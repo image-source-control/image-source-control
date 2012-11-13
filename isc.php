@@ -56,8 +56,8 @@ if (!class_exists('ISC_CLASS')) {
             if (!current_user_can('upload_files'))
                 return FALSE;
 
-            add_filter('attachment_fields_to_edit', array(&$this, 'add_image_source_fields'), 10, 2);
-            add_filter('attachment_fields_to_save', array(&$this, 'image_source_fields_save'), 10, 2);
+            add_filter('attachment_fields_to_edit', array(&$this, 'add_isc_fields'), 10, 2);
+            add_filter('attachment_fields_to_save', array(&$this, 'isc_fields_save'), 10, 2);
         }
 
         /**
@@ -66,10 +66,18 @@ if (!class_exists('ISC_CLASS')) {
          * @param object $post
          * @return arr
          */
-        public function add_image_source_fields($form_fields, $post) {
+        public function add_isc_fields($form_fields, $post) {
+            // add input field for source
             $form_fields['image_source']['label'] = __('Image Source', ISCTEXTDOMAIN);
             $form_fields['image_source']['value'] = get_post_meta($post->ID, '_image_source', true);
             $form_fields['image_source']['helps'] = __('Include the image source here.', ISCTEXTDOMAIN);
+            
+            // add checkbox to mark as your own image
+            $form_fields['image_source_own']['input'] = 'html';
+            $form_fields['image_source_own']['helps'] = __('Check this box if this is your own image and doesn\'t need a source.', ISCTEXTDOMAIN);
+            $form_fields['image_source_own']['html'] = "<input type='checkbox' value='1' name='attachments[{$post->ID}][image_source_own]' id='attachments[{$post->ID}][image_source_own]' " . checked( get_post_meta($post->ID, '_image_source_own', true), 1) . "/> "
+            . __('This is my image', ISCTEXTDOMAIN);
+            
             return $form_fields;
         }
 
@@ -79,16 +87,17 @@ if (!class_exists('ISC_CLASS')) {
          * @param $attachment
          * @return object $post
          */
-        public function image_source_fields_save($post, $attachment) {
+        public function isc_fields_save($post, $attachment) {
             if (isset($attachment['image_source']))
                 update_post_meta($post['ID'], '_image_source', $attachment['image_source']);
+                update_post_meta($post['ID'], '_image_source_own', $attachment['image_source_own']);
             return $post;
         }
 
         /**
-         * get image source for frontend
+         * get image sources for all images of this post
          */
-        /*public function source() {
+        public function isc_list( $post_id ) {
 
             $attachments = get_children(array(
                 'post_parent' => get_the_ID(),
@@ -102,7 +111,7 @@ if (!class_exists('ISC_CLASS')) {
             foreach ($attachments as $attachment_id => $attachment) {
                 echo get_post_meta($attachment_id, '_custom_example', true);
             }
-        }*/
+        }
 
     }
 
