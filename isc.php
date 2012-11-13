@@ -1,5 +1,4 @@
 <?php
-
 /*
   Plugin Name: Image Source Control
   Version: 0.1
@@ -71,13 +70,13 @@ if (!class_exists('ISC_CLASS')) {
             $form_fields['image_source']['label'] = __('Image Source', ISCTEXTDOMAIN);
             $form_fields['image_source']['value'] = get_post_meta($post->ID, '_image_source', true);
             $form_fields['image_source']['helps'] = __('Include the image source here.', ISCTEXTDOMAIN);
-            
+
             // add checkbox to mark as your own image
             $form_fields['image_source_own']['input'] = 'html';
             $form_fields['image_source_own']['helps'] = __('Check this box if this is your own image and doesn\'t need a source.', ISCTEXTDOMAIN);
-            $form_fields['image_source_own']['html'] = "<input type='checkbox' value='1' name='attachments[{$post->ID}][image_source_own]' id='attachments[{$post->ID}][image_source_own]' " . checked( get_post_meta($post->ID, '_image_source_own', true), 1) . "/> "
-            . __('This is my image', ISCTEXTDOMAIN);
-            
+            $form_fields['image_source_own']['html'] = "<input type='checkbox' value='1' name='attachments[{$post->ID}][image_source_own]' id='attachments[{$post->ID}][image_source_own]' " . checked(get_post_meta($post->ID, '_image_source_own', true), 1) . "/> "
+                    . __('This is my image', ISCTEXTDOMAIN);
+
             return $form_fields;
         }
 
@@ -90,27 +89,53 @@ if (!class_exists('ISC_CLASS')) {
         public function isc_fields_save($post, $attachment) {
             if (isset($attachment['image_source']))
                 update_post_meta($post['ID'], '_image_source', $attachment['image_source']);
-                update_post_meta($post['ID'], '_image_source_own', $attachment['image_source_own']);
+            update_post_meta($post['ID'], '_image_source_own', $attachment['image_source_own']);
             return $post;
         }
 
         /**
-         * get image sources for all images of this post
+         * echo image sources for all images of this post
+         * @param int $post_id id of the current post/page
+         * @return echo output
          */
-        public function isc_list( $post_id ) {
+        public function list_post_attachments_with_sources( $post_id = 0 ) {
+
+            if (empty($post_id)) {
+                global $post;
+                if (!empty($post->ID)) {
+                    $post_id = $post->ID;
+                }
+            }
+
+            if (empty($post_id))
+                return;
 
             $attachments = get_children(array(
-                'post_parent' => get_the_ID(),
+                'post_parent' => $post_id,
                 'post_type' => 'attachment',
-                'numberposts' => 1, // show all -1
+                'numberposts' => -1, // show all
                 'post_status' => 'inherit',
                 'post_mime_type' => 'image',
                 'order' => 'ASC',
                 'orderby' => 'menu_order ASC'
                     ));
-            foreach ($attachments as $attachment_id => $attachment) {
-                echo get_post_meta($attachment_id, '_custom_example', true);
-            }
+
+            if (!empty($attachments)) :
+                ?>
+                <p class="isc_image_list_title"><?php _e('image sources:', ISCTEXTDOMAIN); ?></p>
+                <ul class="isc_image_list"><?php
+                foreach ($attachments as $attachment_id => $attachment) :
+                    ?><li><?php
+                    echo $attachment->post_title . ': ';
+                    if ( get_post_meta($attachment_id, '_image_source_own', true) ) {
+                        _e('by the author', ISCTEXTDOMAIN);
+                    } else {
+                        echo get_post_meta($attachment_id, '_image_source', true);
+                    }
+                    ?></li><?php
+                endforeach;
+                ?></ul><?php
+            endif;
         }
 
     }
@@ -121,4 +146,14 @@ if (!class_exists('ISC_CLASS')) {
     }
 
     add_action('plugins_loaded', 'add_image_source_fields_start');
+
+    /**
+     * the next functions are just to have an easier access from outside the class
+     */
+    function isc_list($post_id = 0) {
+
+        ISC_CLASS::list_post_attachments_with_sources($post_id);
+    }
+
 }
+
