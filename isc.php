@@ -57,6 +57,8 @@ if (!class_exists('ISC_CLASS')) {
 
             add_filter('attachment_fields_to_edit', array(&$this, 'add_isc_fields'), 10, 2);
             add_filter('attachment_fields_to_save', array(&$this, 'isc_fields_save'), 10, 2);
+            
+            add_shortcode('isc_list', array($this, 'list_post_attachments_with_sources_shortcode'));
         }
 
         /**
@@ -94,7 +96,7 @@ if (!class_exists('ISC_CLASS')) {
         }
 
         /**
-         * echo image sources for all images of this post
+         * create image sources list for all images of this post
          * @param int $post_id id of the current post/page
          * @return echo output
          */
@@ -120,7 +122,9 @@ if (!class_exists('ISC_CLASS')) {
                 'orderby' => 'menu_order ASC'
                     ));
 
+            $return = '';
             if (!empty($attachments)) :
+                ob_start();
                 ?>
                 <p class="isc_image_list_title"><?php _e('image sources:', ISCTEXTDOMAIN); ?></p>
                 <ul class="isc_image_list"><?php
@@ -135,7 +139,31 @@ if (!class_exists('ISC_CLASS')) {
                     ?></li><?php
                 endforeach;
                 ?></ul><?php
+                $return = ob_get_clean();
             endif;
+            
+            return $return;
+        }
+        
+        /**
+         * shortcode function to list all image sources
+         * @param arr $atts
+         */
+        public function list_post_attachments_with_sources_shortcode ( $atts = array() ) {
+            
+            extract( shortcode_atts( array(
+		'id' => 0,
+            ), $atts ) );
+            
+            // if $id not set, use the current ID from the post
+            if ( empty( $id )) {
+                global $post;
+                $id = $post->ID;
+            }
+            
+            if ( empty( $id )) return;
+            return $this->list_post_attachments_with_sources( $id );
+            
         }
 
     }
@@ -143,6 +171,7 @@ if (!class_exists('ISC_CLASS')) {
     function add_image_source_fields_start() {
 
         new ISC_CLASS();
+    
     }
 
     add_action('plugins_loaded', 'add_image_source_fields_start');
@@ -152,7 +181,7 @@ if (!class_exists('ISC_CLASS')) {
      */
     function isc_list($post_id = 0) {
 
-        ISC_CLASS::list_post_attachments_with_sources($post_id);
+        echo ISC_CLASS::list_post_attachments_with_sources($post_id);
     }
 
 }
