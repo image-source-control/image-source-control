@@ -49,6 +49,20 @@ load_plugin_textdomain(ISCTEXTDOMAIN, false, ISCPATH . '/lang');
 if (!class_exists('ISC_CLASS')) {
 
     class ISC_CLASS {
+        
+        /**
+         * define default meta fields
+         */
+        var $_fields = array(
+            'image_source' => array(
+                'id' => 'image_source',
+                'default' => '',
+            ),
+            'image_source_own' => array(
+                'id' => 'image_source_own',
+                'default' => '',
+            )
+        );
 
         public function __construct() {
 
@@ -57,20 +71,19 @@ if (!class_exists('ISC_CLASS')) {
 
             add_filter('attachment_fields_to_edit', array(&$this, 'add_isc_fields'), 10, 2);
             add_filter('attachment_fields_to_save', array(&$this, 'isc_fields_save'), 10, 2);
-            
-            add_action('admin_menu', array( $this, 'create_menu') );
-            
+
+            add_action('admin_menu', array($this, 'create_menu'));
+
             add_shortcode('isc_list', array($this, 'list_post_attachments_with_sources_shortcode'));
         }
-        
+
         /**
          * create the menu pages for isc
          */
-        public function create_menu () {
-            
+        public function create_menu() {
+
             // this page should be accessable by editors and higher
-            $menuhook = add_submenu_page( 'upload.php', 'missing image sources by Image Source Control Plugin', __('Missing Sources', ISCTEXTDOMAIN), 'edit_others_posts', ISCPATH . '/templates/missing_sources.php', '' );
-            
+            $menuhook = add_submenu_page('upload.php', 'missing image sources by Image Source Control Plugin', __('Missing Sources', ISCTEXTDOMAIN), 'edit_others_posts', ISCPATH . '/templates/missing_sources.php', '');
         }
 
         /**
@@ -82,13 +95,13 @@ if (!class_exists('ISC_CLASS')) {
         public function add_isc_fields($form_fields, $post) {
             // add input field for source
             $form_fields['image_source']['label'] = __('Image Source', ISCTEXTDOMAIN);
-            $form_fields['image_source']['value'] = get_post_meta($post->ID, '_image_source', true);
+            $form_fields['image_source']['value'] = get_post_meta($post->ID, 'image_source', true);
             $form_fields['image_source']['helps'] = __('Include the image source here.', ISCTEXTDOMAIN);
 
             // add checkbox to mark as your own image
             $form_fields['image_source_own']['input'] = 'html';
             $form_fields['image_source_own']['helps'] = __('Check this box if this is your own image and doesn\'t need a source.', ISCTEXTDOMAIN);
-            $form_fields['image_source_own']['html'] = "<input type='checkbox' value='1' name='attachments[{$post->ID}][image_source_own]' id='attachments[{$post->ID}][image_source_own]' " . checked(get_post_meta($post->ID, '_image_source_own', true), 1) . "/> "
+            $form_fields['image_source_own']['html'] = "<input type='checkbox' value='1' name='attachments[{$post->ID}][image_source_own]' id='attachments[{$post->ID}][image_source_own]' " . checked(get_post_meta($post->ID, 'image_source_own', true), 1) . "/> "
                     . __('This is my image', ISCTEXTDOMAIN);
 
             return $form_fields;
@@ -102,8 +115,8 @@ if (!class_exists('ISC_CLASS')) {
          */
         public function isc_fields_save($post, $attachment) {
             if (isset($attachment['image_source']))
-                update_post_meta($post['ID'], '_image_source', $attachment['image_source']);
-            update_post_meta($post['ID'], '_image_source_own', $attachment['image_source_own']);
+                update_post_meta($post['ID'], 'image_source', $attachment['image_source']);
+                update_post_meta($post['ID'], 'image_source_own', $attachment['image_source_own']);
             return $post;
         }
 
@@ -112,7 +125,7 @@ if (!class_exists('ISC_CLASS')) {
          * @param int $post_id id of the current post/page
          * @return echo output
          */
-        public function list_post_attachments_with_sources( $post_id = 0 ) {
+        public function list_post_attachments_with_sources($post_id = 0) {
 
             if (empty($post_id)) {
                 global $post;
@@ -143,39 +156,98 @@ if (!class_exists('ISC_CLASS')) {
                 foreach ($attachments as $attachment_id => $attachment) :
                     ?><li><?php
                     echo $attachment->post_title . ': ';
-                    if ( get_post_meta($attachment_id, '_image_source_own', true) ) {
+                    if (get_post_meta('image_source_own', true)) {
                         _e('by the author', ISCTEXTDOMAIN);
                     } else {
-                        echo get_post_meta($attachment_id, '_image_source', true);
+                        echo get_post_meta('image_source', true);
                     }
                     ?></li><?php
                 endforeach;
                 ?></ul><?php
                 $return = ob_get_clean();
             endif;
-            
+
             return $return;
         }
-        
+
         /**
          * shortcode function to list all image sources
          * @param arr $atts
          */
-        public function list_post_attachments_with_sources_shortcode ( $atts = array() ) {
-            
-            extract( shortcode_atts( array(
-		'id' => 0,
-            ), $atts ) );
-            
+        public function list_post_attachments_with_sources_shortcode($atts = array()) {
+
+            extract(shortcode_atts(array(
+                        'id' => 0,
+                            ), $atts));
+
             // if $id not set, use the current ID from the post
-            if ( empty( $id )) {
+            if (empty($id)) {
                 global $post;
                 $id = $post->ID;
             }
+
+            if (empty($id))
+                return;
+            return $this->list_post_attachments_with_sources($id);
+        }
+
+        /**
+         * get all attachments without sources
+         * the downside of this function: is there is not even an empty metakey field, nothing is going to be retrieved
+         * @todo fix this in WP 3.5 with compare => 'NOT EXISTS'
+         */
+        public function get_attachments_without_sources() {
+
+            $args = array(
+                'post_type' => 'attachment',
+                'numberposts' => -1,
+                'post_status' => null,
+                'post_parent' => null,
+                'meta_query' => array(
+                    // image source is empty
+                    array(
+                        'key' => 'image_source',
+                        'value' => '',
+                        'compare' => '=',
+                    ),
+                    // and image source is not set
+                    array(
+                        'key' => 'image_source_own',
+                        'value' => '1',
+                        'compare' => '!=',
+                    ),
+                )
+            );
+            $attachments = get_posts($args);
+            if (!empty($attachments)) {
+                return $attachments;
+            }
+        }
+
+        /**
+         * add meta values to all attachments
+         * @todo probably need to fix this when more fields are added along the way
+         * @todo use compare => 'NOT EXISTS' when WP 3.5 is up to retrieve only values where it is not set
+         */
+        public function add_meta_values_to_attachments() {
+
+            // retrieve all attachments
+            $args = array(
+                'post_type' => 'attachment',
+                'numberposts' => -1,
+                'post_status' => null,
+                'post_parent' => null,
+            );
+            $attachments = get_posts($args);
+            if (empty($attachments)) return;
             
-            if ( empty( $id )) return;
-            return $this->list_post_attachments_with_sources( $id );
-            
+            foreach ( $attachments as $_attachment ) {
+                setup_postdata( $_attachment );
+                foreach ( $this->_fields as $_field ) {
+                    update_post_meta( get_the_ID(), $_field['id'], $_field['default'] );
+                }
+                
+            }
         }
 
     }
@@ -183,7 +255,6 @@ if (!class_exists('ISC_CLASS')) {
     function add_image_source_fields_start() {
 
         new ISC_CLASS();
-    
     }
 
     add_action('plugins_loaded', 'add_image_source_fields_start');
