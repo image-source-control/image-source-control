@@ -58,7 +58,19 @@ if (!class_exists('ISC_CLASS')) {
             add_filter('attachment_fields_to_edit', array(&$this, 'add_isc_fields'), 10, 2);
             add_filter('attachment_fields_to_save', array(&$this, 'isc_fields_save'), 10, 2);
             
+            add_action('admin_menu', array( $this, 'create_menu') );
+            
             add_shortcode('isc_list', array($this, 'list_post_attachments_with_sources_shortcode'));
+        }
+        
+        /**
+         * create the menu pages for isc
+         */
+        public function create_menu () {
+            
+            // this page should be accessable by editors and higher
+            $menuhook = add_submenu_page( 'upload.php', 'missing image sources by Image Source Control Plugin', __('Missing Sources', ISCTEXTDOMAIN), 'edit_others_posts', ISCPATH . '/templates/missing_sources.php', '' );
+            
         }
 
         /**
