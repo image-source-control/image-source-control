@@ -44,7 +44,7 @@ define('ISCTEXTDOMAIN', 'isc');
 define('ISCDIR', basename(dirname(__FILE__)));
 define('ISCPATH', plugin_dir_path(__FILE__));
 
-load_plugin_textdomain(ISCTEXTDOMAIN, false, ISCPATH . '/lang');
+load_plugin_textdomain(ISCTEXTDOMAIN, false, dirname(plugin_basename(__FILE__)) . 'lang');
 
 if (!class_exists('ISC_CLASS')) {
 
