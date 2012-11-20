@@ -49,17 +49,17 @@ load_plugin_textdomain(ISCTEXTDOMAIN, false, ISCPATH . '/lang');
 if (!class_exists('ISC_CLASS')) {
 
     class ISC_CLASS {
-        
+
         /**
          * define default meta fields
          */
         var $_fields = array(
             'image_source' => array(
-                'id' => 'image_source',
+                'id' => 'isc_image_source',
                 'default' => '',
             ),
             'image_source_own' => array(
-                'id' => 'image_source_own',
+                'id' => 'isc_image_source_own',
                 'default' => '',
             )
         );
@@ -75,6 +75,12 @@ if (!class_exists('ISC_CLASS')) {
             add_action('admin_menu', array($this, 'create_menu'));
 
             add_shortcode('isc_list', array($this, 'list_post_attachments_with_sources_shortcode'));
+
+            add_action('admin_enqueue_scripts', array( $this, 'add_admin_scripts') );
+            
+            // ajax function; 'add_meta_fields' is the action defined in isc.js as the action to be called via ajax
+            add_action('wp_ajax_add_meta_fields', array( $this, 'add_meta_values_to_attachments') );
+
         }
 
         /**
@@ -87,6 +93,17 @@ if (!class_exists('ISC_CLASS')) {
         }
 
         /**
+         * add scripts to admin pages
+         */
+        public function add_admin_scripts($hook) {
+            if ('wz-image-source-control/templates/missing_sources.php' != $hook)
+                return;
+            wp_enqueue_script('isc_script', plugins_url('/js/isc.js', __FILE__), false, ISCVERSION );
+            // this is to define ajaxurl to be able to use this in its own js script
+            // wp_localize_script( 'isc_script', 'IscAjax', array( 'ajaxurl' => admin_url( 'admin-ajax.php' ) ) );
+        }
+
+        /**
          * add custom field to attachment
          * @param arr $form_fields
          * @param object $post
@@ -94,14 +111,14 @@ if (!class_exists('ISC_CLASS')) {
          */
         public function add_isc_fields($form_fields, $post) {
             // add input field for source
-            $form_fields['image_source']['label'] = __('Image Source', ISCTEXTDOMAIN);
-            $form_fields['image_source']['value'] = get_post_meta($post->ID, 'image_source', true);
-            $form_fields['image_source']['helps'] = __('Include the image source here.', ISCTEXTDOMAIN);
+            $form_fields['isc_image_source']['label'] = __('Image Source', ISCTEXTDOMAIN);
+            $form_fields['isc_image_source']['value'] = get_post_meta($post->ID, 'isc_image_source', true);
+            $form_fields['isc_image_source']['helps'] = __('Include the image source here.', ISCTEXTDOMAIN);
 
             // add checkbox to mark as your own image
-            $form_fields['image_source_own']['input'] = 'html';
-            $form_fields['image_source_own']['helps'] = __('Check this box if this is your own image and doesn\'t need a source.', ISCTEXTDOMAIN);
-            $form_fields['image_source_own']['html'] = "<input type='checkbox' value='1' name='attachments[{$post->ID}][image_source_own]' id='attachments[{$post->ID}][image_source_own]' " . checked(get_post_meta($post->ID, 'image_source_own', true), 1) . "/> "
+            $form_fields['isc_image_source_own']['input'] = 'html';
+            $form_fields['isc_image_source_own']['helps'] = __('Check this box if this is your own image and doesn\'t need a source.', ISCTEXTDOMAIN);
+            $form_fields['isc_image_source_own']['html'] = "<input type='checkbox' value='1' name='attachments[{$post->ID}][isc_image_source_own]' id='attachments[{$post->ID}][isc_image_source_own]' " . checked(get_post_meta($post->ID, 'isc_image_source_own', true), 1) . "/> "
                     . __('This is my image', ISCTEXTDOMAIN);
 
             return $form_fields;
@@ -114,9 +131,10 @@ if (!class_exists('ISC_CLASS')) {
          * @return object $post
          */
         public function isc_fields_save($post, $attachment) {
-            if (isset($attachment['image_source']))
-                update_post_meta($post['ID'], 'image_source', $attachment['image_source']);
-                update_post_meta($post['ID'], 'image_source_own', $attachment['image_source_own']);
+            if (isset($attachment['isc_image_source']))
+                update_post_meta($post['ID'], 'isc_image_source', $attachment['isc_image_source']);
+            if (isset($attachment['isc_image_source_own']))
+                update_post_meta($post['ID'], 'isc_image_source_own', $attachment['isc_image_source_own']);
             return $post;
         }
 
@@ -156,10 +174,10 @@ if (!class_exists('ISC_CLASS')) {
                 foreach ($attachments as $attachment_id => $attachment) :
                     ?><li><?php
                     echo $attachment->post_title . ': ';
-                    if (get_post_meta('image_source_own', true)) {
+                    if (get_post_meta('isc_image_source_own', true)) {
                         _e('by the author', ISCTEXTDOMAIN);
                     } else {
-                        echo get_post_meta('image_source', true);
+                        echo get_post_meta('isc_image_source', true);
                     }
                     ?></li><?php
                 endforeach;
@@ -206,13 +224,13 @@ if (!class_exists('ISC_CLASS')) {
                 'meta_query' => array(
                     // image source is empty
                     array(
-                        'key' => 'image_source',
+                        'key' => 'isc_image_source',
                         'value' => '',
                         'compare' => '=',
                     ),
                     // and image source is not set
                     array(
-                        'key' => 'image_source_own',
+                        'key' => 'isc_image_source_own',
                         'value' => '1',
                         'compare' => '!=',
                     ),
@@ -228,6 +246,7 @@ if (!class_exists('ISC_CLASS')) {
          * add meta values to all attachments
          * @todo probably need to fix this when more fields are added along the way
          * @todo use compare => 'NOT EXISTS' when WP 3.5 is up to retrieve only values where it is not set
+         * @todo this currently updates all empty fields; empty in this context is empty string, 0, false or not existing; add check if meta field already existed before
          */
         public function add_meta_values_to_attachments() {
 
@@ -238,15 +257,39 @@ if (!class_exists('ISC_CLASS')) {
                 'post_status' => null,
                 'post_parent' => null,
             );
-            $attachments = get_posts($args);
-            if (empty($attachments)) return;
             
-            foreach ( $attachments as $_attachment ) {
-                setup_postdata( $_attachment );
-                foreach ( $this->_fields as $_field ) {
-                    update_post_meta( get_the_ID(), $_field['id'], $_field['default'] );
+            $attachments = get_posts($args);
+            if (empty($attachments))
+                return;
+
+            $count = 0;
+            foreach ($attachments as $_attachment) {
+                $set = 0;
+                setup_postdata($_attachment);
+                foreach ($this->_fields as $_field) {
+                    $meta = get_post_meta( $_attachment->ID, $_field['id'], true );
+                    if ( empty( $meta )) {
+                        update_post_meta($_attachment->ID, $_field['id'], $_field['default']);
+                        $set = 1;
+                    }
                 }
-                
+                if ( $set ) $count++;
+            }
+            echo sprintf( __('Added meta fields to %d images.', ISCTEXTDOMAIN ), $count );
+            die();
+            
+        }
+        
+        /**
+         * show the loading image from wp-admin/images/loading.gif
+         * @param bool $display should this be displayed directly or hidden? via inline css
+         */
+        public function show_loading_image( $display = true ) {
+            
+            $img_path = admin_url("/images/loading.gif");
+            $file_path = ABSPATH . "wp-admin/images/loading.gif";
+            if (file_exists( $file_path )) {
+                echo '<span id="isc_loading_img" style="display: none;"><img src="' . $img_path . '" width="16" height="16" alt="loading"/></span>';
             }
         }
 
