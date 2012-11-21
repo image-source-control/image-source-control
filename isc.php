@@ -131,10 +131,11 @@ if (!class_exists('ISC_CLASS')) {
          * @return object $post
          */
         public function isc_fields_save($post, $attachment) {
+            
             if (isset($attachment['isc_image_source']))
                 update_post_meta($post['ID'], 'isc_image_source', $attachment['isc_image_source']);
-            if (isset($attachment['isc_image_source_own']))
-                update_post_meta($post['ID'], 'isc_image_source_own', $attachment['isc_image_source_own']);
+
+            update_post_meta($post['ID'], 'isc_image_source_own', $attachment['isc_image_source_own']);
             return $post;
         }
 
