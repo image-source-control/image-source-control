@@ -29,7 +29,7 @@ if (!empty($attachments)) {
         ?><tr>
             <td><?php echo $_attachment->ID; ?></td>
             <td><a href="<?php echo admin_url('media.php?attachment_id=' . $_attachment->ID . '&action=edit'); ?>" title="<?php _e('edit this image', ISCTEXTDOMAIN); ?>"><?php echo $_attachment->post_title; ?></a></td>
-            <td><a href="<?php echo get_edit_post_link( $_attachment->post_parent ); ?>" title="<?php _e('show parent post\'s edit page', ISCTEXTDOMAIN ); ?>"><?php echo get_the_title( $_attachment->post_parent ); ?></a></td></tr><?php
+            <td><?php if ( $_attachment->post_parent ) : ?><a href="<?php echo get_edit_post_link( $_attachment->post_parent ); ?>" title="<?php _e('show parent post\'s edit page', ISCTEXTDOMAIN ); ?>"><?php echo get_the_title( $_attachment->post_parent ); ?></a><?php else : _e('no connection', ISCTEXTDOMAIN); ?><?php endif; ?></td></tr><?php
         
     }
     ?></tbody></table><?php
