@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 ?>
-<h1><?php _e('Missing Images', ISCTEXTDOMAIN); ?></h1>
+<h1><?php _e('Missing Images', 'isc'); ?></h1>
 
 <h2><?php _e('add meta fields', ISCTEXTDOMAIN); ?></h2>
 <p><?php _e('ISC adds some fields to the attachments. If you install ISC, these fields are missing and attachments with missing fields are ignored in some of the queries. So use this button at least the first time you start using ISC.', ISCTEXTDOMAIN); ?></p>
@@ -21,7 +21,7 @@ if (!empty($attachments)) {
         <thead>
             <tr>
                 <th><?php _e('ID', ISCTEXTDOMAIN); ?></th>
-                <th><?php _e('image title', ISCTEXTDOMAIN); ?></th>
+                <th><?php _e('image title', 'isc'); ?></th>
                 <th><?php _e('post / page', ISCTEXTDOMAIN); ?></th>
             </tr>
         </thead><tbody><?php
