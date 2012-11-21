@@ -4,7 +4,7 @@ Contributors: webzunft
 Tags: image, images, picture, picture source, image source, mediathek
 Requires at least: 3.4.0
 Tested up to: 3.4
-Stable tag: 0.1
+Stable tag: 1.0
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -19,6 +19,10 @@ Image Source Control (ISC) helps to prevent this situation.
 **Features**
 
 * adds an extra field (custom field) to mediathek to include the image source into
+* lets you mark an image as your own
+* lists images with missing sources
+* shortcode to include the sources in content fields
+* function to include sources of a post in templates
 
 == Installation ==
 
@@ -30,50 +34,21 @@ e.g.
 1. Activate the plugin through the 'Plugins' menu in WordPress
 1. Place `<?php do_action('plugin_name_hook'); ?>` in your templates
 
-== Frequently Asked Questions ==
-
-= A question that someone might have =
-
-An answer to that question.
-
-= What about foo bar? =
-
-Answer to foo bar dilemma.
-
 == Screenshots ==
 
-1. This screen shot description corresponds to screenshot-1.(png|jpg|jpeg|gif). Note that the screenshot is taken from
-the /assets directory or the directory that contains the stable readme.txt (tags or trunk). Screenshots in the /assets 
-directory take precedence. For example, `/assets/screenshot-1.png` would win over `/tags/4.3/screenshot-1.png` 
-(or jpg, jpeg, gif).
-2. This is the second screen shot
+1. Missing sources page to list images with missing source.
+2. Two extra fields from ISC in mediathek
 
 == Changelog ==
 
-= 0.1 =
-initial submittion
+= 1.0 =
+* initial submittion
+* [Feature] Added image source fields to mediathek
+* [Feature] List images with missing sources
+* [Feature] Shortcode to include the sources in content fields
+* [Feature] Function to include sources of a post in templates
 
-== A brief Markdown Example ==
+== Instructions ==
 
-Ordered list:
-
-1. Some feature
-1. Another feature
-1. Something else about the plugin
-
-Unordered list:
-
-* something
-* something else
-* third thing
-
-Here's a link to [WordPress](http://wordpress.org/ "Your favorite software") and one to [Markdown's Syntax Documentation][markdown syntax].
-Titles are optional, naturally.
-
-[markdown syntax]: http://daringfireball.net/projects/markdown/syntax
-            "Markdown is what the parser uses to process much of the readme file"
-
-Markdown uses email style notation for blockquotes and I've been told:
-> Asterisks for *emphasis*. Double it up  for **strong**.
-
-`<?php code(); // goes in backticks ?>`
+Content is following
+maybe link to external source
