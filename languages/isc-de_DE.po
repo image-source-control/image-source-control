@@ -1,9 +1,9 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Image Source Control v0.1\n"
+"Project-Id-Version: Image Source Control v1.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2012-11-20 22:23:46+0000\n"
+"PO-Revision-Date: 2012-11-21 16:57:40+0000\n"
 "Last-Translator: admin <tho.maier@gmx.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -44,17 +44,17 @@ msgstr "Markiere dieses Feld, wenn das Bild dein eigenes ist und/oder keine exte
 msgid "This is my image"
 msgstr "Das ist mein Bild."
 
-#: isc.php:172
+#: isc.php:173
 #@ isc
 msgid "image sources:"
 msgstr "Bildquellen:"
 
-#: isc.php:178
+#: isc.php:179
 #@ isc
 msgid "by the author"
 msgstr "Vom Autor"
 
-#: isc.php:278
+#: isc.php:279
 #, php-format
 #@ isc
 msgid "Added meta fields to %d images."
@@ -80,23 +80,33 @@ msgstr "ISC fügt einige Felder zu den Bildern hinzu. Wenn du ISC installierst d
 msgid "add metafields to images"
 msgstr "Felder zu Bildern hinzufügen"
 
-#: templates/missing_sources.php:24
+#: templates/missing_sources.php:23
 #@ isc
 msgid "ID"
 msgstr "ID"
 
-#: templates/missing_sources.php:25
+#: templates/missing_sources.php:24
 #@ isc
 msgid "image title"
 msgstr "Bildtitel"
 
-#: templates/missing_sources.php:26
+#: templates/missing_sources.php:25
 #@ isc
 msgid "post / page"
 msgstr "Artikel / Seite"
 
-#: templates/missing_sources.php:30
+#: templates/missing_sources.php:31
 #@ isc
 msgid "edit this image"
 msgstr "dieses Bild bearbeiten"
+
+#: templates/missing_sources.php:32
+#@ isc
+msgid "show parent post's edit page"
+msgstr "Gehe zur Bearbeitungsansicht des zugeordneten Artikels"
+
+#: templates/missing_sources.php:32
+#@ isc
+msgid "no connection"
+msgstr "keine Verknüpfung"
 
