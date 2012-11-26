@@ -175,10 +175,10 @@ if (!class_exists('ISC_CLASS')) {
                 foreach ($attachments as $attachment_id => $attachment) :
                     ?><li><?php
                     echo $attachment->post_title . ': ';
-                    if (get_post_meta('isc_image_source_own', true)) {
+                    if (get_post_meta($attachment_id, 'isc_image_source_own', true)) {
                         _e('by the author', ISCTEXTDOMAIN);
                     } else {
-                        echo get_post_meta('isc_image_source', true);
+                        echo get_post_meta($attachment_id, 'isc_image_source', true);
                     }
                     ?></li><?php
                 endforeach;

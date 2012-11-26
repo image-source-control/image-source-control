@@ -41,6 +41,10 @@ e.g.
 
 == Changelog ==
 
+= 1.0.1 =
+
+* [fixed] show image sources under the post
+
 = 1.0 =
 * initial submittion
 * [Feature] Added image source fields to mediathek
