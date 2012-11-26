@@ -41,7 +41,7 @@ e.g.
 
 == Changelog ==
 
-= 1.0.1 =
+= in development =
 
 * [fixed] show image sources under the post
 
