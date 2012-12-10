@@ -176,26 +176,43 @@ if (!class_exists('ISC_CLASS')) {
                 $this->save_image_information_on_load ($post_id, $_content);
                 $attachments = get_post_meta($post_id, 'isc_post_images', true);
             }
-
+            
             $return = '';
             if (!empty($attachments)) :
                 ob_start();
                 ?>
                 <p class="isc_image_list_title"><?php _e('image sources:', ISCTEXTDOMAIN); ?></p>
                 <ul class="isc_image_list"><?php
-                foreach ($attachments as $attachment_id => $attachment_array) :
-                    ?><li><?php
-                    echo get_the_title($attachment_id) . ': ';
-                    if (get_post_meta($attachment_id, 'isc_image_source_own', true)) {
-                        _e('by the author', ISCTEXTDOMAIN);
+                $atts = array();
+                foreach ($attachments as $attachment_id => $attachment_array) {
+                    
+                    $atts[ $attachment_id ]['title'] = get_the_title($attachment_id);
+                    $own = get_post_meta($attachment_id, 'isc_image_source_own', true);
+                    $source = get_post_meta($attachment_id, 'isc_image_source', true);
+                    
+                    if ( $own == '' AND $source == '' ) {
+                        // remove if no information set
+                        unset( $atts[ $attachment_id ] );
+                        continue;
+                    } elseif ( $own != '' ) {
+                        $atts[ $attachment_id ]['source'] = __('by the author', ISCTEXTDOMAIN);
                     } else {
-                        echo get_post_meta($attachment_id, 'isc_image_source', true);
+                        $atts[ $attachment_id ]['source'] = $source;
                     }
-                    ?></li><?php
+                    
+                }
+                
+                foreach ($atts as $atts_id => $atts_array) :
+                    if ( empty( $atts_array['source'] ) ) continue;
+                    ?><li><?php echo $atts_array['title'] . ': ' . $atts_array['source']; ?></li><?php
                 endforeach;
                 ?></ul><?php
                 $return = ob_get_clean();
+
             endif;
+            
+            // don't display anything, if no image sources displayed
+            if ( count( $atts ) === 0 ) return;
 
             return $return;
         }
