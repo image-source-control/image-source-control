@@ -12,7 +12,7 @@ The Image Source Control saves the source of an image, lists them and warns if i
 
 == Description ==
 
-Did you ever forget to add the source to an image file in the frontend and the attorney of the copyright holder knocked on your door?
+Did you ever forget to add the source to an image file in the frontend and the lawer of the copyright holder knocked on your door?
 
 Image Source Control (ISC) helps to prevent this situation.
 
@@ -30,9 +30,8 @@ This section describes how to install the plugin and get it working.
 
 e.g.
 
-1. Upload `plugin-name.php` to the `/wp-content/plugins/` directory
-1. Activate the plugin through the 'Plugins' menu in WordPress
-1. Place `<?php do_action('plugin_name_hook'); ?>` in your templates
+1. Upload `wz-image-source-control`-folder to the `/wp-content/plugins/` directory
+1. Activate ISC through the 'Plugins' menu in WordPress
 
 == Screenshots ==
 
@@ -43,16 +42,19 @@ e.g.
 
 = in development =
 
+= 1.1 =
 * [fixed] show image sources under the post
+* [fixed] display "checked" attribute in frontend
+* [feature] show sources for all images visible in the post content, not the post gallery
+* [feature] automatically load image source list first time a post is displayed after plugin installation
 
 = 1.0 =
 * initial submittion
-* [Feature] Added image source fields to mediathek
-* [Feature] List images with missing sources
-* [Feature] Shortcode to include the sources in content fields
-* [Feature] Function to include sources of a post in templates
+* [feature] Added image source fields to mediathek
+* [feature] List images with missing sources
+* [feature] Shortcode to include the sources in content fields
+* [feature] Function to include sources of a post in templates
 
 == Instructions ==
 
-Content is following
-maybe link to external source
+...
