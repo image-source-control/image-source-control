@@ -45,6 +45,7 @@ e.g.
 = 1.1 =
 * [fixed] show image sources under the post
 * [fixed] display "checked" attribute in frontend
+* [fixed] don't display image titles in image source list without a source
 * [feature] show sources for all images visible in the post content, not the post gallery
 * [feature] automatically load image source list first time a post is displayed after plugin installation
 
