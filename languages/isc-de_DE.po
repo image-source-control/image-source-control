@@ -1,9 +1,9 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Image Source Control v1.0\n"
+"Project-Id-Version: Image Source Control v1.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2012-11-21 16:57:40+0000\n"
+"PO-Revision-Date: 2012-12-16 13:53:38+0000\n"
 "Last-Translator: admin <tho.maier@gmx.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -19,42 +19,42 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 "X-Textdomain-Support: yes"
 
-#: isc.php:92
+#: isc.php:102
 #@ isc
 msgid "Missing Sources"
 msgstr "Fehlende Bildquellen"
 
-#: isc.php:114
+#: isc.php:126
 #@ isc
 msgid "Image Source"
 msgstr "Bildquelle"
 
-#: isc.php:116
+#: isc.php:128
 #@ isc
 msgid "Include the image source here."
 msgstr "Trage hier die Bildquelle ein."
 
-#: isc.php:120
+#: isc.php:132
 #@ isc
 msgid "Check this box if this is your own image and doesn't need a source."
 msgstr "Markiere dieses Feld, wenn das Bild dein eigenes ist und/oder keine externe Quellenangabe notwendig ist."
 
-#: isc.php:122
+#: isc.php:134
 #@ isc
 msgid "This is my image"
 msgstr "Das ist mein Bild."
 
-#: isc.php:173
+#: isc.php:184
 #@ isc
 msgid "image sources:"
 msgstr "Bildquellen:"
 
-#: isc.php:179
+#: isc.php:198
 #@ isc
 msgid "by the author"
 msgstr "Vom Autor"
 
-#: isc.php:279
+#: isc.php:308
 #, php-format
 #@ isc
 msgid "Added meta fields to %d images."
