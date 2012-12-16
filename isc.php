@@ -431,7 +431,7 @@ if (!class_exists('ISC_CLASS')) {
             // check for the format 'image-title-300x200.jpg' and remove the image size from it
             $newurl = preg_replace("/-(\d+)x(\d+)\.({$types})$/i", '.${3}', $url);
             global $wpdb;
-            $query = $wpdb->prepare("SELECT ID FROM {$wpdb->posts} WHERE guid='$newurl'");
+            $query = $wpdb->prepare("SELECT ID FROM {$wpdb->posts} WHERE guid = %s", $newurl);
             $id = $wpdb->get_var($query);
             return $id;
         }
