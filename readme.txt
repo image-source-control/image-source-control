@@ -2,9 +2,9 @@
 Contributors: webzunft
 # Donate link: http://example.com/
 Tags: image, images, picture, picture source, image source, mediathek
-Requires at least: 3.4.0
-Tested up to: 3.4
-Stable tag: 1.0
+Requires at least: 3.4
+Tested up to: 3.5
+Stable tag: 1.1
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -58,4 +58,13 @@ e.g.
 
 == Instructions ==
 
-...
+Find a list of images with missing sources under _Mediathek > Missing sources_
+
+You can add the image source list to pages or post via the shortcode [isc_list] in your content editor. You can use `[isc_list id="123]`to show the list of any post or page.
+
+You can also add the list with the function `isc_list()` within the loop in your template files. Use `isc_list( $post_id )` to show the image source list outside the loop.
+
+You should also check first if the function exists before using it:
+`<?php if( function_exists('isc_list') ) { isc_list(); } ?>`
+
+The plugin searches your post content and thumbnail for images (attachments) and lists them, if you included at least the image source or marked it as your own image.
