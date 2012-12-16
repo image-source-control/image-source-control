@@ -5,11 +5,11 @@
   Plugin URI: none
   Description: The Image Source Control saves the source of an image, lists them and warns if it is missing.
   Author: Thomas Maier
-  Author URI: http://www.webzunft.de
+  Author URI: http://www.webgilde.com
   License: GPL v3
 
   Image Source Control Plugin for WordPress
-  Copyright (C) 2012, Thomas Maier - post@webzunft.de
+  Copyright (C) 2012, Thomas Maier - thomas.maier@webgilde.com
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -106,7 +106,7 @@ if (!class_exists('ISC_CLASS')) {
          * add scripts to admin pages
          */
         public function add_admin_scripts($hook) {
-            if ('wz-image-source-control/templates/missing_sources.php' != $hook)
+            if ('wg-image-source-control/templates/missing_sources.php' != $hook)
                 return;
             wp_enqueue_script('isc_script', plugins_url('/js/isc.js', __FILE__), false, ISCVERSION);
             // this is to define ajaxurl to be able to use this in its own js script

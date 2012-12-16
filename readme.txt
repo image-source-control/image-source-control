@@ -30,7 +30,7 @@ This section describes how to install the plugin and get it working.
 
 e.g.
 
-1. Upload `wz-image-source-control`-folder to the `/wp-content/plugins/` directory
+1. Upload `wg-image-source-control`-folder to the `/wp-content/plugins/` directory
 1. Activate ISC through the 'Plugins' menu in WordPress
 
 == Screenshots ==
