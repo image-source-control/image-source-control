@@ -130,7 +130,7 @@ if (!class_exists('ISC_CLASS')) {
             // add checkbox to mark as your own image
             $form_fields['isc_image_source_own']['input'] = 'html';
             $form_fields['isc_image_source_own']['helps'] = __('Check this box if this is your own image and doesn\'t need a source.', ISCTEXTDOMAIN);
-            $form_fields['isc_image_source_own']['html'] = "<input type='checkbox' value='1' name='attachments[{$post->ID}][isc_image_source_own]' id='attachments[{$post->ID}][isc_image_source_own]' " . checked(get_post_meta($post->ID, 'isc_image_source_own', true), 1) . "/> "
+            $form_fields['isc_image_source_own']['html'] = "<input type='checkbox' value='1' name='attachments[{$post->ID}][isc_image_source_own]' id='attachments[{$post->ID}][isc_image_source_own]' " . checked(get_post_meta($post->ID, 'isc_image_source_own', true), 1, false ) .  "/> "
                     . __('This is my image', ISCTEXTDOMAIN);
 
             return $form_fields;
