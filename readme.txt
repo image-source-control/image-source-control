@@ -24,6 +24,10 @@ Image Source Control (ISC) helps to prevent this situation.
 * shortcode to include the sources in content fields
 * function to include sources of a post in templates
 
+**Localization**
+
+English, German
+
 == Installation ==
 
 This section describes how to install the plugin and get it working.
