@@ -38,7 +38,7 @@ if (!function_exists('add_action')) {
     exit();
 }
 
-define('ISCVERSION', '1.1');
+define('ISCVERSION', '1.1.1');
 define('ISCNAME', 'Image Source Control');
 define('ISCTEXTDOMAIN', 'isc');
 define('ISCDIR', basename(dirname(__FILE__)));
@@ -104,9 +104,11 @@ if (!class_exists('ISC_CLASS')) {
 
         /**
          * add scripts to admin pages
+         * @since 1.0
+         * @update 1.1.1
          */
         public function add_admin_scripts($hook) {
-            if ('wg-image-source-control/templates/missing_sources.php' != $hook)
+            if ('image-source-control-isc/templates/missing_sources.php' != $hook)
                 return;
             wp_enqueue_script('isc_script', plugins_url('/js/isc.js', __FILE__), false, ISCVERSION);
             // this is to define ajaxurl to be able to use this in its own js script
@@ -305,7 +307,8 @@ if (!class_exists('ISC_CLASS')) {
                 if ($set)
                     $count++;
             }
-            echo sprintf(__('Added meta fields to %d images.', ISCTEXTDOMAIN), $count);
+            echo sprintf(__('Added meta fields to %d images.', ISCTEXTDOMAIN), $count) . 
+                    '<br/><input type="button" value="' . __('reload page', ISCTEXTDOMAIN ) . '" onClick="window.location.reload()">';
             die();
         }
 

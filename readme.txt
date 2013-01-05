@@ -4,7 +4,7 @@ Contributors: webzunft
 Tags: image, images, picture, picture source, image source, mediathek
 Requires at least: 3.4
 Tested up to: 3.5
-Stable tag: 1.1
+Stable tag: 1.1.1
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,11 @@ e.g.
 == Changelog ==
 
 = in development =
+
+= 1.1.1 =
+* [fixed] javascript file is now being loaded and missing fields can be added
+* [feature] added button to reload the missing sources page after fields have been added
+* [locale] updated German translation
 
 = 1.1 =
 * [fixed] show image sources under the post

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Image Source Control v1.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2012-12-16 13:53:38+0000\n"
+"PO-Revision-Date: 2013-01-05 14:33:11+0000\n"
 "Last-Translator: admin <tho.maier@gmx.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -24,37 +24,37 @@ msgstr ""
 msgid "Missing Sources"
 msgstr "Fehlende Bildquellen"
 
-#: isc.php:126
+#: isc.php:128
 #@ isc
 msgid "Image Source"
 msgstr "Bildquelle"
 
-#: isc.php:128
+#: isc.php:130
 #@ isc
 msgid "Include the image source here."
 msgstr "Trage hier die Bildquelle ein."
 
-#: isc.php:132
+#: isc.php:134
 #@ isc
 msgid "Check this box if this is your own image and doesn't need a source."
 msgstr "Markiere dieses Feld, wenn das Bild dein eigenes ist und/oder keine externe Quellenangabe notwendig ist."
 
-#: isc.php:134
+#: isc.php:136
 #@ isc
 msgid "This is my image"
 msgstr "Das ist mein Bild."
 
-#: isc.php:184
+#: isc.php:186
 #@ isc
 msgid "image sources:"
 msgstr "Bildquellen:"
 
-#: isc.php:198
+#: isc.php:200
 #@ isc
 msgid "by the author"
 msgstr "Vom Autor"
 
-#: isc.php:308
+#: isc.php:310
 #, php-format
 #@ isc
 msgid "Added meta fields to %d images."
@@ -109,4 +109,9 @@ msgstr "Gehe zur Bearbeitungsansicht des zugeordneten Artikels"
 #@ isc
 msgid "no connection"
 msgstr "keine Verknüpfung"
+
+#: isc.php:311
+#@ isc
+msgid "reload page"
+msgstr "Seite aktualisieren"
 
