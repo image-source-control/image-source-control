@@ -23,12 +23,12 @@
 
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * Followed the following tutorials
  * http://wpengineer.com/2076/add-custom-field-attachment-in-wordpress/
  * http://bueltge.de/eigene-felder-dateiverwaltung-wordpress/1226/ (same like above, but in German)
- * 
- * 
+ *
+ *
  */
 
 //avoid direct calls to this file
@@ -53,7 +53,7 @@ if (!class_exists('ISC_CLASS')) {
         /**
          * define default meta fields
          */
-        var $_fields = array(
+        protected $_fields = array(
             'image_source' => array(
                 'id' => 'isc_image_source',
                 'default' => '',
@@ -68,7 +68,7 @@ if (!class_exists('ISC_CLASS')) {
          * allowed image file types/extensions
          * @since 1.1
          */
-        var $_allowedExtensions = array(
+        protected $_allowedExtensions = array(
             'jpg', 'png', 'gif'
         );
 
@@ -128,7 +128,7 @@ if (!class_exists('ISC_CLASS')) {
             $form_fields['isc_image_source']['label'] = __('Image Source', ISCTEXTDOMAIN);
             $form_fields['isc_image_source']['value'] = get_post_meta($post->ID, 'isc_image_source', true);
             $form_fields['isc_image_source']['helps'] = __('Include the image source here.', ISCTEXTDOMAIN);
-            
+
             // add checkbox to mark as your own image
             $form_fields['isc_image_source_own']['input'] = 'html';
             $form_fields['isc_image_source_own']['helps'] = __('Check this box if this is your own image and doesn\'t need a source.', ISCTEXTDOMAIN);
@@ -174,11 +174,11 @@ if (!class_exists('ISC_CLASS')) {
 
             $attachments = get_post_meta($post_id, 'isc_post_images', true);
             // if attachments is an empty string, search for images in it
-            if ( $attachments == '' ) { 
+            if ( $attachments == '' ) {
                 $this->save_image_information_on_load ($post_id, $_content);
                 $attachments = get_post_meta($post_id, 'isc_post_images', true);
             }
-            
+
             $return = '';
             if (!empty($attachments)) :
                 ob_start();
@@ -187,11 +187,11 @@ if (!class_exists('ISC_CLASS')) {
                 <ul class="isc_image_list"><?php
                 $atts = array();
                 foreach ($attachments as $attachment_id => $attachment_array) {
-                    
+
                     $atts[ $attachment_id ]['title'] = get_the_title($attachment_id);
                     $own = get_post_meta($attachment_id, 'isc_image_source_own', true);
                     $source = get_post_meta($attachment_id, 'isc_image_source', true);
-                    
+
                     if ( $own == '' AND $source == '' ) {
                         // remove if no information set
                         unset( $atts[ $attachment_id ] );
@@ -201,9 +201,9 @@ if (!class_exists('ISC_CLASS')) {
                     } else {
                         $atts[ $attachment_id ]['source'] = $source;
                     }
-                    
+
                 }
-                
+
                 foreach ($atts as $atts_id => $atts_array) :
                     if ( empty( $atts_array['source'] ) ) continue;
                     ?><li><?php echo $atts_array['title'] . ': ' . $atts_array['source']; ?></li><?php
@@ -212,7 +212,7 @@ if (!class_exists('ISC_CLASS')) {
                 $return = ob_get_clean();
 
             endif;
-            
+
             // don't display anything, if no image sources displayed
             if ( count( $atts ) === 0 ) return;
 
@@ -307,7 +307,7 @@ if (!class_exists('ISC_CLASS')) {
                 if ($set)
                     $count++;
             }
-            echo sprintf(__('Added meta fields to %d images.', ISCTEXTDOMAIN), $count) . 
+            echo sprintf(__('Added meta fields to %d images.', ISCTEXTDOMAIN), $count) .
                     '<br/><input type="button" value="' . __('reload page', ISCTEXTDOMAIN ) . '" onClick="window.location.reload()">';
             die();
         }
@@ -339,25 +339,25 @@ if (!class_exists('ISC_CLASS')) {
             if ('attachment' == $_POST['post_type']) {
                 return;
             }
-            
+
             // check if this is a revision and if so, use parent post id
             if ($_id = wp_is_post_revision($post_id))
                 $post_id = $_id;
-            
+
             $_content = stripslashes($_REQUEST['content']);
             $this->save_image_information($post_id, $_content);
-            
+
         }
-        
+
         /**
          * save image information for a post when it is viewed and the image source list is enabled
          * (this is in case the plugin is new and the current post wasn't saved before)
-         * 
+         *
          * @since 1.1
          */
-        
+
         public function save_image_information_on_load( ) {
-            
+
             global $post;
             if (empty( $post->ID )) return;
 
@@ -365,7 +365,7 @@ if (!class_exists('ISC_CLASS')) {
             $_content = $post->post_content;
 
             $this->save_image_information($post_id, $_content);
-            
+
         }
 
         /**
@@ -455,7 +455,7 @@ if (!class_exists('ISC_CLASS')) {
 
         $isc = new ISC_CLASS();
         echo $isc->list_post_attachments_with_sources($post_id);
-        
+
     }
 
 }
