@@ -53,7 +53,7 @@ if (!class_exists('ISC_CLASS')) {
         /**
          * define default meta fields
          */
-        var $_fields = array(
+        protected $_fields = array(
             'image_source' => array(
                 'id' => 'isc_image_source',
                 'default' => '',
@@ -68,7 +68,7 @@ if (!class_exists('ISC_CLASS')) {
          * allowed image file types/extensions
          * @since 1.1
          */
-        var $_allowedExtensions = array(
+        protected $_allowedExtensions = array(
             'jpg', 'png', 'gif'
         );
 
