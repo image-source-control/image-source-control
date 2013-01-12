@@ -1,8 +1,8 @@
 <?php
 /*
   Plugin Name: Image Source Control
-  Version: 1.1
-  Plugin URI: none
+  Version: 1.1.2
+  Plugin URI: http://wordpress.org/extend/plugins/image-source-control-isc/
   Description: The Image Source Control saves the source of an image, lists them and warns if it is missing.
   Author: Thomas Maier
   Author URI: http://www.webgilde.com
@@ -38,7 +38,7 @@ if (!function_exists('add_action')) {
     exit();
 }
 
-define('ISCVERSION', '1.1.1');
+define('ISCVERSION', '1.1.2');
 define('ISCNAME', 'Image Source Control');
 define('ISCTEXTDOMAIN', 'isc');
 define('ISCDIR', basename(dirname(__FILE__)));
@@ -53,7 +53,7 @@ if (!class_exists('ISC_CLASS')) {
         /**
          * define default meta fields
          */
-        var $_fields = array(
+        protected $_fields = array(
             'image_source' => array(
                 'id' => 'isc_image_source',
                 'default' => '',
@@ -68,8 +68,8 @@ if (!class_exists('ISC_CLASS')) {
          * allowed image file types/extensions
          * @since 1.1
          */
-        var $_allowedExtensions = array(
-            'jpg', 'png', 'gif',
+        protected $_allowedExtensions = array(
+            'jpg', 'png', 'gif'
         );
 
         /**
@@ -81,8 +81,8 @@ if (!class_exists('ISC_CLASS')) {
                 return false;
             }
 
-            add_filter('attachment_fields_to_edit', array(&$this, 'add_isc_fields'), 10, 2);
-            add_filter('attachment_fields_to_save', array(&$this, 'isc_fields_save'), 10, 2);
+            add_filter('attachment_fields_to_edit', array($this, 'add_isc_fields'), 10, 2);
+            add_filter('attachment_fields_to_save', array($this, 'isc_fields_save'), 10, 2);
 
             add_action('admin_menu', array($this, 'create_menu'));
 
@@ -195,7 +195,6 @@ if (!class_exists('ISC_CLASS')) {
             if (!empty($attachments)) {
                 $atts = array();
                 foreach ($attachments as $attachment_id => $attachment_array) {
-
                     $atts[$attachment_id]['title'] = get_the_title($attachment_id);
                     $own = get_post_meta($attachment_id, 'isc_image_source_own', true);
                     $source = get_post_meta($attachment_id, 'isc_image_source', true);
@@ -209,9 +208,9 @@ if (!class_exists('ISC_CLASS')) {
                     } else {
                         $atts[$attachment_id ]['source'] = $source;
                     }
-
-                    $return = $this->_renderAttachments($atts);
                 }
+
+                $return = $this->_renderAttachments($atts);
             }
 
             return $return;
