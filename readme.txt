@@ -1,6 +1,6 @@
 === Plugin Name ===
 Contributors: webzunft
-# Donate link: http://example.com/
+Donate link: (none, so far)
 Tags: image, images, picture, picture source, image source, mediathek
 Requires at least: 3.4
 Tested up to: 3.5
@@ -47,6 +47,8 @@ e.g.
 = 1.1.2 =
 * [fixed] wrong version number in main file so wordpress.org didn't inform about updates
 * [fixed] some minor coding standard issues
+* [fixed] small text for donate link
+* [fixed] plugin url
 
 = 1.1.1 =
 * [fixed] javascript file is now being loaded and missing fields can be added

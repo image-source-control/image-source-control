@@ -2,7 +2,7 @@
 /*
   Plugin Name: Image Source Control
   Version: 1.1.2
-  Plugin URI: none
+  Plugin URI: http://wordpress.org/extend/plugins/image-source-control-isc/
   Description: The Image Source Control saves the source of an image, lists them and warns if it is missing.
   Author: Thomas Maier
   Author URI: http://www.webgilde.com
