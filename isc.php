@@ -143,7 +143,7 @@ if (!class_exists('ISC_CLASS')) {
             $form_fields['isc_image_source_own']['html'] =
                 "<input type='checkbox' value='1' name='attachments[{$post->ID}][isc_image_source_own]' id='attachments[{$post->ID}][isc_image_source_own]' "
                 . checked(get_post_meta($post->ID, 'isc_image_source_own', true), 1, false )
-                . "/> "
+                . " style=\"width:14px\"/> "
                 . __('This is my image', ISCTEXTDOMAIN);
 
             return $form_fields;
