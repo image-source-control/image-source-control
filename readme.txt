@@ -3,7 +3,7 @@ Contributors: webzunft
 Tags: image, images, picture, picture source, image source, mediathek
 Requires at least: 3.4
 Tested up to: 3.5
-Stable tag: 1.1.2
+Stable tag: 1.1.2.1
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -42,6 +42,10 @@ e.g.
 2. Two extra fields from ISC in mediathek
 
 == Changelog ==
+
+= 1.1.2.1 =
+
+* [fixed] wrong user level check caused shortcode to not work for normal visitors
 
 = 1.1.2 =
 * [fixed] wrong version number in main file so wordpress.org didn't inform about updates

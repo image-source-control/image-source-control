@@ -1,7 +1,7 @@
 <?php
 /*
   Plugin Name: Image Source Control
-  Version: 1.1.2
+  Version: 1.1.2.1
   Plugin URI: http://wordpress.org/extend/plugins/image-source-control-isc/
   Description: The Image Source Control saves the source of an image, lists them and warns if it is missing.
   Author: Thomas Maier
@@ -38,7 +38,7 @@ if (!function_exists('add_action')) {
     exit();
 }
 
-define('ISCVERSION', '1.1.2');
+define('ISCVERSION', '1.1.2.1');
 define('ISCNAME', 'Image Source Control');
 define('ISCTEXTDOMAIN', 'isc');
 define('ISCDIR', basename(dirname(__FILE__)));
@@ -77,6 +77,11 @@ if (!class_exists('ISC_CLASS')) {
          */
         public function __construct()
         {
+            // insert all function for the frontend here
+            
+            add_shortcode('isc_list', array($this, 'list_post_attachments_with_sources_shortcode'));
+            
+            // insert all backend functions below this check
             if (!current_user_can('upload_files')) {
                 return false;
             }
@@ -85,8 +90,6 @@ if (!class_exists('ISC_CLASS')) {
             add_filter('attachment_fields_to_save', array($this, 'isc_fields_save'), 10, 2);
 
             add_action('admin_menu', array($this, 'create_menu'));
-
-            add_shortcode('isc_list', array($this, 'list_post_attachments_with_sources_shortcode'));
 
             add_action('admin_enqueue_scripts', array($this, 'add_admin_scripts'));
 
