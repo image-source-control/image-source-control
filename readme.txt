@@ -48,6 +48,7 @@ e.g.
 = 1.1.3 =
 
 * [feature] shortcode to list all images conntected to posts as a paginated list
+* [fixed] content filter now finds images that have been edited (like rotated)
 * [fixed] checking for missing key to prevent error message
 * [fixed] added link to plugin homepage with more details
 

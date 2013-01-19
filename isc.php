@@ -433,6 +433,7 @@ if (!class_exists('ISC_CLASS')) {
         /**
          * filter image src attribute from text
          * @since 1.1
+         * @updated 1.1.3
          * @return array with image src uris
          */
         public function _filter_src_attributes($content = '')
@@ -463,8 +464,8 @@ if (!class_exists('ISC_CLASS')) {
                 return 0;
             }
             $types = implode('|', $this->_allowedExtensions);
-            // check for the format 'image-title-300x200.jpg' and remove the image size from it
-            $newurl = preg_replace("/-(\d+)x(\d+)\.({$types})$/i", '.${3}', $url);
+            // check for the format 'image-title-(e12452112-)300x200.jpg' and remove the image size and edit mark from it
+            $newurl = preg_replace("/(-e\d+){0,1}-(\d+)x(\d+)\.({$types})$/i", '.${4}', $url);
             global $wpdb;
             $query = $wpdb->prepare("SELECT ID FROM {$wpdb->posts} WHERE guid = %s", $newurl);
             $id = $wpdb->get_var($query);
