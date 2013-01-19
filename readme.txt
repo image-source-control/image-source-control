@@ -43,6 +43,12 @@ e.g.
 
 == Changelog ==
 
+= short wishlist =
+
+= 1.1.3 =
+
+* [fixed] checking for missing key to prevent error message
+
 = 1.1.2.1 =
 
 * [fixed] wrong user level check caused shortcode to not work for normal visitors

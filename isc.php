@@ -365,7 +365,7 @@ if (!class_exists('ISC_CLASS')) {
                 return;
             }
 
-            if ('attachment' == $_POST['post_type']) {
+            if (isset($_POST['post_type']) && 'attachment' == $_POST['post_type']) {
                 return;
             }
 
