@@ -11,7 +11,7 @@ The Image Source Control saves the source of an image, lists them and warns if i
 
 == Description ==
 
-Did you ever forget to add the source to an image file in the frontend and the lawer of the copyright holder knocked on your door?
+Did you ever forget to add the source to an image file in the frontend and the lawyer of the copyright holder knocked on your door?
 
 Image Source Control (ISC) helps to prevent this situation.
 
@@ -49,6 +49,7 @@ e.g.
 
 * [feature] shortcode to list all images conntected to posts as a paginated list
 * [fixed] checking for missing key to prevent error message
+* [fixed] added link to plugin homepage with more details
 
 = 1.1.2.1 =
 
