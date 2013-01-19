@@ -90,4 +90,6 @@ You can also add the list with the function `isc_list()` within the loop in your
 You should also check first if the function exists before using it:
 `<?php if( function_exists('isc_list') ) { isc_list(); } ?>`
 
+You can add a paginated list with ALL attachments and sources to a post or page using the shortcode [isc_list_all]. Use `[isc_list per_page="25]` to show only a limited number of images per page.
+
 The plugin searches your post content and thumbnail for images (attachments) and lists them, if you included at least the image source or marked it as your own image.
