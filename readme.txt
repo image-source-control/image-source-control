@@ -47,6 +47,7 @@ e.g.
 
 = 1.1.3 =
 
+* [feature] shortcode to list all images conntected to posts as a paginated list
 * [fixed] checking for missing key to prevent error message
 
 = 1.1.2.1 =

@@ -1,7 +1,7 @@
 <?php
 /*
   Plugin Name: Image Source Control
-  Version: 1.1.2.1
+  Version: 1.1.3
   Plugin URI: http://wordpress.org/extend/plugins/image-source-control-isc/
   Description: The Image Source Control saves the source of an image, lists them and warns if it is missing.
   Author: Thomas Maier
@@ -38,7 +38,7 @@ if (!function_exists('add_action')) {
     exit();
 }
 
-define('ISCVERSION', '1.1.2.1');
+define('ISCVERSION', '1.1.3');
 define('ISCNAME', 'Image Source Control');
 define('ISCTEXTDOMAIN', 'isc');
 define('ISCDIR', basename(dirname(__FILE__)));
@@ -471,9 +471,18 @@ if (!class_exists('ISC_CLASS')) {
             return $id;
         }
         
+        /**
+         * create shortcode to list all image sources in the frontend
+         * @param array $atts
+         * @since 1.1.3
+         * @todo link to the post
+         */
         public function list_all_post_attachments_sources_shortcode($atts = array())
         {
         
+            /**
+             * @todo why not translate here with the code below?
+             */
             extract(shortcode_atts(array(
                 'per_page' => 99999,
                 'before_links' => '',
@@ -483,6 +492,9 @@ if (!class_exists('ISC_CLASS')) {
                 ),
                 $atts));
             
+            /**
+             * @todo why not include this into the array above?
+             */
             if ('&#171; Previous' == $prev_text) 
                 $prev_text = __('&#171; Previous', ISCTEXTDOMAIN);
             if ('Next &#187;' == $next_text) 
@@ -494,6 +506,8 @@ if (!class_exists('ISC_CLASS')) {
                 'numberposts' => -1,
                 'post_status' => null,
                 'post_parent' => null,
+                /** @todo maybe add offset to not retrieve the first results when not on first page */
+                /** @todo maybe add limit to not retrieve more results than on the current page */
             );
 
             $attachments = get_posts($args);
@@ -522,23 +536,23 @@ if (!class_exists('ISC_CLASS')) {
             $page = isset($_GET['isc-page']) ? intval($_GET['isc-page']) : 1;
             $down_limit = 1; // First page
             
-            $up_limit =1;
+            $up_limit = 1;
             
             if ($per_page < $total) {
                 $rem = $total % $per_page; // The Remainder of $total/$per_page
                 $up_limit = ($total - $rem) / $per_page;
                 if (0 < $rem) {
-                    $up_limit++;//If rem is positive, add the last page that contains less that $per_page attachment;
+                    $up_limit++; //If rem is positive, add the last page that contains less than $per_page attachment;
                 }
             }
                 
             ob_start();
             if ( 2 > $up_limit ) {
-                $this->display_connected_attachment_list($connected_atts);
+                $this->display_all_attachment_list($connected_atts);
             } else {
                 $starting_atts = $per_page * ($page - 1); // for page 2 and 3 $per_page start display on $connected_atts[3*(2-1) = 3]
                 $paged_atts = array_slice($connected_atts, $starting_atts, $per_page, true);
-                $this->display_connected_attachment_list($paged_atts);
+                $this->display_all_attachment_list($paged_atts);
                 $this->pagination_links($total, $up_limit, $before_links, $after_links, $prev_text, $next_text);
             } 
             
@@ -548,32 +562,36 @@ if (!class_exists('ISC_CLASS')) {
         
         
         /**
-        * Performs rendering of connected attachments list
+        * performs rendering of all attachments list
+         * @since 1.1.3
         */
-        public function display_connected_attachment_list($atts)
+        public function display_all_attachment_list($atts)
         {
             if (! is_array($atts) || $atts == array())
                 return;
             ?>
             <table>
                 <thead>
-                    <th><?php _e("Attachment's ID", ISCTEXTDOMAIN); ?></th>
+                    <?php /* <th><?php _e("Attachment's ID", ISCTEXTDOMAIN); ?></th>*/ ?>
                     <th><?php _e('Title', ISCTEXTDOMAIN); ?></th>
-                    <th><?php _e('Seen in', ISCTEXTDOMAIN); ?></th>
+                    <th><?php _e('Attached to', ISCTEXTDOMAIN); ?></th>
                     <th><?php _e('Source', ISCTEXTDOMAIN); ?></th>
                 </thead>
                 <tbody>
                 <?php foreach ($atts as $id => $data) : ?>
                     <?php
+                        /** @todo ment for later: this text was used above already; find a place to but it so it is defined only once and used where needed */    
                         $source = __('Not available', ISCTEXTDOMAIN);
                         if (1 == $data['own']) {
+                            /** @todo ment for later: this text was used above already; find a place to but it so it is defined only once and used where needed */
                             $source = __('By the author', ISCTEXTDOMAIN);
                         } elseif (!empty($data['source'])) {
                             $source = $data['source'];
                         }
                     ?>
                     <tr>
-                    <td><?php echo $id ?></td><td><?php echo $data['title']; ?></td><td><?php echo $data['parent']; ?></td><td><?php echo esc_attr($source); ?></td>
+                    <?php /* <td><?php echo $id ?></td>*/ ?>
+                    <td><?php echo $data['title']; ?></td><td><?php echo $data['parent']; ?></td><td><?php echo esc_attr($source); ?></td>
                     </tr>
                 <?php endforeach; ?>
                 </tbody>
@@ -583,6 +601,9 @@ if (!class_exists('ISC_CLASS')) {
         
         /**
         * Pagination links
+         * @since 1.1.3
+         * @todo add @param attribute for each attribute of the function and shortly explain it (for documentation)
+         * 
         */
         public function pagination_links($atts_count, $max_page, $before_links, $after_links, $prev_text, $next_text)
         {
