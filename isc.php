@@ -142,6 +142,7 @@ if (!class_exists('ISC_CLASS')) {
 
             // add checkbox to mark as your own image
             $form_fields['isc_image_source_own']['input'] = 'html';
+            $form_fields['isc_image_source_own']['label'] = '';
             $form_fields['isc_image_source_own']['helps'] =
                 __('Check this box if this is your own image and doesn\'t need a source.', ISCTEXTDOMAIN);
             $form_fields['isc_image_source_own']['html'] =
@@ -455,6 +456,7 @@ if (!class_exists('ISC_CLASS')) {
         /**
          * get image by url accessing the database directly
          * @since 1.1
+         * @updated 1.1.3
          * @param string $url url of the image
          * @return id of the image
          */
