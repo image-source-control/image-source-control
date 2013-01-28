@@ -632,13 +632,32 @@ if (!class_exists('ISC_CLASS')) {
                 $backward_distance = $page - $min_page;
                 $forward_distance = $max_page - $page;
                 
-                $page_link = get_page_link();
-                $query_string = '' . $_SERVER['QUERY_STRING'];
-                $isc_query_tag = (empty($query_string)) ? '?isc-page=' : '&isc-page=';
+                $original_page_link = get_page_link();
+                
+                /* 
+                * Remove the query_string of the page_link (?page_id=xyz for the standard permalink structure), 
+                * which is already captured in $_SERVER['QUERY_STRING'].
+                */                
+                $page_link = preg_replace('#\?.*$#', '', $original_page_link);
+                
+                /**
+                * Remove the actual 'isc-page' query tag (with his value and the precedind '&' char if exists)
+                * if it exists in $_SERVER['QUERY_STRING']. It will be replaced with a different value for each 
+                * link by the $isc_query_tag variable.
+                */
+                $query_string = preg_replace('#&?isc-page=\d+#', '', $_SERVER['QUERY_STRING']);
+                
+                $isc_query_tag = '';
+                if (empty($query_string)) {
+                    $isc_query_tag = '?isc-page=';
+                } else {
+                    $query_string = '?' . $query_string;
+                    $isc_query_tag = '&isc-page=';
+                }
                 
                 if ($min_page != $page) {
                     ?>
-                    <a href="<?php echo $page_link . $query_string . $isc_query_tag . $page-1; ?>" class="prev page-numbers"><?php echo $prev_text; ?></a>
+                    <a href="<?php echo $page_link . $query_string . $isc_query_tag . ($page-1); ?>" class="prev page-numbers"><?php echo $prev_text; ?></a>
                     <?php
                 }
                 
@@ -648,8 +667,8 @@ if (!class_exists('ISC_CLASS')) {
                         ?>
                         <a href="<?php echo $page_link . $query_string . $isc_query_tag; ?>1" class="page-numbers">1</a>
                         <span class="page-numbers dots">...</span>
-                        <a href="<?php echo $page_link . $query_string . $isc_query_tag . $page-2;?>" class="page-numbers"><?php echo $page-2; ?></a>
-                        <a href="<?php echo $page_link . $query_string . $isc_query_tag . $page-1;?>" class="page-numbers"><?php echo $page-1; ?></a>
+                        <a href="<?php echo $page_link . $query_string . $isc_query_tag . ($page-2);?>" class="page-numbers"><?php echo $page-2; ?></a>
+                        <a href="<?php echo $page_link . $query_string . $isc_query_tag . ($page-1);?>" class="page-numbers"><?php echo $page-1; ?></a>
                         <span class="page-numbers current"><?php echo $page; ?></span>
                         <?php
                     } else {
@@ -668,8 +687,8 @@ if (!class_exists('ISC_CLASS')) {
                     
                     if (3 < $forward_distance) {
                     ?>
-                        <a href="<?php echo $page_link . $query_string . $isc_query_tag . $page+1;?>" class="page-numbers"><?php echo $page+1; ?></a>
-                        <a href="<?php echo $page_link . $query_string . $isc_query_tag . $page+2;?>" class="page-numbers"><?php echo $page+2; ?></a>
+                        <a href="<?php echo $page_link . $query_string . $isc_query_tag . ($page+1);?>" class="page-numbers"><?php echo $page+1; ?></a>
+                        <a href="<?php echo $page_link . $query_string . $isc_query_tag . ($page+2);?>" class="page-numbers"><?php echo $page+2; ?></a>
                         <span class="page-numbers dots">...</span>
                         <a href="<?php echo $page_link . $query_string . $isc_query_tag . $max_page;?>" class="page-numbers"><?php echo $max_page; ?></a>
                     <?php
@@ -695,7 +714,7 @@ if (!class_exists('ISC_CLASS')) {
                 }                
                 if ($page != $max_page) {
                     ?>
-                    <a href="<?php echo $page_link . $query_string . $isc_query_tag . $page+1;?>" class="next page-numbers"><?php echo $next_text; ?></a>
+                    <a href="<?php echo $page_link . $query_string . $isc_query_tag . ($page+1);?>" class="next page-numbers"><?php echo $next_text; ?></a>
                     <?php
                 }
                 ?>
