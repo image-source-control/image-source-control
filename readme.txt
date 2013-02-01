@@ -3,7 +3,7 @@ Contributors: webzunft
 Tags: image, images, picture, picture source, image source, mediathek
 Requires at least: 3.4
 Tested up to: 3.5
-Stable tag: 1.1.2.1
+Stable tag: 1.1.3
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -20,12 +20,17 @@ Image Source Control (ISC) helps to prevent this situation.
 * adds an extra field (custom field) to mediathek to include the image source into
 * lets you mark an image as your own
 * lists images with missing sources
-* shortcode to include the sources in content fields
+* shortcode to list the sources in content fields
+* shortcode to list all images in the blog as a paginated list
 * function to include sources of a post in templates
 
 **Localization**
 
 English, German
+
+**Instructions**
+
+Find instructions under *Other Notes* or at the <a href="http://webgilde.com/en/image-source-control/image-source-control-manual/">image source control website</a>.
 
 == Installation ==
 
@@ -47,7 +52,7 @@ e.g.
 
 = 1.1.3 =
 
-* [feature] shortcode to list all images conntected to posts as a paginated list
+* [feature] shortcode to list all images conntected to all posts and pages as a paginated list
 * [fixed] content filter now finds images that have been edited (like rotated)
 * [fixed] checking for missing key to prevent error message
 * [fixed] added link to plugin homepage with more details
@@ -84,9 +89,11 @@ e.g.
 
 == Instructions ==
 
+Also have a look at the <a href="http://webgilde.com/en/image-source-control/image-source-control-manual/">image source control manual</a>.
+
 Find a list of images with missing sources under _Mediathek > Missing sources_
 
-You can add the image source list to pages or post via the shortcode [isc_list] in your content editor. You can use `[isc_list id="123]`to show the list of any post or page.
+You can add the image source list to pages or post via the shortcode [isc_list] in your content editor. You can use `[isc_list id="123]` to show the list of any post or page.
 
 You can also add the list with the function `isc_list()` within the loop in your template files. Use `isc_list( $post_id )` to show the image source list outside the loop.
 
