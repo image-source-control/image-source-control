@@ -634,19 +634,24 @@ if (!class_exists('ISC_CLASS')) {
                 
                 $original_page_link = get_page_link();
                 
-                /* 
+                /** 
                 * Remove the query_string of the page_link (?page_id=xyz for the standard permalink structure), 
                 * which is already captured in $_SERVER['QUERY_STRING'].
+                * @todo replace regex with other value (does WP store the url path without attributes somewhere?
                 */                
                 $page_link = preg_replace('#\?.*$#', '', $original_page_link);
                 
                 /**
-                * Remove the actual 'isc-page' query tag (with his value and the precedind '&' char if exists)
-                * if it exists in $_SERVER['QUERY_STRING']. It will be replaced with a different value for each 
-                * link by the $isc_query_tag variable.
+                * Unset the actual "$_GET['isc-page']" variable (if is set). Pagination variable will be appended to the new query string with a different value for each 
+                * pagination link.
                 */
-                $query_string = preg_replace('#&?isc-page=\d+#', '', $_SERVER['QUERY_STRING']);
                 
+                if (isset($_GET['isc-page'])) {
+                    unset($_GET['isc-page']);
+                }
+                
+                $query_string = http_build_query($_GET);
+				
                 $isc_query_tag = '';
                 if (empty($query_string)) {
                     $isc_query_tag = '?isc-page=';
