@@ -53,7 +53,7 @@ e.g.
 = 1.1.3 =
 
 * [feature] shortcode to list all images conntected to all posts and pages as a paginated list
-* [fixed] content filter now finds images that have been edited (like rotated)
+* [fixed] content filter now finds images that have been edited (like rotated)
 * [fixed] checking for missing key to prevent error message
 * [fixed] added link to plugin homepage with more details
 
@@ -93,12 +93,16 @@ Also have a look at the <a href="http://webgilde.com/en/image-source-control/ima
 
 Find a list of images with missing sources under _Mediathek > Missing sources_
 
+**image sources on pages/posts**
+
 You can add the image source list to pages or post via the shortcode [isc_list] in your content editor. You can use `[isc_list id="123]` to show the list of any post or page.
 
 You can also add the list with the function `isc_list()` within the loop in your template files. Use `isc_list( $post_id )` to show the image source list outside the loop.
 
 You should also check first if the function exists before using it:
 `<?php if( function_exists('isc_list') ) { isc_list(); } ?>`
+
+**list all image sources**
 
 You can add a paginated list with ALL attachments and sources to a post or page using the shortcode [isc_list_all]. Use `[isc_list per_page="25]` to show only a limited number of images per page.
 
