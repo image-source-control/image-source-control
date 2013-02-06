@@ -41,7 +41,7 @@ if (!function_exists('add_action')) {
 define('ISCVERSION', '1.1.3');
 define('ISCNAME', 'Image Source Control');
 define('ISCTEXTDOMAIN', 'isc');
-define('ISCDIR', basename(dirname(__FILE__)));
+define('ISCDIR', basename(dirname(__FILE__)));/** maybe remove? */
 define('ISCPATH', plugin_dir_path(__FILE__));
 
 load_plugin_textdomain(ISCTEXTDOMAIN, false, dirname(plugin_basename(__FILE__)) . '/languages/');
@@ -61,6 +61,10 @@ if (!class_exists('ISC_CLASS')) {
             'image_source_own' => array(
                 'id' => 'isc_image_source_own',
                 'default' => '',
+            ),
+            'image_posts' => array(
+                'id' => 'isc_image_posts',
+                'default' => array()
             )
         );
 
@@ -87,13 +91,18 @@ if (!class_exists('ISC_CLASS')) {
                 return false;
             }
 
+            
+            register_activation_hook(ISCPATH . '/isc.php', array($this, 'activation'));
+            
             add_filter('attachment_fields_to_edit', array($this, 'add_isc_fields'), 10, 2);
             add_filter('attachment_fields_to_save', array($this, 'isc_fields_save'), 10, 2);
-
+            
+            
             add_action('admin_menu', array($this, 'create_menu'));
-
+            add_action('admin_init', array($this, 'SAPI_init'));
+            
             add_action('admin_enqueue_scripts', array($this, 'add_admin_scripts'));
-
+            
             // ajax function; 'add_meta_fields' is the action defined in isc.js as the action to be called via ajax
             add_action('wp_ajax_add_meta_fields', array($this, 'add_meta_values_to_attachments'));
 
@@ -106,8 +115,17 @@ if (!class_exists('ISC_CLASS')) {
          */
         public function create_menu()
         {
-            // this page should be accessable by editors and higher
-            $menuhook = add_submenu_page('upload.php', 'missing image sources by Image Source Control Plugin', __('Missing Sources', ISCTEXTDOMAIN), 'edit_others_posts', ISCPATH . '/templates/missing_sources.php', '');
+            global $isc_missing;
+            global $isc_setting;
+            
+            /**
+            * Check if the page is already created.
+            */
+            if (empty($isc_missing)) {
+                // these pages should be accessable by editors and higher
+                $isc_missing = add_submenu_page('upload.php', 'missing image sources by Image Source Control Plugin', __('Missing Sources', ISCTEXTDOMAIN), 'edit_others_posts', ISCPATH . '/templates/missing_sources.php', '');
+                $image_setting = add_options_page(__('Image control - ISC plugin', ISCTEXTDOMAIN), __('Images control', ISCTEXTDOMAIN), 'edit_others_posts', 'isc_settings_page', array($this, 'render_isc_settings_page'));
+            }
         }
 
         /**
@@ -192,7 +210,9 @@ if (!class_exists('ISC_CLASS')) {
             $attachments = get_post_meta($post_id, 'isc_post_images', true);
             // if attachments is an empty string, search for images in it
             if ($attachments == '') {
-                $this->save_image_information_on_load ($post_id, $_content);
+                $this->save_image_information_on_load();
+                $this->update_image_posts_meta($post_id, $post->post_content);
+                
                 $attachments = get_post_meta($post_id, 'isc_post_images', true);
             }
 
@@ -377,6 +397,10 @@ if (!class_exists('ISC_CLASS')) {
             }
 
             $_content = stripslashes($_REQUEST['content']);
+            
+            // Needs to be called before the 'isc_post_images' field is updated.
+            $this->update_image_posts_meta($post_id, $_content);
+            
             $this->save_image_information($post_id, $_content);
         }
 
@@ -419,6 +443,11 @@ if (!class_exists('ISC_CLASS')) {
 
             // add thumbnail information
             $thumb_id = get_post_thumbnail_id($post_id);
+            
+            /**
+            * Possible issue here: insert an entry with an empty string as array key when the post does not have post thumbnail
+            * and if an image is used both inside the post and as post thumbnail, the thumbnail entry overrides the regular image.
+            */
             $_imgs[$thumb_id] = array(
                 'src' => wp_get_attachment_url($thumb_id),
                 'thumbnail' => true
@@ -445,7 +474,13 @@ if (!class_exists('ISC_CLASS')) {
 
             // parse HTML with DOM
             $dom = new DOMDocument;
+            
+            libxml_use_internal_errors(true);
             $dom->loadHTML($content);
+            
+            // Prevents from sending E_WARNINGs notice (Outputs are forbidden during activation)
+            libxml_clear_errors();
+            
             foreach ($dom->getElementsByTagName('img') as $node) {
                 $srcs[] = $node->getAttribute('src');
             }
@@ -475,6 +510,70 @@ if (!class_exists('ISC_CLASS')) {
         }
         
         /**
+        * Update isc_image_posts meta field for all images found in a post with a given ID.
+        * @param $post_id ID of the target post
+        * @param $content conent of the target post
+        */
+        public function update_image_posts_meta($post_id, $content)
+        {
+            $image_urls = $this->_filter_src_attributes($content);
+            $image_ids = array();
+            $added_images = array();
+            $removed_images = array();
+
+            $isc_post_images = get_post_meta($post_id, 'isc_post_images', true);
+            
+            foreach ($image_urls as $url) {
+                $id = intval($this->get_image_by_url($url));
+                array_push($image_ids, $id);
+                if (is_array($isc_post_images) && ! array_key_exists($id, $isc_post_images)) {
+                    array_push($added_images, $id);
+                }
+            }
+            if (is_array($isc_post_images)) {
+                foreach ($isc_post_images as $old_id => $value) {
+                    if (! in_array($old_id, $image_ids)) {
+                        array_push($removed_images, $old_id);
+                    } else {
+                        if (! empty($old_id)) {
+                            $meta = get_post_meta($old_id, 'isc_image_posts', true);
+                            if (empty($meta)) {
+                                update_post_meta($old_id, 'isc_image_posts', array($post_id));
+                            } else {
+                                // In case the isc_image_posts is not up to date
+                                if (is_array($meta) && ! in_array($post_id, $meta)) {
+                                    array_push($meta, $post_id);
+                                    update_post_meta($old_id, 'isc_image_posts', $meta);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
+            foreach ($added_images as $id) {
+                $meta = get_post_meta($id, 'isc_image_posts', true);
+                if (! is_array($meta) || array() == $meta) {
+                    update_post_meta($id, 'isc_image_posts', array($post_id));
+                } else {
+                    array_push($meta, $post_id);
+                    update_post_meta($id, 'isc_image_posts', $meta);
+                }
+            }
+            
+            foreach ($removed_images as $id) {
+                $image_meta = get_post_meta($id, 'isc_image_posts', true);
+                if (is_array($image_meta)) {
+                    $offset = array_search($post_id, $image_meta);
+                    if (false !== $offset) {
+                        array_splice($image_meta, $offset, 1);
+                        update_post_meta($id, 'isc_image_posts', $image_meta);
+                    }
+                }
+            }            
+        }
+        
+        /**
          * create shortcode to list all image sources in the frontend
          * @param array $atts
          * @since 1.1.3
@@ -485,6 +584,7 @@ if (!class_exists('ISC_CLASS')) {
         
             /**
              * @todo why not translate here with the code below?
+             * > Because the two if statements below will need to call gettext (again) for comparing values.
              */
             extract(shortcode_atts(array(
                 'per_page' => 99999,
@@ -511,6 +611,7 @@ if (!class_exists('ISC_CLASS')) {
                 'post_parent' => null,
                 /** @todo maybe add offset to not retrieve the first results when not on first page */
                 /** @todo maybe add limit to not retrieve more results than on the current page */
+                /** >No, we need to get total count of attachment with parents for $max_page in the pagination link. */
             );
 
             $attachments = get_posts($args);
@@ -632,14 +733,20 @@ if (!class_exists('ISC_CLASS')) {
                 $backward_distance = $page - $min_page;
                 $forward_distance = $max_page - $page;
                 
-                $original_page_link = get_page_link();
+                $page_link = get_page_link();
                 
                 /** 
                 * Remove the query_string of the page_link (?page_id=xyz for the standard permalink structure), 
                 * which is already captured in $_SERVER['QUERY_STRING'].
                 * @todo replace regex with other value (does WP store the url path without attributes somewhere?
-                */                
-                $page_link = preg_replace('#\?.*$#', '', $original_page_link);
+                * >get_page_link() returns the permalink but for the default WP permalink structure, the permalink looks like "http://domain.tld/?p=52", while $_GET
+                * still has a field named 'page_id' with the same value of 52.
+                */
+                
+                $pos = strpos($page_link, '?');
+                if (false !== $pos) {
+                    $page_link = substr($page_link, 0, $pos);
+                }
                 
                 /**
                 * Unset the actual "$_GET['isc-page']" variable (if is set). Pagination variable will be appended to the new query string with a different value for each 
@@ -728,16 +835,156 @@ if (!class_exists('ISC_CLASS')) {
                 echo $after_links;
         }
         
+        /**
+        * The activation function
+        */
+        public function activation()
+        {
+            if (! is_array(get_option('isc_options'))) {
+                update_option( 'isc_options', $this->default_options() );
+            }
+            $options = $this->get_isc_options();
+            if (! $options['installed']) {
+                /**
+                * Here, all jobs to perform during first installation, especially options and meta fields.
+                * Important: No add_action('something', 'somefunction').
+                */
+                
+                /**
+                * Adds (and setup) isc_image_posts meta field to all attachments.
+                */
+                
+                // set all isc_image_posts meta fields.
+                $this->init_image_posts_metafield();
+                
+                $options['installed'] = true;
+                update_option('isc_options', $options);
+            }
+        }
+        
+        /**
+        *   Returns default options
+        */
+        public function default_options()
+        {
+            $default['image_list_headline'] = 'Default header text';
+            $default['installed'] = false;
+            return $default;
+        }
+        
+        /**
+        * Settings API initialization
+        */
+        public function SAPI_init()
+        {
+            register_setting('isc_options_group', 'isc_options', array($this, 'settings_validation'));
+            add_settings_section('isc_settings_section', '', '__return_false', 'isc_settings_page');
+            add_settings_field('image_list_headline', __('Image list headline', ISCTEXTDOMAIN), array($this, 'renderfield_list_headline'), 'isc_settings_page', 'isc_settings_section');
+        }
+        
+        /**
+        * Image_control's page callback
+        */
+        public function render_isc_settings_page()
+        {
+            ?>
+            <div id="icon-options-general" class="icon32"><br></div>
+            <h2><?php _e('Images control settings', ISCTEXTDOMAIN); ?></h2>
+            <form id="image-control-form" method="post" action="options.php">
+            <?php
+                settings_fields( 'isc_options_group' );
+                do_settings_sections( 'isc_settings_page' );
+                submit_button();
+            ?>
+            </form>
+            <?php
+        }
+        
+        /**
+        * image_list field callback
+        */
+        public function renderfield_list_headline()
+        {
+            $options = $this->get_isc_options();
+            $description = __('Here is a short description of what this option does.', ISCTEXTDOMAIN);
+            ?>
+            <div id="image-list-headline-block">
+                <label for="list-head"><?php __('Image list headline', ISCTEXTDOMAIN); ?></label>
+                <input type="text" name="isc_options[image_list_headline_field]" id="list-head" value="<?php echo $options['image_list_headline'] ?>" />
+                <p><em><?php echo $description; ?></em></p>
+            </div>
+            <?php
+        }
+        
+        /**
+        * Returns isc_options if it exists, returns the default options otherwise.
+        */
+        public function get_isc_options() {
+            return get_option('isc_options', $this->default_options());
+        }
+        
+        /*
+        * Input validation function.
+        * @param array $input values from the admin panel
+        */
+        public function settings_validation($input)
+        {
+            $output = $this->get_isc_options();
+            /**
+            * validation process should be more complicated for other types of input but here I assume that this value will be displayed
+            * in the front end simply wrapped inside an html header tag.
+            */
+            $output['image_list_headline'] = esc_html($input['image_list_headline_field']);
+            return $output;
+        }
+        
+        /**
+        * Adds isc_image_posts on all attachments. Launched during first installation.
+        */
+        public function init_image_posts_metafield()
+        {
+            $args = array(
+                'post_type' => 'any',
+                'numberposts' => -1,
+                'post_status' => null,
+                'post_parent' => null,
+            );
+            $posts = get_posts($args);
+            foreach ($posts as $post) {
+                setup_postdata($post);
+                $image_urls = $this->_filter_src_attributes($post->post_content);
+                $image_ids = array();
+                foreach ($image_urls as $url) {
+                    $image_id = intval($this->get_image_by_url($url));
+                    array_push($image_ids,$image_id);
+                }
+                foreach ($image_ids as $id) {
+                    $meta = get_post_meta($id, 'isc_image_posts', true);
+                    if (empty($meta)) {
+                        update_post_meta($id, 'isc_image_posts', array($post->ID));
+                    } else {
+                        if (! in_array($post->ID, $meta)) {
+                            array_push($meta, $post->ID);
+                            update_post_meta($id, 'isc_image_posts', $meta);
+                        }
+                    }
+                }
+            }
+        }
+        
     }// end of class
-
+    
+    $inc_path = substr(plugin_dir_path(__FILE__), 0, strpos(plugin_dir_path(__FILE__), 'wp-content')). 'wp-includes/';
     /**
-     *
-     */
-    function add_image_source_fields_start() {
-        $isc = new ISC_CLASS();
-    }
-
-    add_action('plugins_loaded', 'add_image_source_fields_start');
+    * "pluggable.php" is not defined at this point. Not sure about the reason.
+    */
+    require_once($inc_path . 'pluggable.php');
+    
+    /**
+    * Need an instance of ISC_CLASS when the register_activation_hook is called (earlier than the "plugins_loaded" hook).
+    */
+    global $my_isc;
+    $my_isc = new ISC_CLASS();
 
     /**
      * the next functions are just to have an easier access from outside the class
@@ -746,4 +993,5 @@ if (!class_exists('ISC_CLASS')) {
         $isc = new ISC_CLASS();
         echo $isc->list_post_attachments_with_sources($post_id);
     }
+    
 }
