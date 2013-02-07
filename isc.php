@@ -124,7 +124,7 @@ if (!class_exists('ISC_CLASS')) {
             if (empty($isc_missing)) {
                 // these pages should be accessible by editors and higher
                 $isc_missing = add_submenu_page('upload.php', 'missing image sources by Image Source Control Plugin', __('Missing Sources', ISCTEXTDOMAIN), 'edit_others_posts', ISCPATH . '/templates/missing_sources.php', '');
-                $image_setting = add_options_page(__('Image control - ISC plugin', ISCTEXTDOMAIN), __('Images control', ISCTEXTDOMAIN), 'edit_others_posts', 'isc_settings_page', array($this, 'render_isc_settings_page'));
+                $image_setting = add_options_page(__('Image control - ISC plugin', ISCTEXTDOMAIN), __('Image Control', ISCTEXTDOMAIN), 'edit_others_posts', 'isc_settings_page', array($this, 'render_isc_settings_page'));
             }
         }
 
