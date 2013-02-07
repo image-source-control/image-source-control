@@ -446,15 +446,15 @@ if (!class_exists('ISC_CLASS')) {
             $thumb_id = get_post_thumbnail_id($post_id);
             
             /**
-            * Possible issue here: inserts an entry with an empty string as array key when the post does not have post thumbnail
-            * and if an image is used both inside the post and as post thumbnail, the thumbnail entry overrides the regular image.
+            * if an image is used both inside the post and as post thumbnail, the thumbnail entry overrides the regular image.
             */
-            $_imgs[$thumb_id] = array(
-                'src' => wp_get_attachment_url($thumb_id),
-                'thumbnail' => true
-            );
+            if ( !empty( $thumb_id )) {
+                $_imgs[$thumb_id] = array(
+                    'src' => wp_get_attachment_url($thumb_id),
+                    'thumbnail' => true
+                );
+            }
 
-            // TODO _imgs is an non-empty array by now
             if (empty($_imgs)) {
                 $_imgs = false;
             }
