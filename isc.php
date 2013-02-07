@@ -867,7 +867,7 @@ if (!class_exists('ISC_CLASS')) {
         */
         public function default_options()
         {
-            $default['image_list_headline'] = 'Default header text';
+            $default['image_list_headline'] = __('image sources', ISCTEXTDOMAIN);
             $default['installed'] = false;
             return $default;
         }
