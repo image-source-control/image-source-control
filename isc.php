@@ -906,7 +906,7 @@ if (!class_exists('ISC_CLASS')) {
         public function renderfield_list_headline()
         {
             $options = $this->get_isc_options();
-            $description = __('Here is a short description of what this option does.', ISCTEXTDOMAIN);
+            $description = __('The headline of the image list added via shortcode or function in your theme.', ISCTEXTDOMAIN);
             ?>
             <div id="image-list-headline-block">
                 <label for="list-head"><?php __('Image list headline', ISCTEXTDOMAIN); ?></label>
