@@ -41,7 +41,7 @@ if (!function_exists('add_action')) {
 define('ISCVERSION', '1.1.3');
 define('ISCNAME', 'Image Source Control');
 define('ISCTEXTDOMAIN', 'isc');
-define('ISCDIR', basename(dirname(__FILE__)));/** maybe remove? */
+define('ISCDIR', basename(dirname(__FILE__)));
 define('ISCPATH', plugin_dir_path(__FILE__));
 
 load_plugin_textdomain(ISCTEXTDOMAIN, false, dirname(plugin_basename(__FILE__)) . '/languages/');
