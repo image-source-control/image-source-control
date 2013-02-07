@@ -396,7 +396,8 @@ if (!class_exists('ISC_CLASS')) {
                 $post_id = $_id;
             }
 
-            $_content = stripslashes($_REQUEST['content']);
+            $_content = '';
+            if ( !empty( $_REQUEST['content']) ) $_content = stripslashes($_REQUEST['content']);
             
             // Needs to be called before the 'isc_post_images' field is updated.
             $this->update_image_posts_meta($post_id, $_content);
