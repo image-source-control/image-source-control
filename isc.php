@@ -75,12 +75,22 @@ if (!class_exists('ISC_CLASS')) {
         protected $_allowedExtensions = array(
             'jpg', 'png', 'gif'
         );
+        
+        /**
+         * options saved in the db
+         * @since 1.2
+         */
+        protected $_options = array();
 
         /**
          * Setup registers filterts and actions.
          */
         public function __construct()
         {
+            
+            // load all plugin options
+            $this->_options = get_option('isc_options');
+            
             // insert all function for the frontend here
             
             add_shortcode('isc_list', array($this, 'list_post_attachments_with_sources_shortcode'));
@@ -90,7 +100,6 @@ if (!class_exists('ISC_CLASS')) {
             if (!current_user_can('upload_files')) {
                 return false;
             }
-
             
             register_activation_hook(ISCPATH . '/isc.php', array($this, 'activation'));
             
