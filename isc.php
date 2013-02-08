@@ -1,7 +1,7 @@
 <?php
 /*
   Plugin Name: Image Source Control
-  Version: 1.1.3
+  Version: 1.2
   Plugin URI: http://webgilde.com/en/image-source-control/
   Description: The Image Source Control saves the source of an image, lists them and warns if it is missing.
   Author: Thomas Maier
@@ -38,7 +38,7 @@ if (!function_exists('add_action')) {
     exit();
 }
 
-define('ISCVERSION', '1.1.3');
+define('ISCVERSION', '1.2');
 define('ISCNAME', 'Image Source Control');
 define('ISCTEXTDOMAIN', 'isc');
 define('ISCDIR', basename(dirname(__FILE__)));
@@ -251,18 +251,16 @@ if (!class_exists('ISC_CLASS')) {
                 return ;
             }
             ob_start();
-            // TODO this is almost trivial to replace with sprintf
-            ?>
-            <p class="isc_image_list_title"><?php _e('image sources:', ISCTEXTDOMAIN); ?></p>
+            
+            printf('<p class="isc_image_list_title">%s</p>', get_option('image_list_headline')); ?>
             <ul class="isc_image_list"><?php
 
-            foreach ($attachments as $atts_id => $atts_array) :
+            foreach ($attachments as $atts_id => $atts_array) {
                 if (empty($atts_array['source'])) {
                     continue;
                 }
-                // TODO localise
-                ?><li><?php echo $atts_array['title'] . ': ' . $atts_array['source']; ?></li><?php
-            endforeach;
+                printf('<li>%1$s: %2$s</li>', $atts_array['title'], $atts_array['source']);
+            }
             ?></ul><?php
             return ob_get_clean();
         }
