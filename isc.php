@@ -261,7 +261,8 @@ if (!class_exists('ISC_CLASS')) {
             }
             ob_start();
             
-            printf('<p class="isc_image_list_title">%s</p>', get_option('image_list_headline')); ?>
+            $headline = $this->_options['image_list_headline'];
+            printf('<p class="isc_image_list_title">%s</p>', $headline); ?>
             <ul class="isc_image_list"><?php
 
             foreach ($attachments as $atts_id => $atts_array) {
