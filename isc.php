@@ -133,7 +133,7 @@ if (!class_exists('ISC_CLASS')) {
             if (empty($isc_missing)) {
                 // these pages should be accessible by editors and higher
                 $isc_missing = add_submenu_page('upload.php', 'missing image sources by Image Source Control Plugin', __('Missing Sources', ISCTEXTDOMAIN), 'edit_others_posts', ISCPATH . '/templates/missing_sources.php', '');
-                $image_setting = add_options_page(__('Image control - ISC plugin', ISCTEXTDOMAIN), __('Image Control', ISCTEXTDOMAIN), 'edit_others_posts', 'isc_settings_page', array($this, 'render_isc_settings_page'));
+                $isc_setting = add_options_page(__('Image control - ISC plugin', ISCTEXTDOMAIN), __('Image Control', ISCTEXTDOMAIN), 'edit_others_posts', 'isc_settings_page', array($this, 'render_isc_settings_page'));
             }
         }
 
@@ -144,7 +144,8 @@ if (!class_exists('ISC_CLASS')) {
          */
         public function add_admin_scripts($hook)
         {
-            if ($hook != 'image-source-control-isc/templates/missing_sources.php') {
+            global $isc_setting;
+            if ($hook != $isc_setting) {
                 return;
             }
             wp_enqueue_script('isc_script', plugins_url('/js/isc.js', __FILE__), false, ISCVERSION);
@@ -224,7 +225,11 @@ if (!class_exists('ISC_CLASS')) {
                 
                 $attachments = get_post_meta($post_id, 'isc_post_images', true);
             }
-
+            
+            $authorname = '';
+            if (!empty($post->post_author))
+                $authorname = get_the_author_meta('display_name', $post->post_author);
+            
             $return = '';
             if (!empty($attachments)) {
                 $atts = array();
@@ -238,7 +243,11 @@ if (!class_exists('ISC_CLASS')) {
                         unset($atts[$attachment_id]);
                         continue;
                     } elseif ($own != '') {
-                        $atts[$attachment_id ]['source'] = __('by the author', ISCTEXTDOMAIN);
+                        if ($this->_options['use_authorname'] && !empty($authorname)) {
+                            $atts[$attachment_id ]['source'] = $authorname;
+                        } else {
+                            $atts[$attachment_id ]['source'] = $this->_options['by_author_text'];
+                        }
                     } else {
                         $atts[$attachment_id ]['source'] = $source;
                     }
@@ -365,9 +374,6 @@ if (!class_exists('ISC_CLASS')) {
                     $count++;
                 }
             }
-            echo sprintf(__('Added meta fields to %d images.', ISCTEXTDOMAIN), $count) .
-                    '<br/><input type="button" value="' . __('reload page', ISCTEXTDOMAIN ) . '" onClick="window.location.reload()">';
-            die();
         }
 
         /**
@@ -637,7 +643,36 @@ if (!class_exists('ISC_CLASS')) {
                     $connected_atts[$_attachment->ID]['source'] = get_post_meta($_attachment->ID, 'isc_image_source', true);
                     $connected_atts[$_attachment->ID]['own'] = get_post_meta($_attachment->ID, 'isc_image_source_own', true);
                     $connected_atts[$_attachment->ID]['title'] = $_attachment->post_title;
-                    $connected_atts[$_attachment->ID]['parent'] = get_the_title($_attachment->post_parent);
+                    $connected_atts[$_attachment->ID]['author_name'] = '';
+                    if ('' != $connected_atts[$_attachment->ID]['own']) {
+                        $parent = get_post($_attachment->post_parent);
+                        $connected_atts[$_attachment->ID]['author_name'] = get_the_author_meta('display_name', $parent->post_author);
+                    }
+                    
+                    $metadata = get_post_meta($_attachment->ID, 'isc_image_posts', true);
+                    $parents_data = '';
+                    
+                    if (is_array($metadata) && array() != $metadata) {
+                        if (2 > count($metadata)) {
+                            $parents_data = sprintf(__('<a href="%1$s" title="View %2$s">%3$s</a>', ISCTEXTDOMAIN),
+                                esc_url(get_permalink($metadata[0])),
+                                esc_attr(get_the_title($metadata[0])),
+                                esc_html(get_the_title($metadata[0]))
+                            );
+                        } else {
+                            $parents_data .= "<ul style='margin: 0;'>";
+                            foreach($metadata as $data) {
+                                $parents_data .= sprintf(__('<li><a href="%1$s" title="View %2$s">%3$s</a></li>', ISCTEXTDOMAIN),
+                                    esc_url(get_permalink($data)),
+                                    esc_attr(get_the_title($data)),
+                                    esc_html(get_the_title($data))
+                                );
+                            }
+                            $parents_data .= "</ul>";
+                        }
+                    }
+                    
+                    $connected_atts[$_attachment->ID]['posts'] = $parents_data;
                 }
             }
             
@@ -685,7 +720,7 @@ if (!class_exists('ISC_CLASS')) {
             ?>
             <table>
                 <thead>
-                    <?php /* <th><?php _e("Attachment's ID", ISCTEXTDOMAIN); ?></th>*/ ?>
+                    <th><?php _e("Attachment's ID", ISCTEXTDOMAIN); ?></th>
                     <th><?php _e('Title', ISCTEXTDOMAIN); ?></th>
                     <th><?php _e('Attached to', ISCTEXTDOMAIN); ?></th>
                     <th><?php _e('Source', ISCTEXTDOMAIN); ?></th>
@@ -695,16 +730,20 @@ if (!class_exists('ISC_CLASS')) {
                     <?php
                         /** @todo ment for later: this text was used above already; find a place to but it so it is defined only once and used where needed */    
                         $source = __('Not available', ISCTEXTDOMAIN);
-                        if (1 == $data['own']) {
+                        if ('' != $data['own']) {
                             /** @todo ment for later: this text was used above already; find a place to but it so it is defined only once and used where needed */
-                            $source = __('By the author', ISCTEXTDOMAIN);
-                        } elseif (!empty($data['source'])) {
-                            $source = $data['source'];
+                            if ($this->_options['use_authorname']) {
+                                $source = $data['author_name'];
+                            } else {
+                                $source = $this->_options['by_author_text'];
+                            }
+                        } else {
+                            if (!empty($data['source']))
+                                $source = $data['source'];
                         }
                     ?>
                     <tr>
-                    <?php /* <td><?php echo $id ?></td>*/ ?>
-                    <td><?php echo $data['title']; ?></td><td><?php echo $data['parent']; ?></td><td><?php echo esc_attr($source); ?></td>
+                    <td><?php echo $id; ?></td><td><?php echo $data['title']; ?></td><td><?php echo $data['posts']; ?></td><td><?php echo esc_html($source); ?></td>
                     </tr>
                 <?php endforeach; ?>
                 </tbody>
@@ -859,9 +898,8 @@ if (!class_exists('ISC_CLASS')) {
                 * Important: No add_action('something', 'somefunction').
                 */
                 
-                /**
-                * Adds (and setup) isc_image_posts meta field to all attachments.
-                */
+                // adds meta fields for attachments
+                $this->add_meta_values_to_attachments();
                 
                 // set all isc_image_posts meta fields.
                 $this->init_image_posts_metafield();
@@ -877,6 +915,8 @@ if (!class_exists('ISC_CLASS')) {
         public function default_options()
         {
             $default['image_list_headline'] = __('image sources', ISCTEXTDOMAIN);
+            $default['use_authorname'] = true;
+            $default['by_author_text'] = __('Owned by the author', ISCTEXTDOMAIN);
             $default['installed'] = false;
             return $default;
         }
@@ -889,6 +929,46 @@ if (!class_exists('ISC_CLASS')) {
             register_setting('isc_options_group', 'isc_options', array($this, 'settings_validation'));
             add_settings_section('isc_settings_section', '', '__return_false', 'isc_settings_page');
             add_settings_field('image_list_headline', __('Image list headline', ISCTEXTDOMAIN), array($this, 'renderfield_list_headline'), 'isc_settings_page', 'isc_settings_section');
+            add_settings_field('use_authorname', __('Use authors names', ISCTEXTDOMAIN), array($this, 'renderfield_use_authorname'), 'isc_settings_page', 'isc_settings_section');
+            add_settings_field('by_author_text', __('Custom text for owned images', ISCTEXTDOMAIN), array($this, 'renderfield_byauthor_text'), 'isc_settings_page', 'isc_settings_section');
+        }
+        
+        public function upgrade_management() {
+            /**
+            * Since the activation hook is not executed on plugin upgrade, this function checks options in database
+            * during the admin_init hook to handle plugin's upgrade.
+            * Maybe later: store version in database (then compare it with ISCVERSION) for more accurate upgrade process?
+            */
+            
+            if (!is_array(get_option('isc_options'))) {
+            
+                // Versions prior to 1.2 don't have isc_options nor isc_image_posts meta fields
+                
+                update_option('isc_options', $this->default_options());
+                $this->init_image_posts_metafield();
+                $options = $this->get_isc_options();
+                $options['installed'] = true;
+                update_option('isc_options', $options);
+                
+            } else {
+                
+                /**
+                *   isc_options exists but we make sure it has the correct structure.
+                */
+                
+                $options = get_option('isc_options');
+                $default = $this->default_options();
+                if (!isset($options['image_list_headline'])) 
+                    $options['image_list_headline'] = $default['image_list_headline'];
+                if (!isset($options['installed']))
+                    $options['installed'] = $default['installed'];
+                if (!isset($options['use_authorname']))
+                    $options['use_authorname'] = $default['use_authorname'];
+                if (!isset($options['by_author_text']))
+                    $options['by_author_text'] = $default['by_author_text'];
+                update_option('isc_options', $options);
+                
+            }
         }
         
         /**
@@ -919,7 +999,32 @@ if (!class_exists('ISC_CLASS')) {
             ?>
             <div id="image-list-headline-block">
                 <label for="list-head"><?php __('Image list headline', ISCTEXTDOMAIN); ?></label>
-                <input type="text" name="isc_options[image_list_headline_field]" id="list-head" value="<?php echo $options['image_list_headline'] ?>" />
+                <input type="text" name="isc_options[image_list_headline_field]" id="list-head" value="<?php echo $options['image_list_headline'] ?>" class="regular-text" />
+                <p><em><?php echo $description; ?></em></p>
+            </div>
+            <?php
+        }
+        
+        public function renderfield_use_authorname()
+        {
+            $options = $this->get_isc_options();
+            $description = __("Display the author's public name as source when the image is owned by the author. Uncheck to use a custom text instead.", ISCTEXTDOMAIN);
+            ?>
+            <div id="use-authorname-block">
+                <label for="use_authorname"><?php _e('Use author name') ?></label>
+                <input type="checkbox" name="isc_options[use_authorname_ckbox]" id="use_authorname" <?php checked($options['use_authorname']); ?> />
+                <p><em><?php echo $description; ?></em></p>
+            </div>
+            <?php
+        }
+        
+        public function renderfield_byauthor_text()
+        {
+            $options = $this->get_isc_options();
+            $description = __("Enter the custom text to display if you do not want to use the author's public name.", ISCTEXTDOMAIN);
+            ?>
+            <div id="by-author-text">
+                <input type="text" id="byauthor" name="isc_options[by_author_text_field]" value="<?php echo $options['by_author_text']; ?>" <?php disabled($options['use_authorname']); ?> class="regular-text" />
                 <p><em><?php echo $description; ?></em></p>
             </div>
             <?php
@@ -944,6 +1049,13 @@ if (!class_exists('ISC_CLASS')) {
             * in the front end simply wrapped inside an html header tag.
             */
             $output['image_list_headline'] = esc_html($input['image_list_headline_field']);
+            if (isset($input['use_authorname_ckbox'])) {
+                $output['use_authorname'] = true;
+            } else {
+                $output['use_authorname'] = false;
+                $output['by_author_text'] = esc_html($input['by_author_text_field']);
+            }
+            
             return $output;
         }
         
@@ -983,7 +1095,7 @@ if (!class_exists('ISC_CLASS')) {
         
     }// end of class
     
-    $inc_path = substr(plugin_dir_path(__FILE__), 0, strpos(plugin_dir_path(__FILE__), 'wp-content')). 'wp-includes/';
+    $inc_path = ABSPATH . 'wp-includes/';
     /**
     * "pluggable.php" is not defined at this point. Not sure about the reason.
     */
