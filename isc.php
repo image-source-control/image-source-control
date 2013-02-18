@@ -918,6 +918,7 @@ if (!class_exists('ISC_CLASS')) {
             $default['use_authorname'] = true;
             $default['by_author_text'] = __('Owned by the author', ISCTEXTDOMAIN);
             $default['installed'] = false;
+            $default['version'] = '1.2';
             return $default;
         }
         
@@ -926,6 +927,7 @@ if (!class_exists('ISC_CLASS')) {
         */
         public function SAPI_init()
         {
+            upgrade_management();
             register_setting('isc_options_group', 'isc_options', array($this, 'settings_validation'));
             add_settings_section('isc_settings_section', '', '__return_false', 'isc_settings_page');
             add_settings_field('image_list_headline', __('Image list headline', ISCTEXTDOMAIN), array($this, 'renderfield_list_headline'), 'isc_settings_page', 'isc_settings_section');
@@ -933,40 +935,35 @@ if (!class_exists('ISC_CLASS')) {
             add_settings_field('by_author_text', __('Custom text for owned images', ISCTEXTDOMAIN), array($this, 'renderfield_byauthor_text'), 'isc_settings_page', 'isc_settings_section');
         }
         
+        /**
+        * manage data structure upgrading of outdated versions
+        */
         public function upgrade_management() {
             /**
             * Since the activation hook is not executed on plugin upgrade, this function checks options in database
             * during the admin_init hook to handle plugin's upgrade.
-            * Maybe later: store version in database (then compare it with ISCVERSION) for more accurate upgrade process?
             */
             
-            if (!is_array(get_option('isc_options'))) {
+            $options = get_option( 'isc_options' );
             
-                // Versions prior to 1.2 don't have isc_options nor isc_image_posts meta fields
-                
-                update_option('isc_options', $this->default_options());
-                $this->init_image_posts_metafield();
-                $options = $this->get_isc_options();
-                $options['installed'] = true;
-                update_option('isc_options', $options);
-                
-            } else {
-                
-                /**
-                *   isc_options exists but we make sure it has the correct structure.
-                */
-                
-                $options = get_option('isc_options');
+            if (!is_array($options) || !isset($options['version'])){ // versions prior to 1.2
+            
                 $default = $this->default_options();
-                if (!isset($options['image_list_headline'])) 
-                    $options['image_list_headline'] = $default['image_list_headline'];
-                if (!isset($options['installed']))
-                    $options['installed'] = $default['installed'];
-                if (!isset($options['use_authorname']))
-                    $options['use_authorname'] = $default['use_authorname'];
-                if (!isset($options['by_author_text']))
-                    $options['by_author_text'] = $default['by_author_text'];
+                $options = $options + $default;
+                $this->init_image_posts_metafield();
+                $options['installed'] = true;
+                
                 update_option('isc_options', $options);
+                
+            } elseif(ISCVERSION != $options['version']) {
+            
+                while (ISCVERSION != $options['version']) {
+                    switch ($options['version']) {
+                        /**
+                        * Here, the incremental upgrade process depending on the currently installed version.
+                        */
+                    }
+                }
                 
             }
         }
@@ -1044,12 +1041,9 @@ if (!class_exists('ISC_CLASS')) {
         public function settings_validation($input)
         {
             $output = $this->get_isc_options();
-            /**
-            * validation process should be more complicated for other types of input but here I assume that this value will be displayed
-            * in the front end simply wrapped inside an html header tag.
-            */
             $output['image_list_headline'] = esc_html($input['image_list_headline_field']);
             if (isset($input['use_authorname_ckbox'])) {
+                // Don't worry about the custom text if the author name is selected.
                 $output['use_authorname'] = true;
             } else {
                 $output['use_authorname'] = false;
