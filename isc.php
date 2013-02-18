@@ -927,7 +927,7 @@ if (!class_exists('ISC_CLASS')) {
         */
         public function SAPI_init()
         {
-            upgrade_management();
+            $this->upgrade_management();
             register_setting('isc_options_group', 'isc_options', array($this, 'settings_validation'));
             add_settings_section('isc_settings_section', '', '__return_false', 'isc_settings_page');
             add_settings_field('image_list_headline', __('Image list headline', ISCTEXTDOMAIN), array($this, 'renderfield_list_headline'), 'isc_settings_page', 'isc_settings_section');
