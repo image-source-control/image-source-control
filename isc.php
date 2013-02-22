@@ -43,6 +43,7 @@ define('ISCNAME', 'Image Source Control');
 define('ISCTEXTDOMAIN', 'isc');
 define('ISCDIR', basename(dirname(__FILE__)));
 define('ISCPATH', plugin_dir_path(__FILE__));
+define('WEBGILDE', 'http://webgilde.com/en/image-source-control');
 
 load_plugin_textdomain(ISCTEXTDOMAIN, false, dirname(plugin_basename(__FILE__)) . '/languages/');
 
@@ -74,6 +75,10 @@ if (!class_exists('ISC_CLASS')) {
          */
         protected $_allowedExtensions = array(
             'jpg', 'png', 'gif'
+        );
+        
+        protected $_upgrade_step = array(
+            '1.2'
         );
         
         /**
@@ -624,6 +629,13 @@ if (!class_exists('ISC_CLASS')) {
                 'numberposts' => -1,
                 'post_status' => null,
                 'post_parent' => null,
+                'meta_query' => array(
+                    array(
+                        'key' => 'isc_image_posts',
+                        'value' => 'a:0:{}',
+                        'compare' => '!='
+                    )
+                )
                 /** @todo maybe add offset to not retrieve the first results when not on first page */
                 /** @todo maybe add limit to not retrieve more results than on the current page */
                 /** >No, we need to get total count of attachment with parents for $max_page in the pagination link. */
@@ -634,46 +646,38 @@ if (!class_exists('ISC_CLASS')) {
                 return;
             }
             
+            $options = $this->get_isc_options();
+            
             $connected_atts = array();
             
             //Keeps only those ones who have parent
             
             foreach ($attachments as $_attachment) {
-                if ($_attachment->post_parent) {
-                    $connected_atts[$_attachment->ID]['source'] = get_post_meta($_attachment->ID, 'isc_image_source', true);
-                    $connected_atts[$_attachment->ID]['own'] = get_post_meta($_attachment->ID, 'isc_image_source_own', true);
-                    $connected_atts[$_attachment->ID]['title'] = $_attachment->post_title;
-                    $connected_atts[$_attachment->ID]['author_name'] = '';
-                    if ('' != $connected_atts[$_attachment->ID]['own']) {
-                        $parent = get_post($_attachment->post_parent);
-                        $connected_atts[$_attachment->ID]['author_name'] = get_the_author_meta('display_name', $parent->post_author);
-                    }
-                    
-                    $metadata = get_post_meta($_attachment->ID, 'isc_image_posts', true);
-                    $parents_data = '';
-                    
-                    if (is_array($metadata) && array() != $metadata) {
-                        if (2 > count($metadata)) {
-                            $parents_data = sprintf(__('<a href="%1$s" title="View %2$s">%3$s</a>', ISCTEXTDOMAIN),
-                                esc_url(get_permalink($metadata[0])),
-                                esc_attr(get_the_title($metadata[0])),
-                                esc_html(get_the_title($metadata[0]))
-                            );
-                        } else {
-                            $parents_data .= "<ul style='margin: 0;'>";
-                            foreach($metadata as $data) {
-                                $parents_data .= sprintf(__('<li><a href="%1$s" title="View %2$s">%3$s</a></li>', ISCTEXTDOMAIN),
-                                    esc_url(get_permalink($data)),
-                                    esc_attr(get_the_title($data)),
-                                    esc_html(get_the_title($data))
-                                );
-                            }
-                            $parents_data .= "</ul>";
-                        }
-                    }
-                    
-                    $connected_atts[$_attachment->ID]['posts'] = $parents_data;
+                $connected_atts[$_attachment->ID]['source'] = get_post_meta($_attachment->ID, 'isc_image_source', true);
+                $connected_atts[$_attachment->ID]['own'] = get_post_meta($_attachment->ID, 'isc_image_source_own', true);
+                $connected_atts[$_attachment->ID]['title'] = $_attachment->post_title;
+                $connected_atts[$_attachment->ID]['author_name'] = '';
+                if ('' != $connected_atts[$_attachment->ID]['own']) {
+                    $parent = get_post($_attachment->post_parent);
+                    $connected_atts[$_attachment->ID]['author_name'] = get_the_author_meta('display_name', $parent->post_author);
                 }
+                
+                $metadata = get_post_meta($_attachment->ID, 'isc_image_posts', true);
+                $parents_data = '';
+                
+                if (is_array($metadata) && array() != $metadata) {
+                    $parents_data .= "<ul style='margin: 0;'>";
+                    foreach($metadata as $data) {
+                        $parents_data .= sprintf(__('<li><a href="%1$s" title="View %2$s">%3$s</a></li>', ISCTEXTDOMAIN),
+                            esc_url(get_permalink($data)),
+                            esc_attr(get_the_title($data)),
+                            esc_html(get_the_title($data))
+                        );
+                    }
+                    $parents_data .= "</ul>";
+                }
+                
+                $connected_atts[$_attachment->ID]['posts'] = $parents_data;
             }
             
             $total = count($connected_atts);
@@ -702,7 +706,12 @@ if (!class_exists('ISC_CLASS')) {
                 $paged_atts = array_slice($connected_atts, $starting_atts, $per_page, true);
                 $this->display_all_attachment_list($paged_atts);
                 $this->pagination_links($up_limit, $before_links, $after_links, $prev_text, $next_text);
-            } 
+            }
+            if (isset($options['webgilde']) && true == $options['webgilde']) {
+            ?>
+                <p class="isc-backlink"><a href="<?php echo esc_url(WEBGILDE); ?>"><?php _e('Visit Image Source Control plugin&#39;s website.', ISCTEXTDOMAIN) ?></a></p>
+            <?php
+            }
             
             $output = ob_get_clean();
             return $output;
@@ -919,6 +928,7 @@ if (!class_exists('ISC_CLASS')) {
             $default['by_author_text'] = __('Owned by the author', ISCTEXTDOMAIN);
             $default['installed'] = false;
             $default['version'] = '1.2';
+            $default['webgilde'] = false;
             return $default;
         }
         
@@ -933,6 +943,7 @@ if (!class_exists('ISC_CLASS')) {
             add_settings_field('image_list_headline', __('Image list headline', ISCTEXTDOMAIN), array($this, 'renderfield_list_headline'), 'isc_settings_page', 'isc_settings_section');
             add_settings_field('use_authorname', __('Use authors names', ISCTEXTDOMAIN), array($this, 'renderfield_use_authorname'), 'isc_settings_page', 'isc_settings_section');
             add_settings_field('by_author_text', __('Custom text for owned images', ISCTEXTDOMAIN), array($this, 'renderfield_byauthor_text'), 'isc_settings_page', 'isc_settings_section');
+            add_settings_field('webgilde_backlink', __("Link to webgilde's website", ISCTEXTDOMAIN), array($this, 'renderfield_webgile'), 'isc_settings_page', 'isc_settings_section');
         }
         
         /**
@@ -946,6 +957,9 @@ if (!class_exists('ISC_CLASS')) {
             
             $options = get_option( 'isc_options' );
             
+            $max_step = count($this->_upgrade_step);
+            $step_count = 0;
+            
             if (!is_array($options) || !isset($options['version'])){ // versions prior to 1.2
             
                 $default = $this->default_options();
@@ -954,10 +968,11 @@ if (!class_exists('ISC_CLASS')) {
                 $options['installed'] = true;
                 
                 update_option('isc_options', $options);
+                $step_count++;
                 
             } elseif(ISCVERSION != $options['version']) {
             
-                while (ISCVERSION != $options['version']) {
+                while (ISCVERSION != $options['version'] && $step_count <= $max_step) {
                     switch ($options['version']) {
                         /**
                         * Here, the incremental upgrade process depending on the currently installed version.
@@ -1027,6 +1042,25 @@ if (!class_exists('ISC_CLASS')) {
             <?php
         }
         
+        public function renderfield_webgile()
+        {
+            $options = $this->get_isc_options();
+            /**
+            * Avoid warning notices because of the absence of webgilde field in isc_options throughout development steps.
+            * This 'if' block can be removed for the next release.
+            */
+            if (! isset($options['webgilde'])) {
+                $options['webgilde'] = false;
+            }
+            $description = sprintf(__('Display a link to <a href="%s">Image Source Control plugin&#39;s website</a> below the list of all images in the blog?', ISCTEXTDOMAIN), WEBGILDE);
+            ?>
+            <div id="webgilde-block">
+                <input type="checkbox" id="webgilde-link" name="isc_options[webgilde_field]" <?php checked($options['webgilde']); ?> />
+                <p><em><?php echo $description; ?></em></p>
+            </div>
+            <?php
+        }
+        
         /**
         * Returns isc_options if it exists, returns the default options otherwise.
         */
@@ -1049,7 +1083,11 @@ if (!class_exists('ISC_CLASS')) {
                 $output['use_authorname'] = false;
                 $output['by_author_text'] = esc_html($input['by_author_text_field']);
             }
-            
+            if (isset($input['webgilde_field'])) {
+                $output['webgilde'] = true;
+            } else {
+                $output['webgilde'] = true;
+            }
             return $output;
         }
         
