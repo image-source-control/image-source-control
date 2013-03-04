@@ -82,6 +82,11 @@ if (!class_exists('ISC_CLASS')) {
         );
         
         /**
+        * Thumbnail size in list of all images.
+        */
+        protected $_thumbnail_size = array('thumbnail', 'medium', 'large', 'custom');
+        
+        /**
          * options saved in the db
          * @since 1.2
          */
@@ -110,7 +115,6 @@ if (!class_exists('ISC_CLASS')) {
             
             add_filter('attachment_fields_to_edit', array($this, 'add_isc_fields'), 10, 2);
             add_filter('attachment_fields_to_save', array($this, 'isc_fields_save'), 10, 2);
-            
             
             add_action('admin_menu', array($this, 'create_menu'));
             add_action('admin_init', array($this, 'SAPI_init'));
@@ -726,6 +730,9 @@ if (!class_exists('ISC_CLASS')) {
         {
             if (!is_array($atts) || $atts == array())
                 return;
+            $options = $this->get_isc_options();
+            if (!isset($options['thumbnail_in_list']))
+                $options = $options + $this->default_options();
             ?>
             <table>
                 <thead>
@@ -733,6 +740,9 @@ if (!class_exists('ISC_CLASS')) {
                     <th><?php _e('Title', ISCTEXTDOMAIN); ?></th>
                     <th><?php _e('Attached to', ISCTEXTDOMAIN); ?></th>
                     <th><?php _e('Source', ISCTEXTDOMAIN); ?></th>
+                    <?php if ($options['thumbnail_in_list']) : ?>
+                        <th><?php _e('Thumbnail', ISCTEXTDOMAIN); ?></th>
+                    <?php endif; ?>
                 </thead>
                 <tbody>
                 <?php foreach ($atts as $id => $data) : ?>
@@ -752,7 +762,13 @@ if (!class_exists('ISC_CLASS')) {
                         }
                     ?>
                     <tr>
-                    <td><?php echo $id; ?></td><td><?php echo $data['title']; ?></td><td><?php echo $data['posts']; ?></td><td><?php echo esc_html($source); ?></td>
+                        <td><?php echo $id; ?></td>
+                        <td><?php echo $data['title']; ?></td>
+                        <td><?php echo $data['posts']; ?></td>
+                        <td><?php echo esc_html($source); ?></td>
+                        <?php if ($options['thumbnail_in_list']) : ?>
+                            <td><?php echo wp_get_attachment_image($id, array($options['thumbnail_width'], $options['thumbnail_height'])); ?></td>
+                        <?php endif; ?>
                     </tr>
                 <?php endforeach; ?>
                 </tbody>
@@ -929,6 +945,9 @@ if (!class_exists('ISC_CLASS')) {
             $default['installed'] = false;
             $default['version'] = '1.2';
             $default['webgilde'] = false;
+            $default['thumbnail_in_list'] = false;
+            $default['thumbnail_width'] = 150;
+            $default['thumbnail_height'] = 150;
             return $default;
         }
         
@@ -944,6 +963,9 @@ if (!class_exists('ISC_CLASS')) {
             add_settings_field('use_authorname', __('Use authors names', ISCTEXTDOMAIN), array($this, 'renderfield_use_authorname'), 'isc_settings_page', 'isc_settings_section');
             add_settings_field('by_author_text', __('Custom text for owned images', ISCTEXTDOMAIN), array($this, 'renderfield_byauthor_text'), 'isc_settings_page', 'isc_settings_section');
             add_settings_field('webgilde_backlink', __("Link to webgilde's website", ISCTEXTDOMAIN), array($this, 'renderfield_webgile'), 'isc_settings_page', 'isc_settings_section');
+            add_settings_field('use_thumbnail', __("Use thumbnails in images list", ISCTEXTDOMAIN), array($this, 'renderfield_use_thumbnail'), 'isc_settings_page', 'isc_settings_section');
+            add_settings_field('thumbnail_width', __("Thumbnails max-width", ISCTEXTDOMAIN), array($this, 'renderfield_thumbnail_width'), 'isc_settings_page', 'isc_settings_section');
+            add_settings_field('thumbnail_height', __("Thumbnails max-height", ISCTEXTDOMAIN), array($this, 'renderfield_thumbnail_height'), 'isc_settings_page', 'isc_settings_section');
         }
         
         /**
@@ -1002,7 +1024,7 @@ if (!class_exists('ISC_CLASS')) {
         }
         
         /**
-        * image_list field callback
+        * image_list field callbacks
         */
         public function renderfield_list_headline()
         {
@@ -1049,13 +1071,74 @@ if (!class_exists('ISC_CLASS')) {
             * Avoid warning notices because of the absence of webgilde field in isc_options throughout development steps.
             * This 'if' block can be removed for the next release.
             */
-            if (! isset($options['webgilde'])) {
+            if (!isset($options['webgilde'])) {
                 $options['webgilde'] = false;
             }
             $description = sprintf(__('Display a link to <a href="%s">Image Source Control plugin&#39;s website</a> below the list of all images in the blog?', ISCTEXTDOMAIN), WEBGILDE);
             ?>
             <div id="webgilde-block">
                 <input type="checkbox" id="webgilde-link" name="isc_options[webgilde_field]" <?php checked($options['webgilde']); ?> />
+                <p><em><?php echo $description; ?></em></p>
+            </div>
+            <?php
+        }
+        
+        public function renderfield_use_thumbnail()
+        {
+            $options = $this->get_isc_options();
+            if (!isset($options['thumbnail_in_list'])) {
+                $options = $options + $this->default_options();
+            }
+            $description = __('Display thumbnails on the list of all images in the blog.' ,ISCTEXTDOMAIN);
+            ?>
+            <div id="use-thumbnail-block">
+                <input type="checkbox" id="use-thumbnail" name="isc_options[use_thumbnail]" <?php checked($options['thumbnail_in_list']); ?> />
+                <?php
+                    $preselected_size = 'custom';
+                    // 150*150 = 22500, 300*300 = 90000 and so on
+                    if (150 == $options['thumbnail_width'] && 22500 == $options['thumbnail_width'] * $options['thumbnail_height'] ) {
+                        $preselected_size = 'thumbnail';
+                    } else if (300 == $options['thumbnail_width'] && 90000 == $options['thumbnail_width'] * $options['thumbnail_height'] ) {
+                        $preselected_size = 'medium';
+                    } else if (640 == $options['thumbnail_width'] && 496000 == $options['thumbnail_width'] * $options['thumbnail_height'] ) {
+                        $preselected_size = 'large';
+                    }
+                ?>
+                <select id="thumbnail-size-select" name="isc_options[size_select]" <?php disabled(!$options['thumbnail_in_list']) ?>>
+                    <?php foreach ($this->_thumbnail_size as $size) : ?>
+                        <option value="<?php echo $size; ?>" <?php selected($size, $preselected_size);?>><?php echo $size; ?></option>
+                    <?php endforeach; ?>
+                </select>
+                <p><em><?php echo $description; ?></em></p>
+            </div>
+            <?php
+        }
+        
+        public function renderfield_thumbnail_width()
+        {
+            $options = $this->get_isc_options();
+            if (!isset($options['thumbnail_in_list'])) {
+                $options = $options + $this->default_options();
+            }
+            $description = __('Custom value of the maximum allowed width for thumbnail.' ,ISCTEXTDOMAIN);
+            ?>
+            <div id="thumbnail-custom-width">
+                <input type="text" id="custom-width" name="isc_options[thumbnail_width]" class="small-text" value="<?php echo $options['thumbnail_width'] ?>" /> px
+                <p><em><?php echo $description; ?></em></p>
+            </div>
+            <?php
+        }
+                
+        public function renderfield_thumbnail_height()
+        {
+            $options = $this->get_isc_options();
+            if (!isset($options['thumbnail_in_list'])) {
+                $options = $options + $this->default_options();
+            }
+            $description = __('Custom value of the maximum allowed height for thumbnail.' ,ISCTEXTDOMAIN);
+            ?>
+            <div id="thumbnail-custom-height">
+                <input type="text" id="custom-height" name="isc_options[thumbnail_height]" class="small-text" value="<?php echo $options['thumbnail_height'] ?>"/> px
                 <p><em><?php echo $description; ?></em></p>
             </div>
             <?php
@@ -1087,6 +1170,33 @@ if (!class_exists('ISC_CLASS')) {
                 $output['webgilde'] = true;
             } else {
                 $output['webgilde'] = true;
+            }
+            if (isset($input['use_thumbnail'])) {
+                $output['thumbnail_in_list'] = true;
+                switch($input['size_select']) {
+                    case 'thumbnail' :
+                        $output['thumbnail_width'] = 150;
+                        $output['thumbnail_height'] = 150;
+                        break;
+                    case 'medium' :
+                        $output['thumbnail_width'] = 300;
+                        $output['thumbnail_height'] = 300;
+                        break;
+                    case 'large' :
+                        $output['thumbnail_width'] = 640;
+                        $output['thumbnail_height'] = 640;
+                        break;
+                    default : //custom
+                        if (is_numeric($input['thumbnail_width'])) {
+                            // Ensures that the value stored in database in a positive integer.
+                            $output['thumbnail_width'] = abs(intval(round($input['thumbnail_width'])));
+                        }
+                        if (is_numeric($input['thumbnail_height'])) {
+                            $output['thumbnail_height'] = abs(intval(round($input['thumbnail_height'])));
+                        }
+                }
+            } else {
+                $output['thumbnail_in_list'] = false;
             }
             return $output;
         }
