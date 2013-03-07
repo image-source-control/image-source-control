@@ -713,7 +713,7 @@ if (!class_exists('ISC_CLASS')) {
             }
             if (isset($options['webgilde']) && true == $options['webgilde']) {
             ?>
-                <p class="isc-backlink"><a href="<?php echo esc_url(WEBGILDE); ?>"><?php _e('Image list created by Image Source Control Plugin', ISCTEXTDOMAIN) ?></a></p>
+                <p class="isc-backlink"><?php printf(__('Image list created by <a href="%s" title="Image Source Control">Image Source Control Plugin</a>', ISCTEXTDOMAIN), WEBGILDE); ?></p>
             <?php
             }
             
