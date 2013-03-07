@@ -3,7 +3,7 @@ Contributors: webzunft
 Tags: image, images, picture, picture source, image source, mediathek
 Requires at least: 3.4
 Tested up to: 3.5
-Stable tag: 1.1.3
+Stable tag: 1.2
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -18,9 +18,9 @@ Image Source Control (ISC) helps to prevent this situation.
 **Features**
 
 * adds an extra field (custom field) to mediathek to include the image source into
-* lets you mark an image as your own
-* lists images with missing sources
-* shortcode to list the sources in content fields
+* lets you mark an image to belong to the posts author
+* lists images with missing sources in the backend
+* shortcode to list the sources in the editor
 * shortcode to list all images in the blog as a paginated list
 * function to include sources of a post in templates
 
@@ -48,7 +48,17 @@ e.g.
 
 == Changelog ==
 
-= short wishlist =
+= 1.2 =
+
+* [feature] added an option panel under settings to customize most frontend texts
+* [feature] show image thumbnails in the list of all images
+* [feature] you can add a backlink to the authors page under the image list (optional)
+* [feature] you can now display the real posts author name when an image is marked as "by the author"
+* [feature] link to posts from the image list
+* [fixed] added a more flexible post-image connection to list all posts with a specific image in the list with all images
+* [fixed] image list: don't list images that are currently not used in any post
+* [fixed] no need to initially run the image index after first installing the plugin
+* [l10n] updated German localization
 
 = 1.1.3 =
 
