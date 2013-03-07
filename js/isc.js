@@ -1,17 +1,29 @@
-jQuery(document).ready(function($) {
-
-    $('#isc_add_metafields').click(function(){
-        $('#isc_loading_img').show();
-        var data = {
-            action: 'add_meta_fields',
-            whatever: 1234
-        };
-
-        // since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
-        $.post(ajaxurl, data, function(response) {
-            $('#add_metafields_result').html( response );
-            $('#isc_loading_img').hide();
-        });     
+jQuery(document).ready(function(jQuery) {
+    isc_thumbnail_input_checkstate();
+    jQuery('#use_authorname').click(function(){
+        if ('disabled' == jQuery('#byauthor').attr('disabled')) {
+            jQuery('#byauthor').removeAttr('disabled');
+        } else {
+            jQuery('#byauthor').attr('disabled', 'disabled');
+        }
     });
-	
+	jQuery('#use-thumbnail').click(function(){
+        if ('disabled' == jQuery('#thumbnail-size-select').attr('disabled')) {
+            jQuery('#thumbnail-size-select').removeAttr('disabled');
+        } else {
+            jQuery('#thumbnail-size-select').attr('disabled', 'disabled');
+        }
+    });
+    jQuery('#thumbnail-size-select').change(function(){isc_thumbnail_input_checkstate()});
+    
 });
+
+function isc_thumbnail_input_checkstate(){
+    if ('custom' == jQuery('#thumbnail-size-select').val()) {
+        jQuery('#custom-width').removeAttr('disabled').css('background-color', 'inherit');
+        jQuery('#custom-height').removeAttr('disabled').css('background-color', 'inherit');
+    } else {
+        jQuery('#custom-width').attr('disabled', 'disabled').css('background-color', '#eee');
+        jQuery('#custom-height').attr('disabled', 'disabled').css('background-color', '#eee');
+    }
+}
