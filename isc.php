@@ -982,21 +982,20 @@ if (!class_exists('ISC_CLASS')) {
         * manage data structure upgrading of outdated versions
         */
         public function upgrade_management() {
-            /**
-            * Since the activation hook is not executed on plugin upgrade, this function checks options in database
-            * during the admin_init hook to handle plugin's upgrade.
-            */
-            
+            /*
+             * Since the activation hook is not executed on plugin upgrade, this function checks options in database
+             * during the admin_init hook to handle plugin's upgrade.
+             */
             $options = get_option( 'isc_options' );
-            
+            if (!is_array($options)) {
+                $options = array();
+            }
+
             $max_step = count($this->_upgrade_step);
             $step_count = 0;
-            
-            if (!is_array($options) || !isset($options['version'])){ // versions prior to 1.2
-            
-                $options = array();
-                $default = $this->default_options();
-                $options = $options + $default;
+
+            if (!isset($options['version'])) { // versions prior to 1.2
+                $options = $options + $this->default_options();
                 $this->init_image_posts_metafield();
                 $options['installed'] = true;
                 
