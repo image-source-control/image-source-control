@@ -1005,6 +1005,8 @@ if (!class_exists('ISC_CLASS')) {
             } elseif(ISCVERSION != $options['version']) {
             
                 while (ISCVERSION != $options['version'] && $step_count <= $max_step) {
+                    // TODO add update logic
+                    break ;
                     switch ($options['version']) {
                         /**
                         * Here, the incremental upgrade process depending on the currently installed version.
