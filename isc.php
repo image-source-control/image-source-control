@@ -77,12 +77,22 @@ if (!class_exists('ISC_CLASS')) {
             'jpg', 'png', 'gif'
         );
         
+        /**
+        * This array is used to count the maximum upgrade step count.
+        *
+        * IMPORTANT!
+        * Do not forget to add each new version AFTER EDITING THE ISCVERSION CONSTANT.
+        * @since 1.2
+        */
         protected $_upgrade_step = array(
-            '1.2'
+            '1.2',
+            '1.2.0.1',
+            '1.2.0.2'
         );
         
         /**
         * Thumbnail size in list of all images.
+        * @since 1.2
         */
         protected $_thumbnail_size = array('thumbnail', 'medium', 'large', 'custom');
         
@@ -952,7 +962,7 @@ if (!class_exists('ISC_CLASS')) {
             $default['use_authorname'] = true;
             $default['by_author_text'] = __('Owned by the author', ISCTEXTDOMAIN);
             $default['installed'] = false;
-            $default['version'] = '1.2';
+            $default['version'] = ISCVERSION;
             $default['webgilde'] = false;
             $default['thumbnail_in_list'] = false;
             $default['thumbnail_size'] = 'thumbnail';
@@ -986,7 +996,7 @@ if (!class_exists('ISC_CLASS')) {
              * Since the activation hook is not executed on plugin upgrade, this function checks options in database
              * during the admin_init hook to handle plugin's upgrade.
              */
-            $options = get_option( 'isc_options' );
+            $options = get_option('isc_options');
             if (!is_array($options)) {
                 $options = array();
             }
@@ -994,24 +1004,99 @@ if (!class_exists('ISC_CLASS')) {
             $max_step = count($this->_upgrade_step);
             $step_count = 0;
 
-            if (!isset($options['version'])) { // versions prior to 1.2
-                $options = $options + $this->default_options();
+            if (!isset($options['version'])) {
+                /**
+                * If the current version is older than 1.2, upgrade data structure to 1.2.0.1 (same data structure for 1.2 and 1.2.0.1)
+                * This is because some specific upgrade steps can be necessary (possibly) in future versions. So it may be usefull to perform the
+                * progressive upgrade process (starting to 1.2.0.1) in case an user upgrades his plugin from a very old version.
+                */
+                
+                /**
+                * These are default values of $isc_options's fields in version 1.2.0.1
+                */
+                $particular_options_version['image_list_headline'] = __('image sources', ISCTEXTDOMAIN);
+                $particular_options_version['use_authorname'] = true;
+                $particular_options_version['by_author_text'] = __('Owned by the author', ISCTEXTDOMAIN);
+                $particular_options_version['version'] = '1.2.0.1';
+                $particular_options_version['webgilde'] = false;
+                $particular_options_version['thumbnail_in_list'] = false;
+                $particular_options_version['thumbnail_size'] = 'thumbnail';
+                $particular_options_version['thumbnail_width'] = 150;
+                $particular_options_version['thumbnail_height'] = 150;
+                
+                $options = $options + $particular_options_version;
+                
+                // No isc_image_posts for version prior to 1.2
                 $this->init_image_posts_metafield();
                 $options['installed'] = true;
                 
                 update_option('isc_options', $options);
-                $step_count++;
+                /**
+                * At this point isc_options['version'] has the value '1.2.0.1'
+                */
+                $this->upgrade_management();
                 
-            } elseif(ISCVERSION != $options['version']) {
-            
-                while (ISCVERSION != $options['version'] && $step_count <= $max_step) {
+            } elseif (ISCVERSION != $options['version']) {
+                            
+                while (ISCVERSION != $options['version'] && $step_count < $max_step) {
+                
                     switch ($options['version']) {
-                        /**
-                        * Here, the incremental upgrade process depending on the currently installed version.
-                        */
+                    
+                    /**
+                    * IMPORTANT! 
+                    * AFTER EDITING THE ISCVERSION CONSTANT, add one case with the following structure, otherwise ... infinite loop!
+                    *
+                    *   case 'PREVIOUS VERSION' :
+                    *       $options['version'] = 'NEW VERSION';
+                    *       $step_count++;
+                    *       break;
+                    *
+                    * BEFORE RELEASING NEW VERSION, the case should looks like the following,
+                    *
+                    *   case 'PREVIOUS VERSION' :
+                    *       (1) append default options to current options once and remove all "$options = $options + $this->default_options()" outside of upgrade_management().
+                    *       (2) execute any other particular function related to upgrading to the new version like init_image_posts_metafield().
+                    *       $options['version'] = 'NEW VERSION';
+                    *       $step_count++;
+                    *       break;
+                    *
+                    * @todo add a 'one_shot_function_launcher' utility function and the corresponding data in options to execute once functions mentionned in (2) in dev-mode.
+                    */
+                    
+                        case '1.2' : // 1.2 to 1.2.0.1
+                            /**
+                            * No data structure modifications. This is only for users who have installed the version 1.2. 
+                            * After analysis, WP crashes before any options is saved when upgrading to 1.2. But anyone who installs 1.2.0.1 (maybe ftp only-the fatal error occurs in admin_init hook)
+                            * gets all correct isc_options's indexes excepted the version which is still 1.2, not 1.2.0.1. So in practical, this case matches an installation that runs version 1.2.0.1.
+                            * Then, all we do here is updating the version's index in DB to 1.2.0.1.
+                            */
+                            $options['version'] = '1.2.0.1';
+                            $step_count++;
+                            break;
+                            
+                        case '1.2.0.1' : // 1.2.0.1 to 1.2.0.2
+                            $options['version'] = '1.2.0.2';
+                            $step_count++;
+                            break;
+                            
+                        default :
+                            /**
+                            * In production mode, the program should not meet the default case if $this->_upgrade_step is up to date (all realesed version are in the array).
+                            * So, if for any reason (dev-mode) , this case happens, reset $step_count (to avoid saving changes in isc_options) and exit both from SWITCH and from WHILE.
+                            * We will have a permanent inequality between $isc_options['version'] in options and ISCVERSION in the file.
+                            */
+                            $step_count = 0;
+                            break 2;
+                            
                     }
+                    
                 }
-                
+                /**
+                * If the program has entered the WHILE loop ($step_count has been incremented, i.e. one or more upgrade step executed), save options in database.
+                */                
+                if (0 != $step_count) {
+                    update_option('isc_options', $options);
+                }
             }
         }
         
