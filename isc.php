@@ -1,7 +1,7 @@
 <?php
 /*
   Plugin Name: Image Source Control
-  Version: 1.2.0.2
+  Version: 1.2.0.3
   Plugin URI: http://webgilde.com/en/image-source-control/
   Description: The Image Source Control saves the source of an image, lists them and warns if it is missing.
   Author: Thomas Maier
@@ -38,7 +38,7 @@ if (!function_exists('add_action')) {
     exit();
 }
 
-define('ISCVERSION', '1.2.0.2');
+define('ISCVERSION', '1.2.0.3');
 define('ISCNAME', 'Image Source Control');
 define('ISCTEXTDOMAIN', 'isc');
 define('ISCDIR', basename(dirname(__FILE__)));
@@ -87,7 +87,8 @@ if (!class_exists('ISC_CLASS')) {
         protected $_upgrade_step = array(
             '1.2',
             '1.2.0.1',
-            '1.2.0.2'
+            '1.2.0.2',
+            '1.2.0.3'
         );
         
         /**
@@ -741,9 +742,6 @@ if (!class_exists('ISC_CLASS')) {
             if (!is_array($atts) || $atts == array())
                 return;
             $options = $this->get_isc_options();
-            if (!isset($options['thumbnail_size'])) {
-                $options = $options + $this->default_options();
-            }
             ?>
             <table>
                 <thead>
@@ -1043,7 +1041,8 @@ if (!class_exists('ISC_CLASS')) {
                     switch ($options['version']) {
                     
                     /**
-                    * IMPORTANT! 
+                    * IMPORTANT!
+                    *
                     * AFTER EDITING THE ISCVERSION CONSTANT, add one case with the following structure, otherwise ... infinite loop!
                     *
                     *   case 'PREVIOUS VERSION' :
@@ -1065,10 +1064,7 @@ if (!class_exists('ISC_CLASS')) {
                     
                         case '1.2' : // 1.2 to 1.2.0.1
                             /**
-                            * No data structure modifications. This is only for users who have installed the version 1.2. 
-                            * After analysis, WP crashes before any options is saved when upgrading to 1.2. But anyone who installs 1.2.0.1 (maybe ftp only-the fatal error occurs in admin_init hook)
-                            * gets all correct isc_options's indexes excepted the version which is still 1.2, not 1.2.0.1. So in practical, this case matches an installation that runs version 1.2.0.1.
-                            * Then, all we do here is updating the version's index in DB to 1.2.0.1.
+                            * No data structure modifications. Data structures are identical from 1.2 to 1.2.0.3
                             */
                             $options['version'] = '1.2.0.1';
                             $step_count++;
@@ -1079,9 +1075,21 @@ if (!class_exists('ISC_CLASS')) {
                             $step_count++;
                             break;
                             
+                        case '1.2.0.2' : // 1.2.0.2 to 1.2.0.3
+                            $options['version'] = '1.2.0.3';
+                            
+                            /**
+                            * Adds missings indexes in isc_options. This addition should be performed on the last step.
+                            * Deletion of particular index and operations on custom fields can occur in any step.
+                            */
+                            $options = $options + $this->default_options();
+                            
+                            $step_count++;
+                            break;
+                            
                         default :
                             /**
-                            * In production mode, the program should not meet the default case if $this->_upgrade_step is up to date (all realesed version are in the array).
+                            * In production mode, the program should not meet the default case if $this->_upgrade_step is up to date (all released version are in the array).
                             * So, if for any reason (dev-mode) , this case happens, reset $step_count (to avoid saving changes in isc_options) and exit both from SWITCH and from WHILE.
                             * We will have a permanent inequality between $isc_options['version'] in options and ISCVERSION in the file.
                             */
@@ -1092,7 +1100,7 @@ if (!class_exists('ISC_CLASS')) {
                     
                 }
                 /**
-                * If the program has entered the WHILE loop ($step_count has been incremented, i.e. one or more upgrade step executed), save options in database.
+                * If the program has entered the WHILE loop ($step_count has been incremented, i.e. one or more upgrade step executed), then save options in database.
                 */                
                 if (0 != $step_count) {
                     update_option('isc_options', $options);
@@ -1166,9 +1174,6 @@ if (!class_exists('ISC_CLASS')) {
             * Avoid warning notices because of the absence of webgilde field in isc_options throughout development steps.
             * This 'if' block can be removed for the next release.
             */
-            if (!isset($options['webgilde'])) {
-                $options = $options + $this->default_options();
-            }
             $description = sprintf(__('Display a link to <a href="%s">Image Source Control plugin&#39;s website</a> below the list of all images in the blog?', ISCTEXTDOMAIN), WEBGILDE);
             ?>
             <div id="webgilde-block">
@@ -1181,9 +1186,6 @@ if (!class_exists('ISC_CLASS')) {
         public function renderfield_use_thumbnail()
         {
             $options = $this->get_isc_options();
-            if (!isset($options['thumbnail_size'])) {
-                $options = $options + $this->default_options();
-            }
             $description = __('Display thumbnails on the list of all images in the blog.' ,ISCTEXTDOMAIN);
             ?>
             <div id="use-thumbnail-block">
@@ -1201,9 +1203,6 @@ if (!class_exists('ISC_CLASS')) {
         public function renderfield_thumbnail_width()
         {
             $options = $this->get_isc_options();
-            if (!isset($options['thumbnail_size'])) {
-                $options = $options + $this->default_options();
-            }
             $description = __('Custom value of the maximum allowed width for thumbnail.' ,ISCTEXTDOMAIN);
             ?>
             <div id="thumbnail-custom-width">
@@ -1216,9 +1215,6 @@ if (!class_exists('ISC_CLASS')) {
         public function renderfield_thumbnail_height()
         {
             $options = $this->get_isc_options();
-            if (!isset($options['thumbnail_size'])) {
-                $options = $options + $this->default_options();
-            }
             $description = __('Custom value of the maximum allowed height for thumbnail.' ,ISCTEXTDOMAIN);
             ?>
             <div id="thumbnail-custom-height">
