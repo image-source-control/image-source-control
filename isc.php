@@ -102,7 +102,7 @@ if (!class_exists('ISC_CLASS')) {
          * @since 1.2
          */
         protected $_options = array();
-
+        
         /**
          * Setup registers filterts and actions.
          */
@@ -131,6 +131,7 @@ if (!class_exists('ISC_CLASS')) {
             add_action('admin_init', array($this, 'SAPI_init'));
             
             add_action('admin_enqueue_scripts', array($this, 'add_admin_scripts'));
+            add_action( 'admin_print_scripts', array($this, 'admin_headjs') );
             
             // ajax function; 'add_meta_fields' is the action defined in isc.js as the action to be called via ajax
             add_action('wp_ajax_add_meta_fields', array($this, 'add_meta_values_to_attachments'));
@@ -165,6 +166,9 @@ if (!class_exists('ISC_CLASS')) {
         public function add_admin_scripts($hook)
         {
             global $isc_setting;
+            if ('post.php' == $hook) {
+                wp_enqueue_script('isc_postphp_script', plugins_url('/js/post.php.js', __FILE__), array('jquery'), ISCVERSION);
+            }
             if ($hook != $isc_setting) {
                 return;
             }
@@ -172,7 +176,7 @@ if (!class_exists('ISC_CLASS')) {
             // this is to define ajaxurl to be able to use this in its own js script
             // wp_localize_script( 'isc_script', 'IscAjax', array( 'ajaxurl' => admin_url( 'admin-ajax.php' ) ) );
         }
-
+        
         /**
          * add custom field to attachment
          * @param arr $form_fields
@@ -396,6 +400,27 @@ if (!class_exists('ISC_CLASS')) {
             }
         }
 
+        /**
+        * Display scripts in <head></head> section of admin page. Useful for creating js variables in the js global namespace.
+        */
+        public function admin_headjs()
+        {
+            global $pagenow;
+            $options = $this->get_isc_options();
+            if ('post.php' == $pagenow) {
+                ?>
+                <script type="text/javascript">
+				/* <![CDATA[ */
+                    isc_data = {
+                        warning_nosource : <?php echo (($options['warning_nosource'])? 'true' : 'false'); ?>,
+                        block_form_message : '<?php _e('Please specify the image source', ISCTEXTDOMAIN); ?>'
+                    }
+				/* ]]> */
+                </script>
+                <?php
+            }
+        }
+        
         /**
          * show the loading image from wp-admin/images/loading.gif
          * @param bool $display should this be displayed directly or hidden? via inline css
@@ -966,6 +991,7 @@ if (!class_exists('ISC_CLASS')) {
             $default['thumbnail_size'] = 'thumbnail';
             $default['thumbnail_width'] = 150;
             $default['thumbnail_height'] = 150;
+            $default['warning_nosource'] = true;
             return $default;
         }
         
@@ -984,6 +1010,7 @@ if (!class_exists('ISC_CLASS')) {
             add_settings_field('use_thumbnail', __("Use thumbnails in images list", ISCTEXTDOMAIN), array($this, 'renderfield_use_thumbnail'), 'isc_settings_page', 'isc_settings_section');
             add_settings_field('thumbnail_width', __("Thumbnails max-width", ISCTEXTDOMAIN), array($this, 'renderfield_thumbnail_width'), 'isc_settings_page', 'isc_settings_section');
             add_settings_field('thumbnail_height', __("Thumbnails max-height", ISCTEXTDOMAIN), array($this, 'renderfield_thumbnail_height'), 'isc_settings_page', 'isc_settings_section');
+            add_settings_field('warning_nosource', __("Warnings when no source available", ISCTEXTDOMAIN), array($this, 'renderfield_warning_nosource'), 'isc_settings_page', 'isc_settings_section');
         }
         
         /**
@@ -1170,10 +1197,6 @@ if (!class_exists('ISC_CLASS')) {
         public function renderfield_webgile()
         {
             $options = $this->get_isc_options();
-            /**
-            * Avoid warning notices because of the absence of webgilde field in isc_options throughout development steps.
-            * This 'if' block can be removed for the next release.
-            */
             $description = sprintf(__('Display a link to <a href="%s">Image Source Control plugin&#39;s website</a> below the list of all images in the blog?', ISCTEXTDOMAIN), WEBGILDE);
             ?>
             <div id="webgilde-block">
@@ -1189,7 +1212,7 @@ if (!class_exists('ISC_CLASS')) {
             $description = __('Display thumbnails on the list of all images in the blog.' ,ISCTEXTDOMAIN);
             ?>
             <div id="use-thumbnail-block">
-                <input type="checkbox" id="use-thumbnail" name="isc_options[use_thumbnail]" <?php checked($options['thumbnail_in_list']); ?> />
+                <input type="checkbox" id="use-thumbnail" name="isc_options[use_thumbnail]" value="1" <?php checked($options['thumbnail_in_list']); ?> />
                 <select id="thumbnail-size-select" name="isc_options[size_select]" <?php disabled(!$options['thumbnail_in_list']) ?>>
                     <?php foreach ($this->_thumbnail_size as $size) : ?>
                         <option value="<?php echo $size; ?>" <?php selected($size, $options['thumbnail_size']);?>><?php echo $size; ?></option>
@@ -1219,6 +1242,21 @@ if (!class_exists('ISC_CLASS')) {
             ?>
             <div id="thumbnail-custom-height">
                 <input type="text" id="custom-height" name="isc_options[thumbnail_height]" class="small-text" value="<?php echo $options['thumbnail_height'] ?>"/> px
+                <p><em><?php echo $description; ?></em></p>
+            </div>
+            <?php
+        }
+        
+        public function renderfield_warning_nosource()
+        {
+            $options = $this->get_isc_options();
+            if (!isset($options['warning_nosource'])) {
+                $options = $options + $this->default_options();
+            }
+            $description = __('Warn and prevent data to be saved when an attachment is edited and the source has not been specified.' ,ISCTEXTDOMAIN);
+            ?>
+            <div id="no-source-block">
+                <input type="checkbox" id="no-source" name="isc_options[no_source]"value="1" <?php checked($options['warning_nosource']); ?>/>
                 <p><em><?php echo $description; ?></em></p>
             </div>
             <?php
@@ -1267,6 +1305,11 @@ if (!class_exists('ISC_CLASS')) {
                 }
             } else {
                 $output['thumbnail_in_list'] = false;
+            }
+            if (isset($input['no_source'])) {
+                $output['warning_nosource'] = true;
+            } else {
+                $output['warning_nosource'] = false;
             }
             return $output;
         }
