@@ -116,6 +116,7 @@ if (!class_exists('ISC_CLASS')) {
             
             add_shortcode('isc_list', array($this, 'list_post_attachments_with_sources_shortcode'));
             add_shortcode('isc_list_all', array($this, 'list_all_post_attachments_sources_shortcode'));
+            add_action('wp_enqueue_scripts', array($this, 'front_scripts'));
             
             // insert all backend functions below this check
             if (!current_user_can('upload_files')) {
@@ -138,6 +139,10 @@ if (!class_exists('ISC_CLASS')) {
 
             // save image information in meta field when a post is saved
             add_action('save_post', array($this, 'save_image_information_on_post_save'));
+        }
+        
+        public function front_scripts() {
+            wp_enqueue_script('isc_front_js', plugins_url('/js/front-js.js', __FILE__), array('jquery'), ISCVERSION);
         }
 
         /**
@@ -292,11 +297,29 @@ if (!class_exists('ISC_CLASS')) {
             if ($attachments == array()) {
                 return ;
             }
-            ob_start();
             
+            $options = $this->get_isc_options();
+            if (!isset($options['hide_list'])) {
+                $options = $options + $this->default_options();
+            }
+            $show_text = __('Show the list', ISCTEXTDOMAIN);
+            $hide_text = __('Hide the list', ISCTEXTDOMAIN);
+                    
+            ob_start();
             $headline = $this->_options['image_list_headline'];
-            printf('<p class="isc_image_list_title">%s</p>', $headline); ?>
-            <ul class="isc_image_list"><?php
+            $hide_style = ($options['hide_list'])? 'style="height: 0px; overflow: hidden;"': 'style="height: 100%; overflow: hidden;"';
+            $hide_class = ($options['hide_list'])? ' isc-list-up': ' isc-list-down';
+            $hide_title = ($options['hide_list'])? $show_text : $hide_text;
+            printf('<p class="isc_image_list_title" title="%2$s" style="cursor: pointer;">%1$s</p>', $headline, $hide_title); ?>
+            <script type="text/javascript">
+                /* <!--[CDATA[ */
+                    isc_jstext = {
+                        show_list: "<?php echo esc_attr($show_text); ?>",
+                        hide_list: "<?php echo esc_attr($hide_text); ?>"
+                    }
+                /* ]]--> */
+            </script>
+            <ul class="isc_image_list <?php echo $hide_class; ?>"<?php echo $hide_style; ?>><?php
 
             foreach ($attachments as $atts_id => $atts_array) {
                 if (empty($atts_array['source'])) {
@@ -698,26 +721,25 @@ if (!class_exists('ISC_CLASS')) {
                 $connected_atts[$_attachment->ID]['title'] = $_attachment->post_title;
                 $connected_atts[$_attachment->ID]['author_name'] = '';
                 if ('' != $connected_atts[$_attachment->ID]['own']) {
-                    $parent = get_post($_attachment->post_parent);
-                    $connected_atts[$_attachment->ID]['author_name'] = get_the_author_meta('display_name', $parent->post_author);
+                    $connected_atts[$_attachment->ID]['author_name'] = get_the_author_meta('display_name', $_attachment->post_author);
                 }
                 
                 $metadata = get_post_meta($_attachment->ID, 'isc_image_posts', true);
-                $parents_data = '';
+                $usage_data = '';
                 
                 if (is_array($metadata) && array() != $metadata) {
-                    $parents_data .= "<ul style='margin: 0;'>";
+                    $usage_data .= "<ul style='margin: 0;'>";
                     foreach($metadata as $data) {
-                        $parents_data .= sprintf(__('<li><a href="%1$s" title="View %2$s">%3$s</a></li>', ISCTEXTDOMAIN),
+                        $usage_data .= sprintf(__('<li><a href="%1$s" title="View %2$s">%3$s</a></li>', ISCTEXTDOMAIN),
                             esc_url(get_permalink($data)),
                             esc_attr(get_the_title($data)),
                             esc_html(get_the_title($data))
                         );
                     }
-                    $parents_data .= "</ul>";
+                    $usage_data .= "</ul>";
                 }
                 
-                $connected_atts[$_attachment->ID]['posts'] = $parents_data;
+                $connected_atts[$_attachment->ID]['posts'] = $usage_data;
             }
             
             $total = count($connected_atts);
@@ -992,6 +1014,7 @@ if (!class_exists('ISC_CLASS')) {
             $default['thumbnail_width'] = 150;
             $default['thumbnail_height'] = 150;
             $default['warning_nosource'] = true;
+            $default['hide_list'] = false;
             return $default;
         }
         
@@ -1004,6 +1027,7 @@ if (!class_exists('ISC_CLASS')) {
             register_setting('isc_options_group', 'isc_options', array($this, 'settings_validation'));
             add_settings_section('isc_settings_section', '', '__return_false', 'isc_settings_page');
             add_settings_field('image_list_headline', __('Image list headline', ISCTEXTDOMAIN), array($this, 'renderfield_list_headline'), 'isc_settings_page', 'isc_settings_section');
+            add_settings_field('hide_list', __('Hide the image list', ISCTEXTDOMAIN), array($this, 'renderfield_hide_list'), 'isc_settings_page', 'isc_settings_section');
             add_settings_field('use_authorname', __('Use authors names', ISCTEXTDOMAIN), array($this, 'renderfield_use_authorname'), 'isc_settings_page', 'isc_settings_section');
             add_settings_field('by_author_text', __('Custom text for owned images', ISCTEXTDOMAIN), array($this, 'renderfield_byauthor_text'), 'isc_settings_page', 'isc_settings_section');
             add_settings_field('webgilde_backlink', __("Link to webgilde's website", ISCTEXTDOMAIN), array($this, 'renderfield_webgile'), 'isc_settings_page', 'isc_settings_section');
@@ -1169,6 +1193,22 @@ if (!class_exists('ISC_CLASS')) {
             <?php
         }
         
+        public function renderfield_hide_list()
+        {
+            $options = $this->get_isc_options();
+            if (!isset($options['hide_list'])) {
+                $options = $options + $this->default_options();
+            }
+            $description = __("Hide the list when the post is loaded. A simple click on the list headline will show the list content.", ISCTEXTDOMAIN);
+            ?>
+            <div id="hide-list-block">
+                <label for="hide-list"><?php _e('Hide the image list of a post') ?></label>
+                <input type="checkbox" name="isc_options[hide_list]" id="hide-list" <?php checked($options['hide_list']); ?> />
+                <p><em><?php echo $description; ?></em></p>
+            </div>
+            <?php
+        }
+        
         public function renderfield_use_authorname()
         {
             $options = $this->get_isc_options();
@@ -1310,6 +1350,11 @@ if (!class_exists('ISC_CLASS')) {
                 $output['warning_nosource'] = true;
             } else {
                 $output['warning_nosource'] = false;
+            }
+            if (isset($input['hide_list'])){
+                $output['hide_list'] = true;
+            } else {
+                $output['hide_list'] = false;
             }
             return $output;
         }

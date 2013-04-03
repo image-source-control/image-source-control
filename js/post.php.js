@@ -141,7 +141,7 @@ function IscBlockForm(selector, message, target, event)
     
     
     /**
-    * Register a field to be tested (and validated before submission).
+    * Register a field to be tested.
     * @param field_id string (required), unique id for this registred field
     * @param selector string (required), jQuery selector corresponding to the field. Id or name attributes are good.
     */
@@ -150,7 +150,7 @@ function IscBlockForm(selector, message, target, event)
             throw 'Param 1 of IscBlockForm.addfield must be a string';
         }
         if ('undefined' != typeof(fields[field_id])) {
-            throw 'duplicate id ' + field_id;
+            throw 'duplicated id ' + field_id;
         }
         if (1 < jQuery(selector).length) {
             throw 'the jQuery selector ' + selector + ' match more than one element.';
