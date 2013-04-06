@@ -1202,7 +1202,7 @@ if (!class_exists('ISC_CLASS')) {
             $description = __("Hide the list when the post is loaded. A simple click on the list headline will show the list content.", ISCTEXTDOMAIN);
             ?>
             <div id="hide-list-block">
-                <label for="hide-list"><?php _e('Hide the image list of a post') ?></label>
+                <label for="hide-list"><?php _e('Hide the image list of a post', ISCTEXTDOMAIN) ?></label>
                 <input type="checkbox" name="isc_options[hide_list]" id="hide-list" <?php checked($options['hide_list']); ?> />
                 <p><em><?php echo $description; ?></em></p>
             </div>
@@ -1215,7 +1215,7 @@ if (!class_exists('ISC_CLASS')) {
             $description = __("Display the author's public name as source when the image is owned by the author (the uploader of the image, not necessarily the author of the post the image is displayed on). Uncheck to use a custom text instead.", ISCTEXTDOMAIN);
             ?>
             <div id="use-authorname-block">
-                <label for="use_authorname"><?php _e('Use author name') ?></label>
+                <label for="use_authorname"><?php _e('Use author name', ISCTEXTDOMAIN) ?></label>
                 <input type="checkbox" name="isc_options[use_authorname_ckbox]" id="use_authorname" <?php checked($options['use_authorname']); ?> />
                 <p><em><?php echo $description; ?></em></p>
             </div>

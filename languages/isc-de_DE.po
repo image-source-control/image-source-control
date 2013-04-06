@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Image Source Control v1.2.0.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2013-04-06 14:55:58+0000\n"
+"PO-Revision-Date: 2013-04-06 15:03:20+0000\n"
 "Last-Translator: admin <tho.maier@gmx.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -185,9 +185,9 @@ msgid "The headline of the image list added via shortcode or function in your th
 msgstr "Die Überschrift des Bilderverzeichnisses, das mit einem Shortcode oder einer Funktion in das Theme integriert wurde."
 
 #: isc.php:1218
-#@ default
+#@ isc
 msgid "Use author name"
-msgstr ""
+msgstr "Name des Autors"
 
 #: isc.php:1228
 #@ isc
@@ -277,9 +277,9 @@ msgid "Hide the list when the post is loaded. A simple click on the list headlin
 msgstr "Bildverzeichnis unter Beiträgen standardmäßig ausblenden. (ein Klick auf die Überschrift blendet die Liste ein)"
 
 #: isc.php:1205
-#@ default
+#@ isc
 msgid "Hide the image list of a post"
-msgstr ""
+msgstr "Verstecke das Bildverzeichnis eines Beitrags"
 
 #: isc.php:1215
 #@ isc
