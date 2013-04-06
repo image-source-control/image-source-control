@@ -1,15 +1,16 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Image Source Control v1.2\n"
+"Project-Id-Version: Image Source Control v1.2.0.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2013-03-07 19:59:12+0000\n"
+"PO-Revision-Date: 2013-04-06 14:55:58+0000\n"
 "Last-Translator: admin <tho.maier@gmx.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: CSL v1.x\n"
 "X-Poedit-Language: German\n"
 "X-Poedit-Country: GERMANY\n"
 "X-Poedit-SourceCharset: utf-8\n"
@@ -19,27 +20,27 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 "X-Textdomain-Support: yes"
 
-#: isc.php:144
+#: isc.php:161
 #@ isc
 msgid "Missing Sources"
 msgstr "Fehlende Bildquellen"
 
-#: isc.php:176
+#: isc.php:196
 #@ isc
 msgid "Image Source"
 msgstr "Bildquelle"
 
-#: isc.php:178
+#: isc.php:198
 #@ isc
 msgid "Include the image source here."
 msgstr "Trage hier die Bildquelle ein."
 
-#: isc.php:184
+#: isc.php:204
 #@ isc
 msgid "Check this box if this is your own image and doesn't need a source."
 msgstr "Markiere dieses Feld, wenn das Bild dein eigenes ist und/oder keine externe Quellenangabe notwendig ist."
 
-#: isc.php:189
+#: isc.php:209
 #@ isc
 msgid "This is my image"
 msgstr "Das ist mein Bild."
@@ -94,157 +95,199 @@ msgstr "Gehe zur Bearbeitungsansicht des zugeordneten Artikels"
 msgid "no connection"
 msgstr "keine Verknüpfung"
 
-#: isc.php:145
+#: isc.php:162
 #@ isc
 msgid "Image control - ISC plugin"
 msgstr "Image control - ISC Plugin"
 
-#: isc.php:145
+#: isc.php:162
 #@ isc
 msgid "Image Control"
 msgstr "Image Control"
 
-#: isc.php:626
+#: isc.php:685
 #@ isc
 msgid "&#171; Previous"
 msgstr "&#171; Vorherige"
 
-#: isc.php:628
+#: isc.php:687
 #@ isc
 msgid "Next &#187;"
 msgstr "Weitere &#187;"
 
-#: isc.php:675
+#: isc.php:733
 #, php-format
 #@ isc
 msgid "<li><a href=\"%1$s\" title=\"View %2$s\">%3$s</a></li>"
 msgstr "<li><a href=\"%1$s\" title=\"%2$s\\ aufrufen\\\">%3$s</a></li>"
 
-#: isc.php:743
+#: isc.php:798
 #@ isc
 msgid "Attachment's ID"
 msgstr "ID des Anhangs"
 
-#: isc.php:744
+#: isc.php:799
 #@ isc
 msgid "Title"
 msgstr "Titel"
 
-#: isc.php:745
+#: isc.php:800
 #@ isc
 msgid "Attached to"
 msgstr "Angezeigt unter"
 
-#: isc.php:746
+#: isc.php:801
 #@ isc
 msgid "Source"
 msgstr "Bildquelle"
 
-#: isc.php:752
+#: isc.php:807
 #@ isc
 msgid "Not available"
 msgstr "Nicht verfügbar"
 
-#: isc.php:951
+#: isc.php:1006
+#: isc.php:1066
 #@ isc
 msgid "image sources"
 msgstr "Bildquellen"
 
-#: isc.php:953
+#: isc.php:1008
+#: isc.php:1068
 #@ isc
 msgid "Owned by the author"
 msgstr "Bildrechte beim Autor"
 
-#: isc.php:972
-#: isc.php:1045
+#: isc.php:1029
+#: isc.php:1189
 #@ isc
 msgid "Image list headline"
 msgstr "Überschrift des Bilderverzeichnisses"
 
-#: isc.php:973
+#: isc.php:1031
 #@ isc
 msgid "Use authors names"
 msgstr "Benutze den Namen des Autors"
 
-#: isc.php:974
+#: isc.php:1032
 #@ isc
 msgid "Custom text for owned images"
 msgstr "Text für eigene Bilder"
 
-#: isc.php:1025
+#: isc.php:1169
 #@ isc
 msgid "Images control settings"
 msgstr "Image Source Control Einstellungen"
 
-#: isc.php:1042
+#: isc.php:1186
 #@ isc
 msgid "The headline of the image list added via shortcode or function in your theme."
 msgstr "Die Überschrift des Bilderverzeichnisses, das mit einem Shortcode oder einer Funktion in das Theme integriert wurde."
 
-#: isc.php:1055
-#@ isc
-msgid "Display the author's public name as source when the image is owned by the author. Uncheck to use a custom text instead."
-msgstr "Zeige den öffentlichen Namen des Autors als Bildquelle an, wenn das Bild dem Autor gehört. Deaktiviere dieses Feld, um den Standardtext zu nutzen."
-
-#: isc.php:1058
+#: isc.php:1218
 #@ default
 msgid "Use author name"
 msgstr ""
 
-#: isc.php:1068
+#: isc.php:1228
 #@ isc
 msgid "Enter the custom text to display if you do not want to use the author's public name."
 msgstr "Standardtext der angezeigt wird, wenn der Name des Autors nicht als Bildquelle verwendet werden soll."
 
-#: isc.php:741
+#: isc.php:796
 #@ isc
 msgid "Thumbnail"
 msgstr "Miniaturbild"
 
-#: isc.php:975
+#: isc.php:1033
 #@ isc
 msgid "Link to webgilde's website"
 msgstr "Link zur Webseite des Autors"
 
-#: isc.php:976
+#: isc.php:1034
 #@ isc
 msgid "Use thumbnails in images list"
 msgstr "Verwende Miniaturbilder im Bilderverzeichnis"
 
-#: isc.php:977
+#: isc.php:1035
 #@ isc
 msgid "Thumbnails max-width"
 msgstr "maximale Breite der Miniaturbilder"
 
-#: isc.php:978
+#: isc.php:1036
 #@ isc
 msgid "Thumbnails max-height"
 msgstr "maximale Höhe der Miniaturbilder"
 
-#: isc.php:1087
+#: isc.php:1240
 #, php-format
 #@ isc
 msgid "Display a link to <a href=\"%s\">Image Source Control plugin&#39;s website</a> below the list of all images in the blog?"
 msgstr "Zeige einen Link zur <a href=\"%s\">Hauptseite vom Image Source Control Plugin</a> unter dem Bilderverzeichnis?"
 
-#: isc.php:1102
+#: isc.php:1252
 #@ isc
 msgid "Display thumbnails on the list of all images in the blog."
 msgstr "Zeige Miniaturbilder im Bilderverzeichnis an."
 
-#: isc.php:1122
+#: isc.php:1269
 #@ isc
 msgid "Custom value of the maximum allowed width for thumbnail."
 msgstr "Eigener Wert für die maximale Breite von Miniaturbildern."
 
-#: isc.php:1137
+#: isc.php:1281
 #@ isc
 msgid "Custom value of the maximum allowed height for thumbnail."
 msgstr "Eigener Wert für die maximale Höhe von Miniaturbildern."
 
-#: isc.php:716
+#: isc.php:774
 #, php-format
 #@ isc
 msgid "Image list created by <a href=\"%s\" title=\"Image Source Control\">Image Source Control Plugin</a>"
 msgstr "Das Bilderverzeichnis wurde mit Hilfe vom <a href=\"%s\" title=\"Image Source Control\">Image Source Control Plugin</a> erstellt."
+
+#: isc.php:305
+#@ isc
+msgid "Show the list"
+msgstr "Bildquellen anzeigen"
+
+#: isc.php:306
+#@ isc
+msgid "Hide the list"
+msgstr "Bildquellen verstecken"
+
+#: isc.php:439
+#@ isc
+msgid "Please specify the image source"
+msgstr "Bitte gib die Bildquelle an"
+
+#: isc.php:1030
+#@ isc
+msgid "Hide the image list"
+msgstr "Verstecke das Bildverzeichnis"
+
+#: isc.php:1037
+#@ isc
+msgid "Warnings when no source available"
+msgstr "Warnung bei fehlenden Bildquellen"
+
+#: isc.php:1202
+#@ isc
+msgid "Hide the list when the post is loaded. A simple click on the list headline will show the list content."
+msgstr "Bildverzeichnis unter Beiträgen standardmäßig ausblenden. (ein Klick auf die Überschrift blendet die Liste ein)"
+
+#: isc.php:1205
+#@ default
+msgid "Hide the image list of a post"
+msgstr ""
+
+#: isc.php:1215
+#@ isc
+msgid "Display the author's public name as source when the image is owned by the author (the uploader of the image, not necessarily the author of the post the image is displayed on). Uncheck to use a custom text instead."
+msgstr "Zeige den öffentlichen Namen des Autors als Bildquelle an, wenn das Bild dem Autor gehört. Autor des Bildes ist der Uploader und nicht zwingend identisch mit dem Autor eines Beitrages, von dem das Bild verwendet wird. Deaktiviere dieses Feld, um den Standardtext zu nutzen."
+
+#: isc.php:1296
+#@ isc
+msgid "Warn and prevent data to be saved when an attachment is edited and the source has not been specified."
+msgstr "Zeige eine Warnung und verhindere das Speichern, wenn ein Bild bearbeitet wird und eine Bildquelle nicht angegeben wurde."
 
