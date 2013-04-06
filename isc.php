@@ -1212,7 +1212,7 @@ if (!class_exists('ISC_CLASS')) {
         public function renderfield_use_authorname()
         {
             $options = $this->get_isc_options();
-            $description = __("Display the author's public name as source when the image is owned by the author. Uncheck to use a custom text instead.", ISCTEXTDOMAIN);
+            $description = __("Display the author's public name as source when the image is owned by the author (the uploader of the image, not necessarily the author of the post the image is displayed on). Uncheck to use a custom text instead.", ISCTEXTDOMAIN);
             ?>
             <div id="use-authorname-block">
                 <label for="use_authorname"><?php _e('Use author name') ?></label>
