@@ -128,6 +128,8 @@ if (!class_exists('ISC_CLASS')) {
             add_filter('attachment_fields_to_edit', array($this, 'add_isc_fields'), 10, 2);
             add_filter('attachment_fields_to_save', array($this, 'isc_fields_save'), 10, 2);
             
+            add_action('admin_notices', array($this, 'admin_notices'));
+            
             add_action('admin_menu', array($this, 'create_menu'));
             add_action('admin_init', array($this, 'SAPI_init'));
             
@@ -174,12 +176,10 @@ if (!class_exists('ISC_CLASS')) {
             if ('post.php' == $hook) {
                 wp_enqueue_script('isc_postphp_script', plugins_url('/js/post.php.js', __FILE__), array('jquery'), ISCVERSION);
             }
-            if ($hook != $isc_setting) {
-                return;
+            if ($hook == $isc_setting) {
+                wp_enqueue_script('isc_script', plugins_url('/js/isc.js', __FILE__), false, ISCVERSION);
+                wp_enqueue_style('isc_image_settings_css', plugins_url('/css/image-settings.css', __FILE__), false, ISCVERSION);
             }
-            wp_enqueue_script('isc_script', plugins_url('/js/isc.js', __FILE__), false, ISCVERSION);
-            // this is to define ajaxurl to be able to use this in its own js script
-            // wp_localize_script( 'isc_script', 'IscAjax', array( 'ajaxurl' => admin_url( 'admin-ajax.php' ) ) );
         }
         
         /**
@@ -254,11 +254,7 @@ if (!class_exists('ISC_CLASS')) {
                 
                 $attachments = get_post_meta($post_id, 'isc_post_images', true);
             }
-            
-            $authorname = '';
-            if (!empty($post->post_author))
-                $authorname = get_the_author_meta('display_name', $post->post_author);
-            
+                        
             $return = '';
             if (!empty($attachments)) {
                 $atts = array();
@@ -272,7 +268,12 @@ if (!class_exists('ISC_CLASS')) {
                         unset($atts[$attachment_id]);
                         continue;
                     } elseif ($own != '') {
-                        if ($this->_options['use_authorname'] && !empty($authorname)) {
+                        if ($this->_options['use_authorname']) {
+                            $authorname = '';
+                            $att_post = get_post($attachment_id);
+                            if (null !== $att_post) {
+                                $authorname = get_the_author_meta('display_name', $att_post->post_author);
+                            }
                             $atts[$attachment_id ]['source'] = $authorname;
                         } else {
                             $atts[$attachment_id ]['source'] = $this->_options['by_author_text'];
@@ -1014,6 +1015,7 @@ if (!class_exists('ISC_CLASS')) {
             $default['thumbnail_width'] = 150;
             $default['thumbnail_height'] = 150;
             $default['warning_nosource'] = true;
+            $default['warning_onesource_missing'] = true;
             $default['hide_list'] = false;
             return $default;
         }
@@ -1026,15 +1028,34 @@ if (!class_exists('ISC_CLASS')) {
             $this->upgrade_management();
             register_setting('isc_options_group', 'isc_options', array($this, 'settings_validation'));
             add_settings_section('isc_settings_section', '', '__return_false', 'isc_settings_page');
+            
+            // Starts Page/Post settings group
             add_settings_field('image_list_headline', __('Image list headline', ISCTEXTDOMAIN), array($this, 'renderfield_list_headline'), 'isc_settings_page', 'isc_settings_section');
+            /**
+            * All new setting in Page/Post group Here!
+            */
             add_settings_field('hide_list', __('Hide the image list', ISCTEXTDOMAIN), array($this, 'renderfield_hide_list'), 'isc_settings_page', 'isc_settings_section');
+            // Ends Page/Post settings group
+            
+            // Starts Full images list group
+            add_settings_field('use_thumbnail', __("Use thumbnails in images list", ISCTEXTDOMAIN), array($this, 'renderfield_use_thumbnail'), 'isc_settings_page', 'isc_settings_section');
+            /**
+            * All new setting in Full images list group Here!
+            */
+            add_settings_field('thumbnail_width', __("Thumbnails max-width", ISCTEXTDOMAIN), array($this, 'renderfield_thumbnail_width'), 'isc_settings_page', 'isc_settings_section');
+            add_settings_field('thumbnail_height', __("Thumbnails max-height", ISCTEXTDOMAIN), array($this, 'renderfield_thumbnail_height'), 'isc_settings_page', 'isc_settings_section');
+            // Ends Full images list group
+            
+            // Starts Misc settings group
             add_settings_field('use_authorname', __('Use authors names', ISCTEXTDOMAIN), array($this, 'renderfield_use_authorname'), 'isc_settings_page', 'isc_settings_section');
             add_settings_field('by_author_text', __('Custom text for owned images', ISCTEXTDOMAIN), array($this, 'renderfield_byauthor_text'), 'isc_settings_page', 'isc_settings_section');
             add_settings_field('webgilde_backlink', __("Link to webgilde's website", ISCTEXTDOMAIN), array($this, 'renderfield_webgile'), 'isc_settings_page', 'isc_settings_section');
-            add_settings_field('use_thumbnail', __("Use thumbnails in images list", ISCTEXTDOMAIN), array($this, 'renderfield_use_thumbnail'), 'isc_settings_page', 'isc_settings_section');
-            add_settings_field('thumbnail_width', __("Thumbnails max-width", ISCTEXTDOMAIN), array($this, 'renderfield_thumbnail_width'), 'isc_settings_page', 'isc_settings_section');
-            add_settings_field('thumbnail_height', __("Thumbnails max-height", ISCTEXTDOMAIN), array($this, 'renderfield_thumbnail_height'), 'isc_settings_page', 'isc_settings_section');
-            add_settings_field('warning_nosource', __("Warnings when no source available", ISCTEXTDOMAIN), array($this, 'renderfield_warning_nosource'), 'isc_settings_page', 'isc_settings_section');
+            /**
+            * All new setting in Misc settings group Here!
+            */
+            add_settings_field('warning_one_source', __("Warning when there is at least one missing source", ISCTEXTDOMAIN), array($this, 'renderfield_warning_onesource_misisng'), 'isc_settings_page', 'isc_settings_section');
+            add_settings_field('warning_nosource', __("Warnings when source not available", ISCTEXTDOMAIN), array($this, 'renderfield_warning_nosource'), 'isc_settings_page', 'isc_settings_section');
+            // Ends Misc settings group
         }
         
         /**
@@ -1167,13 +1188,20 @@ if (!class_exists('ISC_CLASS')) {
             ?>
             <div id="icon-options-general" class="icon32"><br></div>
             <h2><?php _e('Images control settings', ISCTEXTDOMAIN); ?></h2>
-            <form id="image-control-form" method="post" action="options.php">
-            <?php
-                settings_fields( 'isc_options_group' );
-                do_settings_sections( 'isc_settings_page' );
-                submit_button();
-            ?>
-            </form>
+            <div id="isc-admin-wrap">
+                <form id="image-control-form" method="post" action="options.php">
+                    <div class="postbox isc-setting-group"><?php // Open the div for the first settings group ?>
+                    <h3 class="setting-group-head"><?php _e('Post / Page images list', ISCTEXTDOMAIN); ?></h3>
+                    <?php
+                        settings_fields( 'isc_options_group' );
+                        do_settings_sections( 'isc_settings_page' );
+                    ?>
+                    </div><?php //Close the last settings group div ?>
+                    <p class="submit">
+                        <input type="submit" name="submit" id="submit" class="button button-primary" value="Save Changes">
+                    </p>
+                </form>
+            </div><!-- #isc-admin-wrap -->
             <?php
         }
         
@@ -1206,6 +1234,11 @@ if (!class_exists('ISC_CLASS')) {
                 <input type="checkbox" name="isc_options[hide_list]" id="hide-list" <?php checked($options['hide_list']); ?> />
                 <p><em><?php echo $description; ?></em></p>
             </div>
+            </td></tr></tbody></table>
+            </div><!-- .postbox -->
+            <div class="postbox isc-setting-group">
+            <h3 class="setting-group-head"><?php _e('Full images list', ISCTEXTDOMAIN) ?></h3>
+            <table class="form-table"><tbody><tr><td>
             <?php
         }
         
@@ -1213,6 +1246,7 @@ if (!class_exists('ISC_CLASS')) {
         {
             $options = $this->get_isc_options();
             $description = __("Display the author's public name as source when the image is owned by the author (the uploader of the image, not necessarily the author of the post the image is displayed on). Uncheck to use a custom text instead.", ISCTEXTDOMAIN);
+
             ?>
             <div id="use-authorname-block">
                 <label for="use_authorname"><?php _e('Use author name', ISCTEXTDOMAIN) ?></label>
@@ -1284,6 +1318,11 @@ if (!class_exists('ISC_CLASS')) {
                 <input type="text" id="custom-height" name="isc_options[thumbnail_height]" class="small-text" value="<?php echo $options['thumbnail_height'] ?>"/> px
                 <p><em><?php echo $description; ?></em></p>
             </div>
+            </td></tr></tbody></table>
+            </div><!-- .postbox -->
+            <div class="postbox isc-setting-group">
+            <h3 class="setting-group-head"><?php _e('Miscellaneous settings', ISCTEXTDOMAIN); ?></h3>
+            <table class="form-table"><tbody><tr><td>
             <?php
         }
         
@@ -1297,6 +1336,21 @@ if (!class_exists('ISC_CLASS')) {
             ?>
             <div id="no-source-block">
                 <input type="checkbox" id="no-source" name="isc_options[no_source]"value="1" <?php checked($options['warning_nosource']); ?>/>
+                <p><em><?php echo $description; ?></em></p>
+            </div>
+            <?php
+        }
+        
+        public function renderfield_warning_onesource_misisng()
+        {
+            $options = $this->get_isc_options();
+            if (!isset($options['warning_onesource_missing'])) {
+                $options = $options + $this->default_options();
+            }
+            $description = __('Display an admin notice in admin pages when one or more image sources are missing.' ,ISCTEXTDOMAIN);
+            ?>
+            <div id="one-source-block">
+                <input type="checkbox" id="one-source" name="isc_options[one_source]"value="1" <?php checked($options['warning_onesource_missing']); ?>/>
                 <p><em><?php echo $description; ?></em></p>
             </div>
             <?php
@@ -1351,6 +1405,11 @@ if (!class_exists('ISC_CLASS')) {
             } else {
                 $output['warning_nosource'] = false;
             }
+            if (isset($input['one_source'])) {
+                $output['warning_onesource_missing'] = true;
+            } else {
+                $output['warning_onesource_missing'] = false;
+            }
             if (isset($input['hide_list'])){
                 $output['hide_list'] = true;
             } else {
@@ -1391,6 +1450,41 @@ if (!class_exists('ISC_CLASS')) {
                     }
                 }
             }
+        }
+        
+        /**
+        *
+        */
+        public function admin_notices()
+        {
+            $args = array(
+                'post_type' => 'attachment',
+                'numberposts' => -1,
+                'post_status' => null,
+                'post_parent' => null,
+                'meta_query' => array(
+                    array(
+                        'key' => 'isc_image_source',
+                        'value' => '',
+                        'compare' => '='
+                    ),
+                    array(
+                        'key' => 'isc_image_source_own',
+                        'value' => '',
+                        'compare' => ''
+                    )
+                ) 
+            );
+            $attachments = get_posts($args);
+            $options = $this->get_isc_options();
+            if (!isset($options['warning_onesource_missing'])) {
+                $options = $options + $this->default_options();
+            }
+            if (!empty($attachments) && $options['warning_onesource_missing'] ) {
+            ?>
+            <div class="updated"><p><?php _e('One or more attachments still have no source.', ISCTEXTDOMAIN);?></p></div>
+            <?php
+            }            
         }
         
     }// end of class

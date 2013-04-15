@@ -20,8 +20,8 @@ jQuery(document).ready(function(jQuery) {
 
 function isc_thumbnail_input_checkstate(){
     if ('custom' == jQuery('#thumbnail-size-select').val()) {
-        jQuery('#custom-width').removeAttr('disabled').css('background-color', 'inherit');
-        jQuery('#custom-height').removeAttr('disabled').css('background-color', 'inherit');
+        jQuery('#custom-width').removeAttr('disabled').css('background-color', '#fff');
+        jQuery('#custom-height').removeAttr('disabled').css('background-color', '#fff');
     } else {
         jQuery('#custom-width').attr('disabled', 'disabled').css('background-color', '#eee');
         jQuery('#custom-height').attr('disabled', 'disabled').css('background-color', '#eee');
