@@ -150,9 +150,6 @@ if (!class_exists('ISC_CLASS')) {
             add_action('admin_enqueue_scripts', array($this, 'add_admin_scripts'));
             add_action( 'admin_print_scripts', array($this, 'admin_headjs') );
             
-            // ajax function; 'add_meta_fields' is the action defined in isc.js as the action to be called via ajax
-            add_action('wp_ajax_add_meta_fields', array($this, 'add_meta_values_to_attachments'));
-
             // save image information in meta field when a post is saved
             add_action('save_post', array($this, 'save_image_information_on_post_save'));
         }
