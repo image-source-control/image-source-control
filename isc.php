@@ -104,6 +104,19 @@ if (!class_exists('ISC_CLASS')) {
         protected $_options = array();
         
         /**
+        * Position of image's caption
+        */
+        protected $_caption_position = array(
+            'top-left',
+            'top-center',
+            'top-right',
+            'center',
+            'bottom-left',
+            'bottom-center',
+            'bottom-right'
+        );
+        
+        /**
          * Setup registers filterts and actions.
          */
         public function __construct()
@@ -117,6 +130,7 @@ if (!class_exists('ISC_CLASS')) {
             add_shortcode('isc_list', array($this, 'list_post_attachments_with_sources_shortcode'));
             add_shortcode('isc_list_all', array($this, 'list_all_post_attachments_sources_shortcode'));
             add_action('wp_enqueue_scripts', array($this, 'front_scripts'));
+            add_action('wp_head', array($this, 'front_head'));
             
             // insert all backend functions below this check
             if (!current_user_can('upload_files')) {
@@ -143,6 +157,30 @@ if (!class_exists('ISC_CLASS')) {
             add_action('save_post', array($this, 'save_image_information_on_post_save'));
         }
         
+        /**
+        * Front-end scripts in <head /> section.
+        */
+        public function front_head()
+        {
+            $options = $this->get_isc_options();
+            if (!isset($options['caption_position'])) {
+                $options = $options + $this->default_options();
+            }
+            ?>
+            <script type="text/javascript">
+            /* <![CDATA[ */
+                var isc_front_data = 
+                {
+                    caption_position : '<?php echo $options['caption_position']; ?>',
+                }
+            /* ]]> */
+            </script>
+            <?php
+        }
+        
+        /**
+        * Enqueue scripts for the front-end.
+        */
         public function front_scripts() {
             wp_enqueue_script('isc_front_js', plugins_url('/js/front-js.js', __FILE__), array('jquery'), ISCVERSION);
         }
@@ -1017,6 +1055,7 @@ if (!class_exists('ISC_CLASS')) {
             $default['warning_nosource'] = true;
             $default['warning_onesource_missing'] = true;
             $default['hide_list'] = false;
+            $default['caption_position'] = 'top-left';
             return $default;
         }
         
@@ -1053,6 +1092,7 @@ if (!class_exists('ISC_CLASS')) {
             /**
             * All new setting in Misc settings group Here!
             */
+            add_settings_field('caption_position', __("Caption position", ISCTEXTDOMAIN), array($this, 'renderfield_caption_pos'), 'isc_settings_page', 'isc_settings_section');
             add_settings_field('warning_one_source', __("Warning when there is at least one missing source", ISCTEXTDOMAIN), array($this, 'renderfield_warning_onesource_misisng'), 'isc_settings_page', 'isc_settings_section');
             add_settings_field('warning_nosource', __("Warnings when source not available", ISCTEXTDOMAIN), array($this, 'renderfield_warning_nosource'), 'isc_settings_page', 'isc_settings_section');
             // Ends Misc settings group
@@ -1356,6 +1396,25 @@ if (!class_exists('ISC_CLASS')) {
             <?php
         }
         
+        public function renderfield_caption_pos()
+        {
+            $options = $this->get_isc_options();
+            if (!isset($options['caption_position'])) {
+                $options = $options + $this->default_options();
+            }
+            $description = __('Position of captions into images' ,ISCTEXTDOMAIN);
+            ?>
+            <div id="caption-block">
+                    <select id="caption-pos" name="isc_options[cap_pos]">
+                        <?php foreach ($this->_caption_position as $pos) : ?>
+                            <option value="<?php echo $pos; ?>" <?php selected($pos, $options['caption_position']); ?>><?php echo $pos; ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                    <p><em><?php echo $description; ?></em></p>
+            </div>
+            <?php
+        }
+        
         /**
         * Returns isc_options if it exists, returns the default options otherwise.
         */
@@ -1415,6 +1474,8 @@ if (!class_exists('ISC_CLASS')) {
             } else {
                 $output['hide_list'] = false;
             }
+            if (in_array($input['cap_pos'], $this->_caption_position))
+                $output['caption_position'] = $input['cap_pos'];
             return $output;
         }
         
@@ -1481,8 +1542,9 @@ if (!class_exists('ISC_CLASS')) {
                 $options = $options + $this->default_options();
             }
             if (!empty($attachments) && $options['warning_onesource_missing'] ) {
+            $missing_src = esc_url(admin_url('upload.php?page=image-source-control-isc/templates/missing_sources.php'));
             ?>
-            <div class="updated"><p><?php _e('One or more attachments still have no source.', ISCTEXTDOMAIN);?></p></div>
+                <div class="updated"><p><?php printf(__('One or more attachments still have no source. See the <a href="%s">missing sources</a> list', ISCTEXTDOMAIN), $missing_src);?></p></div>
             <?php
             }            
         }
