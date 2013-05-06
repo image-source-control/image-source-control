@@ -4,7 +4,6 @@ jQuery(function(){
     /**
     * Hide/Show image list when post/page is loaded
     */
-    var isc_capt_count = jQuery('.wp-caption img').length;
     jQuery('.isc_image_list_title').click(function(){
         isc_list = jQuery('.isc_image_list');
         if ( isc_list.hasClass('isc-list-up') ) {
@@ -35,12 +34,12 @@ jQuery(function(){
     /**
     * Move caption into image
     */
-    jQuery('.wp-caption').each(function(){
+    jQuery('.isc-source').each(function(){
         var main_id = jQuery(this).attr('id');
-        var att_number = main_id.split('_')[1];
-        var caption = jQuery(this).children().filter('.wp-caption-text').html();
-        jQuery(this).find('.wp-caption-text').remove();
-        jQuery(this).append(jQuery('<span />').addClass('isc-caption-text').html(caption).css({
+        var att_number = main_id.split('_')[2];
+        var caption = jQuery(this).children().filter('.isc-source-text').html();
+        jQuery(this).find('.isc-source-text').remove();
+        jQuery(this).append(jQuery('<span />').addClass('isc-source-text').html(caption).css({
             position: 'absolute',
             fontSize: '0.9em',
             backgroundColor: "#333",
@@ -58,75 +57,78 @@ jQuery(function(){
     jQuery(window).resize(function(){
         isc_update_captions_positions();
     });
-    jQuery('.wp-caption img').load(function(){
+    jQuery('.isc-source img').load(function(){
         isc_update_captions_positions();
     });
 });
 
 function isc_update_captions_positions() {
-    jQuery('.wp-caption').each(function(){
+    jQuery('.isc-source').each(function(){
         isc_update_caption_position(jQuery(this));
     });
 }
 
 function isc_update_caption_position(jQ_Obj) {
     var main_id = jQ_Obj.attr('id');
-    var att_number = main_id.split('_')[1];
+    var att_number = main_id.split('_')[2];
     var att = jQ_Obj.find('.wp-image-' + att_number);
     var attw = att.width();
     var atth = att.height();
+    
     
     //relative position
     var l = att.position().left;
     //relative position
     var t = att.position().top;
     
-    var caption = jQ_Obj.find('.isc-caption-text');
+    var caption = jQ_Obj.find('.isc-source-text');
     
     //caption width + padding (after moving onto image)
-    var tw = caption.outerWidth();
+    var tw = caption.outerWidth(true);
     //caption height + padding (idem)
-    var th = caption.innerHeight();
+    var th = caption.outerHeight(true);
     
     var attpl = parseInt(att.css('padding-left').substring(0, att.css('padding-left').indexOf('px')));
+    var attml = parseInt(att.css('margin-left').substring(0, att.css('margin-left').indexOf('px')));
     var attpt = parseInt(att.css('padding-top').substring(0, att.css('padding-top').indexOf('px')));
-    
+    var attmt = parseInt(att.css('margin-top').substring(0, att.css('margin-top').indexOf('px')));
+        
     //caption horizontal margin
-    var tml = 4;
+    var tml = 5;
     //caption vertical margin
-    var tmt = 4;
+    var tmt = 5;
     
     var pos = isc_front_data.caption_position;
     var posl = 0;
     var post = 0;
     switch (pos) {
         case 'top-left':
-            posl = l + attpl + tml;
-            post = t + attpt + tmt;
+            posl = l + attpl + attml + tml;
+            post = t + attpt + attmt + tmt;
             break;
         case 'top-center':
-            posl = l + (Math.round(attw/2) - (Math.round(tw/2)));
-            post = t + attpt + tmt;
+            posl = l + (Math.round(attw/2) - (Math.round(tw/2))) + attpl + attml;
+            post = t + attpt + attmt + tmt;
             break;
         case 'top-right':
-            posl = l - attpl - tml + attw - tw;
-            post = t + attpt + tmt;
+            posl = l - attpl + attml - tml + attw - tw;
+            post = t + attpt + attmt + tmt;
             break;
         case 'center':
-            posl = l + (Math.round(attw/2) - (Math.round(tw/2)));
-            post = t + (Math.round(atth/2) - (Math.round(th/2)));
+            posl = l + (Math.round(attw/2) - (Math.round(tw/2))) + attpl + attml;
+            post = t + (Math.round(atth/2) - (Math.round(th/2))) + attpt + attmt;
             break;
         case 'bottom-left':
-            posl = l + attpl + tml;
-            post = t - attpt - tmt - th + atth;
+            posl = l + attpl + attml + tml;
+            post = t - attpt + attmt - tmt - th + atth;
             break;
         case 'bottom-center':
-            posl = l + (Math.round(attw/2) - (Math.round(tw/2)));
-            post = t + attpt - tmt - th + atth;
+            posl = l + (Math.round(attw/2) - (Math.round(tw/2))) + attpl + attml;
+            post = t + attpt + attmt - tmt - th + atth;
             break;
         case 'bottom-right':
-            posl = l - attpl - tml + attw - tw;
-            post = t + attpt - tmt - th + atth;
+            posl = l - attpl + attml - tml + attw - tw;
+            post = t + attpt + attmt - tmt - th + atth;
             break;
     }
     caption.css({

@@ -70,6 +70,11 @@ if (!class_exists('ISC_CLASS')) {
         );
 
         /**
+        * Commonly used text elements
+        */
+        protected $_common_texts = array();        
+        
+        /**
          * allowed image file types/extensions
          * @since 1.1
          */
@@ -120,10 +125,10 @@ if (!class_exists('ISC_CLASS')) {
          * Setup registers filterts and actions.
          */
         public function __construct()
-        {
-            
+        {        
             // load all plugin options
             $this->_options = get_option('isc_options');
+            $this->_common_texts['not_available'] = __('Not available', ISCTEXTDOMAIN);
             
             // insert all function for the frontend here
             
@@ -131,7 +136,7 @@ if (!class_exists('ISC_CLASS')) {
             add_shortcode('isc_list_all', array($this, 'list_all_post_attachments_sources_shortcode'));
             add_action('wp_enqueue_scripts', array($this, 'front_scripts'));
             add_action('wp_head', array($this, 'front_head'));
-            
+            add_action('the_content', array($this, 'content_filter'));
             // insert all backend functions below this check
             if (!current_user_can('upload_files')) {
                 return false;
@@ -139,6 +144,7 @@ if (!class_exists('ISC_CLASS')) {
             
             register_activation_hook(ISCPATH . '/isc.php', array($this, 'activation'));
             
+            add_action('add_attachment', array($this, 'attachment_added'), 10, 2);
             add_filter('attachment_fields_to_edit', array($this, 'add_isc_fields'), 10, 2);
             add_filter('attachment_fields_to_save', array($this, 'isc_fields_save'), 10, 2);
             
@@ -152,6 +158,58 @@ if (!class_exists('ISC_CLASS')) {
             
             // save image information in meta field when a post is saved
             add_action('save_post', array($this, 'save_image_information_on_post_save'));
+        }
+        
+        public function get_source_by_url($url)
+        {
+            $id = $this->get_image_by_url($url);
+            $metadata['source'] = get_post_meta($id, 'isc_image_source', true);
+            $metadata['own'] = get_post_meta($id, 'isc_image_source_own', true);
+            
+            $source = $this->_common_texts['not_available'];
+            
+            $att_post = get_post($id);
+            
+            if ('' != $metadata['own']) {
+                if ($this->_options['use_authorname']) {
+                    if (!empty($att_post)) {
+                        $source = get_the_author_meta('display_name', $att_post->post_author);
+                    }
+                } else {
+                    $source = $this->options['by_author_text'];
+                }
+            } else {
+                if ('' != $metadata['source']) {
+                    $source = $metadata['source'];
+                }
+            }
+            return $source;
+        }
+        
+        public function content_filter($content)
+        {
+            $pattern = '#(\[caption.*align="(.+)"[^\]*]{0,}\])? *(<a [^>]+>)? *(<img .*class=".*(align\d{4,})?.*wp-image-(\d+)\D*".*src="(.+)".*/?>).*(?(3)(?:</a>)|.*).*(?(1)(?:\[/caption\])|.*)#isU';
+            $count = preg_match_all($pattern, $content, $matches);
+            if (false !== $count) {
+                for ($i=0; $i < $count; $i++) {
+                    $id = $matches[6][$i];
+                    $src = $matches[7][$i];
+                    $source = '<p class="isc-source-text">' . __('Source:', ISCTEXTDOMAIN) . ' ' . $this->get_source_by_url($src) . '</p>';
+                    $old_content = $matches[0][$i];
+                    $new_content = str_replace('wp-image-' . $id, 'wp-image-' . $id . ' with-source', $old_content);
+                    $alignment = (!empty($matches[1][$i]))? $matches[2][$i] : $matches[5][$i];
+                    
+                    $content = str_replace($old_content, '<div id="isc_attachment_' . $id . '" class="isc-source ' . $alignment . '"> ' . $new_content . $source . '</div>', $content);
+                }
+            }
+            return $content;
+        }
+        
+        public function attachment_added($att_id)
+        {
+            foreach ($this->_fields as $field) {
+                update_post_meta($att_id, $field['id'], $field['default']);
+            }
         }
         
         /**
@@ -257,7 +315,6 @@ if (!class_exists('ISC_CLASS')) {
             if (isset($attachment['isc_image_source'])) {
                 update_post_meta($post['ID'], 'isc_image_source', $attachment['isc_image_source']);
             }
-
             update_post_meta($post['ID'], 'isc_image_source_own', $attachment['isc_image_source_own']);
             return $post;
         }
@@ -838,9 +895,8 @@ if (!class_exists('ISC_CLASS')) {
                 </thead>
                 <tbody>
                 <?php foreach ($atts as $id => $data) : ?>
-                    <?php
-                        /** @todo ment for later: this text was used above already; find a place to but it so it is defined only once and used where needed */    
-                        $source = __('Not available', ISCTEXTDOMAIN);
+                    <?php  
+                        $source = $this->_common_texts['not_available'];
                         if ('' != $data['own']) {
                             /** @todo ment for later: this text was used above already; find a place to but it so it is defined only once and used where needed */
                             if ($this->_options['use_authorname']) {
