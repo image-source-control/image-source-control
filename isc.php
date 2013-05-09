@@ -188,18 +188,24 @@ if (!class_exists('ISC_CLASS')) {
         
         public function content_filter($content)
         {
-            $pattern = '#(\[caption.*align="(.+)"[^\]*]{0,}\])? *(<a [^>]+>)? *(<img .*class=".*(align\d{4,})?.*wp-image-(\d+)\D*".*src="(.+)".*/?>).*(?(3)(?:</a>)|.*).*(?(1)(?:\[/caption\])|.*)#isU';
-            $count = preg_match_all($pattern, $content, $matches);
-            if (false !== $count) {
-                for ($i=0; $i < $count; $i++) {
-                    $id = $matches[6][$i];
-                    $src = $matches[7][$i];
-                    $source = '<p class="isc-source-text">' . __('Source:', ISCTEXTDOMAIN) . ' ' . $this->get_source_by_url($src) . '</p>';
-                    $old_content = $matches[0][$i];
-                    $new_content = str_replace('wp-image-' . $id, 'wp-image-' . $id . ' with-source', $old_content);
-                    $alignment = (!empty($matches[1][$i]))? $matches[2][$i] : $matches[5][$i];
-                    
-                    $content = str_replace($old_content, '<div id="isc_attachment_' . $id . '" class="isc-source ' . $alignment . '"> ' . $new_content . $source . '</div>', $content);
+            $options = $this->get_isc_options();
+            if (!isset($options['source_on_image'])) {
+                $options = $options + $this->default_options();
+            }
+            if ($options['source_on_image']) {
+                $pattern = '#(\[caption.*align="(.+)"[^\]*]{0,}\])? *(<a [^>]+>)? *(<img .*class=".*(align\d{4,})?.*wp-image-(\d+)\D*".*src="(.+)".*/?>).*(?(3)(?:</a>)|.*).*(?(1)(?:\[/caption\])|.*)#isU';
+                $count = preg_match_all($pattern, $content, $matches);
+                if (false !== $count) {
+                    for ($i=0; $i < $count; $i++) {
+                        $id = $matches[6][$i];
+                        $src = $matches[7][$i];
+                        $source = '<p class="isc-source-text">' . $options['source_pretext'] . ' ' . $this->get_source_by_url($src) . '</p>';
+                        $old_content = $matches[0][$i];
+                        $new_content = str_replace('wp-image-' . $id, 'wp-image-' . $id . ' with-source', $old_content);
+                        $alignment = (!empty($matches[1][$i]))? $matches[2][$i] : $matches[5][$i];
+                        
+                        $content = str_replace($old_content, '<div id="isc_attachment_' . $id . '" class="isc-source ' . $alignment . '"> ' . $new_content . $source . '</div>', $content);
+                    }
                 }
             }
             return $content;
@@ -1109,6 +1115,8 @@ if (!class_exists('ISC_CLASS')) {
             $default['warning_onesource_missing'] = true;
             $default['hide_list'] = false;
             $default['caption_position'] = 'top-left';
+            $default['source_on_image'] = false;
+            $default['source_pretext'] = __('Source:', ISCTEXTDOMAIN);
             return $default;
         }
         
@@ -1145,6 +1153,7 @@ if (!class_exists('ISC_CLASS')) {
             /**
             * All new setting in Misc settings group Here!
             */
+            add_settings_field('source_caption', __("Source as caption on image", ISCTEXTDOMAIN), array($this, 'renderfield_source_caption'), 'isc_settings_page', 'isc_settings_section');
             add_settings_field('caption_position', __("Caption position", ISCTEXTDOMAIN), array($this, 'renderfield_caption_pos'), 'isc_settings_page', 'isc_settings_section');
             add_settings_field('warning_one_source', __("Warning when there is at least one missing source", ISCTEXTDOMAIN), array($this, 'renderfield_warning_onesource_misisng'), 'isc_settings_page', 'isc_settings_section');
             add_settings_field('warning_nosource', __("Warnings when source not available", ISCTEXTDOMAIN), array($this, 'renderfield_warning_nosource'), 'isc_settings_page', 'isc_settings_section');
@@ -1457,13 +1466,31 @@ if (!class_exists('ISC_CLASS')) {
             }
             $description = __('Position of captions into images' ,ISCTEXTDOMAIN);
             ?>
-            <div id="caption-block">
+            <div id="caption-position-block">
                     <select id="caption-pos" name="isc_options[cap_pos]">
                         <?php foreach ($this->_caption_position as $pos) : ?>
                             <option value="<?php echo $pos; ?>" <?php selected($pos, $options['caption_position']); ?>><?php echo $pos; ?></option>
                         <?php endforeach; ?>
                     </select>
                     <p><em><?php echo $description; ?></em></p>
+            </div>
+            <?php
+        }
+        
+        public function renderfield_source_caption()
+        {
+            $options = $this->get_isc_options();
+            if (!isset($options['source_on_image'])) {
+                $options = $options + $this->default_options();
+            }
+            $description_checkbox = __('Tick to display source onto each image.' ,ISCTEXTDOMAIN);
+            $description_textfield = __('The text preceding the source on each image.' ,ISCTEXTDOMAIN);
+            ?>
+            <div id="caption-block">
+                <input type="checkbox" id="source-on-image" value="1" name="isc_options[source_on_image]" <?php checked($options['source_on_image']); ?> />
+                <p><em><?php echo $description_checkbox; ?></em></p>
+                <input type="text" id='source-pretext' name="isc_options[source_pretext]" value="<?php echo $options['source_pretext']; ?>" />
+                <p><em><?php echo $description_textfield; ?></em></p>
             </div>
             <?php
         }
@@ -1529,6 +1556,12 @@ if (!class_exists('ISC_CLASS')) {
             }
             if (in_array($input['cap_pos'], $this->_caption_position))
                 $output['caption_position'] = $input['cap_pos'];
+            if (isset($input['source_on_image'])) {
+                $output['source_on_image'] = true;
+                $output['source_pretext'] = $input['source_pretext'];
+            } else {
+                $output['source_on_image'] = false;
+            }
             return $output;
         }
         

@@ -83,7 +83,7 @@ function isc_update_caption_position(jQ_Obj) {
     
     var caption = jQ_Obj.find('.isc-source-text');
     
-    //caption width + padding (after moving onto image)
+    //caption width + padding & margin (after moving onto image)
     var tw = caption.outerWidth(true);
     //caption height + padding (idem)
     var th = caption.outerHeight(true);
