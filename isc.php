@@ -1,7 +1,7 @@
 <?php
 /*
   Plugin Name: Image Source Control
-  Version: 1.2.0.3
+  Version: 1.3.0
   Plugin URI: http://webgilde.com/en/image-source-control/
   Description: The Image Source Control saves the source of an image, lists them and warns if it is missing.
   Author: Thomas Maier
@@ -38,7 +38,7 @@ if (!function_exists('add_action')) {
     exit();
 }
 
-define('ISCVERSION', '1.2.0.3');
+define('ISCVERSION', '1.3.0');
 define('ISCNAME', 'Image Source Control');
 define('ISCTEXTDOMAIN', 'isc');
 define('ISCDIR', basename(dirname(__FILE__)));
@@ -80,20 +80,6 @@ if (!class_exists('ISC_CLASS')) {
          */
         protected $_allowedExtensions = array(
             'jpg', 'png', 'gif'
-        );
-        
-        /**
-        * This array is used to count the maximum upgrade step count.
-        *
-        * IMPORTANT!
-        * Do not forget to add each new version AFTER EDITING THE ISCVERSION CONSTANT.
-        * @since 1.2
-        */
-        protected $_upgrade_step = array(
-            '1.2',
-            '1.2.0.1',
-            '1.2.0.2',
-            '1.2.0.3'
         );
         
         /**
@@ -189,9 +175,6 @@ if (!class_exists('ISC_CLASS')) {
         public function content_filter($content)
         {
             $options = $this->get_isc_options();
-            if (!isset($options['source_on_image'])) {
-                $options = $options + $this->default_options();
-            }
             if ($options['source_on_image']) {
                 $pattern = '#(\[caption.*align="(.+)"[^\]*]{0,}\])? *(<a [^>]+>)? *(<img .*class=".*(align\d{4,})?.*wp-image-(\d+)\D*".*src="(.+)".*/?>).*(?(3)(?:</a>)|.*).*(?(1)(?:\[/caption\])|.*)#isU';
                 $count = preg_match_all($pattern, $content, $matches);
@@ -224,9 +207,6 @@ if (!class_exists('ISC_CLASS')) {
         public function front_head()
         {
             $options = $this->get_isc_options();
-            if (!isset($options['caption_position'])) {
-                $options = $options + $this->default_options();
-            }
             ?>
             <script type="text/javascript">
             /* <![CDATA[ */
@@ -398,9 +378,6 @@ if (!class_exists('ISC_CLASS')) {
             }
             
             $options = $this->get_isc_options();
-            if (!isset($options['hide_list'])) {
-                $options = $options + $this->default_options();
-            }
             $show_text = __('Show the list', ISCTEXTDOMAIN);
             $hide_text = __('Hide the list', ISCTEXTDOMAIN);
                     
@@ -1081,8 +1058,8 @@ if (!class_exists('ISC_CLASS')) {
             $options = $this->get_isc_options();
             if (!$options['installed']) {
                 /**
-                * Here, all jobs to perform during first installation, especially options and custom fields.
-                * Important: No add_action('something', 'somefunction').
+                * Here, all jobs to perform during first activation, especially options and custom fields.
+                * Important: NO add_action('something', 'somefunction') here.
                 */
                 
                 // adds meta fields for attachments
@@ -1164,121 +1141,26 @@ if (!class_exists('ISC_CLASS')) {
         * manage data structure upgrading of outdated versions
         */
         public function upgrade_management() {
+        
             /*
              * Since the activation hook is not executed on plugin upgrade, this function checks options in database
              * during the admin_init hook to handle plugin's upgrade.
              */
+             
             $options = get_option('isc_options');
+            
             if (!is_array($options)) {
-                $options = array();
-            }
-
-            $max_step = count($this->_upgrade_step);
-            $step_count = 0;
-
-            if (!isset($options['version'])) {
-                /**
-                * If the current version is older than 1.2, upgrade data structure to 1.2.0.1 (same data structure for 1.2 and 1.2.0.1)
-                * This is because some specific upgrade steps can be necessary (possibly) in future versions. So it may be usefull to perform the
-                * progressive upgrade process (starting to 1.2.0.1) in case an user upgrades his plugin from a very old version.
-                */
-                
-                /**
-                * These are default values of $isc_options's fields in version 1.2.0.1
-                */
-                $particular_options_version['image_list_headline'] = __('image sources', ISCTEXTDOMAIN);
-                $particular_options_version['use_authorname'] = true;
-                $particular_options_version['by_author_text'] = __('Owned by the author', ISCTEXTDOMAIN);
-                $particular_options_version['version'] = '1.2.0.1';
-                $particular_options_version['webgilde'] = false;
-                $particular_options_version['thumbnail_in_list'] = false;
-                $particular_options_version['thumbnail_size'] = 'thumbnail';
-                $particular_options_version['thumbnail_width'] = 150;
-                $particular_options_version['thumbnail_height'] = 150;
-                
-                $options = $options + $particular_options_version;
-                
-                // No isc_image_posts for version prior to 1.2
+                // special case for version prior to 1.2 (which don't have options)
+                $options = $this->default_options();
                 $this->init_image_posts_metafield();
                 $options['installed'] = true;
-                
                 update_option('isc_options', $options);
-                /**
-                * At this point isc_options['version'] has the value '1.2.0.1'
-                */
-                $this->upgrade_management();
-                
-            } elseif (ISCVERSION != $options['version']) {
-                            
-                while (ISCVERSION != $options['version'] && $step_count < $max_step) {
-                
-                    switch ($options['version']) {
-                    
-                    /**
-                    * IMPORTANT!
-                    *
-                    * AFTER EDITING THE ISCVERSION CONSTANT, add one case with the following structure, otherwise ... infinite loop!
-                    *
-                    *   case 'PREVIOUS VERSION' :
-                    *       $options['version'] = 'NEW VERSION';
-                    *       $step_count++;
-                    *       break;
-                    *
-                    * BEFORE RELEASING NEW VERSION, the case should looks like the following,
-                    *
-                    *   case 'PREVIOUS VERSION' :
-                    *       (1) append default options to current options once and remove all "$options = $options + $this->default_options()" outside of upgrade_management().
-                    *       (2) execute any other particular function related to upgrading to the new version like init_image_posts_metafield().
-                    *       $options['version'] = 'NEW VERSION';
-                    *       $step_count++;
-                    *       break;
-                    *
-                    * @todo add a 'one_shot_function_launcher' utility function and the corresponding data in options to execute once functions mentionned in (2) in dev-mode.
-                    */
-                    
-                        case '1.2' : // 1.2 to 1.2.0.1
-                            /**
-                            * No data structure modifications. Data structures are identical from 1.2 to 1.2.0.3
-                            */
-                            $options['version'] = '1.2.0.1';
-                            $step_count++;
-                            break;
-                            
-                        case '1.2.0.1' : // 1.2.0.1 to 1.2.0.2
-                            $options['version'] = '1.2.0.2';
-                            $step_count++;
-                            break;
-                            
-                        case '1.2.0.2' : // 1.2.0.2 to 1.2.0.3
-                            $options['version'] = '1.2.0.3';
-                            
-                            /**
-                            * Adds missings indexes in isc_options. This addition should be performed on the last step.
-                            * Deletion of particular index and operations on custom fields can occur in any step.
-                            */
-                            $options = $options + $this->default_options();
-                            
-                            $step_count++;
-                            break;
-                            
-                        default :
-                            /**
-                            * In production mode, the program should not meet the default case if $this->_upgrade_step is up to date (all released version are in the array).
-                            * So, if for any reason (dev-mode) , this case happens, reset $step_count (to avoid saving changes in isc_options) and exit both from SWITCH and from WHILE.
-                            * We will have a permanent inequality between $isc_options['version'] in options and ISCVERSION in the file.
-                            */
-                            $step_count = 0;
-                            break 2;
-                            
-                    }
-                    
-                }
-                /**
-                * If the program has entered the WHILE loop ($step_count has been incremented, i.e. one or more upgrade step executed), then save options in database.
-                */                
-                if (0 != $step_count) {
-                    update_option('isc_options', $options);
-                }
+            }
+            
+            if (ISCVERSION != $options['version']) {
+                $options = $options + $this->default_options();
+                $options['version'] = ISCVERSION;
+                update_option('isc_options', $options);
             }
         }
         
@@ -1326,9 +1208,6 @@ if (!class_exists('ISC_CLASS')) {
         public function renderfield_hide_list()
         {
             $options = $this->get_isc_options();
-            if (!isset($options['hide_list'])) {
-                $options = $options + $this->default_options();
-            }
             $description = __("Hide the list when the post is loaded. A simple click on the list headline will show the list content.", ISCTEXTDOMAIN);
             ?>
             <div id="hide-list-block">
@@ -1431,9 +1310,6 @@ if (!class_exists('ISC_CLASS')) {
         public function renderfield_warning_nosource()
         {
             $options = $this->get_isc_options();
-            if (!isset($options['warning_nosource'])) {
-                $options = $options + $this->default_options();
-            }
             $description = __('Warn and prevent data to be saved when an attachment is edited and the source has not been specified.' ,ISCTEXTDOMAIN);
             ?>
             <div id="no-source-block">
@@ -1446,9 +1322,6 @@ if (!class_exists('ISC_CLASS')) {
         public function renderfield_warning_onesource_misisng()
         {
             $options = $this->get_isc_options();
-            if (!isset($options['warning_onesource_missing'])) {
-                $options = $options + $this->default_options();
-            }
             $description = __('Display an admin notice in admin pages when one or more image sources are missing.' ,ISCTEXTDOMAIN);
             ?>
             <div id="one-source-block">
@@ -1461,9 +1334,6 @@ if (!class_exists('ISC_CLASS')) {
         public function renderfield_caption_pos()
         {
             $options = $this->get_isc_options();
-            if (!isset($options['caption_position'])) {
-                $options = $options + $this->default_options();
-            }
             $description = __('Position of captions into images' ,ISCTEXTDOMAIN);
             ?>
             <div id="caption-position-block">
@@ -1480,9 +1350,6 @@ if (!class_exists('ISC_CLASS')) {
         public function renderfield_source_caption()
         {
             $options = $this->get_isc_options();
-            if (!isset($options['source_on_image'])) {
-                $options = $options + $this->default_options();
-            }
             $description_checkbox = __('Tick to display source onto each image.' ,ISCTEXTDOMAIN);
             $description_textfield = __('The text preceding the source on each image.' ,ISCTEXTDOMAIN);
             ?>
@@ -1624,9 +1491,6 @@ if (!class_exists('ISC_CLASS')) {
             );
             $attachments = get_posts($args);
             $options = $this->get_isc_options();
-            if (!isset($options['warning_onesource_missing'])) {
-                $options = $options + $this->default_options();
-            }
             if (!empty($attachments) && $options['warning_onesource_missing'] ) {
             $missing_src = esc_url(admin_url('upload.php?page=image-source-control-isc/templates/missing_sources.php'));
             ?>

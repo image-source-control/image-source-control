@@ -2,8 +2,8 @@
 Contributors: webzunft
 Tags: image, images, picture, picture source, image source, mediathek
 Requires at least: 3.4
-Tested up to: 3.5
-Stable tag: 1.2.0.3
+Tested up to: 3.5.1
+Stable tag: 1.3.0
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -47,6 +47,10 @@ e.g.
 2. Two extra fields from ISC in mediathek
 
 == Changelog ==
+
+= 1.3.0 =
+
+
 
 = 1.2.0.3 =
 
