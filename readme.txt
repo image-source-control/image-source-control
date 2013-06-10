@@ -40,6 +40,7 @@ e.g.
 
 1. Upload `wg-image-source-control`-folder to the `/wp-content/plugins/` directory
 1. Activate ISC through the 'Plugins' menu in WordPress
+1. Visit _Settings > Image Control_ to set up the plugin
 
 == Screenshots ==
 
@@ -50,7 +51,11 @@ e.g.
 
 = 1.3.0 =
 
-
+* [feature] hide the image source list under the post/page (default: visible)
+* [feature] use uploader as the image author, not the posts author
+* [feature] warnings, if image is saved without image source
+* [feature] show image source directly within the image; you can choose the position
+* [fixed] update issues
 
 = 1.2.0.3 =
 
