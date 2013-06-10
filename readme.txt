@@ -18,8 +18,10 @@ Image Source Control (ISC) helps to prevent this situation.
 **Features**
 
 * adds an extra field (custom field) to mediathek to include the image source into
-* lets you mark an image to belong to the posts author
+* lets you mark an image to belong to the uploader
 * lists images with missing sources in the backend
+* show image source directly in the image
+* warnings, if image source is missing
 * shortcode to list the sources in the editor
 * shortcode to list all images in the blog as a paginated list
 * function to include sources of a post in templates
