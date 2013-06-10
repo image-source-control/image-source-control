@@ -46,8 +46,10 @@ e.g.
 
 == Screenshots ==
 
-1. Missing sources page to list images with missing source.
-2. Two extra fields from ISC in mediathek
+1. display a list with all images of your site and their sources
+1. display image source within the image
+1. plenty of settings to customize how to display image sources
+1. added two new fields to media library
 
 == Changelog ==
 
