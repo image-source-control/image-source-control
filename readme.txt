@@ -2,8 +2,8 @@
 Contributors: webzunft
 Tags: image, images, picture, picture source, image source, mediathek
 Requires at least: 3.4
-Tested up to: 3.5
-Stable tag: 1.2.0.3
+Tested up to: 3.5.1
+Stable tag: 1.3.0
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -18,8 +18,10 @@ Image Source Control (ISC) helps to prevent this situation.
 **Features**
 
 * adds an extra field (custom field) to mediathek to include the image source into
-* lets you mark an image to belong to the posts author
+* lets you mark an image to belong to the uploader
 * lists images with missing sources in the backend
+* show image source directly in the image
+* warnings, if image source is missing
 * shortcode to list the sources in the editor
 * shortcode to list all images in the blog as a paginated list
 * function to include sources of a post in templates
@@ -40,13 +42,24 @@ e.g.
 
 1. Upload `wg-image-source-control`-folder to the `/wp-content/plugins/` directory
 1. Activate ISC through the 'Plugins' menu in WordPress
+1. Visit _Settings > Image Control_ to set up the plugin
 
 == Screenshots ==
 
-1. Missing sources page to list images with missing source.
-2. Two extra fields from ISC in mediathek
+1. display a list with all images of your site and their sources
+1. display image source within the image
+1. plenty of settings to customize how to display image sources
+1. added two new fields to media library
 
 == Changelog ==
+
+= 1.3.0 =
+
+* [feature] hide the image source list under the post/page (default: visible)
+* [feature] use uploader as the image author, not the posts author
+* [feature] warnings, if image is saved without image source
+* [feature] show image source directly within the image; you can choose the position
+* [fixed] update issues
 
 = 1.2.0.3 =
 
@@ -126,6 +139,6 @@ You should also check first if the function exists before using it:
 
 **list all image sources**
 
-You can add a paginated list with ALL attachments and sources to a post or page using the shortcode [isc_list_all]. Use `[isc_list per_page="25]` to show only a limited number of images per page.
+You can add a paginated list with ALL attachments and sources to a post or page using the shortcode [isc_list_all]. Use `[isc_list_all per_page="25"]` to show only a limited number of images per page.
 
 The plugin searches your post content and thumbnail for images (attachments) and lists them, if you included at least the image source or marked it as your own image.

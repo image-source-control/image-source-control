@@ -1,7 +1,7 @@
 <?php
 /*
   Plugin Name: Image Source Control
-  Version: 1.2.0.3
+  Version: 1.3.0
   Plugin URI: http://webgilde.com/en/image-source-control/
   Description: The Image Source Control saves the source of an image, lists them and warns if it is missing.
   Author: Thomas Maier
@@ -38,7 +38,7 @@ if (!function_exists('add_action')) {
     exit();
 }
 
-define('ISCVERSION', '1.2.0.3');
+define('ISCVERSION', '1.3.0');
 define('ISCNAME', 'Image Source Control');
 define('ISCTEXTDOMAIN', 'isc');
 define('ISCDIR', basename(dirname(__FILE__)));
@@ -70,25 +70,16 @@ if (!class_exists('ISC_CLASS')) {
         );
 
         /**
+        * Commonly used text elements
+        */
+        protected $_common_texts = array();        
+        
+        /**
          * allowed image file types/extensions
          * @since 1.1
          */
         protected $_allowedExtensions = array(
             'jpg', 'png', 'gif'
-        );
-        
-        /**
-        * This array is used to count the maximum upgrade step count.
-        *
-        * IMPORTANT!
-        * Do not forget to add each new version AFTER EDITING THE ISCVERSION CONSTANT.
-        * @since 1.2
-        */
-        protected $_upgrade_step = array(
-            '1.2',
-            '1.2.0.1',
-            '1.2.0.2',
-            '1.2.0.3'
         );
         
         /**
@@ -102,21 +93,36 @@ if (!class_exists('ISC_CLASS')) {
          * @since 1.2
          */
         protected $_options = array();
-
+        
+        /**
+        * Position of image's caption
+        */
+        protected $_caption_position = array(
+            'top-left',
+            'top-center',
+            'top-right',
+            'center',
+            'bottom-left',
+            'bottom-center',
+            'bottom-right'
+        );
+        
         /**
          * Setup registers filterts and actions.
          */
         public function __construct()
-        {
-            
+        {        
             // load all plugin options
             $this->_options = get_option('isc_options');
+            $this->_common_texts['not_available'] = __('Not available', ISCTEXTDOMAIN);
             
             // insert all function for the frontend here
             
             add_shortcode('isc_list', array($this, 'list_post_attachments_with_sources_shortcode'));
             add_shortcode('isc_list_all', array($this, 'list_all_post_attachments_sources_shortcode'));
-            
+            add_action('wp_enqueue_scripts', array($this, 'front_scripts'));
+            add_action('wp_head', array($this, 'front_head'));
+            add_action('the_content', array($this, 'content_filter'));
             // insert all backend functions below this check
             if (!current_user_can('upload_files')) {
                 return false;
@@ -124,19 +130,100 @@ if (!class_exists('ISC_CLASS')) {
             
             register_activation_hook(ISCPATH . '/isc.php', array($this, 'activation'));
             
+            add_action('add_attachment', array($this, 'attachment_added'), 10, 2);
             add_filter('attachment_fields_to_edit', array($this, 'add_isc_fields'), 10, 2);
             add_filter('attachment_fields_to_save', array($this, 'isc_fields_save'), 10, 2);
+            
+            add_action('admin_notices', array($this, 'admin_notices'));
             
             add_action('admin_menu', array($this, 'create_menu'));
             add_action('admin_init', array($this, 'SAPI_init'));
             
             add_action('admin_enqueue_scripts', array($this, 'add_admin_scripts'));
+            add_action( 'admin_print_scripts', array($this, 'admin_headjs') );
             
-            // ajax function; 'add_meta_fields' is the action defined in isc.js as the action to be called via ajax
-            add_action('wp_ajax_add_meta_fields', array($this, 'add_meta_values_to_attachments'));
-
             // save image information in meta field when a post is saved
             add_action('save_post', array($this, 'save_image_information_on_post_save'));
+        }
+        
+        public function get_source_by_url($url)
+        {
+            $id = $this->get_image_by_url($url);
+            $metadata['source'] = get_post_meta($id, 'isc_image_source', true);
+            $metadata['own'] = get_post_meta($id, 'isc_image_source_own', true);
+            
+            $source = $this->_common_texts['not_available'];
+            
+            $att_post = get_post($id);
+            
+            if ('' != $metadata['own']) {
+                if ($this->_options['use_authorname']) {
+                    if (!empty($att_post)) {
+                        $source = get_the_author_meta('display_name', $att_post->post_author);
+                    }
+                } else {
+                    $source = $this->options['by_author_text'];
+                }
+            } else {
+                if ('' != $metadata['source']) {
+                    $source = $metadata['source'];
+                }
+            }
+            return $source;
+        }
+        
+        public function content_filter($content)
+        {
+            $options = $this->get_isc_options();
+            if ($options['source_on_image']) {
+                $pattern = '#(\[caption.*align="(.+)"[^\]*]{0,}\])? *(<a [^>]+>)? *(<img .*class=".*(align\d{4,})?.*wp-image-(\d+)\D*".*src="(.+)".*/?>).*(?(3)(?:</a>)|.*).*(?(1)(?:\[/caption\])|.*)#isU';
+                $count = preg_match_all($pattern, $content, $matches);
+                if (false !== $count) {
+                    for ($i=0; $i < $count; $i++) {
+                        $id = $matches[6][$i];
+                        $src = $matches[7][$i];
+                        $source = '<p class="isc-source-text">' . $options['source_pretext'] . ' ' . $this->get_source_by_url($src) . '</p>';
+                        $old_content = $matches[0][$i];
+                        $new_content = str_replace('wp-image-' . $id, 'wp-image-' . $id . ' with-source', $old_content);
+                        $alignment = (!empty($matches[1][$i]))? $matches[2][$i] : $matches[5][$i];
+                        
+                        $content = str_replace($old_content, '<div id="isc_attachment_' . $id . '" class="isc-source ' . $alignment . '"> ' . $new_content . $source . '</div>', $content);
+                    }
+                }
+            }
+            return $content;
+        }
+        
+        public function attachment_added($att_id)
+        {
+            foreach ($this->_fields as $field) {
+                update_post_meta($att_id, $field['id'], $field['default']);
+            }
+        }
+        
+        /**
+        * Front-end scripts in <head /> section.
+        */
+        public function front_head()
+        {
+            $options = $this->get_isc_options();
+            ?>
+            <script type="text/javascript">
+            /* <![CDATA[ */
+                var isc_front_data = 
+                {
+                    caption_position : '<?php echo $options['caption_position']; ?>',
+                }
+            /* ]]> */
+            </script>
+            <?php
+        }
+        
+        /**
+        * Enqueue scripts for the front-end.
+        */
+        public function front_scripts() {
+            wp_enqueue_script('isc_front_js', plugins_url('/js/front-js.js', __FILE__), array('jquery'), ISCVERSION);
         }
 
         /**
@@ -165,14 +252,15 @@ if (!class_exists('ISC_CLASS')) {
         public function add_admin_scripts($hook)
         {
             global $isc_setting;
-            if ($hook != $isc_setting) {
-                return;
+            if ('post.php' == $hook) {
+                wp_enqueue_script('isc_postphp_script', plugins_url('/js/post.php.js', __FILE__), array('jquery'), ISCVERSION);
             }
-            wp_enqueue_script('isc_script', plugins_url('/js/isc.js', __FILE__), false, ISCVERSION);
-            // this is to define ajaxurl to be able to use this in its own js script
-            // wp_localize_script( 'isc_script', 'IscAjax', array( 'ajaxurl' => admin_url( 'admin-ajax.php' ) ) );
+            if ($hook == $isc_setting) {
+                wp_enqueue_script('isc_script', plugins_url('/js/isc.js', __FILE__), false, ISCVERSION);
+                wp_enqueue_style('isc_image_settings_css', plugins_url('/css/image-settings.css', __FILE__), false, ISCVERSION);
+            }
         }
-
+        
         /**
          * add custom field to attachment
          * @param arr $form_fields
@@ -213,7 +301,6 @@ if (!class_exists('ISC_CLASS')) {
             if (isset($attachment['isc_image_source'])) {
                 update_post_meta($post['ID'], 'isc_image_source', $attachment['isc_image_source']);
             }
-
             update_post_meta($post['ID'], 'isc_image_source_own', $attachment['isc_image_source_own']);
             return $post;
         }
@@ -245,11 +332,7 @@ if (!class_exists('ISC_CLASS')) {
                 
                 $attachments = get_post_meta($post_id, 'isc_post_images', true);
             }
-            
-            $authorname = '';
-            if (!empty($post->post_author))
-                $authorname = get_the_author_meta('display_name', $post->post_author);
-            
+                        
             $return = '';
             if (!empty($attachments)) {
                 $atts = array();
@@ -263,7 +346,12 @@ if (!class_exists('ISC_CLASS')) {
                         unset($atts[$attachment_id]);
                         continue;
                     } elseif ($own != '') {
-                        if ($this->_options['use_authorname'] && !empty($authorname)) {
+                        if ($this->_options['use_authorname']) {
+                            $authorname = '';
+                            $att_post = get_post($attachment_id);
+                            if (null !== $att_post) {
+                                $authorname = get_the_author_meta('display_name', $att_post->post_author);
+                            }
                             $atts[$attachment_id ]['source'] = $authorname;
                         } else {
                             $atts[$attachment_id ]['source'] = $this->_options['by_author_text'];
@@ -288,11 +376,26 @@ if (!class_exists('ISC_CLASS')) {
             if ($attachments == array()) {
                 return ;
             }
-            ob_start();
             
+            $options = $this->get_isc_options();
+            $show_text = __('Show the list', ISCTEXTDOMAIN);
+            $hide_text = __('Hide the list', ISCTEXTDOMAIN);
+                    
+            ob_start();
             $headline = $this->_options['image_list_headline'];
-            printf('<p class="isc_image_list_title">%s</p>', $headline); ?>
-            <ul class="isc_image_list"><?php
+            $hide_style = ($options['hide_list'])? 'style="height: 0px; overflow: hidden;"': 'style="height: 100%; overflow: hidden;"';
+            $hide_class = ($options['hide_list'])? ' isc-list-up': ' isc-list-down';
+            $hide_title = ($options['hide_list'])? $show_text : $hide_text;
+            printf('<p class="isc_image_list_title" title="%2$s" style="cursor: pointer;">%1$s</p>', $headline, $hide_title); ?>
+            <script type="text/javascript">
+                /* <!--[CDATA[ */
+                    isc_jstext = {
+                        show_list: "<?php echo esc_attr($show_text); ?>",
+                        hide_list: "<?php echo esc_attr($hide_text); ?>"
+                    }
+                /* ]]--> */
+            </script>
+            <ul class="isc_image_list <?php echo $hide_class; ?>"<?php echo $hide_style; ?>><?php
 
             foreach ($attachments as $atts_id => $atts_array) {
                 if (empty($atts_array['source'])) {
@@ -396,6 +499,27 @@ if (!class_exists('ISC_CLASS')) {
             }
         }
 
+        /**
+        * Display scripts in <head></head> section of admin page. Useful for creating js variables in the js global namespace.
+        */
+        public function admin_headjs()
+        {
+            global $pagenow;
+            $options = $this->get_isc_options();
+            if ('post.php' == $pagenow) {
+                ?>
+                <script type="text/javascript">
+				/* <![CDATA[ */
+                    isc_data = {
+                        warning_nosource : <?php echo (($options['warning_nosource'])? 'true' : 'false'); ?>,
+                        block_form_message : '<?php _e('Please specify the image source', ISCTEXTDOMAIN); ?>'
+                    }
+				/* ]]> */
+                </script>
+                <?php
+            }
+        }
+        
         /**
          * show the loading image from wp-admin/images/loading.gif
          * @param bool $display should this be displayed directly or hidden? via inline css
@@ -673,26 +797,25 @@ if (!class_exists('ISC_CLASS')) {
                 $connected_atts[$_attachment->ID]['title'] = $_attachment->post_title;
                 $connected_atts[$_attachment->ID]['author_name'] = '';
                 if ('' != $connected_atts[$_attachment->ID]['own']) {
-                    $parent = get_post($_attachment->post_parent);
-                    $connected_atts[$_attachment->ID]['author_name'] = get_the_author_meta('display_name', $parent->post_author);
+                    $connected_atts[$_attachment->ID]['author_name'] = get_the_author_meta('display_name', $_attachment->post_author);
                 }
                 
                 $metadata = get_post_meta($_attachment->ID, 'isc_image_posts', true);
-                $parents_data = '';
+                $usage_data = '';
                 
                 if (is_array($metadata) && array() != $metadata) {
-                    $parents_data .= "<ul style='margin: 0;'>";
+                    $usage_data .= "<ul style='margin: 0;'>";
                     foreach($metadata as $data) {
-                        $parents_data .= sprintf(__('<li><a href="%1$s" title="View %2$s">%3$s</a></li>', ISCTEXTDOMAIN),
+                        $usage_data .= sprintf(__('<li><a href="%1$s" title="View %2$s">%3$s</a></li>', ISCTEXTDOMAIN),
                             esc_url(get_permalink($data)),
                             esc_attr(get_the_title($data)),
                             esc_html(get_the_title($data))
                         );
                     }
-                    $parents_data .= "</ul>";
+                    $usage_data .= "</ul>";
                 }
                 
-                $connected_atts[$_attachment->ID]['posts'] = $parents_data;
+                $connected_atts[$_attachment->ID]['posts'] = $usage_data;
             }
             
             $total = count($connected_atts);
@@ -755,9 +878,8 @@ if (!class_exists('ISC_CLASS')) {
                 </thead>
                 <tbody>
                 <?php foreach ($atts as $id => $data) : ?>
-                    <?php
-                        /** @todo ment for later: this text was used above already; find a place to but it so it is defined only once and used where needed */    
-                        $source = __('Not available', ISCTEXTDOMAIN);
+                    <?php  
+                        $source = $this->_common_texts['not_available'];
                         if ('' != $data['own']) {
                             /** @todo ment for later: this text was used above already; find a place to but it so it is defined only once and used where needed */
                             if ($this->_options['use_authorname']) {
@@ -936,8 +1058,8 @@ if (!class_exists('ISC_CLASS')) {
             $options = $this->get_isc_options();
             if (!$options['installed']) {
                 /**
-                * Here, all jobs to perform during first installation, especially options and custom fields.
-                * Important: No add_action('something', 'somefunction').
+                * Here, all jobs to perform during first activation, especially options and custom fields.
+                * Important: NO add_action('something', 'somefunction') here.
                 */
                 
                 // adds meta fields for attachments
@@ -966,6 +1088,12 @@ if (!class_exists('ISC_CLASS')) {
             $default['thumbnail_size'] = 'thumbnail';
             $default['thumbnail_width'] = 150;
             $default['thumbnail_height'] = 150;
+            $default['warning_nosource'] = true;
+            $default['warning_onesource_missing'] = true;
+            $default['hide_list'] = false;
+            $default['caption_position'] = 'top-left';
+            $default['source_on_image'] = false;
+            $default['source_pretext'] = __('Source:', ISCTEXTDOMAIN);
             return $default;
         }
         
@@ -977,134 +1105,62 @@ if (!class_exists('ISC_CLASS')) {
             $this->upgrade_management();
             register_setting('isc_options_group', 'isc_options', array($this, 'settings_validation'));
             add_settings_section('isc_settings_section', '', '__return_false', 'isc_settings_page');
+            
+            // Starts Page/Post settings group
             add_settings_field('image_list_headline', __('Image list headline', ISCTEXTDOMAIN), array($this, 'renderfield_list_headline'), 'isc_settings_page', 'isc_settings_section');
+            /**
+            * All new setting in Page/Post group Here!
+            */
+            add_settings_field('hide_list', __('Hide the image list', ISCTEXTDOMAIN), array($this, 'renderfield_hide_list'), 'isc_settings_page', 'isc_settings_section');
+            // Ends Page/Post settings group
+            
+            // Starts Full images list group
+            add_settings_field('use_thumbnail', __("Use thumbnails in images list", ISCTEXTDOMAIN), array($this, 'renderfield_use_thumbnail'), 'isc_settings_page', 'isc_settings_section');
+            /**
+            * All new setting in Full images list group Here!
+            */
+            add_settings_field('thumbnail_width', __("Thumbnails max-width", ISCTEXTDOMAIN), array($this, 'renderfield_thumbnail_width'), 'isc_settings_page', 'isc_settings_section');
+            add_settings_field('thumbnail_height', __("Thumbnails max-height", ISCTEXTDOMAIN), array($this, 'renderfield_thumbnail_height'), 'isc_settings_page', 'isc_settings_section');
+            // Ends Full images list group
+            
+            // Starts Misc settings group
             add_settings_field('use_authorname', __('Use authors names', ISCTEXTDOMAIN), array($this, 'renderfield_use_authorname'), 'isc_settings_page', 'isc_settings_section');
             add_settings_field('by_author_text', __('Custom text for owned images', ISCTEXTDOMAIN), array($this, 'renderfield_byauthor_text'), 'isc_settings_page', 'isc_settings_section');
             add_settings_field('webgilde_backlink', __("Link to webgilde's website", ISCTEXTDOMAIN), array($this, 'renderfield_webgile'), 'isc_settings_page', 'isc_settings_section');
-            add_settings_field('use_thumbnail', __("Use thumbnails in images list", ISCTEXTDOMAIN), array($this, 'renderfield_use_thumbnail'), 'isc_settings_page', 'isc_settings_section');
-            add_settings_field('thumbnail_width', __("Thumbnails max-width", ISCTEXTDOMAIN), array($this, 'renderfield_thumbnail_width'), 'isc_settings_page', 'isc_settings_section');
-            add_settings_field('thumbnail_height', __("Thumbnails max-height", ISCTEXTDOMAIN), array($this, 'renderfield_thumbnail_height'), 'isc_settings_page', 'isc_settings_section');
+            /**
+            * All new setting in Misc settings group Here!
+            */
+            add_settings_field('source_caption', __("Source as caption on image", ISCTEXTDOMAIN), array($this, 'renderfield_source_caption'), 'isc_settings_page', 'isc_settings_section');
+            add_settings_field('caption_position', __("Caption position", ISCTEXTDOMAIN), array($this, 'renderfield_caption_pos'), 'isc_settings_page', 'isc_settings_section');
+            add_settings_field('warning_one_source', __("Warning when there is at least one missing source", ISCTEXTDOMAIN), array($this, 'renderfield_warning_onesource_misisng'), 'isc_settings_page', 'isc_settings_section');
+            add_settings_field('warning_nosource', __("Warnings when source not available", ISCTEXTDOMAIN), array($this, 'renderfield_warning_nosource'), 'isc_settings_page', 'isc_settings_section');
+            // Ends Misc settings group
         }
         
         /**
         * manage data structure upgrading of outdated versions
         */
         public function upgrade_management() {
+        
             /*
              * Since the activation hook is not executed on plugin upgrade, this function checks options in database
              * during the admin_init hook to handle plugin's upgrade.
              */
+             
             $options = get_option('isc_options');
+            
             if (!is_array($options)) {
-                $options = array();
-            }
-
-            $max_step = count($this->_upgrade_step);
-            $step_count = 0;
-
-            if (!isset($options['version'])) {
-                /**
-                * If the current version is older than 1.2, upgrade data structure to 1.2.0.1 (same data structure for 1.2 and 1.2.0.1)
-                * This is because some specific upgrade steps can be necessary (possibly) in future versions. So it may be usefull to perform the
-                * progressive upgrade process (starting to 1.2.0.1) in case an user upgrades his plugin from a very old version.
-                */
-                
-                /**
-                * These are default values of $isc_options's fields in version 1.2.0.1
-                */
-                $particular_options_version['image_list_headline'] = __('image sources', ISCTEXTDOMAIN);
-                $particular_options_version['use_authorname'] = true;
-                $particular_options_version['by_author_text'] = __('Owned by the author', ISCTEXTDOMAIN);
-                $particular_options_version['version'] = '1.2.0.1';
-                $particular_options_version['webgilde'] = false;
-                $particular_options_version['thumbnail_in_list'] = false;
-                $particular_options_version['thumbnail_size'] = 'thumbnail';
-                $particular_options_version['thumbnail_width'] = 150;
-                $particular_options_version['thumbnail_height'] = 150;
-                
-                $options = $options + $particular_options_version;
-                
-                // No isc_image_posts for version prior to 1.2
+                // special case for version prior to 1.2 (which don't have options)
+                $options = $this->default_options();
                 $this->init_image_posts_metafield();
                 $options['installed'] = true;
-                
                 update_option('isc_options', $options);
-                /**
-                * At this point isc_options['version'] has the value '1.2.0.1'
-                */
-                $this->upgrade_management();
-                
-            } elseif (ISCVERSION != $options['version']) {
-                            
-                while (ISCVERSION != $options['version'] && $step_count < $max_step) {
-                
-                    switch ($options['version']) {
-                    
-                    /**
-                    * IMPORTANT!
-                    *
-                    * AFTER EDITING THE ISCVERSION CONSTANT, add one case with the following structure, otherwise ... infinite loop!
-                    *
-                    *   case 'PREVIOUS VERSION' :
-                    *       $options['version'] = 'NEW VERSION';
-                    *       $step_count++;
-                    *       break;
-                    *
-                    * BEFORE RELEASING NEW VERSION, the case should looks like the following,
-                    *
-                    *   case 'PREVIOUS VERSION' :
-                    *       (1) append default options to current options once and remove all "$options = $options + $this->default_options()" outside of upgrade_management().
-                    *       (2) execute any other particular function related to upgrading to the new version like init_image_posts_metafield().
-                    *       $options['version'] = 'NEW VERSION';
-                    *       $step_count++;
-                    *       break;
-                    *
-                    * @todo add a 'one_shot_function_launcher' utility function and the corresponding data in options to execute once functions mentionned in (2) in dev-mode.
-                    */
-                    
-                        case '1.2' : // 1.2 to 1.2.0.1
-                            /**
-                            * No data structure modifications. Data structures are identical from 1.2 to 1.2.0.3
-                            */
-                            $options['version'] = '1.2.0.1';
-                            $step_count++;
-                            break;
-                            
-                        case '1.2.0.1' : // 1.2.0.1 to 1.2.0.2
-                            $options['version'] = '1.2.0.2';
-                            $step_count++;
-                            break;
-                            
-                        case '1.2.0.2' : // 1.2.0.2 to 1.2.0.3
-                            $options['version'] = '1.2.0.3';
-                            
-                            /**
-                            * Adds missings indexes in isc_options. This addition should be performed on the last step.
-                            * Deletion of particular index and operations on custom fields can occur in any step.
-                            */
-                            $options = $options + $this->default_options();
-                            
-                            $step_count++;
-                            break;
-                            
-                        default :
-                            /**
-                            * In production mode, the program should not meet the default case if $this->_upgrade_step is up to date (all released version are in the array).
-                            * So, if for any reason (dev-mode) , this case happens, reset $step_count (to avoid saving changes in isc_options) and exit both from SWITCH and from WHILE.
-                            * We will have a permanent inequality between $isc_options['version'] in options and ISCVERSION in the file.
-                            */
-                            $step_count = 0;
-                            break 2;
-                            
-                    }
-                    
-                }
-                /**
-                * If the program has entered the WHILE loop ($step_count has been incremented, i.e. one or more upgrade step executed), then save options in database.
-                */                
-                if (0 != $step_count) {
-                    update_option('isc_options', $options);
-                }
+            }
+            
+            if (ISCVERSION != $options['version']) {
+                $options = $options + $this->default_options();
+                $options['version'] = ISCVERSION;
+                update_option('isc_options', $options);
             }
         }
         
@@ -1116,13 +1172,20 @@ if (!class_exists('ISC_CLASS')) {
             ?>
             <div id="icon-options-general" class="icon32"><br></div>
             <h2><?php _e('Images control settings', ISCTEXTDOMAIN); ?></h2>
-            <form id="image-control-form" method="post" action="options.php">
-            <?php
-                settings_fields( 'isc_options_group' );
-                do_settings_sections( 'isc_settings_page' );
-                submit_button();
-            ?>
-            </form>
+            <div id="isc-admin-wrap">
+                <form id="image-control-form" method="post" action="options.php">
+                    <div class="postbox isc-setting-group"><?php // Open the div for the first settings group ?>
+                    <h3 class="setting-group-head"><?php _e('Post / Page images list', ISCTEXTDOMAIN); ?></h3>
+                    <?php
+                        settings_fields( 'isc_options_group' );
+                        do_settings_sections( 'isc_settings_page' );
+                    ?>
+                    </div><?php //Close the last settings group div ?>
+                    <p class="submit">
+                        <input type="submit" name="submit" id="submit" class="button button-primary" value="Save Changes">
+                    </p>
+                </form>
+            </div><!-- #isc-admin-wrap -->
             <?php
         }
         
@@ -1142,13 +1205,32 @@ if (!class_exists('ISC_CLASS')) {
             <?php
         }
         
+        public function renderfield_hide_list()
+        {
+            $options = $this->get_isc_options();
+            $description = __("Hide the list when the post is loaded. A simple click on the list headline will show the list content.", ISCTEXTDOMAIN);
+            ?>
+            <div id="hide-list-block">
+                <label for="hide-list"><?php _e('Hide the image list of a post', ISCTEXTDOMAIN) ?></label>
+                <input type="checkbox" name="isc_options[hide_list]" id="hide-list" <?php checked($options['hide_list']); ?> />
+                <p><em><?php echo $description; ?></em></p>
+            </div>
+            </td></tr></tbody></table>
+            </div><!-- .postbox -->
+            <div class="postbox isc-setting-group">
+            <h3 class="setting-group-head"><?php _e('Full images list', ISCTEXTDOMAIN) ?></h3>
+            <table class="form-table"><tbody><tr><td>
+            <?php
+        }
+        
         public function renderfield_use_authorname()
         {
             $options = $this->get_isc_options();
-            $description = __("Display the author's public name as source when the image is owned by the author. Uncheck to use a custom text instead.", ISCTEXTDOMAIN);
+            $description = __("Display the author's public name as source when the image is owned by the author (the uploader of the image, not necessarily the author of the post the image is displayed on). Uncheck to use a custom text instead.", ISCTEXTDOMAIN);
+
             ?>
             <div id="use-authorname-block">
-                <label for="use_authorname"><?php _e('Use author name') ?></label>
+                <label for="use_authorname"><?php _e('Use author name', ISCTEXTDOMAIN) ?></label>
                 <input type="checkbox" name="isc_options[use_authorname_ckbox]" id="use_authorname" <?php checked($options['use_authorname']); ?> />
                 <p><em><?php echo $description; ?></em></p>
             </div>
@@ -1170,10 +1252,6 @@ if (!class_exists('ISC_CLASS')) {
         public function renderfield_webgile()
         {
             $options = $this->get_isc_options();
-            /**
-            * Avoid warning notices because of the absence of webgilde field in isc_options throughout development steps.
-            * This 'if' block can be removed for the next release.
-            */
             $description = sprintf(__('Display a link to <a href="%s">Image Source Control plugin&#39;s website</a> below the list of all images in the blog?', ISCTEXTDOMAIN), WEBGILDE);
             ?>
             <div id="webgilde-block">
@@ -1189,7 +1267,7 @@ if (!class_exists('ISC_CLASS')) {
             $description = __('Display thumbnails on the list of all images in the blog.' ,ISCTEXTDOMAIN);
             ?>
             <div id="use-thumbnail-block">
-                <input type="checkbox" id="use-thumbnail" name="isc_options[use_thumbnail]" <?php checked($options['thumbnail_in_list']); ?> />
+                <input type="checkbox" id="use-thumbnail" name="isc_options[use_thumbnail]" value="1" <?php checked($options['thumbnail_in_list']); ?> />
                 <select id="thumbnail-size-select" name="isc_options[size_select]" <?php disabled(!$options['thumbnail_in_list']) ?>>
                     <?php foreach ($this->_thumbnail_size as $size) : ?>
                         <option value="<?php echo $size; ?>" <?php selected($size, $options['thumbnail_size']);?>><?php echo $size; ?></option>
@@ -1220,6 +1298,66 @@ if (!class_exists('ISC_CLASS')) {
             <div id="thumbnail-custom-height">
                 <input type="text" id="custom-height" name="isc_options[thumbnail_height]" class="small-text" value="<?php echo $options['thumbnail_height'] ?>"/> px
                 <p><em><?php echo $description; ?></em></p>
+            </div>
+            </td></tr></tbody></table>
+            </div><!-- .postbox -->
+            <div class="postbox isc-setting-group">
+            <h3 class="setting-group-head"><?php _e('Miscellaneous settings', ISCTEXTDOMAIN); ?></h3>
+            <table class="form-table"><tbody><tr><td>
+            <?php
+        }
+        
+        public function renderfield_warning_nosource()
+        {
+            $options = $this->get_isc_options();
+            $description = __('Warn and prevent data to be saved when an attachment is edited and the source has not been specified.' ,ISCTEXTDOMAIN);
+            ?>
+            <div id="no-source-block">
+                <input type="checkbox" id="no-source" name="isc_options[no_source]"value="1" <?php checked($options['warning_nosource']); ?>/>
+                <p><em><?php echo $description; ?></em></p>
+            </div>
+            <?php
+        }
+        
+        public function renderfield_warning_onesource_misisng()
+        {
+            $options = $this->get_isc_options();
+            $description = __('Display an admin notice in admin pages when one or more image sources are missing.' ,ISCTEXTDOMAIN);
+            ?>
+            <div id="one-source-block">
+                <input type="checkbox" id="one-source" name="isc_options[one_source]"value="1" <?php checked($options['warning_onesource_missing']); ?>/>
+                <p><em><?php echo $description; ?></em></p>
+            </div>
+            <?php
+        }
+        
+        public function renderfield_caption_pos()
+        {
+            $options = $this->get_isc_options();
+            $description = __('Position of captions into images' ,ISCTEXTDOMAIN);
+            ?>
+            <div id="caption-position-block">
+                    <select id="caption-pos" name="isc_options[cap_pos]">
+                        <?php foreach ($this->_caption_position as $pos) : ?>
+                            <option value="<?php echo $pos; ?>" <?php selected($pos, $options['caption_position']); ?>><?php echo $pos; ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                    <p><em><?php echo $description; ?></em></p>
+            </div>
+            <?php
+        }
+        
+        public function renderfield_source_caption()
+        {
+            $options = $this->get_isc_options();
+            $description_checkbox = __('Tick to display source onto each image.' ,ISCTEXTDOMAIN);
+            $description_textfield = __('The text preceding the source on each image.' ,ISCTEXTDOMAIN);
+            ?>
+            <div id="caption-block">
+                <input type="checkbox" id="source-on-image" value="1" name="isc_options[source_on_image]" <?php checked($options['source_on_image']); ?> />
+                <p><em><?php echo $description_checkbox; ?></em></p>
+                <input type="text" id='source-pretext' name="isc_options[source_pretext]" value="<?php echo $options['source_pretext']; ?>" />
+                <p><em><?php echo $description_textfield; ?></em></p>
             </div>
             <?php
         }
@@ -1268,6 +1406,29 @@ if (!class_exists('ISC_CLASS')) {
             } else {
                 $output['thumbnail_in_list'] = false;
             }
+            if (isset($input['no_source'])) {
+                $output['warning_nosource'] = true;
+            } else {
+                $output['warning_nosource'] = false;
+            }
+            if (isset($input['one_source'])) {
+                $output['warning_onesource_missing'] = true;
+            } else {
+                $output['warning_onesource_missing'] = false;
+            }
+            if (isset($input['hide_list'])){
+                $output['hide_list'] = true;
+            } else {
+                $output['hide_list'] = false;
+            }
+            if (in_array($input['cap_pos'], $this->_caption_position))
+                $output['caption_position'] = $input['cap_pos'];
+            if (isset($input['source_on_image'])) {
+                $output['source_on_image'] = true;
+                $output['source_pretext'] = $input['source_pretext'];
+            } else {
+                $output['source_on_image'] = false;
+            }
             return $output;
         }
         
@@ -1303,6 +1464,39 @@ if (!class_exists('ISC_CLASS')) {
                     }
                 }
             }
+        }
+        
+        /**
+        *
+        */
+        public function admin_notices()
+        {
+            $args = array(
+                'post_type' => 'attachment',
+                'numberposts' => -1,
+                'post_status' => null,
+                'post_parent' => null,
+                'meta_query' => array(
+                    array(
+                        'key' => 'isc_image_source',
+                        'value' => '',
+                        'compare' => '='
+                    ),
+                    array(
+                        'key' => 'isc_image_source_own',
+                        'value' => '',
+                        'compare' => ''
+                    )
+                ) 
+            );
+            $attachments = get_posts($args);
+            $options = $this->get_isc_options();
+            if (!empty($attachments) && $options['warning_onesource_missing'] ) {
+            $missing_src = esc_url(admin_url('upload.php?page=image-source-control-isc/templates/missing_sources.php'));
+            ?>
+                <div class="updated"><p><?php printf(__('One or more attachments still have no source. See the <a href="%s">missing sources</a> list', ISCTEXTDOMAIN), $missing_src);?></p></div>
+            <?php
+            }            
         }
         
     }// end of class

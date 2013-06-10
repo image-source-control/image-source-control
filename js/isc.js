@@ -1,5 +1,7 @@
 jQuery(document).ready(function(jQuery) {
     isc_thumbnail_input_checkstate();
+    isc_caption_checkstate();
+    jQuery('#source-on-image').click(function(){isc_caption_checkstate()});
     jQuery('#use_authorname').click(function(){
         if ('disabled' == jQuery('#byauthor').attr('disabled')) {
             jQuery('#byauthor').removeAttr('disabled');
@@ -20,10 +22,19 @@ jQuery(document).ready(function(jQuery) {
 
 function isc_thumbnail_input_checkstate(){
     if ('custom' == jQuery('#thumbnail-size-select').val()) {
-        jQuery('#custom-width').removeAttr('disabled').css('background-color', 'inherit');
-        jQuery('#custom-height').removeAttr('disabled').css('background-color', 'inherit');
+        jQuery('#custom-width').removeAttr('disabled').css('background-color', '#fff');
+        jQuery('#custom-height').removeAttr('disabled').css('background-color', '#fff');
     } else {
         jQuery('#custom-width').attr('disabled', 'disabled').css('background-color', '#eee');
         jQuery('#custom-height').attr('disabled', 'disabled').css('background-color', '#eee');
+    }
+}
+
+function isc_caption_checkstate() {
+    if (false == jQuery('#source-on-image').prop('checked')) {
+        jQuery('#source-pretext').attr('disabled', 'disabled').css('background-color', '#eee');
+    } else {
+        jQuery('#source-pretext').removeAttr('disabled');
+        jQuery('#source-pretext').css('background-color', '#fff');
     }
 }

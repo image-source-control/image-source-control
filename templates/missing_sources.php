@@ -4,25 +4,17 @@
  * and open the template in the editor.
  */
 ?>
-<h1><?php _e('Missing Images', 'isc'); ?></h1>
-
-<h2><?php _e('add meta fields', ISCTEXTDOMAIN); ?></h2>
-<p><?php _e('ISC adds some fields to the attachments. If you install ISC, these fields are missing and attachments with missing fields are ignored in some of the queries. So use this button at least the first time you start using ISC.', ISCTEXTDOMAIN); ?></p>
-<p><a id="isc_add_metafields" href="javascript:void(0);"><?php _e('add metafields to images', ISCTEXTDOMAIN); ?></a>
-    <?php ISC_CLASS::show_loading_image(); ?>
-    <span id="add_metafields_result"></span>
-</p>
-
+<h1><?php _e('Missing Sources', 'isc'); ?></h1>
 
 <?php
 $attachments = ISC_CLASS::get_attachments_without_sources();
 if (!empty($attachments)) {
-    ?><table>
+    ?><table class="widefat" style="width: 80%;" >
         <thead>
             <tr>
                 <th><?php _e('ID', ISCTEXTDOMAIN); ?></th>
-                <th><?php _e('image title', 'isc'); ?></th>
-                <th><?php _e('post / page', ISCTEXTDOMAIN); ?></th>
+                <th><?php _e('Image title', 'isc'); ?></th>
+                <th><?php _e('Post / Page', ISCTEXTDOMAIN); ?></th>
             </tr>
         </thead><tbody><?php
     foreach ($attachments as $_attachment) {
@@ -33,4 +25,8 @@ if (!empty($attachments)) {
         
     }
     ?></tbody></table><?php
+} else {
+    ?>
+    <h2><?php _e('All sources have been specified!', ISCTEXTDOMAIN); ?></h2>
+    <?php
 }
