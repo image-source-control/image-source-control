@@ -1,7 +1,7 @@
 <?php
 /*
   Plugin Name: Image Source Control
-  Version: 1.3.0
+  Version: 1.3.1
   Plugin URI: http://webgilde.com/en/image-source-control/
   Description: The Image Source Control saves the source of an image, lists them and warns if it is missing.
   Author: Thomas Maier
@@ -38,7 +38,7 @@ if (!function_exists('add_action')) {
     exit();
 }
 
-define('ISCVERSION', '1.3.0');
+define('ISCVERSION', '1.3.1');
 define('ISCNAME', 'Image Source Control');
 define('ISCTEXTDOMAIN', 'isc');
 define('ISCDIR', basename(dirname(__FILE__)));
@@ -679,6 +679,10 @@ if (!class_exists('ISC_CLASS')) {
             $image_ids = array();
             $added_images = array();
             $removed_images = array();
+            
+            // add thumbnail information
+            $thumb_id = get_post_thumbnail_id($post_id);
+            if ( !empty( $thumb_id )) { $image_urls[] = wp_get_attachment_url($thumb_id); }
 
             $isc_post_images = get_post_meta($post_id, 'isc_post_images', true);
             
