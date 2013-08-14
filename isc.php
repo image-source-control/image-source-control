@@ -79,7 +79,7 @@ if (!class_exists('ISC_CLASS')) {
          * @since 1.1
          */
         protected $_allowedExtensions = array(
-            'jpg', 'png', 'gif'
+            'jpg', 'png', 'gif', 'jpeg'
         );
         
         /**
