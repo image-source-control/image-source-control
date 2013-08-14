@@ -635,6 +635,7 @@ if (!class_exists('ISC_CLASS')) {
             $dom = new DOMDocument;
             
             libxml_use_internal_errors(true);
+            $content = mb_convert_encoding($content, 'HTML-ENTITIES', "UTF-8");
             $dom->loadHTML($content);
             
             // Prevents from sending E_WARNINGs notice (Outputs are forbidden during activation)
