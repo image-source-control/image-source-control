@@ -2,7 +2,7 @@
 Contributors: webzunft
 Tags: image, images, picture, picture source, image source, mediathek
 Requires at least: 3.4
-Tested up to: 3.5.2
+Tested up to: 3.6.1
 Stable tag: 1.3.4
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -53,6 +53,10 @@ e.g.
 
 == Changelog ==
 
+= 1.3.4 =
+
+* [bugfix] fixed the problem when the plugin is used with wpdirauth plugin.
+
 = 1.3.3 =
 
 * [bugfix] fixed problems with special characters like German umlauts (äöü) in file names
@@ -76,7 +80,7 @@ e.g.
 
 = 1.2.0.3 =
 
-* [fixed] solid fix for an issue occuring on updating to version 1.2
+* [fixed] solid fix for an issue occurring on updating to version 1.2
 
 = 1.2.0.2 =
 
