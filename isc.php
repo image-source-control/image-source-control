@@ -1,7 +1,7 @@
 <?php
 /*
   Plugin Name: Image Source Control
-  Version: 1.3.4
+  Version: 1.3.4.1
   Plugin URI: http://webgilde.com/en/image-source-control/
   Description: The Image Source Control saves the source of an image, lists them and warns if it is missing.
   Author: Thomas Maier
@@ -38,7 +38,7 @@ if (!function_exists('add_action')) {
     exit();
 }
 
-define('ISCVERSION', '1.3.4');
+define('ISCVERSION', '1.3.4.1');
 define('ISCNAME', 'Image Source Control');
 define('ISCTEXTDOMAIN', 'isc');
 define('ISCDIR', basename(dirname(__FILE__)));
@@ -47,7 +47,7 @@ define('WEBGILDE', 'http://webgilde.com/en/image-source-control');
 
 load_plugin_textdomain(ISCTEXTDOMAIN, false, dirname(plugin_basename(__FILE__)) . '/languages/');
 
-require_once(ISCPATH . '/isc.class.php');
+require_once(ISCPATH . 'isc.class.php');
 
 global $my_isc;
 $my_isc = new ISC_CLASS();
