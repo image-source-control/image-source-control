@@ -7,4 +7,8 @@
     cursor: default;
 }
 
+#isc-admin-wrap .form-table {
+    margin: 0 1em;
+}
+
 #licences textarea { width: 40em; height: 7em; }

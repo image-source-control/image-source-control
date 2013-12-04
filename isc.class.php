@@ -145,7 +145,11 @@ if (!class_exists('ISC_CLASS')) {
             if($options['enable_licences'] && isset($metadata['licence']) && $metadata['licence']) {
                 $licences = $this->licences_text_to_array($options['licences']);
                 if(isset($licences[$metadata['licence']]['url'])) $licence_url = $licences[$metadata['licence']]['url'];
-                $source = sprintf('%1$s | <a href="%3$s" target="_blank" rel="nofollow">%2$s</a>', $source, $metadata['licence'], $licence_url);
+                if($licence_url) {
+                    $source = sprintf('%1$s | <a href="%3$s" target="_blank" rel="nofollow">%2$s</a>', $source, $metadata['licence'], $licence_url);
+                } else {
+                    $source = sprintf('%1$s | %2$s', $source, $metadata['licence']);
+                }
             }
 
             return $source;
@@ -380,7 +384,10 @@ if (!class_exists('ISC_CLASS')) {
         }
 
         /**
+         * render attachment list
+         *
          * @param array $attachments
+         * @updated 1.3.5
          */
         protected function _renderAttachments($attachments)
         {
@@ -413,8 +420,13 @@ if (!class_exists('ISC_CLASS')) {
                 if (empty($atts_array['source'])) {
                     continue;
                 }
+                // TODO find a more flexible way to create the source information in less lines
                 if($options['enable_licences'] && isset($atts_array['licence']))
-                    printf('<li>%1$s: %2$s | <a href="%4$s" target="_blank" rel="nofollow">%3$s</a></li>', $atts_array['title'], $atts_array['source'], $atts_array['licence'], $atts_array['licence_url']);
+                    if($atts_array['licence_url']) {
+                        printf('<li>%1$s: %2$s | <a href="%4$s" target="_blank" rel="nofollow">%3$s</a></li>', $atts_array['title'], $atts_array['source'], $atts_array['licence'], $atts_array['licence_url']);
+                    } else {
+                        printf('<li>%1$s: %2$s | %3$s</li>', $atts_array['title'], $atts_array['source'], $atts_array['licence']);
+                    }
                 else
                     printf('<li>%1$s: %2$s</li>', $atts_array['title'], $atts_array['source']);
             }
@@ -1238,7 +1250,7 @@ if (!class_exists('ISC_CLASS')) {
             </div><!-- .postbox -->
             <div class="postbox isc-setting-group">
             <h3 class="setting-group-head"><?php _e('Full images list', ISCTEXTDOMAIN) ?></h3>
-            <table class="form-table"><tbody><tr><td>
+            <table class="form-table"><tbody>
             <?php
         }
 
@@ -1294,7 +1306,7 @@ if (!class_exists('ISC_CLASS')) {
             </div><!-- .postbox -->
             <div class="postbox isc-setting-group">
             <h3 class="setting-group-head"><?php _e('Miscellaneous settings', ISCTEXTDOMAIN); ?></h3>
-            <table class="form-table"><tbody><tr><td>
+            <table class="form-table"><tbody><tr>
             <?php
         }
 
@@ -1352,7 +1364,7 @@ if (!class_exists('ISC_CLASS')) {
             </div><!-- .postbox -->
             <div class="postbox isc-setting-group">
             <h3 class="setting-group-head"><?php _e('Licences settings', ISCTEXTDOMAIN); ?></h3>
-            <table class="form-table"><tbody><tr><td>
+            <table class="form-table"><tbody><tr>
             <?php
         }
 
