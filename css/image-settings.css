@@ -6,3 +6,5 @@
     padding: 0.8em 1em;
     cursor: default;
 }
+
+#licences textarea { width: 40em; height: 7em; }

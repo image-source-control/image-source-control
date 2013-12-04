@@ -11,7 +11,7 @@ jQuery(function(){
             isc_list.toggleClass('isc-list-up isc-list-down');
             isc_list.css({
                 visibility: 'hidden',
-                height: '100%',
+                height: 'auto'
             });
             max = isc_list.height();
             isc_list.css({
@@ -30,7 +30,7 @@ jQuery(function(){
             );
         }
     });
-    
+
     /**
     * Move caption into image
     */
@@ -53,7 +53,7 @@ jQuery(function(){
         jQuery(this).css('padding-bottom', jQuery(this).css('padding-top'));
         isc_update_captions_positions();
     });
-    
+
     jQuery(window).resize(function(){
         isc_update_captions_positions();
     });
@@ -74,30 +74,30 @@ function isc_update_caption_position(jQ_Obj) {
     var att = jQ_Obj.find('.wp-image-' + att_number);
     var attw = att.width();
     var atth = att.height();
-    
-    
+
+
     //relative position
     var l = att.position().left;
     //relative position
     var t = att.position().top;
-    
+
     var caption = jQ_Obj.find('.isc-source-text');
-    
+
     //caption width + padding & margin (after moving onto image)
     var tw = caption.outerWidth(true);
     //caption height + padding (idem)
     var th = caption.outerHeight(true);
-    
+
     var attpl = parseInt(att.css('padding-left').substring(0, att.css('padding-left').indexOf('px')));
     var attml = parseInt(att.css('margin-left').substring(0, att.css('margin-left').indexOf('px')));
     var attpt = parseInt(att.css('padding-top').substring(0, att.css('padding-top').indexOf('px')));
     var attmt = parseInt(att.css('margin-top').substring(0, att.css('margin-top').indexOf('px')));
-        
+
     //caption horizontal margin
     var tml = 5;
     //caption vertical margin
     var tmt = 5;
-    
+
     var pos = isc_front_data.caption_position;
     var posl = 0;
     var post = 0;
