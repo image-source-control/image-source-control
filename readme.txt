@@ -55,7 +55,7 @@ e.g.
 
 = 1.3.5 =
 
-* [feature] added hooks to enable developers to add their own images to the image source list
+* [feature] added hooks to enable developers to add their own images to the image source list (more information in the [manual](http://webgilde.com/en/image-source-control/image-source-control-manual/))
 * [feature] added image licences
 * updated settings page layout so it works WordPress 3.8 RC1
 * [l10n] updated German translation
