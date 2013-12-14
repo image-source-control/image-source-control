@@ -53,6 +53,10 @@ e.g.
 
 == Changelog ==
 
+= unversioned =
+
+* renamed post.php.js to post.js to avoid conflicts with some (broken) caching plugin rewrites
+
 = 1.3.5 =
 
 * [feature] added hooks to enable developers to add their own images to the image source list (more information in the [manual](http://webgilde.com/en/image-source-control/image-source-control-manual/))
