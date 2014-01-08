@@ -3,7 +3,7 @@ Contributors: webzunft
 Tags: image, images, picture, picture source, image source, mediathek
 Requires at least: 3.4
 Tested up to: 3.8 RC1
-Stable tag: 1.3.5
+Stable tag: 1.3.6
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -53,7 +53,7 @@ e.g.
 
 == Changelog ==
 
-= unversioned =
+= 1.3.6 =
 
 * renamed post.php.js to post.js to avoid conflicts with some (broken) caching plugin rewrites
 
