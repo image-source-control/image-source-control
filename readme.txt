@@ -53,6 +53,10 @@ e.g.
 
 == Changelog ==
 
+= 1.3.7 =
+
+* added css classes to image lists for better css styling
+
 = 1.3.6 =
 
 * renamed post.php.js to post.js to avoid conflicts with some (broken) caching plugin rewrites

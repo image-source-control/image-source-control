@@ -406,6 +406,7 @@ if (!class_exists('ISC_CLASS')) {
             $hide_style = ($options['hide_list'])? 'style="height: 0px; overflow: hidden;"': 'style="height: auto; overflow: hidden;"';
             $hide_class = ($options['hide_list'])? ' isc-list-up': ' isc-list-down';
             $hide_title = ($options['hide_list'])? $show_text : $hide_text;
+            ?><div class="isc_image_list_box"><?php
             printf('<p class="isc_image_list_title" title="%2$s" style="cursor: pointer;">%1$s</p>', $headline, $hide_title); ?>
             <script type="text/javascript">
                 /* <!--[CDATA[ */
@@ -431,7 +432,7 @@ if (!class_exists('ISC_CLASS')) {
                 else
                     printf('<li>%1$s: %2$s</li>', $atts_array['title'], $atts_array['source']);
             }
-            ?></ul><?php
+            ?></ul></div><?php
             return ob_get_clean();
         }
 
@@ -880,6 +881,7 @@ if (!class_exists('ISC_CLASS')) {
                 return;
             $options = $this->get_isc_options();
             ?>
+            <div class="isc_all_image_list_box">
             <table>
                 <thead>
                     <?php if ($options['thumbnail_in_list']) : ?>
@@ -925,7 +927,7 @@ if (!class_exists('ISC_CLASS')) {
                     </tr>
                 <?php endforeach; ?>
                 </tbody>
-            </table>
+            </table></div>
             <?php
         }
 
