@@ -348,8 +348,8 @@ if (!class_exists('ISC_CLASS')) {
                     $own = get_post_meta($attachment_id, 'isc_image_source_own', true);
                     $source = get_post_meta($attachment_id, 'isc_image_source', true);
 
-                    if ( $own == '' && $source == '' ) {
-                        // remove if no information set
+                    // remove if no information set or author images are not to be displayed
+                    if ( ($own == '' && $source == '' ) || ($own != '' && $this->_options['exclude_own_images'])) {
                         unset($atts[$attachment_id]);
                         continue;
                     } elseif ($own != '') {
@@ -809,6 +809,12 @@ if (!class_exists('ISC_CLASS')) {
             foreach ($attachments as $_attachment) {
                 $connected_atts[$_attachment->ID]['source'] = get_post_meta($_attachment->ID, 'isc_image_source', true);
                 $connected_atts[$_attachment->ID]['own'] = get_post_meta($_attachment->ID, 'isc_image_source_own', true);
+                // jump to next element if author images are not to be included in the list
+                if($options['exclude_own_images'] && '' != $connected_atts[$_attachment->ID]['own']) {
+                    unset($connected_atts[$_attachment->ID]);
+                    continue;
+                }
+
                 $connected_atts[$_attachment->ID]['title'] = $_attachment->post_title;
                 $connected_atts[$_attachment->ID]['author_name'] = '';
                 if ('' != $connected_atts[$_attachment->ID]['own']) {
@@ -1095,6 +1101,7 @@ if (!class_exists('ISC_CLASS')) {
         public function default_options()
         {
             $default['image_list_headline'] = __('image sources', ISCTEXTDOMAIN);
+            $default['exclude_own_images'] = false;
             $default['use_authorname'] = true;
             $default['by_author_text'] = __('Owned by the author', ISCTEXTDOMAIN);
             $default['installed'] = false;
@@ -1148,6 +1155,7 @@ if (!class_exists('ISC_CLASS')) {
             add_settings_field('licences', __('List of licences', ISCTEXTDOMAIN), array($this, 'renderfield_licences'), 'isc_settings_page', 'isc_settings_section');
 
             // Starts Misc settings group
+            add_settings_field('exclude_own_images', __('Exclude own images', ISCTEXTDOMAIN), array($this, 'renderfield_exclude_own_images'), 'isc_settings_page', 'isc_settings_section');
             add_settings_field('use_authorname', __('Use authors names', ISCTEXTDOMAIN), array($this, 'renderfield_use_authorname'), 'isc_settings_page', 'isc_settings_section');
             add_settings_field('by_author_text', __('Custom text for owned images', ISCTEXTDOMAIN), array($this, 'renderfield_byauthor_text'), 'isc_settings_page', 'isc_settings_section');
             add_settings_field('webgilde_backlink', __("Link to webgilde's website", ISCTEXTDOMAIN), array($this, 'renderfield_webgile'), 'isc_settings_page', 'isc_settings_section');
@@ -1254,6 +1262,25 @@ if (!class_exists('ISC_CLASS')) {
             <div class="postbox isc-setting-group">
             <h3 class="setting-group-head"><?php _e('Full images list', ISCTEXTDOMAIN) ?></h3>
             <table class="form-table"><tbody>
+            <?php
+        }
+
+        /**
+         * render option to exclude image from lists if it is makes as "by the author"
+         *
+         * @since 1.3.7
+         */
+        public function renderfield_exclude_own_images()
+        {
+            $options = $this->get_isc_options();
+            $description = __("Exclude images maked as 'own image' from image lists (post and all) in the frontend. You can still manage them in the dashboard.", ISCTEXTDOMAIN);
+
+            ?>
+            <div id="use-authorname-block">
+                <label for="exclude_own_images"><?php _e('Exclude own images from lists', ISCTEXTDOMAIN) ?></label>
+                <input type="checkbox" name="isc_options[exclude_own_images]" id="exclude_own_images" <?php checked($options['exclude_own_images']); ?> />
+                <p><em><?php echo $description; ?></em></p>
+            </div>
             <?php
         }
 
@@ -1454,6 +1481,11 @@ if (!class_exists('ISC_CLASS')) {
             } else {
                 $output['use_authorname'] = false;
                 $output['by_author_text'] = esc_html($input['by_author_text_field']);
+            }
+            if (isset($input['exclude_own_images'])) {
+                $output['exclude_own_images'] = true;
+            } else {
+                $output['exclude_own_images'] = false;
             }
             if (isset($input['webgilde_field'])) {
                 $output['webgilde'] = true;
