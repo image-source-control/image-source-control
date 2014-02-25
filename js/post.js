@@ -14,33 +14,33 @@ function IscBlockForm(selector, message, target, event)
         IscBlockForm.IFB_counter = 0;
     }
     var instance_id = IscBlockForm.IFB_counter;
-    
+
     IscBlockForm.IFB_counter++;
-    
+
     if ('string' != typeof(selector)) {
         throw 'Param 1 of IscBlockForm must be a string';
     }
     var main_selector = selector;
-    
+
     if ('string' != typeof(message)) {
         throw 'Param 2 of IscBlockForm must be a string';
     }
     var text = message;
-    
+
     if ('string' != typeof(target)) {
         throw 'Param 3 of IscBlockForm must be a string';
     }
     var target_selector = target;
-    
+
     var l_event = 'submit';
     if ('live' == event) {
         l_event = 'live';
     }
     var fields = {};
     var main_filter = undefined;
-        
+
     // Private methods
-    
+
     /**
     * Scroll the window to the warning box
     */
@@ -49,7 +49,7 @@ function IscBlockForm(selector, message, target, event)
         jQuery(document).scrollTop(pos.top);
         jQuery(document).scrollLeft(pos.left);
     }
-    
+
     /**
     * Display the warning box
     */
@@ -71,17 +71,17 @@ function IscBlockForm(selector, message, target, event)
             fontWeight: 'bold',
         });
         jQuery(target_selector).before(d.append(m));
-        
-        if ('live' != l_event) 
+
+        if ('live' != l_event)
             jump_to(d);
-            
+
         d.animate(
             {opacity: 1, height: '100%'},
             1500,
             'swing'
         );
     }
-    
+
     /**
     * remove the warning box
     */
@@ -94,43 +94,44 @@ function IscBlockForm(selector, message, target, event)
             });
         }
     }
-    
+
     /**
     * Update value of fields
-    */    
+    */
     var update_fields = function() {
         for (var id in fields) {
             elem = jQuery(fields[id].selector);
+            if(elem.length == 0) continue; // check if element exists
             tagname = elem.prop('tagName').toLowerCase();
             switch (tagname) {
                 case 'input' :
                     type = elem.attr('type');
                     switch (type) {
                         case 'text':
-                            fields[id].type = 'text'; 
-                            fields[id].value = elem.val(); 
+                            fields[id].type = 'text';
+                            fields[id].value = elem.val();
                             break;
                         case 'checkbox':
-                            fields[id].type = 'checkbox'; 
-                            fields[id].value = elem.prop('checked'); 
+                            fields[id].type = 'checkbox';
+                            fields[id].value = elem.prop('checked');
                             break;
                         default :
                             break;
                     }
                     break;
-                    
+
                 case 'select' :
                     break;
-                    
+
                 case 'textarea' :
                     break;
-                    
+
             }
         }
     }
-    
+
     // Public methods
-    
+
     /**
     * Check the form with the filter
     */
@@ -138,8 +139,8 @@ function IscBlockForm(selector, message, target, event)
         update_fields();
         return main_filter(fields);
     }
-    
-    
+
+
     /**
     * Register a field to be tested.
     * @param field_id string (required), unique id for this registred field
@@ -155,23 +156,23 @@ function IscBlockForm(selector, message, target, event)
         if (1 < jQuery(selector).length) {
             throw 'the jQuery selector ' + selector + ' match more than one element.';
         }
-        fields[field_id] = 
+        fields[field_id] =
         {
             'selector'      : selector,
             'value'         : undefined,
             'type'          : undefined
         }
     }
-    
+
     /**
-    * Set the main filter function. 
+    * Set the main filter function.
     * @param main_filter_cb callback (required), when the function returns false, the submission is intercepted and the output box displayed.
     * This callback accepts one parameter: the fields object.
     */
     this.filter = function(main_filter_cb) {
         main_filter = main_filter_cb;
     };
-    
+
     /**
     * Attach the event defined in arguments
     */
@@ -218,7 +219,7 @@ jQuery(function(){
             }
         });
         classic_form.attach();
-        
+
         live_form = new IscBlockForm('.compat-item', isc_data.block_form_message, '.compat-attachment-fields', 'live');
         live_form.register_field('source', '.compat-item .compat-field-isc_image_source input');
         live_form.register_field('own', '.compat-item .compat-field-isc_image_source_own input');

@@ -3,7 +3,7 @@ Contributors: webzunft
 Tags: image, images, picture, picture source, image source, mediathek
 Requires at least: 3.5
 Tested up to: 3.8.1
-Stable tag: 1.4
+Stable tag: 1.4.1
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -52,6 +52,10 @@ e.g.
 1. added two new fields to media library
 
 == Changelog ==
+
+= 1.4.1 =
+
+* [bugfix] fixing js issue breaking save and preview function
 
 = 1.4 =
 
