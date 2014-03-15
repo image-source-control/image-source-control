@@ -58,6 +58,7 @@ e.g.
 * [bugfix] setting default meta values if isc functions are directly called
 * [bugfix] minor error when image own checkbox is not checked
 * [bugfix] don’t link to unpublished posts from the image source list
+* [bugfix] check if `mb_convert_encoding()` function exists before using it
 
 = 1.4.1 =
 
