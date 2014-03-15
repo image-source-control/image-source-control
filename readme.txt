@@ -53,9 +53,10 @@ e.g.
 
 == Changelog ==
 
-= 1.5 =
+= 1.4.2 =
 
 * [bugfix] setting default meta values if isc functions are directly called
+* [bugfix] minor error when image own checkbox is not checked
 
 = 1.4.1 =
 

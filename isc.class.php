@@ -296,7 +296,8 @@ if (!class_exists('ISC_CLASS')) {
             if (isset($attachment['isc_image_source'])) {
                 update_post_meta($post['ID'], 'isc_image_source', $attachment['isc_image_source']);
             }
-            update_post_meta($post['ID'], 'isc_image_source_own', $attachment['isc_image_source_own']);
+            $own = (isset($attachment['isc_image_source_own'])) ? $attachment['isc_image_source_own'] : '';
+            update_post_meta($post['ID'], 'isc_image_source_own', $own);
             if (isset($attachment['isc_image_licence'])) {
                 update_post_meta($post['ID'], 'isc_image_licence', $attachment['isc_image_licence']);
             }
