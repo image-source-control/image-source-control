@@ -710,6 +710,8 @@ if (!class_exists('ISC_CLASS')) {
             $image_urls = apply_filters('isc_images_in_posts_simple', $image_urls, $post_id);
 
             $isc_post_images = get_post_meta($post_id, 'isc_post_images', true);
+            // just needed in very rare cases, when updates comes from outside of isc and meta fields doesn’t exist yet
+            if(empty($isc_post_images)) $isc_post_images = array();
 
             foreach ($image_urls as $url) {
                 $id = intval($this->get_image_by_url($url));

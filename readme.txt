@@ -53,6 +53,10 @@ e.g.
 
 == Changelog ==
 
+= 1.5 =
+
+* [bugfix] setting default meta values if isc functions are directly called
+
 = 1.4.1 =
 
 * [bugfix] fixing js issue breaking save and preview function
