@@ -830,11 +830,14 @@ if (!class_exists('ISC_CLASS')) {
                 if (is_array($metadata) && array() != $metadata) {
                     $usage_data .= "<ul style='margin: 0;'>";
                     foreach($metadata as $data) {
-                        $usage_data .= sprintf(__('<li><a href="%1$s" title="View %2$s">%3$s</a></li>', ISCTEXTDOMAIN),
-                            esc_url(get_permalink($data)),
-                            esc_attr(get_the_title($data)),
-                            esc_html(get_the_title($data))
-                        );
+                        // only list published posts
+                        if(get_post_status($data) == 'publish') {
+                            $usage_data .= sprintf(__('<li><a href="%1$s" title="View %2$s">%3$s</a></li>', ISCTEXTDOMAIN),
+                                esc_url(get_permalink($data)),
+                                esc_attr(get_the_title($data)),
+                                esc_html(get_the_title($data))
+                            );
+                        }
                     }
                     $usage_data .= "</ul>";
                 }
