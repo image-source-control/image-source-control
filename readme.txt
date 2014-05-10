@@ -55,7 +55,7 @@ e.g.
 
 = 1.4.3 =
 
-* [feature] don’t show source in caption, if option to hide sources on own images is enabled
+* [feature] hide sources caption for your own images, if option to hide sources on own images is enabled
 
 = 1.4.2 =
 
