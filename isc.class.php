@@ -155,6 +155,14 @@ if (!class_exists('ISC_CLASS')) {
             return $source;
         }
 
+        /**
+         * filter post content for captions and include source into caption, if this setting is enabled
+         *
+         * @param string $content post content
+         * @return string $content
+         *
+         * @update 1.4.3
+         */
         public function content_filter($content)
         {
             $options = $this->get_isc_options();
@@ -164,6 +172,10 @@ if (!class_exists('ISC_CLASS')) {
                 if (false !== $count) {
                     for ($i=0; $i < $count; $i++) {
                         $id = $matches[6][$i];
+                        // don’t show caption for own image if admin choose not to do so
+                        if($options['exclude_own_images']){
+                            if(get_post_meta($id, 'isc_image_source_own', true)) continue;
+                        }
                         $src = $matches[7][$i];
                         $source = '<p class="isc-source-text">' . $options['source_pretext'] . ' ' . $this->get_source_by_url($src) . '</p>';
                         $old_content = $matches[0][$i];
@@ -1281,11 +1293,11 @@ if (!class_exists('ISC_CLASS')) {
         public function renderfield_exclude_own_images()
         {
             $options = $this->get_isc_options();
-            $description = __("Exclude images maked as 'own image' from image lists (post and all) in the frontend. You can still manage them in the dashboard.", ISCTEXTDOMAIN);
+            $description = __("Exclude images marked as 'own image' from image lists (post and full) and caption in the frontend. You can still manage them in the dashboard.", ISCTEXTDOMAIN);
 
             ?>
             <div id="use-authorname-block">
-                <label for="exclude_own_images"><?php _e('Exclude own images from lists', ISCTEXTDOMAIN) ?></label>
+                <label for="exclude_own_images"><?php _e('Hide sources for own images', ISCTEXTDOMAIN) ?></label>
                 <input type="checkbox" name="isc_options[exclude_own_images]" id="exclude_own_images" <?php checked($options['exclude_own_images']); ?> />
                 <p><em><?php echo $description; ?></em></p>
             </div>

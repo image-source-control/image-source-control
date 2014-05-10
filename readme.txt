@@ -2,8 +2,8 @@
 Contributors: webzunft
 Tags: image, images, picture, picture source, image source, mediathek
 Requires at least: 3.5
-Tested up to: 3.8.2
-Stable tag: 1.4.2
+Tested up to: 3.9.1
+Stable tag: 1.4.3
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -52,6 +52,10 @@ e.g.
 1. added two new fields to media library
 
 == Changelog ==
+
+= 1.4.3 =
+
+* [feature] don’t show source in caption, if option to hide sources on own images is enabled
 
 = 1.4.2 =
 
