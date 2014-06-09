@@ -52,7 +52,5 @@ require_once(ISCPATH . 'isc.class.php');
 global $my_isc;
 $my_isc = new ISC_CLASS();
 
-function isc_list($post_id = 0) {
-    global $my_isc;
-    echo $my_isc->list_post_attachments_with_sources($post_id);
-}
+// include frontend functions
+require_once(ISCPATH . 'functions.php');

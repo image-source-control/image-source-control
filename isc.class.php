@@ -110,49 +110,19 @@ if (!class_exists('ISC_CLASS')) {
         }
 
         /**
-         * load an image source by url
+         * load an image source string by url
          *
-         * @updated 1.3.5
+         * @updated 1.5
          * @param string $url url of the image
          * @return type
          */
         public function get_source_by_url($url)
         {
-            $options = $this->get_isc_options();
+            // get the id by the image source
             $id = $this->get_image_by_url($url);
-            $metadata['source'] = get_post_meta($id, 'isc_image_source', true);
-            $metadata['own'] = get_post_meta($id, 'isc_image_source_own', true);
-            $metadata['licence'] = get_post_meta($id, 'isc_image_licence', true);
 
-            $source = $this->_common_texts['not_available'];
+            return $this->render_image_source_string($id);
 
-            $att_post = get_post($id);
-
-            if ('' != $metadata['own']) {
-                if ($this->_options['use_authorname']) {
-                    if (!empty($att_post)) {
-                        $source = get_the_author_meta('display_name', $att_post->post_author);
-                    }
-                } else {
-                    $source = $this->options['by_author_text'];
-                }
-            } else {
-                if ('' != $metadata['source']) {
-                    $source = $metadata['source'];
-                }
-            }
-            // add licence if enabled
-            if($options['enable_licences'] && isset($metadata['licence']) && $metadata['licence']) {
-                $licences = $this->licences_text_to_array($options['licences']);
-                if(isset($licences[$metadata['licence']]['url'])) $licence_url = $licences[$metadata['licence']]['url'];
-                if($licence_url) {
-                    $source = sprintf('%1$s | <a href="%3$s" target="_blank" rel="nofollow">%2$s</a>', $source, $metadata['licence'], $licence_url);
-                } else {
-                    $source = sprintf('%1$s | %2$s', $source, $metadata['licence']);
-                }
-            }
-
-            return $source;
         }
 
         /**
@@ -187,6 +157,49 @@ if (!class_exists('ISC_CLASS')) {
                 }
             }
             return $content;
+        }
+
+        /**
+         * render source string of single image by its id
+         *
+         * @param int $id id of the image
+         */
+        public function render_image_source_string($id){
+            $options = $this->get_isc_options();
+
+            $metadata['source'] = get_post_meta($id, 'isc_image_source', true);
+            $metadata['own'] = get_post_meta($id, 'isc_image_source_own', true);
+            $metadata['licence'] = get_post_meta($id, 'isc_image_licence', true);
+
+            $source = $this->_common_texts['not_available'];
+
+            $att_post = get_post($id);
+
+            if ('' != $metadata['own']) {
+                if ($this->_options['use_authorname']) {
+                    if (!empty($att_post)) {
+                        $source = get_the_author_meta('display_name', $att_post->post_author);
+                    }
+                } else {
+                    $source = $this->options['by_author_text'];
+                }
+            } else {
+                if ('' != $metadata['source']) {
+                    $source = $metadata['source'];
+                }
+            }
+            // add licence if enabled
+            if($options['enable_licences'] && isset($metadata['licence']) && $metadata['licence']) {
+                $licences = $this->licences_text_to_array($options['licences']);
+                if(isset($licences[$metadata['licence']]['url'])) $licence_url = $licences[$metadata['licence']]['url'];
+                if($licence_url) {
+                    $source = sprintf('%1$s | <a href="%3$s" target="_blank" rel="nofollow">%2$s</a>', $source, $metadata['licence'], $licence_url);
+                } else {
+                    $source = sprintf('%1$s | %2$s', $source, $metadata['licence']);
+                }
+            }
+
+            return $source;
         }
 
         public function attachment_added($att_id)

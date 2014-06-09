@@ -53,6 +53,10 @@ e.g.
 
 == Changelog ==
 
+= 1.5 =
+
+* [feature] added function to get single image source from within templates
+
 = 1.4.3 =
 
 * [feature] hide sources caption for your own images, if option to hide sources on own images is enabled
