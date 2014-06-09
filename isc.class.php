@@ -162,6 +162,8 @@ if (!class_exists('ISC_CLASS')) {
         /**
          * render source string of single image by its id
          *
+         * @updated 1.5 wrapped source into source url
+         *
          * @param int $id id of the image
          */
         public function render_image_source_string($id){
@@ -170,6 +172,7 @@ if (!class_exists('ISC_CLASS')) {
             $options = $this->get_isc_options();
 
             $metadata['source'] = get_post_meta($id, 'isc_image_source', true);
+            $metadata['source_url'] = get_post_meta($id, 'isc_image_source_url', true);
             $metadata['own'] = get_post_meta($id, 'isc_image_source_own', true);
             $metadata['licence'] = get_post_meta($id, 'isc_image_licence', true);
 
@@ -190,6 +193,12 @@ if (!class_exists('ISC_CLASS')) {
                     $source = $metadata['source'];
                 }
             }
+
+            // wrap link around source, if given
+            if('' != $metadata['source_url']){
+                $source = sprintf('<a href="%2$s" target="_blank" rel="nofollow">%1$s</a>', $source, $metadata['source_url']);
+            }
+
             // add licence if enabled
             if($options['enable_licences'] && isset($metadata['licence']) && $metadata['licence']) {
                 $licences = $this->licences_text_to_array($options['licences']);
@@ -269,12 +278,15 @@ if (!class_exists('ISC_CLASS')) {
 
         /**
          * add custom field to attachment
-         * @param arr $form_fields
-         * @param object $post
-         * @return arr
+         *
          * @since 1.0
          * @updated 1.1
          * @updated 1.3.5 added field for licence
+         * @updated 1.5 added field for url
+
+         * @param arr $form_fields
+         * @param object $post
+         * @return arr
          */
         public function add_isc_fields($form_fields, $post)
         {
@@ -293,6 +305,11 @@ if (!class_exists('ISC_CLASS')) {
                 . checked(get_post_meta($post->ID, 'isc_image_source_own', true), 1, false )
                 . " style=\"width:14px\"/> "
                 . __('This is my image', ISCTEXTDOMAIN);
+
+            // add input field for source url
+            $form_fields['isc_image_source_url']['label'] = __('Image Source URL', ISCTEXTDOMAIN);
+            $form_fields['isc_image_source_url']['value'] = get_post_meta($post->ID, 'isc_image_source_url', true);
+            $form_fields['isc_image_source_url']['helps'] = __('URL to link the source text to.', ISCTEXTDOMAIN);
 
             // add input field for source
             $options = $this->get_isc_options();
@@ -314,6 +331,9 @@ if (!class_exists('ISC_CLASS')) {
 
         /**
          * save image source to post_meta
+         *
+         * @updated 1.5 added field for url
+         *
          * @param object $post
          * @param $attachment
          * @return object $post
@@ -322,6 +342,10 @@ if (!class_exists('ISC_CLASS')) {
         {
             if (isset($attachment['isc_image_source'])) {
                 update_post_meta($post['ID'], 'isc_image_source', $attachment['isc_image_source']);
+            }
+            if (isset($attachment['isc_image_source_url'])) {
+                $url = sanitize_url($attachment['isc_image_source_url']);
+                update_post_meta($post['ID'], 'isc_image_source_url', $url);
             }
             $own = (isset($attachment['isc_image_source_own'])) ? $attachment['isc_image_source_own'] : '';
             update_post_meta($post['ID'], 'isc_image_source_own', $own);
@@ -333,8 +357,10 @@ if (!class_exists('ISC_CLASS')) {
 
         /**
          * create image sources list for all images of this post
+         *
          * @since 1.0
          * @updated 1.1, 1.3.5
+         *
          * @param int $post_id id of the current post/page
          * @return echo output
          */
