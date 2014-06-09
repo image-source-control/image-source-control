@@ -165,6 +165,8 @@ if (!class_exists('ISC_CLASS')) {
          * @param int $id id of the image
          */
         public function render_image_source_string($id){
+            $id = absint($id);
+
             $options = $this->get_isc_options();
 
             $metadata['source'] = get_post_meta($id, 'isc_image_source', true);
