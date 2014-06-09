@@ -56,6 +56,8 @@ e.g.
 = 1.5 =
 
 * [feature] added function to get single image source from within templates
+* [feature] link the image source to a url; added url field to image source input fields
+* [optimized] using just a single function to create the source string whereever needed (fixes missing licence on full image lists)
 
 = 1.4.3 =
 

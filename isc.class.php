@@ -18,6 +18,10 @@ if (!class_exists('ISC_CLASS')) {
                 'id' => 'isc_image_source',
                 'default' => '',
             ),
+            'image_source_url' => array(
+                'id' => 'isc_image_source_url',
+                'default' => '',
+            ),
             'image_source_own' => array(
                 'id' => 'isc_image_source_own',
                 'default' => '',
@@ -161,6 +165,9 @@ if (!class_exists('ISC_CLASS')) {
 
         /**
          * render source string of single image by its id
+         *  this only returns the string with source and licence (and urls),
+         *  but no wrapping, because the string is used in a lot of functions
+         *  (e.g. image source list where title is prepended)
          *
          * @updated 1.5 wrapped source into source url
          *
@@ -360,6 +367,7 @@ if (!class_exists('ISC_CLASS')) {
          *
          * @since 1.0
          * @updated 1.1, 1.3.5
+         * @updated 1.5 use new render function to create basic image source string
          *
          * @param int $post_id id of the current post/page
          * @return echo output
@@ -385,51 +393,23 @@ if (!class_exists('ISC_CLASS')) {
                 $attachments = get_post_meta($post_id, 'isc_post_images', true);
             }
 
-            // get licence array
-            $options = $this->get_isc_options();
-            if(!$options['enable_licences']) {
-                $licences = false;
-            } else {
-                $licences = $this->licences_text_to_array($options['licences']);
-                if($licences == false) $licences = array();
-            }
-
             $return = '';
             if (!empty($attachments)) {
                 $atts = array();
                 foreach ($attachments as $attachment_id => $attachment_array) {
-                    $atts[$attachment_id]['title'] = get_the_title($attachment_id);
+
                     $own = get_post_meta($attachment_id, 'isc_image_source_own', true);
                     $source = get_post_meta($attachment_id, 'isc_image_source', true);
 
-                    // remove if no information set or author images are not to be displayed
+                    // check if source of own images can be displayed
                     if ( ($own == '' && $source == '' ) || ($own != '' && $this->_options['exclude_own_images'])) {
                         unset($atts[$attachment_id]);
                         continue;
-                    } elseif ($own != '') {
-                        if ($this->_options['use_authorname']) {
-                            $authorname = '';
-                            $att_post = get_post($attachment_id);
-                            if (null !== $att_post) {
-                                $authorname = get_the_author_meta('display_name', $att_post->post_author);
-                            }
-                            $atts[$attachment_id ]['source'] = $authorname;
-                        } else {
-                            $atts[$attachment_id ]['source'] = $this->_options['by_author_text'];
-                        }
                     } else {
-                        $atts[$attachment_id ]['source'] = $source;
+                        $atts[$attachment_id]['title'] = get_the_title($attachment_id);
+                        $atts[$attachment_id]['source'] = $this->render_image_source_string($attachment_id);
                     }
 
-                    // add licence information
-                    // TODO maybe don’t display an unused licence (e.g. removed from the licence textarea)
-                    if(is_array($licences)) {
-                        $_licence = get_post_meta($attachment_id, 'isc_image_licence', true);
-                        if(isset($licences[$_licence]['url'])) {
-                            $atts[$attachment_id]['licence_url'] = $licences[$_licence]['url'];
-                        }
-                        if($_licence) $atts[$attachment_id]['licence'] = $_licence;
-                    }
                 }
 
                 $return = $this->_renderAttachments($atts);
@@ -443,6 +423,7 @@ if (!class_exists('ISC_CLASS')) {
          *
          * @param array $attachments
          * @updated 1.3.5
+         * @updated 1.5 removed rendering the licence to an earlier function
          */
         protected function _renderAttachments($attachments)
         {
@@ -476,15 +457,7 @@ if (!class_exists('ISC_CLASS')) {
                 if (empty($atts_array['source'])) {
                     continue;
                 }
-                // TODO find a more flexible way to create the source information in less lines
-                if($options['enable_licences'] && isset($atts_array['licence']))
-                    if($atts_array['licence_url']) {
-                        printf('<li>%1$s: %2$s | <a href="%4$s" target="_blank" rel="nofollow">%3$s</a></li>', $atts_array['title'], $atts_array['source'], $atts_array['licence'], $atts_array['licence_url']);
-                    } else {
-                        printf('<li>%1$s: %2$s | %3$s</li>', $atts_array['title'], $atts_array['source'], $atts_array['licence']);
-                    }
-                else
-                    printf('<li>%1$s: %2$s</li>', $atts_array['title'], $atts_array['source']);
+                printf('<li>%1$s: %2$s</li>', $atts_array['title'], $atts_array['source']);
             }
             ?></ul></div><?php
             return ob_get_clean();
@@ -941,6 +914,7 @@ if (!class_exists('ISC_CLASS')) {
         /**
         * performs rendering of all attachments list
         * @since 1.1.3
+        * @update 1.5 added new method to get source
         */
         public function display_all_attachment_list($atts)
         {
@@ -962,18 +936,7 @@ if (!class_exists('ISC_CLASS')) {
                 <tbody>
                 <?php foreach ($atts as $id => $data) : ?>
                     <?php
-                        $source = $this->_common_texts['not_available'];
-                        if ('' != $data['own']) {
-                            /** @todo ment for later: this text was used above already; find a place to but it so it is defined only once and used where needed */
-                            if ($this->_options['use_authorname']) {
-                                $source = $data['author_name'];
-                            } else {
-                                $source = $this->_options['by_author_text'];
-                            }
-                        } else {
-                            if (!empty($data['source']))
-                                $source = $data['source'];
-                        }
+                        $source = $this->render_image_source_string($id);
                     ?>
                     <tr>
                         <?php
@@ -990,7 +953,7 @@ if (!class_exists('ISC_CLASS')) {
                         <td <?php echo $v_align;?>><?php echo $id; ?></td>
                         <td <?php echo $v_align;?>><?php echo $data['title']; ?></td>
                         <td <?php echo $v_align;?>><?php echo $data['posts']; ?></td>
-                        <td <?php echo $v_align;?>><?php echo esc_html($source); ?></td>
+                        <td <?php echo $v_align;?>><?php echo $source; ?></td>
                     </tr>
                 <?php endforeach; ?>
                 </tbody>
