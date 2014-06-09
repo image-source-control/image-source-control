@@ -12,3 +12,7 @@
 }
 
 #licences textarea { width: 40em; height: 7em; }
+
+/* meta field in media view */
+.compat-attachment-fields input[type="text"] { width: 100%; }
+.compat-attachment-fields th { vertical-align: top; }

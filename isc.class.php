@@ -277,10 +277,10 @@ if (!class_exists('ISC_CLASS')) {
                 // 2013-12-11 (maik) quick fix for post.php.js to avoid access conflicts caused by other plugins due to by inconsistent naming
                 wp_enqueue_script('isc_postphp_script', plugins_url('/js/post.js', __FILE__), array('jquery'), ISCVERSION);
             }
-            if ($hook == $isc_setting) {
+            //if ($hook == $isc_setting) {
                 wp_enqueue_script('isc_script', plugins_url('/js/isc.js', __FILE__), false, ISCVERSION);
                 wp_enqueue_style('isc_image_settings_css', plugins_url('/css/image-settings.css', __FILE__), false, ISCVERSION);
-            }
+            //}
         }
 
         /**
