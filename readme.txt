@@ -61,6 +61,8 @@ Some major change under the hood. On blogs with a lot of posts and images the ac
 If everything works as expected you might not notice a change. There is only a second list on the missing image page.
 Read this post to learn more about it.
 
+* [optimized] display the missing sources message on the dashboard start page only
+
 = 1.5 =
 
 * [feature] added function to get single image source from within templates
