@@ -59,9 +59,7 @@ e.g.
 
 Some major change under the hood. On blogs with a lot of posts and images the activation crashed due to auto index of all meta fields.
 If everything works as expected you might not notice a change. There is only a second list on the missing image page.
-Read this post to learn more about it.
-
-* [optimized] display the missing sources message on the dashboard start page only
+Read [this post](http://webgilde.com/en/image-source-control-1-6/) to learn more about it.
 
 = 1.5 =
 

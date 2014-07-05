@@ -100,7 +100,7 @@ if (!class_exists('ISC_CLASS')) {
                 add_filter('attachment_fields_to_edit', array($this, 'add_isc_fields'), 10, 2);
                 add_filter('attachment_fields_to_save', array($this, 'isc_fields_save'), 10, 2);
 
-                add_action('admin_head-index.php', array($this, 'admin_notices'));
+                add_action('admin_notices', array($this, 'admin_notices'));
 
                 add_action('admin_menu', array($this, 'create_menu'));
                 add_action('admin_init', array($this, 'SAPI_init'));
