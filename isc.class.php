@@ -633,7 +633,7 @@ if (!class_exists('ISC_CLASS')) {
         }
 
         /**
-         * save image information for a post when it is viewed
+         * save image information for a post when it is viewed – only called when using isc_list function
          * (to help indexing old posts)
          *
          * @since 1.1

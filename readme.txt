@@ -3,7 +3,7 @@ Contributors: webzunft
 Tags: image, images, picture, picture source, image source, mediathek
 Requires at least: 3.5
 Tested up to: 3.9.1
-Stable tag: 1.5
+Stable tag: 1.6
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -54,6 +54,12 @@ e.g.
 1. added two new fields to media library
 
 == Changelog ==
+
+= 1.6 =
+
+Some major change under the hood. On blogs with a lot of posts and images the activation crashed due to auto index of all meta fields.
+If everything works as expected you might not notice a change. There is only a second list on the missing image page.
+Read this post to learn more about it.
 
 = 1.5 =
 
