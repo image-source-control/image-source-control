@@ -484,11 +484,9 @@ if (!class_exists('ISC_CLASS')) {
         }
 
         /**
-         * get all attachments without sources
-         * the downside of this function: is there is not even an empty metakey field, nothing is going to be retrieved
-         * @todo fix this in WP 3.5 with compare => 'NOT EXISTS'
+         * get all attachments with empty sources string
          */
-        public function get_attachments_without_sources()
+        public function get_attachments_with_empty_sources()
         {
             $args = array(
                 'post_type' => 'attachment',
@@ -507,6 +505,34 @@ if (!class_exists('ISC_CLASS')) {
                         'key' => 'isc_image_source_own',
                         'value' => '1',
                         'compare' => '!=',
+                    ),
+                )
+            );
+
+            $attachments = get_posts($args);
+            if (!empty($attachments)) {
+                return $attachments;
+            }
+        }
+
+        /**
+         * get all attachments without the proper meta values (needed mostly after installing the plugin for unindexed images)
+         *
+         * @since 1.6
+         */
+        public function get_attachments_without_sources()
+        {
+            $args = array(
+                'post_type' => 'attachment',
+                'numberposts' => -1,
+                'post_status' => null,
+                'post_parent' => null,
+                'meta_query' => array(
+                    // image source is empty
+                    array(
+                        'key' => 'isc_image_source',
+                        'value' => 'any', /* any string; needed prior to WP 3.9 */
+                        'compare' => 'NOT EXISTS',
                     ),
                 )
             );
@@ -607,8 +633,8 @@ if (!class_exists('ISC_CLASS')) {
         }
 
         /**
-         * save image information for a post when it is viewed and the image source list is enabled
-         * (this is in case the plugin is new and the current post wasn't saved before)
+         * save image information for a post when it is viewed
+         * (to help indexing old posts)
          *
          * @since 1.1
          */
@@ -626,7 +652,7 @@ if (!class_exists('ISC_CLASS')) {
         }
 
         /**
-         * retrieve images added to a post or page and save all information as a meta value
+         * retrieve images added to a post or page and save all information as a post meta value for the post
          * @since 1.1
          * @updated 1.3.5 added isc_images_in_posts filter
          * @todo check for more post types that maybe should not be parsed here
@@ -661,7 +687,7 @@ if (!class_exists('ISC_CLASS')) {
             $_imgs = apply_filters('isc_images_in_posts', $_imgs, $post_id);
 
             if (empty($_imgs)) {
-                $_imgs = false;
+                $_imgs = array();
             }
             update_post_meta($post_id, 'isc_post_images', $_imgs);
         }
@@ -1108,11 +1134,18 @@ if (!class_exists('ISC_CLASS')) {
                 * Important: NO add_action('something', 'somefunction') here.
                 */
 
+                /**
+                 * auto indexation removed in version 1.6
+                 * not needed due to NOT EXISTS for meta fields since WP 3.5
+                 *
+                 * @todo remove the functions completely
+                 */
+
                 // adds meta fields for attachments
-                $this->add_meta_values_to_attachments();
+                // $this->add_meta_values_to_attachments();
 
                 // set all isc_image_posts meta fields.
-                $this->init_image_posts_metafield();
+                // $this->init_image_posts_metafield();
 
                 $options['installed'] = true;
                 update_option('isc_options', $options);
