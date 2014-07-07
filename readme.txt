@@ -1,4 +1,4 @@
-=== Plugin Name ===
+=== Image Source Control ===
 Contributors: webzunft
 Tags: image, images, picture, picture source, image source, mediathek
 Requires at least: 3.5
