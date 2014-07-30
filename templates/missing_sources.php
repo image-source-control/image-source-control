@@ -11,7 +11,7 @@ $attachments = ISC_CLASS::get_attachments_with_empty_sources();
 if (!empty($attachments)) {
     ?><h2><?php _e('Images with empty sources', ISCTEXTDOMAIN); ?></h2>
     <p><?php _e('Images with empty sources and not belonging to an author.', ISCTEXTDOMAIN); ?></p>
-    <table class="widefat" style="width: 80%;" >
+    <table class="widefat isc-table" style="width: 80%;" >
         <thead>
             <tr>
                 <th><?php _e('ID', ISCTEXTDOMAIN); ?></th>
@@ -37,7 +37,7 @@ $attachments = ISC_CLASS::get_attachments_without_sources();
 if (!empty($attachments)) {
     ?><h2><?php _e('Unindexed images', ISCTEXTDOMAIN); ?></h2>
     <p><?php _e('Images that haven’t been indexed yet, e.g. after plugin installation. (technically speaking: no meta field created yet)', ISCTEXTDOMAIN); ?></p>
-    <table class="widefat" style="width: 80%;" >
+    <table class="widefat isc-table" style="width: 80%;" >
         <thead>
             <tr>
                 <th><?php _e('ID', ISCTEXTDOMAIN); ?></th>
@@ -57,4 +57,11 @@ if (!empty($attachments)) {
     ?>
     <h2><?php _e('All images are indexed.', ISCTEXTDOMAIN); ?></h2>
     <?php
-}
+} ?>
+<h2><?php _e('Debug', ISCTEXTDOMAIN); ?></h2>
+<button type="button" id="isc-list-post-image-relation"><?php _e('list post-image relations', ISCTEXTDOMAIN); ?></button>
+<p class="description"><?php _e('This will list the information ISC knows about the connection between posts and images.', ISCTEXTDOMAIN); ?></p>
+<div id="isc-post-image-relations"></div>
+<button type="button" id="isc-list-image-post-relation"><?php _e('list image-post relations', ISCTEXTDOMAIN); ?></button>
+<p class="description"><?php _e('This will list the information ISC knows about the connection between images and posts.', ISCTEXTDOMAIN); ?></p>
+<div id="isc-image-post-relations"></div>

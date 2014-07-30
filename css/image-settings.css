@@ -16,3 +16,6 @@
 /* meta field in media view */
 .compat-attachment-fields input[type="text"] { width: 100%; }
 .compat-attachment-fields th { vertical-align: top; }
+
+/* tables */
+.isc-table tr:hover { background-color: #ddd;}

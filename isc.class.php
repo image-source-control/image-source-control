@@ -91,6 +91,10 @@ if (!class_exists('ISC_CLASS')) {
             add_action('wp_head', array($this, 'front_head'));
             add_action('the_content', array($this, 'content_filter'));
 
+            // ajax actions
+            add_action('wp_ajax_isc-post-image-relations', array($this, 'list_post_image_relations'));
+            add_action('wp_ajax_isc-image-post-relations', array($this, 'list_image_post_relations'));
+
             // insert all backend functions below this check
 
             if (is_admin()) {
@@ -1714,6 +1718,58 @@ if (!class_exists('ISC_CLASS')) {
 
             if($new_licences == array()) return false;
             else return $new_licences;
+        }
+
+        /**
+         * list image post relations (called with ajax)
+         *
+         * @since 1.6.1
+         */
+        public function list_post_image_relations(){
+            // get all meta fields
+            $args = array(
+                'posts_per_page' => -1,
+                'post_status' => null,
+                'post_parent' => null,
+                'meta_query' => array(
+                    array(
+                        'key' => 'isc_post_images',
+                    ),
+                )
+            );
+            $posts_with_images = new WP_Query($args);
+
+            if($posts_with_images->have_posts()){
+                require_once(ISCPATH . '/templates/post_images_list.php');
+            }
+
+            wp_reset_postdata();
+
+            die();
+        }
+
+        /**
+         * list post image relations (called with ajax)
+         *
+         * @since 1.6.1
+         */
+        public function list_image_post_relations(){
+            // get all meta fields
+            $args = array(
+                'post_type' => 'attachment',
+                'posts_per_page' => -1,
+                'post_status' => 'inherit'
+
+            );
+            $images_with_posts = new WP_Query($args);
+
+            if($images_with_posts->have_posts()){
+                require_once(ISCPATH . '/templates/image_posts_list.php');
+            }
+
+            wp_reset_postdata();
+
+            die();
         }
 
     }// end of class
