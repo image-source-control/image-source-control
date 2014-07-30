@@ -1754,12 +1754,16 @@ if (!class_exists('ISC_CLASS')) {
          * @since 1.6.1
          */
         public function list_image_post_relations(){
-            // get all meta fields
+            // get all images
             $args = array(
                 'post_type' => 'attachment',
                 'posts_per_page' => -1,
-                'post_status' => 'inherit'
-
+                'post_status' => 'inherit',
+                'meta_query' => array(
+                    array(
+                        'key' => 'isc_image_posts',
+                    ),
+                )
             );
             $images_with_posts = new WP_Query($args);
 
