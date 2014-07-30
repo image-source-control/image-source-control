@@ -3,7 +3,7 @@ Contributors: webzunft
 Tags: image, images, picture, picture source, image source, mediathek
 Requires at least: 3.5
 Tested up to: 3.9.1
-Stable tag: 1.6
+Stable tag: 1.6.1
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -17,6 +17,7 @@ Image Source Control (ISC) helps to prevent this situation.
 
 **Features**
 
+* various methods to display and list image sources
 * adds an extra field (custom field) to mediathek to include the image source into
 * lets you mark an image to belong to the uploader
 * lists images with missing sources in the backend
@@ -54,6 +55,11 @@ e.g.
 1. added two new fields to media library
 
 == Changelog ==
+
+= 1.6.1 =
+
+* [feature] list image sources at the bottom of posts and pages without coding
+* [feature] debug modus to check the relation between images and image posts
 
 = 1.6 =
 
