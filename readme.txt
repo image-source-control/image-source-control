@@ -59,7 +59,9 @@ e.g.
 = 1.7.0 =
 
 * [optimized] manage different source display types on top of settings page
+* [feature] choose between different types of how to display sources in the frontend
 * [feature] hide sources on frontend, but still be able to manage them on the dashboard
+* [optimized] renamed settings page to "Image Sources"
 
 Important: the source list is now made the default option for source output. Please check settings to change this.
 
