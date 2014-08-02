@@ -95,98 +95,6 @@ if (!class_exists('ISC_Admin')) {
         }
 
         /**
-         * create the menu pages for isc
-         *
-         * @since 1.0
-         */
-        public function create_menu()
-        {
-            global $isc_missing;
-            global $isc_setting;
-
-            // These pages should be available only for editors and higher
-            $isc_missing = add_submenu_page('upload.php', 'missing image sources by Image Source Control Plugin', __('Missing Sources', ISCTEXTDOMAIN), 'edit_others_posts', 'isc_missing_sources_page', array($this, 'render_missing_sources_page'));
-            $isc_setting = add_options_page(__('Image control - ISC plugin', ISCTEXTDOMAIN), __('Image Control', ISCTEXTDOMAIN), 'edit_others_posts', 'isc_settings_page', array($this, 'render_isc_settings_page'));
-        }
-
-        /**
-         * Settings API initialization
-         *
-         * @update 1.3.5 added settings for sources
-        */
-        public function SAPI_init()
-        {
-            $this->upgrade_management();
-            register_setting('isc_options_group', 'isc_options', array($this, 'settings_validation'));
-            add_settings_section('isc_settings_section', '', '__return_false', 'isc_settings_page');
-
-            // Starts Page/Post settings group with attach list to post option
-            add_settings_field('attach_list_to_post', __('Display image source list', ISCTEXTDOMAIN), array($this, 'renderfield_attach_list_to_post'), 'isc_settings_page', 'isc_settings_section');
-
-            // title of the source list
-            add_settings_field('image_list_headline', __('Image list headline', ISCTEXTDOMAIN), array($this, 'renderfield_list_headline'), 'isc_settings_page', 'isc_settings_section');
-            /**
-            * All new setting in Page/Post group Here!
-            */
-            add_settings_field('hide_list', __('Hide the image list', ISCTEXTDOMAIN), array($this, 'renderfield_hide_list'), 'isc_settings_page', 'isc_settings_section');
-            // Ends Page/Post settings group
-
-            // Starts Full images list group
-            add_settings_field('use_thumbnail', __("Use thumbnails in images list", ISCTEXTDOMAIN), array($this, 'renderfield_use_thumbnail'), 'isc_settings_page', 'isc_settings_section');
-            /**
-            * All new setting in Full images list group Here!
-            */
-            add_settings_field('thumbnail_width', __("Thumbnails max-width", ISCTEXTDOMAIN), array($this, 'renderfield_thumbnail_width'), 'isc_settings_page', 'isc_settings_section');
-            add_settings_field('thumbnail_height', __("Thumbnails max-height", ISCTEXTDOMAIN), array($this, 'renderfield_thumbnail_height'), 'isc_settings_page', 'isc_settings_section');
-            // Ends Full images list group
-
-            // Starts Licence settings group
-            add_settings_field('enable_licences', __("Enable licences", ISCTEXTDOMAIN), array($this, 'renderfield_enable_licences'), 'isc_settings_page', 'isc_settings_section');
-            add_settings_field('licences', __('List of licences', ISCTEXTDOMAIN), array($this, 'renderfield_licences'), 'isc_settings_page', 'isc_settings_section');
-
-            // Starts Misc settings group
-            add_settings_field('exclude_own_images', __('Exclude own images', ISCTEXTDOMAIN), array($this, 'renderfield_exclude_own_images'), 'isc_settings_page', 'isc_settings_section');
-            add_settings_field('use_authorname', __('Use authors names', ISCTEXTDOMAIN), array($this, 'renderfield_use_authorname'), 'isc_settings_page', 'isc_settings_section');
-            add_settings_field('by_author_text', __('Custom text for owned images', ISCTEXTDOMAIN), array($this, 'renderfield_byauthor_text'), 'isc_settings_page', 'isc_settings_section');
-            add_settings_field('webgilde_backlink', __("Link to webgilde's website", ISCTEXTDOMAIN), array($this, 'renderfield_webgile'), 'isc_settings_page', 'isc_settings_section');
-            /**
-            * All new setting in Misc settings group Here!
-            */
-            add_settings_field('source_caption', __("Source as caption on image", ISCTEXTDOMAIN), array($this, 'renderfield_source_caption'), 'isc_settings_page', 'isc_settings_section');
-            add_settings_field('caption_position', __("Caption position", ISCTEXTDOMAIN), array($this, 'renderfield_caption_pos'), 'isc_settings_page', 'isc_settings_section');
-            add_settings_field('warning_one_source', __("Warning when there is at least one missing source", ISCTEXTDOMAIN), array($this, 'renderfield_warning_onesource_misisng'), 'isc_settings_page', 'isc_settings_section');
-            add_settings_field('warning_nosource', __("Warnings when source not available", ISCTEXTDOMAIN), array($this, 'renderfield_warning_nosource'), 'isc_settings_page', 'isc_settings_section');
-            // Ends Misc settings group
-        }
-
-        /**
-        * manage data structure upgrading of outdated versions
-        */
-        public function upgrade_management() {
-
-            /*
-             * Since the activation hook is not executed on plugin upgrade, this function checks options in database
-             * during the admin_init hook to handle plugin's upgrade.
-             */
-
-            $options = get_option('isc_options');
-
-            if (!is_array($options)) {
-                // special case for version prior to 1.2 (which don't have options)
-                $options = $this->default_options();
-                $this->init_image_posts_metafield();
-                $options['installed'] = true;
-                update_option('isc_options', $options);
-            }
-
-            if (ISCVERSION != $options['version']) {
-                $options = $options + $this->default_options();
-                $options['version'] = ISCVERSION;
-                update_option('isc_options', $options);
-            }
-        }
-
-        /**
          * add scripts to admin pages
          * @since 1.0
          * @update 1.1.1
@@ -376,6 +284,90 @@ if (!class_exists('ISC_Admin')) {
         }
 
         /**
+         * create the menu pages for isc
+         *
+         * @since 1.0
+         */
+        public function create_menu()
+        {
+            global $isc_missing;
+            global $isc_setting;
+
+            // These pages should be available only for editors and higher
+            $isc_missing = add_submenu_page('upload.php', 'missing image sources by Image Source Control Plugin', __('Missing Sources', ISCTEXTDOMAIN), 'edit_others_posts', 'isc_missing_sources_page', array($this, 'render_missing_sources_page'));
+            $isc_setting = add_options_page(__('Image control - ISC plugin', ISCTEXTDOMAIN), __('Image Control', ISCTEXTDOMAIN), 'edit_others_posts', 'isc_settings_page', array($this, 'render_isc_settings_page'));
+        }
+
+        /**
+         * Settings API initialization
+         *
+         * @update 1.3.5 added settings for sources
+         * @todo rewrite this and following functions to a more practical form (esp. shorter) or at least bundle field into more useful sections
+        */
+        public function SAPI_init()
+        {
+            $this->upgrade_management();
+            register_setting('isc_options_group', 'isc_options', array($this, 'settings_validation'));
+            add_settings_section('isc_settings_section', '', '__return_false', 'isc_settings_page');
+
+            // handle type of source display
+            add_settings_field('source_display_type', __('How to display sources', ISCTEXTDOMAIN), array($this, 'renderfield_sources_display_type'), 'isc_settings_page', 'isc_settings_section');
+
+            // settings for sources list below single pages
+            add_settings_field('attach_list_to_post', __('Display image source list', ISCTEXTDOMAIN), array($this, 'renderfield_attach_list_to_post'), 'isc_settings_page', 'isc_settings_section');
+            add_settings_field('image_list_headline', __('Image list headline', ISCTEXTDOMAIN), array($this, 'renderfield_list_headline'), 'isc_settings_page', 'isc_settings_section');
+            add_settings_field('hide_list', __('Hide the image list', ISCTEXTDOMAIN), array($this, 'renderfield_hide_list'), 'isc_settings_page', 'isc_settings_section');
+
+            // source in caption
+            add_settings_field('source_caption', __("Source as caption on image", ISCTEXTDOMAIN), array($this, 'renderfield_source_caption'), 'isc_settings_page', 'isc_settings_section');
+            add_settings_field('caption_position', __("Caption position", ISCTEXTDOMAIN), array($this, 'renderfield_caption_pos'), 'isc_settings_page', 'isc_settings_section');
+
+            // full image sources list group
+            add_settings_field('use_thumbnail', __("Use thumbnails in images list", ISCTEXTDOMAIN), array($this, 'renderfield_use_thumbnail'), 'isc_settings_page', 'isc_settings_section');
+            add_settings_field('thumbnail_width', __("Thumbnails max-width", ISCTEXTDOMAIN), array($this, 'renderfield_thumbnail_width'), 'isc_settings_page', 'isc_settings_section');
+            add_settings_field('thumbnail_height', __("Thumbnails max-height", ISCTEXTDOMAIN), array($this, 'renderfield_thumbnail_height'), 'isc_settings_page', 'isc_settings_section');
+
+            // Licence settings group
+            add_settings_field('enable_licences', __("Enable licences", ISCTEXTDOMAIN), array($this, 'renderfield_enable_licences'), 'isc_settings_page', 'isc_settings_section');
+            add_settings_field('licences', __('List of licences', ISCTEXTDOMAIN), array($this, 'renderfield_licences'), 'isc_settings_page', 'isc_settings_section');
+
+            // Misc settings group
+            add_settings_field('exclude_own_images', __('Exclude own images', ISCTEXTDOMAIN), array($this, 'renderfield_exclude_own_images'), 'isc_settings_page', 'isc_settings_section');
+            add_settings_field('use_authorname', __('Use authors names', ISCTEXTDOMAIN), array($this, 'renderfield_use_authorname'), 'isc_settings_page', 'isc_settings_section');
+            add_settings_field('by_author_text', __('Custom text for owned images', ISCTEXTDOMAIN), array($this, 'renderfield_byauthor_text'), 'isc_settings_page', 'isc_settings_section');
+            add_settings_field('webgilde_backlink', __("Link to webgilde's website", ISCTEXTDOMAIN), array($this, 'renderfield_webgile'), 'isc_settings_page', 'isc_settings_section');
+            add_settings_field('warning_one_source', __("Warning when there is at least one missing source", ISCTEXTDOMAIN), array($this, 'renderfield_warning_onesource_misisng'), 'isc_settings_page', 'isc_settings_section');
+            add_settings_field('warning_nosource', __("Warnings when source not available", ISCTEXTDOMAIN), array($this, 'renderfield_warning_nosource'), 'isc_settings_page', 'isc_settings_section');
+        }
+
+        /**
+        * manage data structure upgrading of outdated versions
+        */
+        public function upgrade_management() {
+
+            /*
+             * Since the activation hook is not executed on plugin upgrade, this function checks options in database
+             * during the admin_init hook to handle plugin's upgrade.
+             */
+
+            $options = get_option('isc_options');
+
+            if (!is_array($options)) {
+                // special case for version prior to 1.2 (which don't have options)
+                $options = $this->default_options();
+                $this->init_image_posts_metafield();
+                $options['installed'] = true;
+                update_option('isc_options', $options);
+            }
+
+            if (ISCVERSION != $options['version']) {
+                $options = $options + $this->default_options();
+                $options['version'] = ISCVERSION;
+                update_option('isc_options', $options);
+            }
+        }
+
+        /**
         * Image_control's page callback
         */
         public function render_isc_settings_page()
@@ -386,7 +378,7 @@ if (!class_exists('ISC_Admin')) {
             <div id="isc-admin-wrap">
                 <form id="image-control-form" method="post" action="options.php">
                     <div class="postbox isc-setting-group"><?php // Open the div for the first settings group ?>
-                    <h3 class="setting-group-head"><?php _e('Post / Page images list', ISCTEXTDOMAIN); ?></h3>
+                    <h3 class="setting-group-head"><?php _e('How to display source in Frontend', ISCTEXTDOMAIN); ?></h3>
                     <?php
                         settings_fields( 'isc_options_group' );
                         do_settings_sections( 'isc_settings_page' );
@@ -413,6 +405,42 @@ if (!class_exists('ISC_Admin')) {
         * WordPress Setting API Callbacks
         * *******************************
         */
+        /**
+         * choose type of sources display in the frontend
+         *
+         * @since 1.7
+         */
+        public function renderfield_sources_display_type()
+        {
+            $options = $this->get_isc_options();
+            ?>
+            <div id="display_types_block">
+                <p class="description"><?php echo __('Choose here how to display image sources on single pages', ISCTEXTDOMAIN);; ?></p>
+                <br/>
+                <input type="radio" name="isc_options[display_type]" id="display-types-attach-list-to-post" value="list" <?php checked($options['display_type'], 'list'); ?> />
+                <label for="display-types-attach-list-to-post"><?php echo __('list below post', ISCTEXTDOMAIN);; ?></label>
+                <p class="description"><?php echo __('Displays a list of image sources below the post/page.', ISCTEXTDOMAIN);; ?></p>
+
+                <input type="radio" name="isc_options[display_type]" id="display-types-overlay" value="overlay" <?php checked($options['display_type'], 'overlay'); ?> />
+                <label for="display-types-overlay"><?php echo __('overlay and hidden list', ISCTEXTDOMAIN);; ?></label>
+                <p class="description"><?php echo __('Source as an overlay on the image and a source list that is visible on click.', ISCTEXTDOMAIN);; ?></p>
+
+                <input type="radio" name="isc_options[display_type]" id="display-types-caption" value="caption" <?php checked($options['display_type'],'caption'); ?> />
+                <label for="display-types-caption"><?php echo __('overlay (using WordPress caption)', ISCTEXTDOMAIN);; ?></label>
+                <p class="description"><?php echo __('Display image source on WordPress caption – not shown, if caption is missing (option is deprecated)', ISCTEXTDOMAIN);; ?></p>
+
+                <input type="radio" name="isc_options[display_type]" id="display-types-none" value="none" <?php checked($options['display_type'], 'none'); ?> />
+                <label for="display-types-none"><?php echo __('none', ISCTEXTDOMAIN);; ?></label>
+                <p class="description"><?php echo __('Use this to hide sources on the frontend, but still be able to manage image sources in your dashboard.', ISCTEXTDOMAIN);; ?></p>
+            </div>
+            </td></tr></tbody></table>
+            </div><!-- .postbox -->
+            <div class="postbox isc-setting-group">
+            <h3 class="setting-group-head"><?php _e('Image sources list', ISCTEXTDOMAIN) ?></h3>
+            <table class="form-table"><tbody>
+            <?php
+        }
+
         public function renderfield_attach_list_to_post()
         {
             $options = $this->get_isc_options();
@@ -447,6 +475,42 @@ if (!class_exists('ISC_Admin')) {
                 <label for="hide-list"><?php _e('Hide the image list of a post', ISCTEXTDOMAIN) ?></label>
                 <input type="checkbox" name="isc_options[hide_list]" id="hide-list" <?php checked($options['hide_list']); ?> />
                 <p><em><?php echo $description; ?></em></p>
+            </div>
+            </td></tr></tbody></table>
+            </div><!-- .postbox -->
+            <div class="postbox isc-setting-group">
+            <h3 class="setting-group-head"><?php _e('Imace Source Overlay', ISCTEXTDOMAIN) ?></h3>
+            <table class="form-table"><tbody>
+            <?php
+        }
+
+        public function renderfield_source_caption()
+        {
+            $options = $this->get_isc_options();
+            $description_checkbox = __('Tick to display source onto each image.' ,ISCTEXTDOMAIN);
+            $description_textfield = __('The text preceding the source on each image.' ,ISCTEXTDOMAIN);
+            ?>
+            <div id="caption-block">
+                <input type="checkbox" id="source-on-image" value="1" name="isc_options[source_on_image]" <?php checked($options['source_on_image']); ?> />
+                <p><em><?php echo $description_checkbox; ?></em></p>
+                <input type="text" id='source-pretext' name="isc_options[source_pretext]" value="<?php echo $options['source_pretext']; ?>" />
+                <p><em><?php echo $description_textfield; ?></em></p>
+            </div>
+            <?php
+        }
+
+        public function renderfield_caption_pos()
+        {
+            $options = $this->get_isc_options();
+            $description = __('Position of captions into images' ,ISCTEXTDOMAIN);
+            ?>
+            <div id="caption-position-block">
+                    <select id="caption-pos" name="isc_options[cap_pos]">
+                        <?php foreach ($this->_caption_position as $pos) : ?>
+                            <option value="<?php echo $pos; ?>" <?php selected($pos, $options['caption_position']); ?>><?php echo $pos; ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                    <p><em><?php echo $description; ?></em></p>
             </div>
             </td></tr></tbody></table>
             </div><!-- .postbox -->
@@ -609,37 +673,6 @@ if (!class_exists('ISC_Admin')) {
             <div id="one-source-block">
                 <input type="checkbox" id="one-source" name="isc_options[one_source]"value="1" <?php checked($options['warning_onesource_missing']); ?>/>
                 <p><em><?php echo $description; ?></em></p>
-            </div>
-            <?php
-        }
-
-        public function renderfield_caption_pos()
-        {
-            $options = $this->get_isc_options();
-            $description = __('Position of captions into images' ,ISCTEXTDOMAIN);
-            ?>
-            <div id="caption-position-block">
-                    <select id="caption-pos" name="isc_options[cap_pos]">
-                        <?php foreach ($this->_caption_position as $pos) : ?>
-                            <option value="<?php echo $pos; ?>" <?php selected($pos, $options['caption_position']); ?>><?php echo $pos; ?></option>
-                        <?php endforeach; ?>
-                    </select>
-                    <p><em><?php echo $description; ?></em></p>
-            </div>
-            <?php
-        }
-
-        public function renderfield_source_caption()
-        {
-            $options = $this->get_isc_options();
-            $description_checkbox = __('Tick to display source onto each image.' ,ISCTEXTDOMAIN);
-            $description_textfield = __('The text preceding the source on each image.' ,ISCTEXTDOMAIN);
-            ?>
-            <div id="caption-block">
-                <input type="checkbox" id="source-on-image" value="1" name="isc_options[source_on_image]" <?php checked($options['source_on_image']); ?> />
-                <p><em><?php echo $description_checkbox; ?></em></p>
-                <input type="text" id='source-pretext' name="isc_options[source_pretext]" value="<?php echo $options['source_pretext']; ?>" />
-                <p><em><?php echo $description_textfield; ?></em></p>
             </div>
             <?php
         }

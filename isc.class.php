@@ -950,6 +950,7 @@ if (!class_exists('ISC_Class')) {
         */
         public function default_options()
         {
+            $default['display_type'] = 'list';
             $default['image_list_headline'] = __('image sources', ISCTEXTDOMAIN);
             $default['exclude_own_images'] = false;
             $default['use_authorname'] = true;
@@ -987,6 +988,7 @@ if (!class_exists('ISC_Class')) {
         public function settings_validation($input)
         {
             $output = $this->get_isc_options();
+            $output['display_type'] = esc_attr($input['display_type']);
             $output['image_list_headline'] = esc_html($input['image_list_headline_field']);
             if (isset($input['attach_list_to_post'])) {
                 $output['attach_list_to_post'] = true;

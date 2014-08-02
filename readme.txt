@@ -56,6 +56,13 @@ e.g.
 
 == Changelog ==
 
+= 1.7.0 =
+
+* [optimized] manage different source display types on top of settings page
+* [feature] hide sources on frontend, but still be able to manage them on the dashboard
+
+Important: the source list is now made the default option for source output. Please check settings to change this.
+
 = 1.6.1 =
 
 * [feature] list image sources at the bottom of posts and pages without coding
