@@ -435,7 +435,7 @@ if (!class_exists('ISC_Admin')) {
             </div>
             </td></tr></tbody></table>
             </div><!-- .postbox -->
-            <div class="postbox isc-setting-group">
+            <div id="isc-setting-group-list" class="postbox isc-setting-group">
             <h3 class="setting-group-head"><?php _e('Image sources list', ISCTEXTDOMAIN) ?></h3>
             <table class="form-table"><tbody>
             <?php
@@ -478,7 +478,7 @@ if (!class_exists('ISC_Admin')) {
             </div>
             </td></tr></tbody></table>
             </div><!-- .postbox -->
-            <div class="postbox isc-setting-group">
+            <div id="isc-setting-group-overlay" class="postbox isc-setting-group">
             <h3 class="setting-group-head"><?php _e('Imace Source Overlay', ISCTEXTDOMAIN) ?></h3>
             <table class="form-table"><tbody>
             <?php

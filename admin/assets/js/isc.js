@@ -53,7 +53,37 @@ jQuery(document).ready(function($) {
 
         });
     });
+    // handle which boxes to show on settings page
+    isc_hide_option_boxes();
+    // handle boxes on type change
+    $('#display_types_block input').change(function(){
+        isc_hide_option_boxes();
+    })
 });
+
+// handle which options boxes to display on settings page
+function isc_hide_option_boxes(){
+    // get display type
+    var type = jQuery('#display_types_block input:checked').val();
+    switch(type){
+        case 'list' :
+            jQuery('#isc-setting-group-list table').fadeIn();
+            jQuery('#isc-setting-group-overlay table').fadeOut();
+            break;
+        case 'overlay' :
+            jQuery('#isc-setting-group-list table').fadeIn();
+            jQuery('#isc-setting-group-overlay table').fadeIn();
+            break;
+        case 'caption' :
+            jQuery('#isc-setting-group-list table').fadeOut();
+            jQuery('#isc-setting-group-overlay table').fadeIn();
+            break;
+        default :
+            jQuery('#isc-setting-group-list table').fadeOut();
+            jQuery('#isc-setting-group-overlay table').fadeOut();
+            break;
+    }
+}
 
 function isc_thumbnail_input_checkstate(){
     if ('custom' == jQuery('#thumbnail-size-select').val()) {
