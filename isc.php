@@ -48,8 +48,6 @@ define('WEBGILDE', 'http://webgilde.com/en/image-source-control');
 load_plugin_textdomain(ISCTEXTDOMAIN, false, dirname(plugin_basename(__FILE__)) . '/languages/');
 
 require_once(ISCPATH . 'isc.class.php');
-$my_isc = new ISC_Class();
-global $my_isc;
 
 if ( is_admin() && ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) ) {
     require_once(ISCPATH . 'admin/admin.php');
@@ -59,4 +57,7 @@ if ( is_admin() && ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) ) {
     require_once(ISCPATH . 'public/public.php');
     $isc_public = new ISC_Public;
     require_once(ISCPATH . 'functions.php');
+} else {
+    $my_isc = new ISC_Class();
+    // global $my_isc;
 }
