@@ -377,7 +377,7 @@ if (!class_exists('ISC_Admin')) {
             <h2><?php _e('Images control settings', ISCTEXTDOMAIN); ?></h2>
             <div id="isc-admin-wrap">
                 <form id="image-control-form" method="post" action="options.php">
-                    <div class="postbox isc-setting-group"><?php // Open the div for the first settings group ?>
+                    <div id="isc-setting-group-type" class="postbox isc-setting-group"><?php // Open the div for the first settings group ?>
                     <h3 class="setting-group-head"><?php _e('How to display source in Frontend', ISCTEXTDOMAIN); ?></h3>
                     <?php
                         settings_fields( 'isc_options_group' );
@@ -414,9 +414,8 @@ if (!class_exists('ISC_Admin')) {
         {
             $options = $this->get_isc_options();
             ?>
+            <p class="description"><?php echo __('Choose here how to display image sources on single pages', ISCTEXTDOMAIN);; ?></p><br/>
             <div id="display_types_block">
-                <p class="description"><?php echo __('Choose here how to display image sources on single pages', ISCTEXTDOMAIN);; ?></p>
-                <br/>
                 <input type="radio" name="isc_options[display_type]" id="display-types-attach-list-to-post" value="list" <?php checked($options['display_type'], 'list'); ?> />
                 <label for="display-types-attach-list-to-post"><?php echo __('list below post', ISCTEXTDOMAIN);; ?></label>
                 <p class="description"><?php echo __('Displays a list of image sources below the post/page.', ISCTEXTDOMAIN);; ?></p>
@@ -428,6 +427,10 @@ if (!class_exists('ISC_Admin')) {
                 <input type="radio" name="isc_options[display_type]" id="display-types-caption" value="caption" <?php checked($options['display_type'],'caption'); ?> />
                 <label for="display-types-caption"><?php echo __('overlay (using WordPress caption)', ISCTEXTDOMAIN);; ?></label>
                 <p class="description"><?php echo __('Display image source on WordPress caption – not shown, if caption is missing (option is deprecated)', ISCTEXTDOMAIN);; ?></p>
+
+                <input type="radio" name="isc_options[display_type]" id="display-types-manually" value="manually" <?php checked($options['display_type'],'manually'); ?> />
+                <label for="display-types-manually"><?php echo __('place functions manually', ISCTEXTDOMAIN);; ?></label>
+                <p class="description"><?php echo __('Choose this option if you don’t want to use one of the options above but place the image source list manually into your template as described <a href="http://webgilde.com/en/image-source-control/image-sources-frontend/" title="external link" target="_blank">here</a>', ISCTEXTDOMAIN);; ?></p>
 
                 <input type="radio" name="isc_options[display_type]" id="display-types-none" value="none" <?php checked($options['display_type'], 'none'); ?> />
                 <label for="display-types-none"><?php echo __('none', ISCTEXTDOMAIN);; ?></label>
