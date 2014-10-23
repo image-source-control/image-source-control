@@ -168,7 +168,7 @@ if (!class_exists('ISC_CLASS')) {
             }
 
             // attach image source list to content, if option is enabled
-            if (is_single() && $options['attach_list_to_post']) {
+            if (is_single() && isset($options['attach_list_to_post']) && $options['attach_list_to_post']) {
                 $content = $content . $this->list_post_attachments_with_sources();
             }
 
