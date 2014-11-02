@@ -425,7 +425,7 @@ if (!class_exists('ISC_Class')) {
             );
 
             $attachments = get_posts($args);
-            if (empty($attachments) || !is_array($attachments)) {
+            if (empty($attachments) || !is_array($attachments)) {
                 return;
             }
 
