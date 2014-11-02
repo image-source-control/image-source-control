@@ -129,7 +129,7 @@ if (!class_exists('ISC_Class')) {
         {
             // display inline sources
             $options = $this->get_isc_options();
-            if ($options['source_on_image']) {
+            if ($options['display_type'] == 'overlay') {
                 $pattern = '#(\[caption.*align="(.+)"[^\]*]{0,}\])? *(<a [^>]+>)? *(<img .*class=".*(align\d{4,})?.*wp-image-(\d+)\D*".*src="(.+)".*/?>).*(?(3)(?:</a>)|.*).*(?(1)(?:\[/caption\])|.*)#isU';
                 $count = preg_match_all($pattern, $content, $matches);
                 if (false !== $count) {
@@ -954,7 +954,6 @@ if (!class_exists('ISC_Class')) {
             $default['warning_onesource_missing'] = true;
             $default['hide_list'] = false;
             $default['caption_position'] = 'top-left';
-            $default['source_on_image'] = false;
             $default['source_pretext'] = __('Source:', ISCTEXTDOMAIN);
             $default['enable_licences'] = false;
             $default['licences'] = __("CC BY 2.0|http://creativecommons.org/licenses/by/2.0/legalcode", ISCTEXTDOMAIN);
@@ -1039,11 +1038,8 @@ if (!class_exists('ISC_Class')) {
             }
             if (in_array($input['cap_pos'], $this->_caption_position))
                 $output['caption_position'] = $input['cap_pos'];
-            if (isset($input['source_on_image'])) {
-                $output['source_on_image'] = true;
-                $output['source_pretext'] = $input['source_pretext'];
-            } else {
-                $output['source_on_image'] = false;
+            if (!isset($input['source_pretext'])) {
+                $output['source_pretext'] = esc_textarea($input['source_pretext']);
             }
             return $output;
         }

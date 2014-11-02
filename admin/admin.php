@@ -317,8 +317,8 @@ if (!class_exists('ISC_Admin')) {
             add_settings_field('image_list_headline', __('Image list headline', ISCTEXTDOMAIN), array($this, 'renderfield_list_headline'), 'isc_settings_page', 'isc_settings_section');
 
             // source in caption
-            add_settings_field('source_caption', __("Source as caption on image", ISCTEXTDOMAIN), array($this, 'renderfield_source_caption'), 'isc_settings_page', 'isc_settings_section');
-            add_settings_field('caption_position', __("Caption position", ISCTEXTDOMAIN), array($this, 'renderfield_caption_pos'), 'isc_settings_page', 'isc_settings_section');
+            add_settings_field('source_caption', __("Overlay pre-text", ISCTEXTDOMAIN), array($this, 'renderfield_overlay_text'), 'isc_settings_page', 'isc_settings_section');
+            add_settings_field('caption_position', __("Overlay position", ISCTEXTDOMAIN), array($this, 'renderfield_overlay_position'), 'isc_settings_page', 'isc_settings_section');
 
             // full image sources list group
             add_settings_field('use_thumbnail', __("Use thumbnails in images list", ISCTEXTDOMAIN), array($this, 'renderfield_use_thumbnail'), 'isc_settings_page', 'isc_settings_section');
@@ -356,6 +356,8 @@ if (!class_exists('ISC_Admin')) {
                     // convert old into new settings
                     if(isset($options['attach_list_to_post'])){
                         $options['display_type'] = 'list';
+                    } elseif(isset($options['source_on_image'])){
+                        $options['display_type'] = 'overlay';
                     }
                 }
             } else {
@@ -427,9 +429,9 @@ if (!class_exists('ISC_Admin')) {
                 <label for="display-types-attach-list-to-post"><?php echo __('list below pages', ISCTEXTDOMAIN);; ?></label>
                 <p class="description"><?php echo __('Displays a list of image sources below singular pages.', ISCTEXTDOMAIN);; ?></p>
 
-                <input type="radio" name="isc_options[display_type]" id="display-types-caption" value="caption" <?php checked($options['display_type'],'caption'); ?> />
-                <label for="display-types-caption"><?php echo __('caption overlay', ISCTEXTDOMAIN);; ?></label>
-                <p class="description"><?php echo __('Display image source on WordPress caption – not shown, if caption is missing', ISCTEXTDOMAIN);; ?></p>
+                <input type="radio" name="isc_options[display_type]" id="display-types-overlay" value="overlay" <?php checked($options['display_type'],'overlay'); ?> />
+                <label for="display-types-overlay"><?php echo __('overlay', ISCTEXTDOMAIN);; ?></label>
+                <p class="description"><?php echo __('Display image source as a simple overlay', ISCTEXTDOMAIN);; ?></p>
 
                 <input type="radio" name="isc_options[display_type]" id="display-types-manually" value="manually" <?php checked($options['display_type'],'manually'); ?> />
                 <label for="display-types-manually"><?php echo __('place functions manually', ISCTEXTDOMAIN);; ?></label>
@@ -460,30 +462,26 @@ if (!class_exists('ISC_Admin')) {
             </td></tr></tbody></table>
             </div><!-- .postbox -->
             <div id="isc-setting-group-overlay" class="postbox isc-setting-group">
-            <h3 class="setting-group-head"><?php _e('Imace Source Overlay', ISCTEXTDOMAIN) ?></h3>
+            <h3 class="setting-group-head"><?php _e('Overlay', ISCTEXTDOMAIN) ?></h3>
             <table class="form-table"><tbody>
             <?php
         }
 
-        public function renderfield_source_caption()
+        public function renderfield_overlay_text()
         {
             $options = $this->get_isc_options();
-            $description_checkbox = __('Tick to display source onto each image.' ,ISCTEXTDOMAIN);
-            $description_textfield = __('The text preceding the source on each image.' ,ISCTEXTDOMAIN);
             ?>
-            <div id="caption-block">
-                <input type="checkbox" id="source-on-image" value="1" name="isc_options[source_on_image]" <?php checked($options['source_on_image']); ?> />
-                <p><em><?php echo $description_checkbox; ?></em></p>
+            <div id="overlay-block">
                 <input type="text" id='source-pretext' name="isc_options[source_pretext]" value="<?php echo $options['source_pretext']; ?>" />
-                <p><em><?php echo $description_textfield; ?></em></p>
+                <p><em><?php echo __('The text preceding the source.' ,ISCTEXTDOMAIN); ?></em></p>
             </div>
             <?php
         }
 
-        public function renderfield_caption_pos()
+        public function renderfield_overlay_position()
         {
             $options = $this->get_isc_options();
-            $description = __('Position of captions into images' ,ISCTEXTDOMAIN);
+            $description = __('Position of overlay into images' ,ISCTEXTDOMAIN);
             ?>
             <div id="caption-position-block">
                     <select id="caption-pos" name="isc_options[cap_pos]">
@@ -509,7 +507,7 @@ if (!class_exists('ISC_Admin')) {
         public function renderfield_exclude_own_images()
         {
             $options = $this->get_isc_options();
-            $description = __("Exclude images marked as 'own image' from image lists (post and full) and caption in the frontend. You can still manage them in the dashboard.", ISCTEXTDOMAIN);
+            $description = __("Exclude images marked as 'own image' from image lists (post and full) and overlay in the frontend. You can still manage them in the dashboard.", ISCTEXTDOMAIN);
 
             ?>
             <div id="use-authorname-block">
