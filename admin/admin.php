@@ -355,9 +355,10 @@ if (!class_exists('ISC_Admin')) {
                 if(version_compare('1.7', $options['version'], '>')){
                     // convert old into new settings
                     if(isset($options['attach_list_to_post'])){
-                        $options['display_type'] = 'list';
-                    } elseif(isset($options['source_on_image'])){
-                        $options['display_type'] = 'overlay';
+                        $options['display_type'][] = 'list';
+                    }
+                    if(isset($options['source_on_image'])){
+                        $options['display_type'][] = 'overlay';
                     }
                 }
             } else {
@@ -423,28 +424,25 @@ if (!class_exists('ISC_Admin')) {
         {
             $options = $this->get_isc_options();
             ?>
-            <p class="description"><?php echo __('Choose here how to display image sources on single pages', ISCTEXTDOMAIN);; ?></p><br/>
+            <p class="description"><?php echo __('Choose where to display image sources on singular pages', ISCTEXTDOMAIN);; ?></p><br/>
             <div id="display_types_block">
-                <input type="radio" name="isc_options[display_type]" id="display-types-attach-list-to-post" value="list" <?php checked($options['display_type'], 'list'); ?> />
-                <label for="display-types-attach-list-to-post"><?php echo __('list below pages', ISCTEXTDOMAIN);; ?></label>
+                <input type="hidden" name="isc_options[display_type]" value=""/>
+
+                <input type="checkbox" name="isc_options[display_type][]" id="display-types-list" value="list" <?php checked(in_array('list', $options['display_type']), true); ?> />
+                <label for="display-types-list"><?php echo __('list below content', ISCTEXTDOMAIN);; ?></label>
                 <p class="description"><?php echo __('Displays a list of image sources below singular pages.', ISCTEXTDOMAIN);; ?></p>
 
-                <input type="radio" name="isc_options[display_type]" id="display-types-overlay" value="overlay" <?php checked($options['display_type'],'overlay'); ?> />
+                <input type="checkbox" name="isc_options[display_type][]" id="display-types-overlay" value="overlay" <?php checked(in_array('overlay', $options['display_type']), true); ?> />
                 <label for="display-types-overlay"><?php echo __('overlay', ISCTEXTDOMAIN);; ?></label>
                 <p class="description"><?php echo __('Display image source as a simple overlay', ISCTEXTDOMAIN);; ?></p>
 
-                <input type="radio" name="isc_options[display_type]" id="display-types-manually" value="manually" <?php checked($options['display_type'],'manually'); ?> />
-                <label for="display-types-manually"><?php echo __('place functions manually', ISCTEXTDOMAIN);; ?></label>
-                <p class="description"><?php echo __('Choose this option if you don’t want to use one of the options above but place the image source list manually into your template as described <a href="http://webgilde.com/en/image-source-control/image-sources-frontend/" title="external link" target="_blank">here</a>', ISCTEXTDOMAIN);; ?></p>
+                <p><?php echo __('If you don’t want to use any of these methods, you can still place the image source list manually as described <a href="http://webgilde.com/en/image-source-control/image-sources-frontend/" title="external link" target="_blank">here</a>', ISCTEXTDOMAIN);; ?></p>
 
-                <input type="radio" name="isc_options[display_type]" id="display-types-none" value="none" <?php checked($options['display_type'], 'none'); ?> />
-                <label for="display-types-none"><?php echo __('none', ISCTEXTDOMAIN);; ?></label>
-                <p class="description"><?php echo __('Use this to hide sources on the frontend, but still be able to manage image sources in your dashboard.', ISCTEXTDOMAIN);; ?></p>
             </div>
             </td></tr></tbody></table>
             </div><!-- .postbox -->
             <div id="isc-setting-group-list" class="postbox isc-setting-group">
-            <h3 class="setting-group-head"><?php _e('List below pages', ISCTEXTDOMAIN) ?></h3>
+            <h3 class="setting-group-head"><?php _e('List below content', ISCTEXTDOMAIN) ?></h3>
             <table class="form-table"><tbody>
             <?php
         }

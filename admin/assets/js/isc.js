@@ -64,21 +64,22 @@ jQuery(document).ready(function($) {
 // handle which options boxes to display on settings page
 function isc_hide_option_boxes(){
     // get display type
-    var type = jQuery('#display_types_block input:checked').val();
-    switch(type){
-        case 'list' :
-            jQuery('#isc-setting-group-list table').fadeIn();
-            jQuery('#isc-setting-group-overlay table').fadeOut();
-            break;
-        case 'overlay' :
-            jQuery('#isc-setting-group-list table').fadeOut();
-            jQuery('#isc-setting-group-overlay table').fadeIn();
-            break;
-        default :
-            jQuery('#isc-setting-group-list table').fadeOut();
-            jQuery('#isc-setting-group-overlay table').fadeOut();
-            break;
-    }
+    var checkedelements = jQuery('#display_types_block input:checked');
+    // hide all elements
+    jQuery('#isc-setting-group-list table').fadeOut();
+    jQuery('#isc-setting-group-overlay table').fadeOut();
+    checkedelements.each(function(){
+        switch(jQuery(this).val()){
+            case 'list' :
+                jQuery('#isc-setting-group-list table'  ).fadeIn();
+                break;
+            case 'overlay' :
+                jQuery('#isc-setting-group-overlay table').fadeIn();
+                break;
+            default :
+                break;
+        }
+    });
 }
 
 function isc_thumbnail_input_checkstate(){

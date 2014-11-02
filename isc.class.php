@@ -129,7 +129,7 @@ if (!class_exists('ISC_Class')) {
         {
             // display inline sources
             $options = $this->get_isc_options();
-            if ($options['display_type'] == 'overlay') {
+            if (in_array('overlay', $options['display_type'])) {
                 $pattern = '#(\[caption.*align="(.+)"[^\]*]{0,}\])? *(<a [^>]+>)? *(<img .*class=".*(align\d{4,})?.*wp-image-(\d+)\D*".*src="(.+)".*/?>).*(?(3)(?:</a>)|.*).*(?(1)(?:\[/caption\])|.*)#isU';
                 $count = preg_match_all($pattern, $content, $matches);
                 if (false !== $count) {
@@ -151,7 +151,7 @@ if (!class_exists('ISC_Class')) {
             }
 
             // attach image source list to content, if option is enabled
-            if (is_singular() && $options['display_type'] == 'list') {
+            if (is_singular() && in_array('list', $options['display_type'])) {
                 $content = $content . $this->list_post_attachments_with_sources();
             }
 
@@ -938,7 +938,7 @@ if (!class_exists('ISC_Class')) {
         */
         public function default_options()
         {
-            $default['display_type'] = 'list';
+            $default['display_type'] = array('list');
             $default['image_list_headline'] = __('image sources', ISCTEXTDOMAIN);
             $default['exclude_own_images'] = false;
             $default['use_authorname'] = true;
@@ -975,7 +975,7 @@ if (!class_exists('ISC_Class')) {
         public function settings_validation($input)
         {
             $output = $this->get_isc_options();
-            $output['display_type'] = esc_attr($input['display_type']);
+            $output['display_type'] = $input['display_type'];
             $output['image_list_headline'] = esc_html($input['image_list_headline_field']);
             if (isset($input['use_authorname_ckbox'])) {
                 // Don't worry about the custom text if the author name is selected.
