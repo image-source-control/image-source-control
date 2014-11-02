@@ -319,15 +319,7 @@ if (!class_exists('ISC_Class')) {
             $hide_class = ($options['hide_list'])? ' isc-list-up': ' isc-list-down';
             $hide_title = ($options['hide_list'])? $show_text : $hide_text;
             ?><div class="isc_image_list_box"><?php
-            printf('<p class="isc_image_list_title" title="%2$s" style="cursor: pointer;">%1$s</p>', $headline, $hide_title); ?>
-            <script type="text/javascript">
-                /* <!--[CDATA[ */
-                    isc_jstext = {
-                        show_list: "<?php echo esc_attr($show_text); ?>",
-                        hide_list: "<?php echo esc_attr($hide_text); ?>"
-                    }
-                /* ]]--> */
-            </script>
+            printf('<p class="isc_image_list_title" title="%2$s">%1$s</p>', $headline, $hide_title); ?>
             <ul class="isc_image_list <?php echo $hide_class; ?>"<?php echo $hide_style; ?>><?php
 
             foreach ($attachments as $atts_id => $atts_array) {
