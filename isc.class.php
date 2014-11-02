@@ -975,7 +975,11 @@ if (!class_exists('ISC_Class')) {
         public function settings_validation($input)
         {
             $output = $this->get_isc_options();
-            $output['display_type'] = $input['display_type'];
+            if(!is_array($input['display_type'])){
+                $output['display_type'] = array();
+            } else {
+                $output['display_type'] = $input['display_type'];
+            }
             $output['image_list_headline'] = esc_html($input['image_list_headline_field']);
             if (isset($input['use_authorname_ckbox'])) {
                 // Don't worry about the custom text if the author name is selected.
