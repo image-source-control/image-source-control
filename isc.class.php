@@ -151,7 +151,7 @@ if (!class_exists('ISC_Class')) {
             }
 
             // attach image source list to content, if option is enabled
-            if (is_single() && $options['attach_list_to_post']) {
+            if (is_single() && $options['display_type'] == 'list') {
                 $content = $content . $this->list_post_attachments_with_sources();
             }
 
@@ -990,11 +990,6 @@ if (!class_exists('ISC_Class')) {
             $output = $this->get_isc_options();
             $output['display_type'] = esc_attr($input['display_type']);
             $output['image_list_headline'] = esc_html($input['image_list_headline_field']);
-            if (isset($input['attach_list_to_post'])) {
-                $output['attach_list_to_post'] = true;
-            } else {
-                $output['attach_list_to_post'] = false;
-            }
             if (isset($input['use_authorname_ckbox'])) {
                 // Don't worry about the custom text if the author name is selected.
                 $output['use_authorname'] = true;

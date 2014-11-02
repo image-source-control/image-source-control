@@ -314,7 +314,6 @@ if (!class_exists('ISC_Admin')) {
             add_settings_field('source_display_type', __('How to display sources', ISCTEXTDOMAIN), array($this, 'renderfield_sources_display_type'), 'isc_settings_page', 'isc_settings_section');
 
             // settings for sources list below single pages
-            add_settings_field('attach_list_to_post', __('Display image source list', ISCTEXTDOMAIN), array($this, 'renderfield_attach_list_to_post'), 'isc_settings_page', 'isc_settings_section');
             add_settings_field('image_list_headline', __('Image list headline', ISCTEXTDOMAIN), array($this, 'renderfield_list_headline'), 'isc_settings_page', 'isc_settings_section');
             add_settings_field('hide_list', __('Hide the image list', ISCTEXTDOMAIN), array($this, 'renderfield_hide_list'), 'isc_settings_page', 'isc_settings_section');
 
@@ -352,7 +351,15 @@ if (!class_exists('ISC_Admin')) {
 
             $options = get_option('isc_options');
 
-            if (!is_array($options)) {
+            if (is_array($options)) {
+                // version 1.7 and higher
+                if(version_compare('1.7', $options['version'], '>')){
+                    // convert old into new settings
+                    if(isset($options['attach_list_to_post'])){
+                        $options['display_type'] = 'list';
+                    }
+                }
+            } else {
                 // special case for version prior to 1.2 (which don't have options)
                 $options = $this->default_options();
                 $this->init_image_posts_metafield();
@@ -365,6 +372,7 @@ if (!class_exists('ISC_Admin')) {
                 $options['version'] = ISCVERSION;
                 update_option('isc_options', $options);
             }
+
         }
 
         /**
@@ -420,13 +428,9 @@ if (!class_exists('ISC_Admin')) {
                 <label for="display-types-attach-list-to-post"><?php echo __('list below post', ISCTEXTDOMAIN);; ?></label>
                 <p class="description"><?php echo __('Displays a list of image sources below the post/page.', ISCTEXTDOMAIN);; ?></p>
 
-                <input type="radio" name="isc_options[display_type]" id="display-types-overlay" value="overlay" <?php checked($options['display_type'], 'overlay'); ?> />
-                <label for="display-types-overlay"><?php echo __('overlay and hidden list', ISCTEXTDOMAIN);; ?></label>
-                <p class="description"><?php echo __('Source as an overlay on the image and a source list that is visible on click.', ISCTEXTDOMAIN);; ?></p>
-
                 <input type="radio" name="isc_options[display_type]" id="display-types-caption" value="caption" <?php checked($options['display_type'],'caption'); ?> />
-                <label for="display-types-caption"><?php echo __('overlay (using WordPress caption)', ISCTEXTDOMAIN);; ?></label>
-                <p class="description"><?php echo __('Display image source on WordPress caption – not shown, if caption is missing (option is deprecated)', ISCTEXTDOMAIN);; ?></p>
+                <label for="display-types-caption"><?php echo __('caption overlay', ISCTEXTDOMAIN);; ?></label>
+                <p class="description"><?php echo __('Display image source on WordPress caption – not shown, if caption is missing', ISCTEXTDOMAIN);; ?></p>
 
                 <input type="radio" name="isc_options[display_type]" id="display-types-manually" value="manually" <?php checked($options['display_type'],'manually'); ?> />
                 <label for="display-types-manually"><?php echo __('place functions manually', ISCTEXTDOMAIN);; ?></label>
@@ -439,20 +443,8 @@ if (!class_exists('ISC_Admin')) {
             </td></tr></tbody></table>
             </div><!-- .postbox -->
             <div id="isc-setting-group-list" class="postbox isc-setting-group">
-            <h3 class="setting-group-head"><?php _e('Image sources list', ISCTEXTDOMAIN) ?></h3>
+            <h3 class="setting-group-head"><?php _e('List below post', ISCTEXTDOMAIN) ?></h3>
             <table class="form-table"><tbody>
-            <?php
-        }
-
-        public function renderfield_attach_list_to_post()
-        {
-            $options = $this->get_isc_options();
-            $description = __('Displays the list of image sources below the post/page.', ISCTEXTDOMAIN);
-            ?>
-            <div id="attach-list-to-post-block">
-                <input type="checkbox" name="isc_options[attach_list_to_post]" id="attach-list-to-post" <?php checked($options['attach_list_to_post']); ?> />
-                <label for="attach-list-to-post"><?php echo $description; ?></label>
-            </div>
             <?php
         }
 

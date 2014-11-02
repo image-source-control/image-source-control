@@ -70,10 +70,6 @@ function isc_hide_option_boxes(){
             jQuery('#isc-setting-group-list table').fadeIn();
             jQuery('#isc-setting-group-overlay table').fadeOut();
             break;
-        case 'overlay' :
-            jQuery('#isc-setting-group-list table').fadeIn();
-            jQuery('#isc-setting-group-overlay table').fadeIn();
-            break;
         case 'caption' :
             jQuery('#isc-setting-group-list table').fadeOut();
             jQuery('#isc-setting-group-overlay table').fadeIn();
