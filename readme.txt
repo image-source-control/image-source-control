@@ -58,7 +58,7 @@ e.g.
 
 1. display a list with all images of your site and their sources
 1. display image source within the image
-1. plenty of settings to customize how to display image sources
+1. some of the settings to customize how to display image sources
 1. added two new fields to media library
 
 == Changelog ==
@@ -69,6 +69,7 @@ e.g.
 * [optimized] renamed settings page to "Image Sources"
 * [removed] hiding source list elements in the frontend is no longer possible
 * [fixed] show source list not only below posts, but every other post type
+* [fixed] removed screenshots from main plugin files
 
 Important: I tried to move old settings to new ones, but please check your settings and source display after updating.
 
