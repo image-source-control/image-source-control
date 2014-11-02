@@ -425,12 +425,12 @@ if (!class_exists('ISC_Class')) {
             );
 
             $attachments = get_posts($args);
-            if (empty($attachments)) {
+            if (empty($attachments) || !is_array($attachments)) {
                 return;
             }
 
             $count = 0;
-            foreach ($attachments as $_attachment) {
+            foreach($attachments as $_attachment) {
                 $set = false;
                 setup_postdata($_attachment);
                 foreach ($this->_fields as $_field) {
