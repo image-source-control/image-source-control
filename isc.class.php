@@ -151,7 +151,7 @@ if (!class_exists('ISC_Class')) {
             }
 
             // attach image source list to content, if option is enabled
-            if (is_single() && $options['display_type'] == 'list') {
+            if (is_singular() && $options['display_type'] == 'list') {
                 $content = $content . $this->list_post_attachments_with_sources();
             }
 
@@ -289,7 +289,7 @@ if (!class_exists('ISC_Class')) {
 
                 }
 
-                $return = $this->_renderAttachments($atts);
+                $return = $this->render_attachments($atts);
             }
 
             return $return;
@@ -302,25 +302,21 @@ if (!class_exists('ISC_Class')) {
          * @updated 1.3.5
          * @updated 1.5 removed rendering the licence to an earlier function
          */
-        protected function _renderAttachments($attachments)
+        protected function render_attachments($attachments)
         {
             // don't display anything, if no image sources displayed
             if ($attachments == array()) {
                 return ;
             }
 
+
             $options = $this->get_isc_options();
-            $show_text = __('Show the list', ISCTEXTDOMAIN);
-            $hide_text = __('Hide the list', ISCTEXTDOMAIN);
 
             ob_start();
             $headline = $this->_options['image_list_headline'];
-            $hide_style = ($options['hide_list'])? 'style="height: 0px; overflow: hidden;"': 'style="height: auto; overflow: hidden;"';
-            $hide_class = ($options['hide_list'])? ' isc-list-up': ' isc-list-down';
-            $hide_title = ($options['hide_list'])? $show_text : $hide_text;
             ?><div class="isc_image_list_box"><?php
-            printf('<p class="isc_image_list_title" title="%2$s">%1$s</p>', $headline, $hide_title); ?>
-            <ul class="isc_image_list <?php echo $hide_class; ?>"<?php echo $hide_style; ?>><?php
+            printf('<p class="isc_image_list_title">%1$s</p>', $headline); ?>
+            <ul class="isc_image_list"><?php
 
             foreach ($attachments as $atts_id => $atts_array) {
                 if (empty($atts_array['source'])) {

@@ -62,6 +62,9 @@ e.g.
 * [feature] choose between different types of how to display sources in the frontend
 * [feature] hide sources on frontend, but still be able to manage them on the dashboard
 * [optimized] renamed settings page to "Image Sources"
+* [removed] hiding source list elements in the frontend is no longer possible
+* [fixed] show source list not only below posts, but every other post type
+
 
 Important: the source list is now made the default option for source output. Please check settings to change this.
 

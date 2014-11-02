@@ -315,7 +315,6 @@ if (!class_exists('ISC_Admin')) {
 
             // settings for sources list below single pages
             add_settings_field('image_list_headline', __('Image list headline', ISCTEXTDOMAIN), array($this, 'renderfield_list_headline'), 'isc_settings_page', 'isc_settings_section');
-            add_settings_field('hide_list', __('Hide the image list', ISCTEXTDOMAIN), array($this, 'renderfield_hide_list'), 'isc_settings_page', 'isc_settings_section');
 
             // source in caption
             add_settings_field('source_caption', __("Source as caption on image", ISCTEXTDOMAIN), array($this, 'renderfield_source_caption'), 'isc_settings_page', 'isc_settings_section');
@@ -425,8 +424,8 @@ if (!class_exists('ISC_Admin')) {
             <p class="description"><?php echo __('Choose here how to display image sources on single pages', ISCTEXTDOMAIN);; ?></p><br/>
             <div id="display_types_block">
                 <input type="radio" name="isc_options[display_type]" id="display-types-attach-list-to-post" value="list" <?php checked($options['display_type'], 'list'); ?> />
-                <label for="display-types-attach-list-to-post"><?php echo __('list below post', ISCTEXTDOMAIN);; ?></label>
-                <p class="description"><?php echo __('Displays a list of image sources below the post/page.', ISCTEXTDOMAIN);; ?></p>
+                <label for="display-types-attach-list-to-post"><?php echo __('list below pages', ISCTEXTDOMAIN);; ?></label>
+                <p class="description"><?php echo __('Displays a list of image sources below singular pages.', ISCTEXTDOMAIN);; ?></p>
 
                 <input type="radio" name="isc_options[display_type]" id="display-types-caption" value="caption" <?php checked($options['display_type'],'caption'); ?> />
                 <label for="display-types-caption"><?php echo __('caption overlay', ISCTEXTDOMAIN);; ?></label>
@@ -443,7 +442,7 @@ if (!class_exists('ISC_Admin')) {
             </td></tr></tbody></table>
             </div><!-- .postbox -->
             <div id="isc-setting-group-list" class="postbox isc-setting-group">
-            <h3 class="setting-group-head"><?php _e('List below post', ISCTEXTDOMAIN) ?></h3>
+            <h3 class="setting-group-head"><?php _e('List below pages', ISCTEXTDOMAIN) ?></h3>
             <table class="form-table"><tbody>
             <?php
         }
@@ -456,19 +455,6 @@ if (!class_exists('ISC_Admin')) {
             <div id="image-list-headline-block">
                 <label for="list-head"><?php __('Image list headline', ISCTEXTDOMAIN); ?></label>
                 <input type="text" name="isc_options[image_list_headline_field]" id="list-head" value="<?php echo $options['image_list_headline'] ?>" class="regular-text" />
-                <p><em><?php echo $description; ?></em></p>
-            </div>
-            <?php
-        }
-
-        public function renderfield_hide_list()
-        {
-            $options = $this->get_isc_options();
-            $description = __("Hide the list when the post is loaded. A simple click on the list headline will show the list content.", ISCTEXTDOMAIN);
-            ?>
-            <div id="hide-list-block">
-                <label for="hide-list"><?php _e('Hide the image list of a post', ISCTEXTDOMAIN) ?></label>
-                <input type="checkbox" name="isc_options[hide_list]" id="hide-list" <?php checked($options['hide_list']); ?> />
                 <p><em><?php echo $description; ?></em></p>
             </div>
             </td></tr></tbody></table>
