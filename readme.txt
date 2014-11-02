@@ -1,13 +1,13 @@
 === Image Source Control ===
 Contributors: webzunft
-Tags: image, images, picture, picture source, image source, mediathek
+Tags: image, images, picture, picture source, image source, mediathek, media, caption
 Requires at least: 3.5
-Tested up to: 3.9.1
-Stable tag: 1.6.1
+Tested up to: 4.0
+Stable tag: 1.7
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
-The Image Source Control saves the source of an image, lists them and warns if it is missing.
+The Image Source Control manages image sources, displays them and warns if they are missing.
 
 == Description ==
 
@@ -15,10 +15,17 @@ Did you ever forget to add the source to an image file in the frontend and the l
 
 Image Source Control (ISC) helps to prevent this situation.
 
+**Image Sources Lists**
+
+You can choose between different image source list types:
+
+* source as image caption/overlay
+* source list below the content
+* combined source list of all images
+
 **Features**
 
-* various methods to display and list image sources
-* adds an extra field (custom field) to mediathek to include the image source into
+* manage image source within media dashboard
 * lets you mark an image to belong to the uploader
 * lists images with missing sources in the backend
 * show image source directly in the image
@@ -55,6 +62,15 @@ e.g.
 1. added two new fields to media library
 
 == Changelog ==
+
+= 1.7.0 =
+
+* [optimized] manage different source display types on top of settings page
+* [optimized] renamed settings page to "Image Sources"
+* [removed] hiding source list elements in the frontend is no longer possible
+* [fixed] show source list not only below posts, but every other post type
+
+Important: I tried to move old settings to new ones, but please check your settings and source display after updating.
 
 = 1.6.1 =
 
@@ -195,11 +211,15 @@ Read [this post](http://webgilde.com/en/image-source-control-1-6/) to learn more
 
 Also have a look at the <a href="http://webgilde.com/en/image-source-control/image-source-control-manual/">image source control manual</a>.
 
-Find a list of images with missing sources under _Mediathek > Missing sources_
+Find a list of images with missing sources under _Media > Missing sources_
 
-**image sources on pages/posts**
+**automatic image sources**
 
-You can add the image source list to pages or post via the shortcode [isc_list] in your content editor. You can use `[isc_list id="123]` to show the list of any post or page.
+You can choose to display image sources automatically below the post content or as a small overlay above your images. Just visit the settings page of the plugin to enable those options.
+
+**manually included image sources on pages/posts**
+
+You can add the image source list manually to pages or post via the shortcode [isc_list] in your content editor. You can use `[isc_list id="123]` to show the list of any post or page.
 
 You can also add the list with the function `isc_list()` within the loop in your template files. Use `isc_list( $post_id )` to show the image source list outside the loop.
 

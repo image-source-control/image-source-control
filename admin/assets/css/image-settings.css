@@ -1,6 +1,7 @@
-.isc-setting-group {
-    width: 96%;
-}
+.isc-setting-group { width: 96%; }
+#display_types_block label { font-weight: bold; }
+#isc-setting-group-type table th { display: none; }
+#display_types_block .description { margin-left: 1.7em; margin-bottom: .5em; }
 
 #isc-admin-wrap h3 {
     padding: 0.8em 1em;

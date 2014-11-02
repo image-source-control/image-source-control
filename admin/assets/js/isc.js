@@ -53,7 +53,34 @@ jQuery(document).ready(function($) {
 
         });
     });
+    // handle which boxes to show on settings page
+    isc_hide_option_boxes();
+    // handle boxes on type change
+    $('#display_types_block input').change(function(){
+        isc_hide_option_boxes();
+    })
 });
+
+// handle which options boxes to display on settings page
+function isc_hide_option_boxes(){
+    // get display type
+    var checkedelements = jQuery('#display_types_block input:checked');
+    // hide all elements
+    jQuery('#isc-setting-group-list table').fadeOut();
+    jQuery('#isc-setting-group-overlay table').fadeOut();
+    checkedelements.each(function(){
+        switch(jQuery(this).val()){
+            case 'list' :
+                jQuery('#isc-setting-group-list table'  ).fadeIn();
+                break;
+            case 'overlay' :
+                jQuery('#isc-setting-group-overlay table').fadeIn();
+                break;
+            default :
+                break;
+        }
+    });
+}
 
 function isc_thumbnail_input_checkstate(){
     if ('custom' == jQuery('#thumbnail-size-select').val()) {
