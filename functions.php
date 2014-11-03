@@ -10,8 +10,8 @@
  * @param int $post_id post id
  */
 function isc_list($post_id = 0) {
-    global $my_isc;
-    echo $my_isc->list_post_attachments_with_sources($post_id);
+    global $isc_public;
+    echo $isc_public->list_post_attachments_with_sources($post_id);
 }
 
 /**
@@ -21,6 +21,6 @@ function isc_list($post_id = 0) {
  * @param int $attachment_id id of the image
  */
 function isc_image_source($attachment_id = 0) {
-    global $my_isc;
-    echo $my_isc->render_image_source_string($attachment_id);
+    global $isc_public;
+    echo $isc_public->render_image_source_string($attachment_id);
 }
