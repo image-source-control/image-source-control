@@ -66,6 +66,7 @@ e.g.
 = 1.7.2 =
 
 * [fixed] error message shown when list type settings was empty or unsaved
+* [fixed] source overlay showing if no image source was set for it
 
 = 1.7.1 =
 
