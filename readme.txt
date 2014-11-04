@@ -63,6 +63,10 @@ e.g.
 
 == Changelog ==
 
+= 1.7.2 =
+
+* [fixed] error message shown when list type settings was empty or unsaved
+
 = 1.7.1 =
 
 * [fixed] source list function referring to the wrong plugin class

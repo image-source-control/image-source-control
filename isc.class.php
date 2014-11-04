@@ -129,7 +129,7 @@ if (!class_exists('ISC_Class')) {
         {
             // display inline sources
             $options = $this->get_isc_options();
-            if (in_array('overlay', $options['display_type'])) {
+            if (is_array($options['display_type']) && in_array('overlay', $options['display_type'])) {
                 $pattern = '#(\[caption.*align="(.+)"[^\]*]{0,}\])? *(<a [^>]+>)? *(<img .*class=".*(align\d{4,})?.*wp-image-(\d+)\D*".*src="(.+)".*/?>).*(?(3)(?:</a>)|.*).*(?(1)(?:\[/caption\])|.*)#isU';
                 $count = preg_match_all($pattern, $content, $matches);
                 if (false !== $count) {
@@ -151,7 +151,7 @@ if (!class_exists('ISC_Class')) {
             }
 
             // attach image source list to content, if option is enabled
-            if (is_singular() && in_array('list', $options['display_type'])) {
+            if (is_singular() && is_array($options['display_type']) && in_array('list', $options['display_type'])) {
                 $content = $content . $this->list_post_attachments_with_sources();
             }
 
