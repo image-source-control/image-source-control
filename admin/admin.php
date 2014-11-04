@@ -198,7 +198,7 @@ if (!class_exists('ISC_Admin')) {
         public function isc_fields_save($post, $attachment)
         {
             if (isset($attachment['isc_image_source'])) {
-                update_post_meta($post['ID'], 'isc_image_source', $attachment['isc_image_source']);
+                update_post_meta($post['ID'], 'isc_image_source', trim($attachment['isc_image_source']));
             }
             if (isset($attachment['isc_image_source_url'])) {
                 $url = sanitize_url($attachment['isc_image_source_url']);

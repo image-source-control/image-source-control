@@ -67,6 +67,7 @@ e.g.
 
 * [fixed] error message shown when list type settings was empty or unsaved
 * [fixed] source overlay showing if no image source was set for it
+* [optimized] trim source input
 
 = 1.7.1 =
 
