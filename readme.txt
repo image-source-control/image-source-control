@@ -63,6 +63,10 @@ e.g.
 
 == Changelog ==
 
+= untracked =
+
+* [fixed] bug on multisite update
+
 = 1.7.2 =
 
 * [fixed] error message shown when list type settings was empty or unsaved
