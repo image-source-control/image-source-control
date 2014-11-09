@@ -67,6 +67,7 @@ e.g.
 
 * [fixed] bug on ajax calls preventing the source fields to show up on ajax called pages in the dashboard
 * [fixed] bug on multisite update
+* [optimized] don’t hide setting boxes
 
 = 1.7.2 =
 
