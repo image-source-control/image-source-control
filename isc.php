@@ -49,7 +49,7 @@ load_plugin_textdomain(ISCTEXTDOMAIN, false, dirname(plugin_basename(__FILE__)) 
 
 require_once(ISCPATH . 'isc.class.php');
 
-if ( is_admin() && ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) ) {
+if ( is_admin() ) {
     require_once(ISCPATH . 'admin/admin.php');
     $isc_admin = new ISC_Admin;
 } elseif (!is_admin() && ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX )) {

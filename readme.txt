@@ -63,8 +63,9 @@ e.g.
 
 == Changelog ==
 
-= untracked =
+= 1.7.3 =
 
+* [fixed] bug on ajax calls preventing the source fields to show up on ajax called pages in the dashboard
 * [fixed] bug on multisite update
 
 = 1.7.2 =
