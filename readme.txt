@@ -3,7 +3,7 @@ Contributors: webzunft
 Tags: image, images, picture, picture source, image source, mediathek, media, caption
 Requires at least: 3.5
 Tested up to: 4.0
-Stable tag: 1.7.2
+Stable tag: 1.7.3
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -68,6 +68,7 @@ e.g.
 * [fixed] bug on ajax calls preventing the source fields to show up on ajax called pages in the dashboard
 * [fixed] bug on multisite update
 * [optimized] don’t hide setting boxes
+* [optimized] finished moving all publically needed function to its own class
 
 = 1.7.2 =
 

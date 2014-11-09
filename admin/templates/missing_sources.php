@@ -7,7 +7,7 @@
 <h1><?php _e('Missing Sources', 'isc'); ?></h1>
 
 <?php
-$attachments = ISC_CLASS::get_attachments_with_empty_sources();
+$attachments = ISC_Admin::get_attachments_with_empty_sources();
 if (!empty($attachments)) {
     ?><h2><?php _e('Images with empty sources', ISCTEXTDOMAIN); ?></h2>
     <p><?php _e('Images with empty sources and not belonging to an author.', ISCTEXTDOMAIN); ?></p>
@@ -33,7 +33,7 @@ if (!empty($attachments)) {
     <?php
 }
 
-$attachments = ISC_CLASS::get_attachments_without_sources();
+$attachments = ISC_Admin::get_attachments_without_sources();
 if (!empty($attachments)) {
     ?><h2><?php _e('Unindexed images', ISCTEXTDOMAIN); ?></h2>
     <p><?php _e('Images that haven’t been indexed yet, e.g. after plugin installation. (technically speaking: no meta field created yet)', ISCTEXTDOMAIN); ?></p>

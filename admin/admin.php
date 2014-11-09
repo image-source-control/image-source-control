@@ -41,6 +41,10 @@ if (!class_exists('ISC_Admin')) {
             // scripts and styles
             add_action('admin_enqueue_scripts', array($this, 'add_admin_scripts'));
             add_action( 'admin_print_scripts', array($this, 'admin_headjs') );
+
+            // ajax calls
+            add_action('wp_ajax_isc-post-image-relations', array($this, 'list_post_image_relations'));
+            add_action('wp_ajax_isc-image-post-relations', array($this, 'list_image_post_relations'));
         }
 
         /**
@@ -407,7 +411,7 @@ if (!class_exists('ISC_Admin')) {
         */
         public function render_missing_sources_page()
         {
-            require_once(ISCPATH . '/templates/missing_sources.php');
+            require_once(ISCPATH . '/admin/templates/missing_sources.php');
         }
 
         /**
@@ -659,6 +663,204 @@ if (!class_exists('ISC_Admin')) {
         * End of Setting API Callbacks
         * ****************************
         */
+
+         /**
+         * get all attachments with empty sources string
+         */
+        public function get_attachments_with_empty_sources()
+        {
+            $args = array(
+                'post_type' => 'attachment',
+                'numberposts' => -1,
+                'post_status' => null,
+                'post_parent' => null,
+                'meta_query' => array(
+                    // image source is empty
+                    array(
+                        'key' => 'isc_image_source',
+                        'value' => '',
+                        'compare' => '=',
+                    ),
+                    // and does not belong to an author
+                    array(
+                        'key' => 'isc_image_source_own',
+                        'value' => '1',
+                        'compare' => '!=',
+                    ),
+                )
+            );
+
+            $attachments = get_posts($args);
+            if (!empty($attachments)) {
+                return $attachments;
+            }
+        }
+
+        /**
+         * get all attachments without the proper meta values (needed mostly after installing the plugin for unindexed images)
+         *
+         * @since 1.6
+         */
+        public function get_attachments_without_sources()
+        {
+            $args = array(
+                'post_type' => 'attachment',
+                'numberposts' => -1,
+                'post_status' => null,
+                'post_parent' => null,
+                'meta_query' => array(
+                    // image source is empty
+                    array(
+                        'key' => 'isc_image_source',
+                        'value' => 'any', /* any string; needed prior to WP 3.9 */
+                        'compare' => 'NOT EXISTS',
+                    ),
+                )
+            );
+
+            $attachments = get_posts($args);
+            if (!empty($attachments)) {
+                return $attachments;
+            }
+        }
+
+
+        /**
+         * list image post relations (called with ajax)
+         *
+         * @since 1.6.1
+         */
+        public function list_post_image_relations(){
+            // get all meta fields
+            $args = array(
+                'posts_per_page' => -1,
+                'post_status' => null,
+                'post_parent' => null,
+                'meta_query' => array(
+                    array(
+                        'key' => 'isc_post_images',
+                    ),
+                )
+            );
+            $posts_with_images = new WP_Query($args);
+
+            if($posts_with_images->have_posts()){
+                require_once(ISCPATH . '/admin/templates/post_images_list.php');
+            }
+
+            wp_reset_postdata();
+
+            die();
+        }
+
+        /**
+         * list post image relations (called with ajax)
+         *
+         * @since 1.6.1
+         */
+        public function list_image_post_relations(){
+            // get all images
+            $args = array(
+                'post_type' => 'attachment',
+                'posts_per_page' => -1,
+                'post_status' => 'inherit',
+                'meta_query' => array(
+                    array(
+                        'key' => 'isc_image_posts',
+                    ),
+                )
+            );
+            $images_with_posts = new WP_Query($args);
+
+            if($images_with_posts->have_posts()){
+                require_once(ISCPATH . '/admin/templates/image_posts_list.php');
+            }
+
+            wp_reset_postdata();
+
+            die();
+        }
+        
+        /**
+        * Input validation function.
+        * @param array $input values from the admin panel
+         * @updated 1.3.5 added licences fields
+        */
+        public function settings_validation($input)
+        {
+            $output = $this->get_isc_options();
+            if(!is_array($input['display_type'])){
+                $output['display_type'] = array();
+            } else {
+                $output['display_type'] = $input['display_type'];
+            }
+            $output['image_list_headline'] = esc_html($input['image_list_headline_field']);
+            if (isset($input['use_authorname_ckbox'])) {
+                // Don't worry about the custom text if the author name is selected.
+                $output['use_authorname'] = true;
+            } else {
+                $output['use_authorname'] = false;
+                $output['by_author_text'] = esc_html($input['by_author_text_field']);
+            }
+            if (isset($input['exclude_own_images'])) {
+                $output['exclude_own_images'] = true;
+            } else {
+                $output['exclude_own_images'] = false;
+            }
+            if (isset($input['webgilde_field'])) {
+                $output['webgilde'] = true;
+            } else {
+                $output['webgilde'] = false;
+            }
+            if (isset($input['enable_licences'])) {
+                $output['enable_licences'] = true;
+            } else {
+                $output['enable_licences'] = false;
+            }
+            if (isset($input['licences'])) {
+                $output['licences'] = esc_textarea($input['licences']);
+            } else {
+                $output['licences'] = false;
+            }
+            if (isset($input['use_thumbnail'])) {
+                $output['thumbnail_in_list'] = true;
+                if (in_array($input['size_select'], $this->_thumbnail_size)) {
+                    $output['thumbnail_size'] = $input['size_select'];
+                }
+                if ('custom' == $input['size_select']) {
+                    if (is_numeric($input['thumbnail_width'])) {
+                        // Ensures that the value stored in database in a positive integer.
+                        $output['thumbnail_width'] = absint(round($input['thumbnail_width']));
+                    }
+                    if (is_numeric($input['thumbnail_height'])) {
+                        $output['thumbnail_height'] = absint(round($input['thumbnail_height']));
+                    }
+                }
+            } else {
+                $output['thumbnail_in_list'] = false;
+            }
+            if (isset($input['no_source'])) {
+                $output['warning_nosource'] = true;
+            } else {
+                $output['warning_nosource'] = false;
+            }
+            if (isset($input['one_source'])) {
+                $output['warning_onesource_missing'] = true;
+            } else {
+                $output['warning_onesource_missing'] = false;
+            }
+            if (isset($input['hide_list'])){
+                $output['hide_list'] = true;
+            } else {
+                $output['hide_list'] = false;
+            }
+            if (in_array($input['cap_pos'], $this->_caption_position))
+                $output['caption_position'] = $input['cap_pos'];
+            if (!isset($input['source_pretext'])) {
+                $output['source_pretext'] = esc_textarea($input['source_pretext']);
+            }
+            return $output;
+        }
 
     }
 }
