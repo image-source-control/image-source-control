@@ -88,7 +88,8 @@ if (!class_exists('ISC_Public')) {
             }
 
             // attach image source list to content, if option is enabled
-            if (is_singular() && isset($options['display_type']) && is_array($options['display_type']) && in_array('list', $options['display_type'])) {
+            if ($options['list_on_archives'] ||
+                    (is_singular() && isset($options['display_type']) && is_array($options['display_type']) && in_array('list', $options['display_type']))) {
                 $content = $content . $this->list_post_attachments_with_sources();
             }
 

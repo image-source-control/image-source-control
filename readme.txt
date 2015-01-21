@@ -70,6 +70,7 @@ e.g.
 = 1.7.4 =
 
 * [feature] added image sources for galleries and other shortcodes
+* [feature] enable image sources lists on archive pages
 
 = 1.7.3 =
 
