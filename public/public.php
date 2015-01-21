@@ -60,6 +60,7 @@ if (!class_exists('ISC_Public')) {
          */
         public function content_filter($content)
         {
+
             // display inline sources
             $options = $this->get_isc_options();
             if (isset($options['display_type']) && is_array($options['display_type']) && in_array('overlay', $options['display_type'])) {
@@ -116,6 +117,7 @@ if (!class_exists('ISC_Public')) {
             }
 
             $attachments = get_post_meta($post_id, 'isc_post_images', true);
+
             // if attachments is an empty string, search for images in it
             if ($attachments == '') {
                 $this->save_image_information_on_load();
