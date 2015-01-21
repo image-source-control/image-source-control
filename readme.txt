@@ -67,6 +67,11 @@ e.g.
 
 == Changelog ==
 
+= 1.7.5 =
+
+* [feature] display image sources on archive pages (see settings)
+* updated German translation
+
 = 1.7.4 =
 
 * [feature] added image sources for galleries and other shortcodes

@@ -316,7 +316,10 @@ if (!class_exists('ISC_Admin')) {
 
             // handle type of source display
             add_settings_field('source_display_type', __('How to display sources', ISCTEXTDOMAIN), array($this, 'renderfield_sources_display_type'), 'isc_settings_page', 'isc_settings_section');
-            add_settings_field('list_on_archives', __('Sources list on Archives', ISCTEXTDOMAIN), array($this, 'renderfield_list_on_archives'), 'isc_settings_page', 'isc_settings_section');
+
+            // settings for archive pages
+            add_settings_field('list_on_archives', __('Sources below full posts', ISCTEXTDOMAIN), array($this, 'renderfield_list_on_archives'), 'isc_settings_page', 'isc_settings_section');
+            add_settings_field('list_on_excerpts', __('Sources below excerpts', ISCTEXTDOMAIN), array($this, 'renderfield_list_on_excerpts'), 'isc_settings_page', 'isc_settings_section');
 
             // settings for sources list below single pages
             add_settings_field('image_list_headline', __('Image list headline', ISCTEXTDOMAIN), array($this, 'renderfield_list_headline'), 'isc_settings_page', 'isc_settings_section');
@@ -454,7 +457,7 @@ if (!class_exists('ISC_Admin')) {
         /**
          * select the option for sources on archive pages
          *
-         * @since 1.7
+         * @since 1.8
          */
         public function renderfield_list_on_archives()
         {
@@ -462,8 +465,25 @@ if (!class_exists('ISC_Admin')) {
             ?>
             <div id="display_types_block">
                 <input type="checkbox" name="isc_options[list_on_archives]" id="list-on-archives" value="1" <?php checked(1, $options['list_on_archives'], true); ?> />
-                <label for="list-on-archives"><?php echo __('Display sources list on post lists (archives)', ISCTEXTDOMAIN);; ?></label>
-                <p class="description"><?php echo __('Choose this option if you want to display the sources list attached to posts on archive and category pages.', ISCTEXTDOMAIN); ?></p>
+                <label for="list-on-archives"><?php echo __('Display sources list below full posts', ISCTEXTDOMAIN);; ?></label>
+                <p class="description"><?php echo __('Choose this option if you want to display the sources list attached to posts on archive and category pages that display the full content.', ISCTEXTDOMAIN); ?></p>
+            </div>
+            <?php
+        }
+
+        /**
+         * select the option for sources on archive pages
+         *
+         * @since 1.8
+         */
+        public function renderfield_list_on_excerpts()
+        {
+            $options = $this->get_isc_options();
+            ?>
+            <div id="display_types_block">
+                <input type="checkbox" name="isc_options[list_on_excerpts]" id="list-on-excerpts" value="1" <?php checked(1, $options['list_on_excerpts'], true); ?> />
+                <label for="list-on-excerpts"><?php echo __('Display sources list below excerpts', ISCTEXTDOMAIN);; ?></label>
+                <p class="description"><?php echo __('Choose this option if you want to display the source of the featured image below the post excerpt. The source will be attached to the excerpt and it might happen that you see it everywhere. If this happens you should display the source manually in your template.', ISCTEXTDOMAIN); ?></p>
             </div>
             </td></tr></tbody></table>
             </div><!-- .postbox -->
@@ -816,10 +836,15 @@ if (!class_exists('ISC_Admin')) {
             } else {
                 $output['display_type'] = $input['display_type'];
             }
-            if(isset($input['display_on_archives'])){
-                $output['display_on_archives'] = true;
+            if(isset($input['list_on_archives'])){
+                $output['list_on_archives'] = true;
             } else {
-                $output['display_on_archives'] = false;
+                $output['list_on_archives'] = false;
+            }
+            if(isset($input['list_on_excerpts'])){
+                $output['list_on_excerpts'] = true;
+            } else {
+                $output['list_on_excerpts'] = false;
             }
             $output['image_list_headline'] = esc_html($input['image_list_headline_field']);
             if (isset($input['use_authorname_ckbox'])) {

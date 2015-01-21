@@ -21,6 +21,7 @@ if (!class_exists('ISC_Public')) {
             add_action('wp_enqueue_scripts', array($this, 'front_scripts'));
             add_action('wp_head', array($this, 'front_head'));
             add_filter('the_content', array($this, 'content_filter'), 20);
+            add_filter('the_excerpt', array($this, 'excerpt_filter'), 20);
             add_shortcode('isc_list', array($this, 'list_post_attachments_with_sources_shortcode'));
             add_shortcode('isc_list_all', array($this, 'list_all_post_attachments_sources_shortcode'));
         }
@@ -94,6 +95,44 @@ if (!class_exists('ISC_Public')) {
             }
 
             return $content;
+        }
+
+        /**
+         * add image source of featured image to post excerpts
+         *
+         * @param string $excerpt post excerpt
+         * @return string $excerpt
+         *
+         * @update 1.4.3
+         */
+        public function excerpt_filter($excerpt)
+        {
+
+            // display inline sources
+            $options = $this->get_isc_options();
+            $post = get_post();
+
+            if (empty($options['list_on_excerpts'])) return $excerpt;
+            
+            if(has_post_thumbnail($post->ID)){
+                $id = get_post_thumbnail_id($post->ID);
+                $thumb = get_post($post->ID);
+
+                // don’t show caption for own image if admin choose not to do so
+                if($options['exclude_own_images']){
+                    if(get_post_meta($id, 'isc_image_source_own', true)) return $excerpt;
+                }
+                // don’t display empty sources
+                $src = $thumb->guid;
+                if(!$source_string = $this->render_image_source_string($id)) return $excerpt;
+
+                $source = '<p class="isc-source-text">' . $options['source_pretext'] . ' ' . $source_string . '</p>';
+
+                // attach list to excerpt
+                $excerpt = $excerpt . $source;
+            }
+
+            return $excerpt;
         }
 
         /**
