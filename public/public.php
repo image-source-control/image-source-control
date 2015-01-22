@@ -113,24 +113,10 @@ if (!class_exists('ISC_Public')) {
             $post = get_post();
 
             if (empty($options['list_on_excerpts'])) return $excerpt;
-            
-            if(has_post_thumbnail($post->ID)){
-                $id = get_post_thumbnail_id($post->ID);
-                $thumb = get_post($post->ID);
 
-                // don’t show caption for own image if admin choose not to do so
-                if($options['exclude_own_images']){
-                    if(get_post_meta($id, 'isc_image_source_own', true)) return $excerpt;
-                }
-                // don’t display empty sources
-                $src = $thumb->guid;
-                if(!$source_string = $this->render_image_source_string($id)) return $excerpt;
+            $source_string = $this->get_thumbnail_source_string($post->ID);
 
-                $source = '<p class="isc-source-text">' . $options['source_pretext'] . ' ' . $source_string . '</p>';
-
-                // attach list to excerpt
-                $excerpt = $excerpt . $source;
-            }
+            $excerpt = $excerpt . $source_string;
 
             return $excerpt;
         }
@@ -543,6 +529,37 @@ if (!class_exists('ISC_Public')) {
                 </div>
                 <?php
                 echo $after_links;
+        }
+
+        /**
+         * get source string of a feature image
+         *
+         * @since 1.8
+         * @param $post_id
+         * @return source string
+         */
+        function get_thumbnail_source_string($post_id = 0){
+
+            if(empty($post_id)) return '';
+
+            $options = $this->get_isc_options();
+
+            if(has_post_thumbnail($post_id)){
+                $id = get_post_thumbnail_id($post_id);
+                $thumb = get_post($post_id);
+
+                // don’t show caption for own image if admin choose not to do so
+                if($options['exclude_own_images']){
+                    if(get_post_meta($id, 'isc_image_source_own', true)) return '';
+                }
+                // don’t display empty sources
+                $src = $thumb->guid;
+                if(!$source_string = $this->render_image_source_string($id)) return '';
+
+                return '<p class="isc-source-text">' . $options['source_pretext'] . ' ' . $source_string . '</p>';
+            }
+
+            return '';
         }
 
                 /**

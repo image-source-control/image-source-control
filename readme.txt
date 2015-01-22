@@ -3,7 +3,7 @@ Contributors: webzunft
 Tags: image, images, picture, picture source, image source, mediathek, media, caption
 Requires at least: 3.5
 Tested up to: 4.1
-Stable tag: 1.7.4
+Stable tag: 1.8
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -30,6 +30,7 @@ You can choose between different image source list types:
 * include a list with all images and their sources of the current page/post
 * include a list with all images and their sources
 * attach lists to automatically or using shortcodes or template functions
+* display image sources on archive pages
 
 **Backend Features**
 
@@ -67,9 +68,10 @@ e.g.
 
 == Changelog ==
 
-= 1.7.5 =
+= 1.8 =
 
 * [feature] display image sources on archive pages (see settings)
+* [feature] use `isc_thumbnail_source()` to display thumbnail source in templates
 * updated German translation
 
 = 1.7.4 =

@@ -24,3 +24,21 @@ function isc_image_source($attachment_id = 0) {
     global $isc_public;
     echo $isc_public->render_image_source_string($attachment_id);
 }
+
+/**
+ * return the source html of the featured image
+ *
+ * @since 1.8
+ * @global obj $my_isc isc class
+ * @global obj $post current post
+ * @param int $post_id id of the post; will use current post if empty
+ */
+function isc_thumbnail_source($post_id = 0) {
+    global $isc_public, $post;
+
+    if(empty($post_id) && !empty($post->ID)){
+        $post_id = $post->ID;
+    }
+
+    echo $isc_public->get_thumbnail_source_string($post_id);
+}
