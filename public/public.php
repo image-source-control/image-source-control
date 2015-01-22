@@ -21,6 +21,7 @@ if (!class_exists('ISC_Public')) {
             add_action('wp_enqueue_scripts', array($this, 'front_scripts'));
             add_action('wp_head', array($this, 'front_head'));
             add_filter('the_content', array($this, 'content_filter'), 20);
+            add_filter('the_excerpt', array($this, 'excerpt_filter'), 20);
             add_shortcode('isc_list', array($this, 'list_post_attachments_with_sources_shortcode'));
             add_shortcode('isc_list_all', array($this, 'list_all_post_attachments_sources_shortcode'));
         }
@@ -60,6 +61,7 @@ if (!class_exists('ISC_Public')) {
          */
         public function content_filter($content)
         {
+
             // display inline sources
             $options = $this->get_isc_options();
             if (isset($options['display_type']) && is_array($options['display_type']) && in_array('overlay', $options['display_type'])) {
@@ -87,11 +89,36 @@ if (!class_exists('ISC_Public')) {
             }
 
             // attach image source list to content, if option is enabled
-            if (is_singular() && isset($options['display_type']) && is_array($options['display_type']) && in_array('list', $options['display_type'])) {
+            if ($options['list_on_archives'] ||
+                    (is_singular() && isset($options['display_type']) && is_array($options['display_type']) && in_array('list', $options['display_type']))) {
                 $content = $content . $this->list_post_attachments_with_sources();
             }
 
             return $content;
+        }
+
+        /**
+         * add image source of featured image to post excerpts
+         *
+         * @param string $excerpt post excerpt
+         * @return string $excerpt
+         *
+         * @update 1.4.3
+         */
+        public function excerpt_filter($excerpt)
+        {
+
+            // display inline sources
+            $options = $this->get_isc_options();
+            $post = get_post();
+
+            if (empty($options['list_on_excerpts'])) return $excerpt;
+
+            $source_string = $this->get_thumbnail_source_string($post->ID);
+
+            $excerpt = $excerpt . $source_string;
+
+            return $excerpt;
         }
 
         /**
@@ -116,6 +143,7 @@ if (!class_exists('ISC_Public')) {
             }
 
             $attachments = get_post_meta($post_id, 'isc_post_images', true);
+
             // if attachments is an empty string, search for images in it
             if ($attachments == '') {
                 $this->save_image_information_on_load();
@@ -501,6 +529,37 @@ if (!class_exists('ISC_Public')) {
                 </div>
                 <?php
                 echo $after_links;
+        }
+
+        /**
+         * get source string of a feature image
+         *
+         * @since 1.8
+         * @param $post_id
+         * @return source string
+         */
+        function get_thumbnail_source_string($post_id = 0){
+
+            if(empty($post_id)) return '';
+
+            $options = $this->get_isc_options();
+
+            if(has_post_thumbnail($post_id)){
+                $id = get_post_thumbnail_id($post_id);
+                $thumb = get_post($post_id);
+
+                // don’t show caption for own image if admin choose not to do so
+                if($options['exclude_own_images']){
+                    if(get_post_meta($id, 'isc_image_source_own', true)) return '';
+                }
+                // don’t display empty sources
+                $src = $thumb->guid;
+                if(!$source_string = $this->render_image_source_string($id)) return '';
+
+                return '<p class="isc-source-text">' . $options['source_pretext'] . ' ' . $source_string . '</p>';
+            }
+
+            return '';
         }
 
                 /**

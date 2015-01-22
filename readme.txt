@@ -2,8 +2,8 @@
 Contributors: webzunft
 Tags: image, images, picture, picture source, image source, mediathek, media, caption
 Requires at least: 3.5
-Tested up to: 4.0
-Stable tag: 1.7.3
+Tested up to: 4.1
+Stable tag: 1.8
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -23,16 +23,21 @@ You can choose between different image source list types:
 * source list below the content
 * combined source list of all images
 
-**Features**
+**Frontend Features**
+
+* display sources for images in content, galleries, shortcodes and featured images
+* show image source directly in the image (not working with all images and themes)
+* include a list with all images and their sources of the current page/post
+* include a list with all images and their sources
+* attach lists to automatically or using shortcodes or template functions
+* display image sources on archive pages
+
+**Backend Features**
 
 * manage image source within media dashboard
-* lets you mark an image to belong to the uploader
+* mark an image to belong to the uploader
 * lists images with missing sources in the backend
-* show image source directly in the image
 * warnings, if image source is missing
-* shortcode to list the sources in the editor
-* shortcode to list all images in the blog as a paginated list
-* function to include sources of a post in templates
 * link sources to any url
 * manage, display and link licences
 
@@ -62,6 +67,17 @@ e.g.
 1. added two new fields to media library
 
 == Changelog ==
+
+= 1.8 =
+
+* [feature] display image sources on archive pages (see settings)
+* [feature] use `isc_thumbnail_source()` to display thumbnail source in templates
+* updated German translation
+
+= 1.7.4 =
+
+* [feature] added image sources for galleries and other shortcodes
+* [feature] enable image sources lists on archive pages
 
 = 1.7.3 =
 
