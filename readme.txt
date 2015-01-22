@@ -72,12 +72,8 @@ e.g.
 
 * [feature] display image sources on archive pages (see settings)
 * [feature] use `isc_thumbnail_source()` to display thumbnail source in templates
-* updated German translation
-
-= 1.7.4 =
-
 * [feature] added image sources for galleries and other shortcodes
-* [feature] enable image sources lists on archive pages
+* updated German translation
 
 = 1.7.3 =
 
