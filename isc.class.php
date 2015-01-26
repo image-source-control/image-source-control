@@ -296,6 +296,7 @@ if (!class_exists('ISC_Class')) {
         public function default_options()
         {
             $default['display_type'] = array('list');
+            $default['list_on_archives'] = false;
             $default['image_list_headline'] = __('image sources', ISCTEXTDOMAIN);
             $default['exclude_own_images'] = false;
             $default['use_authorname'] = true;
