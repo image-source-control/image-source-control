@@ -3,7 +3,7 @@ Contributors: webzunft
 Tags: image, images, picture, picture source, image source, mediathek, media, caption
 Requires at least: 3.5
 Tested up to: 4.1
-Stable tag: 1.8.1
+Stable tag: 1.8.2
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -47,7 +47,7 @@ English, German
 
 **Instructions**
 
-Find instructions under *Other Notes* or at the <a href="http://webgilde.com/en/image-source-control/image-source-control-manual/">image source control website</a>.
+Find instructions under *Other Notes* or at the [image source control website](http://webgilde.com/en/image-source-control/image-source-control-manual/).
 
 == Installation ==
 
@@ -67,6 +67,11 @@ e.g.
 1. added two new fields to media library
 
 == Changelog ==
+
+= 1.8.2 =
+
+* [feature] show image sources for changed images
+* [feature] show image sources for images with query parameters
 
 = 1.8.1 =
 
@@ -150,7 +155,7 @@ Read [this post](http://webgilde.com/en/image-source-control-1-6/) to learn more
 
 = 1.3.5 =
 
-* [feature] added hooks to enable developers to add their own images to the image source list (more information in the [manual](http://webgilde.com/en/image-source-control/image-source-control-manual/))
+* [feature] added hooks to enable developers to add their own images to the image source list – more information in the [manual](http://webgilde.com/en/image-source-control/image-source-control-manual/)
 * [feature] added image licences
 * updated settings page layout so it works WordPress 3.8 RC1
 * [l10n] updated German translation

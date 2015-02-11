@@ -205,8 +205,14 @@ if (!class_exists('ISC_Class')) {
                 return 0;
             }
             $types = implode('|', $this->_allowedExtensions);
-            // check for the format 'image-title-(e12452112-)300x200.jpg' and remove the image size and edit mark from it
-            $newurl = preg_replace("/(-e\d+){0,1}-(\d+)x(\d+)\.({$types})$/i", '.${4}', $url);
+            /**
+             * check for the format 'image-title-(e12452112-)300x200.jpg(?query…)' and removes
+             *   the image size
+             *   edit marks
+             *   additional query vars
+             */
+            $newurl = preg_replace("/(-e\d+){0,1}(-\d+x\d+){0,1}\.({$types})(.*)/i", '.${3}', $url);
+
             global $wpdb;
             $query = $wpdb->prepare("SELECT ID FROM {$wpdb->posts} WHERE guid = %s", $newurl);
             $id = $wpdb->get_var($query);
