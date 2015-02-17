@@ -908,7 +908,7 @@ if (!class_exists('ISC_Admin')) {
             }
             if (in_array($input['cap_pos'], $this->_caption_position))
                 $output['caption_position'] = $input['cap_pos'];
-            if (!isset($input['source_pretext'])) {
+            if (isset($input['source_pretext'])) {
                 $output['source_pretext'] = esc_textarea($input['source_pretext']);
             }
             return $output;

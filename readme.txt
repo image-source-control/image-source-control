@@ -3,7 +3,7 @@ Contributors: webzunft
 Tags: image, images, picture, picture source, image source, mediathek, media, caption
 Requires at least: 3.5
 Tested up to: 4.1
-Stable tag: 1.8.2
+Stable tag: 1.8.3
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -67,6 +67,10 @@ e.g.
 1. added two new fields to media library
 
 == Changelog ==
+
+= 1.8.3 =
+
+* [fixed] saving pre text for source overlay, thanks to maler.whick
 
 = 1.8.2 =
 
