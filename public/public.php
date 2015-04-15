@@ -242,7 +242,8 @@ if (!class_exists('ISC_Public')) {
                 'before_links' => '',
                 'after_links' => '',
                 'prev_text' => '&#171; Previous',
-                'next_text' => 'Next &#187;'
+                'next_text' => 'Next &#187;',
+                'included' => 'displayed'
                 ),
                 $atts));
 
@@ -256,15 +257,22 @@ if (!class_exists('ISC_Public')) {
                 'post_type' => 'attachment',
                 'numberposts' => -1,
                 'post_status' => null,
-                'post_parent' => null,
-                'meta_query' => array(
+                'post_parent' => null
+            );
+
+            // check mode
+            if($included == 'all'){
+                // load all images
+
+            } else { // load only images attached to posts
+                $args['meta_query'] = array(
                     array(
                         'key' => 'isc_image_posts',
                         'value' => 'a:0:{}',
                         'compare' => '!='
                     )
-                )
-            );
+                );
+            }
 
             $attachments = get_posts($args);
             if (empty($attachments)) {
