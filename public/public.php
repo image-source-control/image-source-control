@@ -636,7 +636,8 @@ if (!class_exists('ISC_Public')) {
             if($options['enable_licences'] && isset($metadata['licence']) && $metadata['licence']) {
                 $licences = $this->licences_text_to_array($options['licences']);
                 if(isset($licences[$metadata['licence']]['url'])) $licence_url = $licences[$metadata['licence']]['url'];
-                if($licence_url) {
+
+                if(isset($licence_url) && $licence_url != '') {
                     $source = sprintf('%1$s | <a href="%3$s" target="_blank" rel="nofollow">%2$s</a>', $source, $metadata['licence'], $licence_url);
                 } else {
                     $source = sprintf('%1$s | %2$s', $source, $metadata['licence']);

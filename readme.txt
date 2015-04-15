@@ -70,8 +70,8 @@ e.g.
 
 = 1.8.4 =
 
-* [fixed] default author text not showing up
 * [feature] added option to display all images in the full list, not just those visible in posts
+* [fixed] default author text not showing up
 
 = 1.8.3 =
 
