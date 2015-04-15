@@ -68,6 +68,10 @@ e.g.
 
 == Changelog ==
 
+= untagged =
+
+* [fixed] default author text not showing up
+
 = 1.8.3 =
 
 * [fixed] saving pre text for source overlay, thanks to maler.whick

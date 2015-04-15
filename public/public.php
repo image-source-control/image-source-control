@@ -609,7 +609,7 @@ if (!class_exists('ISC_Public')) {
                         $source = get_the_author_meta('display_name', $att_post->post_author);
                     }
                 } else {
-                    $source = $this->options['by_author_text'];
+                    $source = $this->_options['by_author_text'];
                 }
             } else {
                 if ('' != $metadata['source']) {
