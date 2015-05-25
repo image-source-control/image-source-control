@@ -205,7 +205,7 @@ if (!class_exists('ISC_Admin')) {
                 update_post_meta($post['ID'], 'isc_image_source', trim($attachment['isc_image_source']));
             }
             if (isset($attachment['isc_image_source_url'])) {
-                $url = sanitize_url($attachment['isc_image_source_url']);
+                $url = esc_url_raw($attachment['isc_image_source_url']);
                 update_post_meta($post['ID'], 'isc_image_source_url', $url);
             }
             $own = (isset($attachment['isc_image_source_own'])) ? $attachment['isc_image_source_own'] : '';
