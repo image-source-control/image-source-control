@@ -266,6 +266,7 @@ if (!class_exists('ISC_Class')) {
                                 // In case the isc_image_posts is not up to date
                                 if (is_array($meta) && !in_array($post_id, $meta)) {
                                     array_push($meta, $post_id);
+									$meta = array_unique( $meta );
                                     update_post_meta($old_id, 'isc_image_posts', $meta);
                                 }
                             }
@@ -280,6 +281,7 @@ if (!class_exists('ISC_Class')) {
                     update_post_meta($id, 'isc_image_posts', array($post_id));
                 } else {
                     array_push($meta, $post_id);
+					$meta = array_unique( $meta );
                     update_post_meta($id, 'isc_image_posts', $meta);
                 }
             }
@@ -290,6 +292,7 @@ if (!class_exists('ISC_Class')) {
                     $offset = array_search($post_id, $image_meta);
                     if (false !== $offset) {
                         array_splice($image_meta, $offset, 1);
+						$image_meta = array_unique( $image_meta );
                         update_post_meta($id, 'isc_image_posts', $image_meta);
                     }
                 }
@@ -358,6 +361,7 @@ if (!class_exists('ISC_Class')) {
                     } else {
                         if (!in_array($post->ID, $meta)) {
                             array_push($meta, $post->ID);
+							$meta = array_unique( $meta );
                             update_post_meta($id, 'isc_image_posts', $meta);
                         }
                     }

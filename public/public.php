@@ -301,18 +301,21 @@ if (!class_exists('ISC_Public')) {
                 $metadata = get_post_meta($_attachment->ID, 'isc_image_posts', true);
                 $usage_data = '';
 
-                if (is_array($metadata) && array() != $metadata) {
+				if (is_array($metadata) && array() != $metadata) {
                     $usage_data .= "<ul style='margin: 0;'>";
+                    $usage_data_array = array();
                     foreach($metadata as $data) {
                         // only list published posts
                         if(get_post_status($data) == 'publish') {
-                            $usage_data .= sprintf(__('<li><a href="%1$s" title="View %2$s">%3$s</a></li>', ISCTEXTDOMAIN),
+                            $usage_data_array[] = sprintf(__('<li><a href="%1$s" title="View %2$s">%3$s</a></li>', ISCTEXTDOMAIN),
                                 esc_url(get_permalink($data)),
                                 esc_attr(get_the_title($data)),
                                 esc_html(get_the_title($data))
                             );
                         }
                     }
+					$usage_data_array = array_unique( $usage_data_array );
+                    $usage_data .= implode( '', $usage_data_array );
                     $usage_data .= "</ul>";
                 }
 
