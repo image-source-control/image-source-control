@@ -211,10 +211,13 @@ if (!class_exists('ISC_Class')) {
              *   edit marks
              *   additional query vars
              */
-            $newurl = preg_replace("/(-e\d+){0,1}(-\d+x\d+){0,1}\.({$types})(.*)/i", '.${3}', $url);
+            $newurl = preg_replace( "/(-e\d+){0,1}(-\d+x\d+){0,1}\.({$types})(.*)/i", '.${3}', $url );
+
+			// remove protocoll (http or https)
+			$newurl = preg_replace( '/(http:|https:)/' , '', $newurl );
 
             global $wpdb;
-            $query = $wpdb->prepare("SELECT ID FROM {$wpdb->posts} WHERE guid = %s", $newurl);
+            $query = $wpdb->prepare("SELECT ID FROM {$wpdb->posts} WHERE guid LIKE '%%%s'", $newurl);
             $id = $wpdb->get_var($query);
             return $id;
         }

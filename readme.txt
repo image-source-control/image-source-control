@@ -68,6 +68,10 @@ e.g.
 
 == Changelog ==
 
+= untagged =
+
+* search for image urls regardless of their used protocol (http or https)
+
 = 1.8.6 | 1.8.7 =
 
 * removed duplicate post links on full source list
