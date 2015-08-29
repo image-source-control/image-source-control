@@ -211,13 +211,17 @@ if (!class_exists('ISC_Class')) {
              *   edit marks
              *   additional query vars
              */
-            $newurl = preg_replace( "/(-e\d+){0,1}(-\d+x\d+){0,1}\.({$types})(.*)/i", '.${3}', $url );
+            $newurl = esc_url( preg_replace( "/(-e\d+){0,1}(-\d+x\d+){0,1}\.({$types})(.*)/i", '.${3}', $url ) );
 
 			// remove protocoll (http or https)
 			$newurl = preg_replace( '/(http:|https:)/' , '', $newurl );
 
             global $wpdb;
-            $query = $wpdb->prepare("SELECT ID FROM {$wpdb->posts} WHERE guid LIKE '%%%s'", $newurl);
+
+			// not escaped, because escaping already happened above
+			$query = sprintf("SELECT ID FROM {$wpdb->posts} WHERE post_type='attachment' AND guid = \"http:%s\" OR guid = \"https:%s\" LIMIT 1", $newurl, $newurl );
+			error_log( $query );
+            //$query = $wpdb->prepare("SELECT ID FROM {$wpdb->posts} WHERE guid LIKE '%%%s'", $newurl);
             $id = $wpdb->get_var($query);
             return $id;
         }
