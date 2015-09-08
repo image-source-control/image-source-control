@@ -68,6 +68,10 @@ e.g.
 
 == Changelog ==
 
+= untagged=
+
+* rather use than error-log query
+
 = 1.8.8 =
 
 * search for image urls regardless of their used protocol (http or https)

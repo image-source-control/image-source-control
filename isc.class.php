@@ -201,6 +201,8 @@ if (!class_exists('ISC_Class')) {
          */
         public function get_image_by_url($url = '')
         {
+            global $wpdb;
+
             if (empty($url)) {
                 return 0;
             }
@@ -216,12 +218,8 @@ if (!class_exists('ISC_Class')) {
 			// remove protocoll (http or https)
 			$newurl = preg_replace( '/(http:|https:)/' , '', $newurl );
 
-            global $wpdb;
-
 			// not escaped, because escaping already happened above
-			$query = sprintf("SELECT ID FROM {$wpdb->posts} WHERE post_type='attachment' AND guid = \"http:%s\" OR guid = \"https:%s\" LIMIT 1", $newurl, $newurl );
-			error_log( $query );
-            //$query = $wpdb->prepare("SELECT ID FROM {$wpdb->posts} WHERE guid LIKE '%%%s'", $newurl);
+            $query = $wpdb->prepare("SELECT ID FROM {$wpdb->posts} WHERE post_type='attachment' AND guid = \"http:%s\" OR guid = \"https:%s\" LIMIT 1", $newurl, $newurl );
             $id = $wpdb->get_var($query);
             return $id;
         }
