@@ -219,7 +219,7 @@ if (!class_exists('ISC_Class')) {
 			$newurl = preg_replace( '/(http:|https:)/' , '', $newurl );
 
 			// not escaped, because escaping already happened above
-            $query = $wpdb->prepare("SELECT ID FROM {$wpdb->posts} WHERE post_type='attachment' AND guid = \"http:%s\" OR guid = \"https:%s\" LIMIT 1", $newurl, $newurl );
+            $query = sprintf("SELECT ID FROM {$wpdb->posts} WHERE post_type='attachment' AND guid = \"http:%s\" OR guid = \"https:%s\" LIMIT 1", $newurl, $newurl );
             $id = $wpdb->get_var($query);
             return $id;
         }
