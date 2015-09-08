@@ -3,7 +3,7 @@ Contributors: webzunft
 Tags: image, images, picture, picture source, image source, mediathek, media, caption
 Requires at least: 3.5
 Tested up to: 4.3
-Stable tag: 1.8.8
+Stable tag: 1.8.9
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -68,7 +68,7 @@ e.g.
 
 == Changelog ==
 
-= untagged=
+= 1.8.9=
 
 * rather use than error-log query
 
