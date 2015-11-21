@@ -244,6 +244,19 @@ if (!class_exists('ISC_Class')) {
             // add thumbnail information
             $thumb_id = get_post_thumbnail_id($post_id);
             if ( !empty( $thumb_id )) { $image_urls[] = wp_get_attachment_url($thumb_id); }
+            
+            // get urls from gallery images
+            // this might not be needed, since the gallery shortcode might have run already, but just in case
+            if ( preg_match_all('/\[gallery([^\]]+)\]/m', $content, $results, PREG_SET_ORDER)) {
+                foreach ($results as $result) {
+                        if (! preg_match('/ids="([^"]+)"/m', $result[1], $ids)) {
+                                continue;
+                        }
+                        $image_urls = array_merge($image_urls, array_map(function ($id) {
+                                return wp_get_attachment_url(trim($id));
+                        }, explode(',', $ids[1])));
+                }
+            }
 
             // apply filter to image array, so other developers can add their own logic
             $image_urls = apply_filters('isc_images_in_posts_simple', $image_urls, $post_id);
