@@ -70,6 +70,7 @@ e.g.
 
 = untagged =
 
+* added `isc_get_image_by_url_query` filter
 * fixed image list being empty due to autosave
 * read src from attribute according to dom documentation, thanks to heiglandreas
 
