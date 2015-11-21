@@ -224,7 +224,9 @@ if (!class_exists('ISC_Admin')) {
         public function save_image_information_on_post_save($post_id)
         {
             // return, if save_post is called more than one time
-            if (did_action('save_post') !== 1) {
+            if ( did_action('save_post') !== 1
+                || ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) 
+                || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
                 return;
             }
 
@@ -238,7 +240,7 @@ if (!class_exists('ISC_Admin')) {
             }
 
             $_content = '';
-            if ( !empty( $_REQUEST['content']) ) $_content = stripslashes($_REQUEST['content']);
+            if ( !empty( $_POST['content']) ) $_content = stripslashes($_POST['content']);
 
             // Needs to be called before the 'isc_post_images' field is updated.
             $this->update_image_posts_meta($post_id, $_content);

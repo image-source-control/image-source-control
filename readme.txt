@@ -68,6 +68,10 @@ e.g.
 
 == Changelog ==
 
+= untagged =
+
+* fixed image list being empty due to autosave
+
 = 1.8.9=
 
 * rather use than error-log query
