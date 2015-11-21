@@ -261,7 +261,7 @@ if (!class_exists('ISC_Public')) {
             );
 
             // check mode
-            if($included == 'all'){
+            if( $included === 'all' ){
                 // load all images
 
             } else { // load only images attached to posts
@@ -314,7 +314,10 @@ if (!class_exists('ISC_Public')) {
                             );
                         }
                     }
-					$usage_data_array = array_unique( $usage_data_array );
+                    if ( 'all' !== $included && $usage_data_array === array() ) {
+                        unset($connected_atts[$_attachment->ID]);
+                        continue;
+                    }
                     $usage_data .= implode( '', $usage_data_array );
                     $usage_data .= "</ul>";
                 }

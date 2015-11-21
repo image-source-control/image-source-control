@@ -221,7 +221,6 @@ if (!class_exists('ISC_Class')) {
 
             // not escaped, because escaping already happened above
             $query = apply_filters( 'isc_get_image_by_url_query', sprintf('SELECT ID FROM %1$s WHERE post_type="attachment" AND guid = "http:%2$s" OR guid = "https:%2$s" LIMIT 1', $wpdb->posts, $newurl ), $newurl );
-            error_log( $query );
             $id = $wpdb->get_var($query);
             return $id;
         }

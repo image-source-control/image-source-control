@@ -70,6 +70,7 @@ e.g.
 
 = untagged =
 
+* don’t list images attached to non-public posts in the full image list, when only visible images should be displayed, thanks to heiglandreas
 * added `isc_get_image_by_url_query` filter
 * fixed image list being empty due to autosave
 * read src from attribute according to dom documentation, thanks to heiglandreas
