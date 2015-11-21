@@ -71,6 +71,7 @@ e.g.
 = untagged =
 
 * fixed image list being empty due to autosave
+* read src from attribute according to dom documentation, thanks to heiglandreas
 
 = 1.8.9=
 

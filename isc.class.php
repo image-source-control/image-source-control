@@ -186,7 +186,8 @@ if (!class_exists('ISC_Class')) {
             libxml_clear_errors();
 
             foreach ($dom->getElementsByTagName('img') as $node) {
-                $srcs[] = $node->getAttribute('src');
+                //$srcs[] = $node->getAttribute('src');
+                $srcs[] = $node->attributes->getNamedItem('src')->textContent;
             }
 
             return $srcs;
