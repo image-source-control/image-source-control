@@ -3,7 +3,7 @@ Contributors: webzunft
 Tags: image, images, picture, picture source, image source, mediathek, media, caption
 Requires at least: 3.5
 Tested up to: 4.4
-Stable tag: 1.8.10
+Stable tag: 1.8.10.1
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -68,6 +68,10 @@ e.g.
 
 == Changelog ==
 
+= 1.8.10.1 =
+
+* hotfix for php below 5.3
+
 = 1.8.10 =
 
 * don’t list images attached to non-public posts in the full image list, when only visible images should be displayed, thanks to heiglandreas
@@ -77,7 +81,7 @@ e.g.
 * read src from attribute according to dom documentation, thanks to heiglandreas
 * tested with WordPress 4.4 beta 4
 
-= 1.8.9=
+= 1.8.9 =
 
 * rather use than error-log query
 

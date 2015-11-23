@@ -5,7 +5,7 @@ if (!function_exists('add_action')) {
     header('HTTP/1.1 403 Forbidden');
     exit();
 }
-
+error_log( version_compare( phpversion(), '5.3' ) );
 if (!class_exists('ISC_Class')) {
 
     class ISC_Class
@@ -247,14 +247,13 @@ if (!class_exists('ISC_Class')) {
             
             // get urls from gallery images
             // this might not be needed, since the gallery shortcode might have run already, but just in case
-            if ( preg_match_all('/\[gallery([^\]]+)\]/m', $content, $results, PREG_SET_ORDER)) {
+            // only for php 5.3 and higher
+            if ( -1 !== version_compare( phpversion(), '5.3' ) && preg_match_all('/\[gallery([^\]]+)\]/m', $content, $results, PREG_SET_ORDER)) {
                 foreach ($results as $result) {
                         if (! preg_match('/ids="([^"]+)"/m', $result[1], $ids)) {
                                 continue;
                         }
-                        $image_urls = array_merge($image_urls, array_map(function ($id) {
-                                return wp_get_attachment_url(trim($id));
-                        }, explode(',', $ids[1])));
+                        $image_urls = array_merge($image_urls, array_map( 'map_walker', explode(',', $ids[1])));
                 }
             }
 
