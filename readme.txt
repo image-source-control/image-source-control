@@ -2,8 +2,8 @@
 Contributors: webzunft
 Tags: image, images, picture, picture source, image source, mediathek, media, caption
 Requires at least: 3.5
-Tested up to: 4.3
-Stable tag: 1.8.9
+Tested up to: 4.4
+Stable tag: 1.8.10
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -68,13 +68,14 @@ e.g.
 
 == Changelog ==
 
-= untagged =
+= 1.8.10 =
 
 * don’t list images attached to non-public posts in the full image list, when only visible images should be displayed, thanks to heiglandreas
 * added fallback to read images from galleries
 * added `isc_get_image_by_url_query` filter
 * fixed image list being empty due to autosave
 * read src from attribute according to dom documentation, thanks to heiglandreas
+* tested with WordPress 4.4 beta 4
 
 = 1.8.9=
 
