@@ -68,6 +68,12 @@ e.g.
 
 == Changelog ==
 
+= 1.8.11 =
+
+* cleanup
+* removed log spam introduced with 1.8.10
+* prevent SQL injection through crafted img src attributes
+
 = 1.8.10.1 =
 
 * hotfix for php below 5.3
