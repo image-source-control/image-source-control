@@ -61,6 +61,12 @@ class ISC_Class {
             'bottom-right'
         );
 
+        protected static $instance;
+
+        public static function get_instance() {
+            return self::$instance;
+        }
+
         /**
          * Setup registers filterts and actions.
          */
@@ -68,6 +74,7 @@ class ISC_Class {
         {
             // load all plugin options
             $this->_options = get_option('isc_options');
+            self::$instance = $this;
         }
 
         /**
