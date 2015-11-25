@@ -38,7 +38,7 @@ if ( ! function_exists( 'add_action' ) ) {
     exit();
 }
 
-define( 'ISCVERSION', '1.8.10' );
+define( 'ISCVERSION', '1.8.11' );
 define( 'ISCNAME', 'Image Source Control' );
 define( 'ISCTEXTDOMAIN', 'isc' );
 define( 'ISCDIR', basename( dirname( __FILE__ ) ) );
