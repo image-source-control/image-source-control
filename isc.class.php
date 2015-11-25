@@ -1,15 +1,7 @@
 <?php
-//avoid direct calls to this file
-if (!function_exists('add_action')) {
-    header('Status: 403 Forbidden');
-    header('HTTP/1.1 403 Forbidden');
-    exit();
-}
-error_log( version_compare( phpversion(), '5.3' ) );
-if (!class_exists('ISC_Class')) {
 
-    class ISC_Class
-    {
+class ISC_Class {
+
         /**
          * define default meta fields
          */
@@ -69,6 +61,12 @@ if (!class_exists('ISC_Class')) {
             'bottom-right'
         );
 
+        protected static $instance;
+
+        public static function get_instance() {
+            return self::$instance;
+        }
+
         /**
          * Setup registers filterts and actions.
          */
@@ -76,7 +74,7 @@ if (!class_exists('ISC_Class')) {
         {
             // load all plugin options
             $this->_options = get_option('isc_options');
-
+            self::$instance = $this;
         }
 
         /**
@@ -96,15 +94,15 @@ if (!class_exists('ISC_Class')) {
             );
 
             $attachments = get_posts($args);
-            if (empty($attachments) || !is_array($attachments)) {
+            if ( empty($attachments) || !is_array($attachments) ) {
                 return;
             }
 
             $count = 0;
-            foreach($attachments as $_attachment) {
+            foreach ( $attachments as $_attachment ) {
                 $set = false;
                 setup_postdata($_attachment);
-                foreach ($this->_fields as $_field) {
+                foreach ( $this->_fields as $_field ) {
                     $meta = get_post_meta($_attachment->ID, $_field['id'], true);
                     if (empty($meta)) {
                         update_post_meta($_attachment->ID, $_field['id'], $_field['default']);
@@ -177,17 +175,20 @@ if (!class_exists('ISC_Class')) {
             $dom = new DOMDocument;
 
             libxml_use_internal_errors(true);
-            // TODO better DOM method again regex (wasn’t able so far due to encoding problems)
-            if(function_exists('mb_convert_encoding'))
+            if ( function_exists('mb_convert_encoding') ) {
                 $content = mb_convert_encoding($content, 'HTML-ENTITIES', "UTF-8");
+            }
             $dom->loadHTML($content);
 
             // Prevents from sending E_WARNINGs notice (Outputs are forbidden during activation)
             libxml_clear_errors();
 
             foreach ($dom->getElementsByTagName('img') as $node) {
-                //$srcs[] = $node->getAttribute('src');
-                $srcs[] = $node->attributes->getNamedItem('src')->textContent;
+                if ( isset( $node->attributes ) ) {
+                    if ( null !== $node->attributes->getNamedItem('src') ) {
+                        $srcs[] = $node->attributes->getNamedItem('src')->textContent;
+                    }
+                }
             }
 
             return $srcs;
@@ -207,7 +208,7 @@ if (!class_exists('ISC_Class')) {
             if (empty($url)) {
                 return 0;
             }
-            $types = implode('|', $this->_allowedExtensions);
+            $types = implode( '|', $this->_allowedExtensions );
             /**
              * check for the format 'image-title-(e12452112-)300x200.jpg(?query…)' and removes
              *   the image size
@@ -217,11 +218,17 @@ if (!class_exists('ISC_Class')) {
             $newurl = esc_url( preg_replace( "/(-e\d+){0,1}(-\d+x\d+){0,1}\.({$types})(.*)/i", '.${3}', $url ) );
 
             // remove protocoll (http or https)
-            $newurl = preg_replace( '/(http:|https:)/' , '', $newurl );
+            $newurl = str_ireplace( array( 'http:', 'https:' ) , '', $newurl );
 
             // not escaped, because escaping already happened above
-            $query = apply_filters( 'isc_get_image_by_url_query', sprintf('SELECT ID FROM %1$s WHERE post_type="attachment" AND guid = "http:%2$s" OR guid = "https:%2$s" LIMIT 1', $wpdb->posts, $newurl ), $newurl );
+            $raw_query = $wpdb->prepare(
+                "SELECT ID FROM `$wpdb->posts` WHERE post_type='attachment' AND guid = %s OR guid = %s LIMIT 1",
+                "http:$newurl",
+                "https:$newurl"
+            );
+            $query = apply_filters( 'isc_get_image_by_url_query', $raw_query, $newurl );
             $id = $wpdb->get_var($query);
+
             return $id;
         }
 
@@ -415,6 +422,4 @@ if (!class_exists('ISC_Class')) {
             if($new_licences == array()) return false;
             else return $new_licences;
         }
-
-    }// end of class
-}
+}// end of class
