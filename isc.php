@@ -1,7 +1,7 @@
 <?php
 /*
   Plugin Name: Image Source Control
-  Version: 1.8.10
+  Version: 1.8.11
   Plugin URI: http://webgilde.com/en/image-source-control/
   Description: The Image Source Control saves the source of an image, lists them and warns if it is missing.
   Author: Thomas Maier
@@ -32,32 +32,37 @@
  */
 
 //avoid direct calls to this file
-if (!function_exists('add_action')) {
-    header('Status: 403 Forbidden');
-    header('HTTP/1.1 403 Forbidden');
+if ( ! function_exists( 'add_action' ) ) {
+    header( 'Status: 403 Forbidden' );
+    header( 'HTTP/1.1 403 Forbidden' );
     exit();
 }
 
-define('ISCVERSION', '1.8.10');
-define('ISCNAME', 'Image Source Control');
-define('ISCTEXTDOMAIN', 'isc');
-define('ISCDIR', basename(dirname(__FILE__)));
-define('ISCPATH', plugin_dir_path(__FILE__));
-define('WEBGILDE', 'http://webgilde.com/en/image-source-control');
+define( 'ISCVERSION', '1.8.10' );
+define( 'ISCNAME', 'Image Source Control' );
+define( 'ISCTEXTDOMAIN', 'isc' );
+define( 'ISCDIR', basename( dirname( __FILE__ ) ) );
+define( 'ISCPATH', plugin_dir_path( __FILE__ ) );
+define( 'WEBGILDE', 'http://webgilde.com/en/image-source-control' );
 
-load_plugin_textdomain(ISCTEXTDOMAIN, false, dirname(plugin_basename(__FILE__)) . '/languages/');
+load_plugin_textdomain( ISCTEXTDOMAIN, false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
 
-require_once(ISCPATH . 'isc.class.php');
+if ( ! class_exists('ISC_Class')) {
+    require_once ISCPATH . 'isc.class.php' ;
+}
 
 if ( is_admin() ) {
-    require_once(ISCPATH . 'admin/admin.php');
-    $isc_admin = new ISC_Admin;
+    if ( ! class_exists( 'ISC_Admin' ) ) {
+        require_once ISCPATH . 'admin/admin.php' ;
+    }
+    new ISC_Admin;
 } elseif (!is_admin() && ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX )) {
     // include frontend functions
-    require_once(ISCPATH . 'public/public.php');
-    $isc_public = new ISC_Public;
-    require_once(ISCPATH . 'functions.php');
+    if ( ! class_exists( 'ISC_Public' ) ) {
+        require_once ISCPATH . 'public/public.php';
+    }
+    new ISC_Public;
+    require_once ISCPATH . 'functions.php';
 } else {
-    $my_isc = new ISC_Class();
-    // global $my_isc;
+    new ISC_Class;
 }
