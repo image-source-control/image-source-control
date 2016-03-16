@@ -21,6 +21,9 @@ if (!class_exists('ISC_Admin')) {
          * @since 1.7
          */
         public function __construct() {
+            
+            parent::__construct();
+            
             register_activation_hook(ISCPATH . '../isc.php', array($this, 'activation'));
 
             // attachment field handling

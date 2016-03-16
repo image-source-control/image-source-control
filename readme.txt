@@ -71,6 +71,7 @@ e.g.
 = untagged =
 
 * fixed missing index issue
+* call parent class in admin class constructor
 
 = 1.8.11 =
 
