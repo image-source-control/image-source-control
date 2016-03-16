@@ -68,6 +68,10 @@ e.g.
 
 == Changelog ==
 
+= untagged =
+
+* fixed missing index issue
+
 = 1.8.11 =
 
 * cleanup

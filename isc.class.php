@@ -331,6 +331,7 @@ class ISC_Class {
         {
             $default['display_type'] = array('list');
             $default['list_on_archives'] = false;
+            $default['list_on_excerpts'] = false;
             $default['image_list_headline'] = __('image sources', ISCTEXTDOMAIN);
             $default['exclude_own_images'] = false;
             $default['use_authorname'] = true;
