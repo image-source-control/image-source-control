@@ -17,7 +17,7 @@ Image Source Control (ISC) helps to prevent this situation.
 
 > <strong>github repository</strong>
 > 
-> Since I have no time to implement feature requests or bugfixes right now, you can submit them to the github repository.
+> Since I am not able to work on feature requests or fix buxes right now, you can submit them to the github repository.
 > I will definitely review them there.
 > https://github.com/webgilde/image-source-control
 
