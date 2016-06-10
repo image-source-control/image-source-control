@@ -15,11 +15,17 @@ Did you ever forget to add the source to an image file in the frontend and the l
 
 Image Source Control (ISC) helps to prevent this situation.
 
+> <strong>github repository</strong>
+> 
+> Since I have no time to implement feature requests or bugfixes right now, you can submit them to the github repository.
+> I will definitely review them there.
+> https://github.com/webgilde/image-source-control
+
 **Image Sources Lists**
 
 You can choose between different image source list types:
 
-* source as image caption/overlay
+* source as image caption/overlay (not compatible with all themes)
 * source list below the content
 * combined source list of all images
 
