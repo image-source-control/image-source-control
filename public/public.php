@@ -65,7 +65,7 @@ if (!class_exists('ISC_Public')) {
             // display inline sources
             $options = $this->get_isc_options();
             if (isset($options['display_type']) && is_array($options['display_type']) && in_array('overlay', $options['display_type'])) {
-                $pattern = '#(\[caption.*align="(.+)"[^\]*]{0,}\])? *(<a [^>]+>)? *(<img .*class=".*(alignleft|alignright|alignnone|aligncenter)??.*wp-image-(\d+)\D*".*src="(.+)".*/?>).*(?(3)(?:</a>)|.*).*(?(1)(?:\[/caption\])|.*)#isU';
+                $pattern = '#(\[caption.*align="(.+)"[^\]*]{0,}\])? *(<a [^>]+>)? *(<img .*class=".*?(alignleft|alignright|alignnone|aligncenter)??.*wp-image-(\d+)\D*".*src="(.+)".*/?>).*(?(3)(?:</a>)|.*).*(?(1)(?:\[/caption\])|.*)#isU';
                 $count = preg_match_all($pattern, $content, $matches);
                 if (false !== $count) {
                     for ($i=0; $i < $count; $i++) {
@@ -79,7 +79,7 @@ if (!class_exists('ISC_Public')) {
                         if(!$source_string = $this->get_source_by_url($src)) continue;
 
                         $source = '<p class="isc-source-text">' . $options['source_pretext'] . ' ' . $source_string . '</p>';
-                        $old_content = $matches[0][$i];
+                        $old_content = $matches[4][$i];
                         $new_content = str_replace('wp-image-' . $id, 'wp-image-' . $id . ' with-source', $old_content);
                         $alignment = (!empty($matches[1][$i]))? $matches[2][$i] : $matches[5][$i];
 
