@@ -30,7 +30,8 @@ if (!class_exists('ISC_Public')) {
         * Enqueue scripts for the front-end.
         */
         public function front_scripts() {
-            wp_enqueue_script('isc_front_js', plugins_url('/assets/js/front-js.js', __FILE__), array('jquery'), ISCVERSION);
+            // inject in footer as we only do stuff after dom-ready
+            wp_enqueue_script('isc_front_js', plugins_url('/assets/js/front-js.js', __FILE__), array('jquery'), ISCVERSION, true);
         }
 
                 /**

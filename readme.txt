@@ -74,6 +74,8 @@ e.g.
 
 == Changelog ==
 
+* load public javascript in footer by default
+
 = 1.8.11.2 =
 
 * fixed align value not being understood correctly
