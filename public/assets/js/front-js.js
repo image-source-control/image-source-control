@@ -27,7 +27,7 @@ jQuery(function(){
     jQuery(window).resize(function(){
         isc_update_captions_positions();
     });
-    jQuery('.isc-source img').load(function(){
+    jQuery('.isc-source img').on('load', function(){
         isc_update_captions_positions();
     });
 });

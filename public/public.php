@@ -30,7 +30,8 @@ if (!class_exists('ISC_Public')) {
         * Enqueue scripts for the front-end.
         */
         public function front_scripts() {
-            wp_enqueue_script('isc_front_js', plugins_url('/assets/js/front-js.js', __FILE__), array('jquery'), ISCVERSION);
+            // inject in footer as we only do stuff after dom-ready
+            wp_enqueue_script('isc_front_js', plugins_url('/assets/js/front-js.js', __FILE__), array('jquery'), ISCVERSION, true);
         }
 
                 /**
@@ -65,7 +66,7 @@ if (!class_exists('ISC_Public')) {
             // display inline sources
             $options = $this->get_isc_options();
             if (isset($options['display_type']) && is_array($options['display_type']) && in_array('overlay', $options['display_type'])) {
-                $pattern = '#(\[caption.*align="(.+)"[^\]*]{0,}\])? *(<a [^>]+>)? *(<img .*class=".*(alignleft|alignright|alignnone|aligncenter)??.*wp-image-(\d+)\D*".*src="(.+)".*/?>).*(?(3)(?:</a>)|.*).*(?(1)(?:\[/caption\])|.*)#isU';
+                $pattern = '#(\[caption.*align="(.+)"[^\]*]{0,}\])? *(<a [^>]+>)? *(<img [^>]*class="[^"]*(alignleft|alignright|alignnone|aligncenter)??[^"]*wp-image-(\d+)\D*"[^>]*src="(.+)".*/?>).*(?(3)(?:</a>)|.*).*(?(1)(?:\[/caption\])|.*)#isU';
                 $count = preg_match_all($pattern, $content, $matches);
                 if (false !== $count) {
                     for ($i=0; $i < $count; $i++) {
