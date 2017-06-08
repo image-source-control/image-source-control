@@ -74,7 +74,10 @@ e.g.
 
 == Changelog ==
 
-* load public javascript in footer by default
+= untagged =
+
+* load public JavaScript in footer by default
+* used more stable regex
 
 = 1.8.11.2 =
 
