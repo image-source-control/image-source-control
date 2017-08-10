@@ -66,18 +66,25 @@ if (!class_exists('ISC_Public')) {
             // display inline sources
             $options = $this->get_isc_options();
             if (isset($options['display_type']) && is_array($options['display_type']) && in_array('overlay', $options['display_type'])) {
-                $pattern = '#(\[caption.*align="(.+)"[^\]*]{0,}\])? *(<a [^>]+>)? *(<img [^>]*class="[^"]*(alignleft|alignright|alignnone|aligncenter)??[^"]*wp-image-(\d+)\D*"[^>]*src="(.+)".*/?>).*(?(3)(?:</a>)|.*).*(?(1)(?:\[/caption\])|.*)#isU';
+                $pattern = '#(\[caption.*align="(.+)"[^\]*]{0,}\])? *(<a [^>]+>)? *(<img [^>]*class="[^"]*(alignleft|alignright|alignnone|aligncenter)??[^"]*(wp-image-\d+)?\D*"[^>]*src="(.+)".*/?>).*(?(3)(?:</a>)|.*).*(?(1)(?:\[/caption\])|.*)#isU';
                 $count = preg_match_all($pattern, $content, $matches);
                 if (false !== $count) {
                     for ($i=0; $i < $count; $i++) {
                         $id = $matches[6][$i];
+                        if(!$id) {
+                            //get id by url
+                            $src = $matches[7][$i];
+                            $id = $this->get_image_by_url($src);
+                        } else {
+                            //remove leading wp-image-
+                            $id = substr($id, 9);
+                        }
                         // don’t show caption for own image if admin choose not to do so
                         if($options['exclude_own_images']){
                             if(get_post_meta($id, 'isc_image_source_own', true)) continue;
                         }
                         // don’t display empty sources
-                        $src = $matches[7][$i];
-                        if(!$source_string = $this->get_source_by_url($src)) continue;
+                        if(!$source_string = $this->render_image_source_string($id)) continue;
 
                         $source = '<p class="isc-source-text">' . $options['source_pretext'] . ' ' . $source_string . '</p>';
                         $old_content = $matches[0][$i];
@@ -577,11 +584,12 @@ if (!class_exists('ISC_Public')) {
             return '';
         }
 
-                /**
+        /**
          * load an image source string by url
          *
          * @updated 1.5
          * @param string $url url of the image
+         * @deprecated
          * @return type
          */
         public function get_source_by_url($url)
