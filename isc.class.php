@@ -210,12 +210,12 @@ class ISC_Class {
             }
             $types = implode( '|', $this->_allowedExtensions );
             /**
-             * check for the format 'image-title-(e12452112-)300x200.jpg(?query…)' and removes
+             * check for the format 'image-title-300x200.jpg(?query…)' and removes
              *   the image size
              *   edit marks
              *   additional query vars
              */
-            $newurl = esc_url( preg_replace( "/(-e\d+){0,1}(-\d+x\d+){0,1}\.({$types})(.*)/i", '.${3}', $url ) );
+            $newurl = esc_url( preg_replace( "/(-\d+x\d+)\.({$types})(.*)/i", '.${2}', $url ) );
 
             // remove protocoll (http or https)
             $newurl = str_ireplace( array( 'http:', 'https:' ) , '', $newurl );
