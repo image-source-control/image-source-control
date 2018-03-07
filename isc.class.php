@@ -126,16 +126,7 @@ class ISC_Class {
             // apply shortcodes to content
             $_content = do_shortcode($_content);
 
-            $_image_urls = $this->_filter_src_attributes($_content);
-            $_imgs = array();
-
-            foreach ($_image_urls as $_image_url) {
-                // get ID of images by url
-                $img_id = $this->get_image_by_url($_image_url);
-                $_imgs[$img_id] = array(
-                    'src' => $_image_url
-                );
-            }
+            $_imgs = $this->_filter_image_ids($_content);
 
             // add thumbnail information
             $thumb_id = get_post_thumbnail_id($post_id);
@@ -160,9 +151,56 @@ class ISC_Class {
         }
 
         /**
+         * filter image ids from text
+         * @return array with image ids => image src uri-s
+         */
+        public function _filter_image_ids($content = '') {
+            $srcs = array();
+            if (empty($content))
+                return $srcs;
+
+            // parse HTML with DOM
+            $dom = new DOMDocument;
+
+            libxml_use_internal_errors(true);
+            if ( function_exists('mb_convert_encoding') ) {
+                $content = mb_convert_encoding($content, 'HTML-ENTITIES', "UTF-8");
+            }
+            $dom->loadHTML($content);
+
+            // Prevents from sending E_WARNINGs notice (Outputs are forbidden during activation)
+            libxml_clear_errors();
+
+            foreach ($dom->getElementsByTagName('img') as $node) {
+                if ( isset( $node->attributes ) ) {
+                    $matched = false;
+                    if ( null !== $node->attributes->getNamedItem('class') ) {
+                        if (preg_match('#.*wp-image-(\d+?).*#U', $node->attributes->getNamedItem('class')->textContent, $matches)) {
+                            $srcs[intval($matches[1])] = $node->attributes->getNamedItem('src')->textContent;
+                            $matched = true;
+                        }
+                    }
+                    if (!$matched) {
+                        if ( null !== $node->attributes->getNamedItem('src') ) {
+                            $url = $node->attributes->getNamedItem('src')->textContent;
+                            // get ID of images by url
+                            $id = $this->get_image_by_url($url);
+                            if ($id) {
+                                $srcs[$id] = $url;
+                            }
+                        }
+                    }
+                }
+            }
+
+            return $srcs;
+        }
+
+        /**
          * filter image src attribute from text
          * @since 1.1
          * @updated 1.1.3
+         * @deprecated use _filter_image_ids instead
          * @return array with image src uri-s
          */
         public function _filter_src_attributes($content = '')
@@ -229,7 +267,7 @@ class ISC_Class {
             $query = apply_filters( 'isc_get_image_by_url_query', $raw_query, $newurl );
             $id = $wpdb->get_var($query);
 
-            return $id;
+            return intval($id);
         }
 
         /**
@@ -243,44 +281,57 @@ class ISC_Class {
             // apply shortcodes to content
             $content = do_shortcode($content);
 
-            $image_urls = $this->_filter_src_attributes($content);
-            $image_ids = array();
+            $image_ids = $this->_filter_image_ids($content);
             $added_images = array();
             $removed_images = array();
 
             // add thumbnail information
             $thumb_id = get_post_thumbnail_id($post_id);
-            if ( !empty( $thumb_id )) { $image_urls[] = wp_get_attachment_url($thumb_id); }
-            
+            if ( !empty( $thumb_id )) { $image_ids[$thumb_id] = wp_get_attachment_url($thumb_id); }
+
             // get urls from gallery images
             // this might not be needed, since the gallery shortcode might have run already, but just in case
             // only for php 5.3 and higher
             if ( -1 !== version_compare( phpversion(), '5.3' ) && preg_match_all('/\[gallery([^\]]+)\]/m', $content, $results, PREG_SET_ORDER)) {
                 foreach ($results as $result) {
-                        if (! preg_match('/ids="([^"]+)"/m', $result[1], $ids)) {
-                                continue;
-                        }
-                        $image_urls = array_merge($image_urls, array_map( 'map_walker', explode(',', $ids[1])));
+                    if (! preg_match('/ids="([^"]+)"/m', $result[1], $ids)) {
+                            continue;
+                    }
+                    foreach (explode(',', $ids[1]) as $id) {
+                        $image_ids[intval($id)] = get_the_guid($id);
+                    }
                 }
             }
 
             // apply filter to image array, so other developers can add their own logic
-            $image_urls = apply_filters('isc_images_in_posts_simple', $image_urls, $post_id);
+            $filtered_image_ids = apply_filters('isc_images_in_posts_simple', $image_ids, $post_id);
+            //for backwards compatibilty: check if the array-keys are valid image ids
+            if ($filtered_image_ids != $image_ids) {
+                $image_ids = array();
+                $valid_post_types = apply_filters('isc_valid_post_types', array('attachment'));
+                if (in_array(get_post_type($check_id), $valid_post_types)) {
+                    if ($id = $this->get_image_by_url($url)) {
+                        $image_ids[$id] = $url;
+                    }
+                } else {
+                    $image_ids[$check_id] = $url;
+                }
+            } else {
+                $image_ids = $filtered_image_ids;
+            }
 
             $isc_post_images = get_post_meta($post_id, 'isc_post_images', true);
             // just needed in very rare cases, when updates comes from outside of isc and meta fields doesn’t exist yet
             if(empty($isc_post_images)) $isc_post_images = array();
 
-            foreach ($image_urls as $url) {
-                $id = intval($this->get_image_by_url($url));
-                array_push($image_ids, $id);
+            foreach ($image_ids as $id => $url) {
                 if (is_array($isc_post_images) && !array_key_exists($id, $isc_post_images)) {
                     array_push($added_images, $id);
                 }
             }
             if (is_array($isc_post_images)) {
                 foreach ($isc_post_images as $old_id => $value) {
-                    if (!in_array($old_id, $image_ids)) {
+                    if (!array_key_exists($old_id, $image_ids)) {
                         array_push($removed_images, $old_id);
                     } else {
                         if (!empty($old_id)) {
@@ -374,12 +425,7 @@ class ISC_Class {
             $posts = get_posts($args);
             foreach ($posts as $post) {
                 setup_postdata($post);
-                $image_urls = $this->_filter_src_attributes($post->post_content);
-                $image_ids = array();
-                foreach ($image_urls as $url) {
-                    $image_id = intval($this->get_image_by_url($url));
-                    array_push($image_ids,$image_id);
-                }
+                $image_ids = $this->_filter_image_ids($post->post_content);
                 foreach ($image_ids as $id) {
                     $meta = get_post_meta($id, 'isc_image_posts', true);
                     if (empty($meta)) {
