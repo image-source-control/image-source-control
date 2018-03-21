@@ -78,6 +78,7 @@ e.g.
 
 * load public JavaScript in footer by default
 * used more stable regex
+* fixed looking for sources for image names including dimensions (e.g., 300x250)
 
 = 1.8.11.2 =
 
