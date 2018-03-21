@@ -20,7 +20,7 @@ if (!class_exists('ISC_Public')) {
 
             add_action('wp_enqueue_scripts', array($this, 'front_scripts'));
             add_action('wp_head', array($this, 'front_head'));
-            add_filter('the_content', array($this, 'content_filter'), 20);
+            add_filter('the_content', array($this, 'content_filter'), 9);
             add_filter('the_excerpt', array($this, 'excerpt_filter'), 20);
             add_shortcode('isc_list', array($this, 'list_post_attachments_with_sources_shortcode'));
             add_shortcode('isc_list_all', array($this, 'list_all_post_attachments_sources_shortcode'));
@@ -66,8 +66,20 @@ if (!class_exists('ISC_Public')) {
             // display inline sources
             $options = $this->get_isc_options();
             if (isset($options['display_type']) && is_array($options['display_type']) && in_array('overlay', $options['display_type'])) {
+                /**
+                 * what do we get from the regex?
+                 * 
+                 * 0 – old content
+                 * 1 – starting caption shortcode
+                 * 2 – alignment
+                 * 3 – (starting link tag)
+                 * 4 – (img tag)
+                 * 5 – alignment
+                 * 6 – attachment post id
+                 * 7 – source URL
+                 */
                 $pattern = '#(\[caption.*align="(.+)"[^\]*]{0,}\])? *(<a [^>]+>)? *(<img [^>]*class="[^"]*(alignleft|alignright|alignnone|aligncenter)??[^"]*wp-image-(\d+)\D*"[^>]*src="(.+)".*/?>).*(?(3)(?:</a>)|.*).*(?(1)(?:\[/caption\])|.*)#isU';
-                $count = preg_match_all($pattern, $content, $matches);
+                $count = preg_match_all($pattern, $content, $matches);                
                 if (false !== $count) {
                     for ($i=0; $i < $count; $i++) {
                         $id = $matches[6][$i];

@@ -216,16 +216,20 @@ class ISC_Class {
              *   additional query vars
              */
             $newurl = esc_url( preg_replace( "/(-e\d+){0,1}(-\d+x\d+){0,1}\.({$types})(.*)/i", '.${3}', $url ) );
-
+            
             // remove protocoll (http or https)
+            $url = str_ireplace( array( 'http:', 'https:' ) , '', $url );
             $newurl = str_ireplace( array( 'http:', 'https:' ) , '', $newurl );
 
             // not escaped, because escaping already happened above
             $raw_query = $wpdb->prepare(
-                "SELECT ID FROM `$wpdb->posts` WHERE post_type='attachment' AND guid = %s OR guid = %s LIMIT 1",
+                "SELECT ID FROM `$wpdb->posts` WHERE post_type='attachment' AND guid = %s OR guid = %s OR guid = %s OR guid = %s LIMIT 1",
+                "http:$url",
+                "https:$url",
                 "http:$newurl",
                 "https:$newurl"
             );
+            
             $query = apply_filters( 'isc_get_image_by_url_query', $raw_query, $newurl );
             $id = $wpdb->get_var($query);
 
