@@ -82,14 +82,22 @@ if (!class_exists('ISC_Public')) {
                 $count = preg_match_all($pattern, $content, $matches);                
                 if (false !== $count) {
                     for ($i=0; $i < $count; $i++) {
-                        $id = $matches[6][$i];
                         // don’t show caption for own image if admin choose not to do so
                         if($options['exclude_own_images']){
-                            if(get_post_meta($id, 'isc_image_source_own', true)) continue;
+                            if(get_post_meta($id, 'isc_image_source_own', true)) {
+                                continue;
+                            }
                         }
                         // don’t display empty sources
-                        $src = $matches[7][$i];
-                        if(!$source_string = $this->get_source_by_url($src)) continue;
+                        $id = $matches[6][$i];
+                        if( !$id ){
+                            $src = $matches[7][$i];
+                            $id = $this->get_image_by_url($srl);
+                        }
+                        
+                        if(!$source_string = $this->render_image_source_string($id)) {
+                            continue;
+                        }
 
                         $source = '<p class="isc-source-text">' . $options['source_pretext'] . ' ' . $source_string . '</p>';
                         $old_content = $matches[0][$i];
@@ -589,10 +597,11 @@ if (!class_exists('ISC_Public')) {
             return '';
         }
 
-                /**
+        /**
          * load an image source string by url
          *
          * @updated 1.5
+         * @deprecated since 1.9
          * @param string $url url of the image
          * @return type
          */
