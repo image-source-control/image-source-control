@@ -76,10 +76,10 @@ e.g.
 
 = untagged =
 
+* used more stable regex
 * replaced use of image url with attachment ID where possible to lift some heavy loads
 * load public JavaScript in footer by default
-* used more stable regex
-* fixed looking for sources for image names including dimensions (e.g., 300x250)
+* fix for image names including dimensions (e.g., 300x250)
 
 = 1.8.11.2 =
 

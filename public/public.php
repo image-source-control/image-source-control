@@ -20,7 +20,11 @@ if (!class_exists('ISC_Public')) {
 
             add_action('wp_enqueue_scripts', array($this, 'front_scripts'));
             add_action('wp_head', array($this, 'front_head'));
-            add_filter('the_content', array($this, 'content_filter'), 9);
+            
+            /**
+             * filters need to be above 10 in order to have interpreted also gallery shortcode
+             */
+            add_filter('the_content', array($this, 'content_filter'), 20);
             add_filter('the_excerpt', array($this, 'excerpt_filter'), 20);
             add_shortcode('isc_list', array($this, 'list_post_attachments_with_sources_shortcode'));
             add_shortcode('isc_list_all', array($this, 'list_all_post_attachments_sources_shortcode'));
@@ -67,42 +71,77 @@ if (!class_exists('ISC_Public')) {
             $options = $this->get_isc_options();
             if (isset($options['display_type']) && is_array($options['display_type']) && in_array('overlay', $options['display_type'])) {
                 /**
+                 * DEPRECATED VERSION FOR REFERENCE
                  * what do we get from the regex?
                  * 
-                 * 0 – old content
+                 * 0 – full match
                  * 1 – starting caption shortcode
                  * 2 – alignment
                  * 3 – (starting link tag)
                  * 4 – (img tag)
                  * 5 – alignment
-                 * 6 – attachment post id
+                 * 6 – attachment id
                  * 7 – source URL
+                 * 
                  */
                 $pattern = '#(\[caption.*align="(.+)"[^\]*]{0,}\])? *(<a [^>]+>)? *(<img [^>]*class="[^"]*(alignleft|alignright|alignnone|aligncenter)??[^"]*wp-image-(\d+)\D*"[^>]*src="(.+)".*/?>).*(?(3)(?:</a>)|.*).*(?(1)(?:\[/caption\])|.*)#isU';
-                $count = preg_match_all($pattern, $content, $matches);                
+                /**
+                 * NEW VERSION
+                 * 
+                 * removed [caption], because this check runs after the hook that interprets shortcodes
+                 * img tag is checked individually since there is a different order of attributes when images are used in gallery or individually
+                 * 
+                 * 0 – full match
+                 * 1 – starting link tag
+                 * 2 – "rel" attribute from link tag
+                 * 3 – image id from link wp-att- value in "rel" attribute
+                 * 4 – full img tag
+                 * 5 – image URL
+                 * 
+                 * potential issues:
+                 * * line breaks in the code
+                 */
+                $pattern = '#(<a [^>]*(rel="[^"]*[^"]*wp-att-(\d+)"[^>]*)>)? *(<img [^>]*[^>]*src="(.+)".*\/?>).*(?(3)(?:<\/a>)|.*).*(?(1).*)#isU';
+                $count = preg_match_all($pattern, $content, $matches);
                 if (false !== $count) {
                     for ($i=0; $i < $count; $i++) {
                         // don’t show caption for own image if admin choose not to do so
                         if($options['exclude_own_images']){
-                            if(get_post_meta($id, 'isc_image_source_own', true)) {
-                                continue;
-                            }
-                        }
-                        // don’t display empty sources
-                        $id = $matches[6][$i];
-                        if( !$id ){
-                            $src = $matches[7][$i];
-                            $id = $this->get_image_by_url($srl);
+                                if(get_post_meta($id, 'isc_image_source_own', true)) {
+                                        continue;
+                                }
                         }
                         
+                        /**
+                         * interpret the image tag
+                         * 
+                         * we only need the ID if we don’t have it yet
+                         * it can be retrieved from "wp-image-" class (single) or "aria-describedby="gallery-1-34" in gallery
+                         */
+                        $id = $matches[3][$i];
+                        $img_tag = $matches[4][$i];
+                        
+                        if( ! $id ){
+                                $success = preg_match('#wp-image-(\d+)|aria-describedby="gallery-1-(\d+)#is', $img_tag, $matches_id);
+                                $id = $matches_id[1] ? intval( $matches_id[1] ) : intval( $matches_id[2] );
+                        }
+                        
+                        // if ID is still missing get image by URL
+                        if( $id ){
+                            $src = $matches[5][$i];
+                            $id = $this->get_image_by_url($src);
+                        }
+                        
+                        // don’t display empty sources
                         if(!$source_string = $this->render_image_source_string($id)) {
-                            continue;
+                                continue;
                         }
 
                         $source = '<p class="isc-source-text">' . $options['source_pretext'] . ' ' . $source_string . '</p>';
                         $old_content = $matches[0][$i];
                         $new_content = str_replace('wp-image-' . $id, 'wp-image-' . $id . ' with-source', $old_content);
-                        $alignment = (!empty($matches[1][$i]))? $matches[2][$i] : $matches[5][$i];
+                        // $alignment = (!empty($matches[1][$i]))? $matches[2][$i] : $matches[5][$i];
+                        $alignment = '';
 
                         $content = str_replace($old_content, '<div id="isc_attachment_' . $id . '" class="isc-source ' . $alignment . '"> ' . $new_content . $source . '</div>', $content);
                     }
