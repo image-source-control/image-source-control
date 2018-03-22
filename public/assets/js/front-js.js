@@ -1,6 +1,6 @@
 var isc_nb = 0;
 
-jQuery(function(){
+jQuery(document).ready(function(){
     /**
     * Move caption into image
     */
@@ -45,12 +45,11 @@ function isc_update_caption_position(jQ_Obj) {
     var attw = att.width();
     var atth = att.height();
 
-
     //relative position
     var l = att.position().left;
     //relative position
     var t = att.position().top;
-
+    
     var caption = jQ_Obj.find('.isc-source-text');
 
     //caption width + padding & margin (after moving onto image)

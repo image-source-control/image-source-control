@@ -94,7 +94,7 @@ if (!class_exists('ISC_Public')) {
                  * 0 – full match
                  * 1 - <figure> if set
                  * 2 – alignment
-                 * 3 – inner code starting with link
+                 * 3 – inner code starting with <a>
                  * 4 – opening link attribute
                  * 5 – "rel" attribute from link tag
                  * 6 – image id from link wp-att- value in "rel" attribute
@@ -110,9 +110,9 @@ if (!class_exists('ISC_Public')) {
                  * potential issues:
                  * * line breaks in the code
                  */
-                $pattern = '#(<[^>]*class="[^"]*(alignleft|alignright|alignnone|aligncenter).*)?((<a [^>]*(rel="[^"]*[^"]*wp-att-(\d+)"[^>]*)>)? *(<img [^>]*[^>]*src="(.+)".*\/?>).*(<\/a.*>)?[^<]*).*(<\/figure.*>)?#isU';
+                $pattern = '#(<[^>]*class="[^"]*(alignleft|alignright|alignnone|aligncenter).*)?((<a [^>]*(rel="[^"]*[^"]*wp-att-(\d+)"[^>]*)>)? *(<img [^>]*[^>]*src="(.+)".*\/?>).*(</a>)??[^<]*).*(<\/figure.*>)?#isU';
                 $count = preg_match_all($pattern, $content, $matches);
-                //error_log(print_r($matches, true));
+                // error_log(print_r($content, true)); error_log(print_r($matches, true));
                 if (false !== $count) {
                     for ($i=0; $i < $count; $i++) {
                         // don’t show caption for own image if admin choose not to do so
@@ -151,11 +151,12 @@ if (!class_exists('ISC_Public')) {
                         preg_match('#alignleft|alignright|alignnone|aligncenter#is', $matches[0][$i], $matches_align);
                         $alignment = isset( $matches_align[0] ) ? $matches_align[0] : '';
 
-                        $source = '<p class="isc-source-text">' . $options['source_pretext'] . ' ' . $source_string . '</p>';
+                        $source = '<span class="isc-source-text">' . $options['source_pretext'] . ' ' . $source_string . '</span>';
                         $old_content = $matches[3][$i];
                         $new_content = str_replace('wp-image-' . $id, 'wp-image-' . $id . ' with-source', $old_content);
 
                         $content = str_replace($old_content, '<div id="isc_attachment_' . $id . '" class="isc-source ' . $alignment . '"> ' . $new_content . $source . '</div>', $content);
+                        
                     }
                 }
             }

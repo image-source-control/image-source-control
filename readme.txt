@@ -77,6 +77,7 @@ e.g.
 = untagged =
 
 * used more stable regex
+* place the overlay after DOM loaded completely to prevent wrong positioning
 * replaced use of image url with attachment ID where possible to lift some heavy loads
 * load public JavaScript in footer by default
 * fix for image names including dimensions (e.g., 300x250)
