@@ -282,7 +282,7 @@ class ISC_Class {
             
             $query = apply_filters( 'isc_get_image_by_url_query', $raw_query, $newurl );
             $id = $wpdb->get_var($query);
-
+            
             return intval( $id );
         }
 

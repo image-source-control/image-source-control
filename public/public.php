@@ -137,10 +137,11 @@ if (!class_exists('ISC_Public')) {
                         }
                         
                         // if ID is still missing get image by URL
-                        if( $id ){
+                        if( ! $id ){
                             $src = $matches[8][$i];
                             $id = $this->get_image_by_url($src);
                         }
+                        
                         
                         // don’t display empty sources
                         if(!$source_string = $this->render_image_source_string($id)) {
