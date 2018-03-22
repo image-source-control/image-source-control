@@ -92,17 +92,27 @@ if (!class_exists('ISC_Public')) {
                  * img tag is checked individually since there is a different order of attributes when images are used in gallery or individually
                  * 
                  * 0 – full match
-                 * 1 – starting link tag
-                 * 2 – "rel" attribute from link tag
-                 * 3 – image id from link wp-att- value in "rel" attribute
-                 * 4 – full img tag
-                 * 5 – image URL
+                 * 1 - <figure> if set
+                 * 2 – alignment
+                 * 3 – inner code starting with link
+                 * 4 – opening link attribute
+                 * 5 – "rel" attribute from link tag
+                 * 6 – image id from link wp-att- value in "rel" attribute
+                 * 7 – full img tag
+                 * 8 – image URL
+                 * 9 – (unused)
+                 * 10 - </figure>
+                 * 
+                 * tested with:
+                 * * with and without [caption]
+                 * * with and without link attibute
                  * 
                  * potential issues:
                  * * line breaks in the code
                  */
-                $pattern = '#(<a [^>]*(rel="[^"]*[^"]*wp-att-(\d+)"[^>]*)>)? *(<img [^>]*[^>]*src="(.+)".*\/?>).*(?(3)(?:<\/a>)|.*).*(?(1).*)#isU';
+                $pattern = '#(<[^>]*class="[^"]*(alignleft|alignright|alignnone|aligncenter).*)?((<a [^>]*(rel="[^"]*[^"]*wp-att-(\d+)"[^>]*)>)? *(<img [^>]*[^>]*src="(.+)".*\/?>).*(<\/a.*>)?[^<]*).*(<\/figure.*>)?#isU';
                 $count = preg_match_all($pattern, $content, $matches);
+                //error_log(print_r($matches, true));
                 if (false !== $count) {
                     for ($i=0; $i < $count; $i++) {
                         // don’t show caption for own image if admin choose not to do so
@@ -118,8 +128,8 @@ if (!class_exists('ISC_Public')) {
                          * we only need the ID if we don’t have it yet
                          * it can be retrieved from "wp-image-" class (single) or "aria-describedby="gallery-1-34" in gallery
                          */
-                        $id = $matches[3][$i];
-                        $img_tag = $matches[4][$i];
+                        $id = $matches[6][$i];
+                        $img_tag = $matches[7][$i];
                         
                         if( ! $id ){
                                 $success = preg_match('#wp-image-(\d+)|aria-describedby="gallery-1-(\d+)#is', $img_tag, $matches_id);
@@ -128,7 +138,7 @@ if (!class_exists('ISC_Public')) {
                         
                         // if ID is still missing get image by URL
                         if( $id ){
-                            $src = $matches[5][$i];
+                            $src = $matches[8][$i];
                             $id = $this->get_image_by_url($src);
                         }
                         
@@ -136,12 +146,14 @@ if (!class_exists('ISC_Public')) {
                         if(!$source_string = $this->render_image_source_string($id)) {
                                 continue;
                         }
+                        
+                        // get any alignment from the original code
+                        preg_match('#alignleft|alignright|alignnone|aligncenter#is', $matches[0][$i], $matches_align);
+                        $alignment = isset( $matches_align[0] ) ? $matches_align[0] : '';
 
                         $source = '<p class="isc-source-text">' . $options['source_pretext'] . ' ' . $source_string . '</p>';
-                        $old_content = $matches[0][$i];
+                        $old_content = $matches[3][$i];
                         $new_content = str_replace('wp-image-' . $id, 'wp-image-' . $id . ' with-source', $old_content);
-                        // $alignment = (!empty($matches[1][$i]))? $matches[2][$i] : $matches[5][$i];
-                        $alignment = '';
 
                         $content = str_replace($old_content, '<div id="isc_attachment_' . $id . '" class="isc-source ' . $alignment . '"> ' . $new_content . $source . '</div>', $content);
                     }
