@@ -7,9 +7,7 @@ jQuery(document).ready(function(){
     jQuery('.isc-source').each(function(){
         var main_id = jQuery(this).attr('id');
         var att_number = main_id.split('_')[2];
-        var caption = jQuery(this).children().filter('.isc-source-text').html();
-        jQuery(this).find('.isc-source-text').remove();
-        jQuery(this).append(jQuery('<span />').addClass('isc-source-text').html(caption).css({
+        jQuery(this).find('.isc-source-text').css({
             position: 'absolute',
             fontSize: '0.9em',
             backgroundColor: "#333",
@@ -17,19 +15,21 @@ jQuery(document).ready(function(){
             opacity: "0.70",
             padding: '0 0.15em',
             textShadow: 'none',
-        }));
+        });
         // Some themes handle the bottom padding of the attachment's div with the caption text (which is in between
         // the image and the bottom border) not with the div itself. The following line set the padding on the bottom equal to the top.
         jQuery(this).css('padding-bottom', jQuery(this).css('padding-top'));
-        isc_update_captions_positions();
+        isc_update_caption_position(jQuery(this));
     });
 
     jQuery(window).resize(function(){
         isc_update_captions_positions();
     });
+    /** doesn’t seem needed anymore
     jQuery('.isc-source img').on('load', function(){
         isc_update_captions_positions();
     });
+    */
 });
 
 function isc_update_captions_positions() {
@@ -41,7 +41,10 @@ function isc_update_captions_positions() {
 function isc_update_caption_position(jQ_Obj) {
     var main_id = jQ_Obj.attr('id');
     var att_number = main_id.split('_')[2];
-    var att = jQ_Obj.find('.wp-image-' + att_number);
+    // try to look for single image only in case this is a gallery
+    // var att = jQ_Obj.find('.wp-image-' + att_number);
+    var att = jQ_Obj.find( 'img' );
+    // console.log( att );
     var attw = att.width();
     var atth = att.height();
 
@@ -51,7 +54,7 @@ function isc_update_caption_position(jQ_Obj) {
     var t = att.position().top;
     
     var caption = jQ_Obj.find('.isc-source-text');
-
+    
     //caption width + padding & margin (after moving onto image)
     var tw = caption.outerWidth(true);
     //caption height + padding (idem)
