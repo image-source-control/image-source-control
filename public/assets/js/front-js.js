@@ -5,8 +5,6 @@ jQuery(document).ready(function(){
     * Move caption into image
     */
     jQuery('.isc-source').each(function(){
-        var main_id = jQuery(this).attr('id');
-        var att_number = main_id.split('_')[2];
         jQuery(this).find('.isc-source-text').css({
             position: 'absolute',
             fontSize: '0.9em',
