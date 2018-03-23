@@ -14,7 +14,7 @@ jQuery(document).ready(function(){
             color: "#fff",
             opacity: "0.70",
             padding: '0 0.15em',
-            textShadow: 'none',
+            textShadow: 'none'
         });
         // Some themes handle the bottom padding of the attachment's div with the caption text (which is in between
         // the image and the bottom border) not with the div itself. The following line set the padding on the bottom equal to the top.
