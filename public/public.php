@@ -133,7 +133,9 @@ if (!class_exists('ISC_Public')) {
                         
                         if( ! $id ){
                                 $success = preg_match('#wp-image-(\d+)|aria-describedby="gallery-1-(\d+)#is', $img_tag, $matches_id);
-                                $id = $matches_id[1] ? intval( $matches_id[1] ) : intval( $matches_id[2] );
+                                if( $success ){
+                                    $id = $matches_id[1] ? intval( $matches_id[1] ) : intval( $matches_id[2] );
+                                }
                         }
                         
                         // if ID is still missing get image by URL

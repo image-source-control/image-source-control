@@ -31,8 +31,8 @@ if (!class_exists('ISC_Admin')) {
             add_filter('attachment_fields_to_edit', array($this, 'add_isc_fields'), 10, 2);
             add_filter('attachment_fields_to_save', array($this, 'isc_fields_save'), 10, 2);
 
-            // save image information in meta field when a post is saved
-            add_action('save_post', array($this, 'save_image_information_on_post_save'));
+            // save image information in meta field after a post was saved
+            add_action('wp_insert_post', array($this, 'save_image_information_on_post_save'));
 
             // admin notices
             add_action('admin_notices', array($this, 'admin_notices'));
@@ -243,7 +243,14 @@ if (!class_exists('ISC_Admin')) {
             }
 
             $_content = '';
-            if ( !empty( $_POST['content']) ) $_content = stripslashes($_POST['content']);
+            if ( !empty( $_POST['content']) ) {
+                $_content = stripslashes($_POST['content']);
+            } else { // retrieve content with Gutenberg, because no content included in $_POST object then
+                $_post = get_post( $post_id );
+                if( isset( $_post->post_content ) ){
+                    $_content = $_post->post_content;
+                }
+            }
 
             // Needs to be called before the 'isc_post_images' field is updated.
             $this->update_image_posts_meta($post_id, $_content);

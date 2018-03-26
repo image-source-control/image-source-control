@@ -76,6 +76,7 @@ e.g.
 
 = untagged =
 
+* works with version 2.4.0 of Gutenberg plugin
 * used more stable regex
 * place the overlay after DOM loaded completely to prevent wrong positioning
 * replaced use of image url with attachment ID where possible to lift some heavy loads

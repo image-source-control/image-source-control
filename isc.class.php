@@ -123,9 +123,8 @@ class ISC_Class {
          */
         public function save_image_information($post_id, $_content)
         {
-            // apply shortcodes to content
-            $_content = do_shortcode($_content);
-
+            $content = apply_filters( 'the_content', $content );
+            
             /*$_image_urls = $this->_filter_src_attributes($_content);
             $_imgs = array();
 
@@ -294,8 +293,7 @@ class ISC_Class {
         */
         public function update_image_posts_meta($post_id, $content)
         {
-            // apply shortcodes to content
-            $content = do_shortcode($content);
+            $content = apply_filters( 'the_content', $content );
 
             $image_ids = $this->_filter_image_ids($content);
             $added_images = array();
