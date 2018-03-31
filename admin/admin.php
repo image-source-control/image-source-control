@@ -232,11 +232,17 @@ if (!class_exists('ISC_Admin')) {
                 || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
                 return;
             }
-
-            if (isset($_POST['post_type']) && 'attachment' == $_POST['post_type']) {
+            
+            /**
+             * don’t save meta data for non-public post types, since those shouldn’t be visible in the frontend
+             * ignore also attachment posts
+             */
+            if ( ! isset( $_POST['post_type'] ) 
+                    || ! in_array( $_POST['post_type'], get_post_types( array( 'public' => true ), 'names' ) ) // is the post type public
+                    || 'attachment' == $_POST['post_type']) {
                 return;
             }
-
+            
             // check if this is a revision and if so, use parent post id
             if ($_id = wp_is_post_revision($post_id)) {
                 $post_id = $_id;
