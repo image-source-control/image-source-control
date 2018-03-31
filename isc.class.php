@@ -121,7 +121,7 @@ class ISC_Class {
          * @updated 1.3.5 added isc_images_in_posts filter
          * @todo check for more post types that maybe should not be parsed here
          */
-        public function save_image_information($post_id, $_content)
+        public function save_image_information($post_id, $content = '' )
         {
             $content = apply_filters( 'the_content', $content );
             
@@ -136,7 +136,7 @@ class ISC_Class {
                 );
             }*/
             
-            $_imgs = $this->_filter_image_ids($_content);
+            $_imgs = $this->_filter_image_ids($content);
 
             // add thumbnail information
             $thumb_id = get_post_thumbnail_id($post_id);
