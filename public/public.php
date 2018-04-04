@@ -147,7 +147,7 @@ if (!class_exists('ISC_Public')) {
                         }
                         
                         // don’t display empty sources
-                        if(!$source_string = $this->render_image_source_string($id)) {
+                        if( !$source_string = $this->render_image_source_string( $id ) ) {
                                 continue;
                         }
                         
