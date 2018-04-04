@@ -112,15 +112,10 @@ if (!class_exists('ISC_Public')) {
                  */
                 $pattern = '#(<[^>]*class="[^"]*(alignleft|alignright|alignnone|aligncenter).*)?((<a [^>]*(rel="[^"]*[^"]*wp-att-(\d+)"[^>]*)>)? *(<img [^>]*[^>]*src="(.+)".*\/?>).*(</a>)??[^<]*).*(<\/figure.*>)?#isU';
                 $count = preg_match_all($pattern, $content, $matches);
+                
                 // error_log(print_r($content, true)); error_log(print_r($matches, true));
                 if (false !== $count) {
                     for ($i=0; $i < $count; $i++) {
-                        // don’t show caption for own image if admin choose not to do so
-                        if($options['exclude_own_images']){
-                                if(get_post_meta($id, 'isc_image_source_own', true)) {
-                                        continue;
-                                }
-                        }
                         
                         /**
                          * interpret the image tag
@@ -144,6 +139,12 @@ if (!class_exists('ISC_Public')) {
                             $id = $this->get_image_by_url($src);
                         }
                         
+                        // don’t show caption for own image if admin choose not to do so
+                        if($options['exclude_own_images']){
+                                if(get_post_meta($id, 'isc_image_source_own', true)) {
+                                        continue;
+                                }
+                        }
                         
                         // don’t display empty sources
                         if(!$source_string = $this->render_image_source_string($id)) {
