@@ -53,6 +53,9 @@ if (!class_exists('ISC_Public')) {
                 }
             /* ]]> */
             </script>
+            <style>
+                .isc-source { position: relative; }
+            </style>
             <?php
         }
 

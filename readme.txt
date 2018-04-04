@@ -82,6 +82,7 @@ e.g.
 * replaced use of image url with attachment ID where possible to lift some heavy loads
 * load public JavaScript in footer by default
 * prevent saving ISC post meta information on non-public post types
+* place overlay correctly even when page continues to shift
 * fix for image names including dimensions (e.g., 300x250)
 
 = 1.8.11.2 =
