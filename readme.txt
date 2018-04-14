@@ -17,7 +17,7 @@ Image Source Control (ISC) helps to prevent this situation.
 
 > <strong>github repository</strong>
 > 
-> Since I am not able to work on feature requests or fix buxes right now, you can submit them to the github repository.
+> I might not always be able to work on feature requests or fix buxes, but you can submit them to the github repository.
 > I will definitely review them there.
 > https://github.com/webgilde/image-source-control
 
@@ -35,7 +35,7 @@ You can choose between different image source list types:
 * show image source directly in the image (not working with all images and themes)
 * include a list with all images and their sources of the current page/post
 * include a list with all images and their sources with all images or only those included in posts
-* attach lists to automatically or using shortcodes or template functions
+* attach lists be the content automatically or using shortcodes or template functions
 * display image sources on archive pages
 
 **Backend Features**
@@ -51,9 +51,30 @@ You can choose between different image source list types:
 
 English, German
 
-**Instructions**
+== Instructions ==
 
-Find instructions under *Other Notes* or at the [image source control website](http://webgilde.com/en/image-source-control/image-source-control-manual/).
+Also have a look at the [image source control website](http://webgilde.com/en/image-source-control/image-source-control-manual/).
+
+Find a list of images with missing sources under _Media > Missing sources_
+
+**automatic image sources**
+
+You can choose to display image sources automatically below the post content or as a small overlay above your images. Just visit the settings page of the plugin to enable those options.
+
+**manually included image sources on pages/posts**
+
+You can add the image source list manually to pages or post via the shortcode `[isc_list]` in your content editor. You can use `[isc_list id="123]` to show the list of any post or page.
+
+You can also add the list with the function `isc_list()` within the loop in your template files. Use `isc_list( $post_id )` to show the image source list outside the loop.
+
+You should also check first if the function exists before using it:
+`<?php if( function_exists('isc_list') ) { isc_list(); } ?>`
+
+**list all image sources**
+
+You can add a paginated list with ALL attachments and sources to a post or page using the shortcode `[isc_list_all]`. Use `[isc_list_all per_page="25"]` to show only a limited number of images per page.
+
+The plugin searches your post content and thumbnail for images (attachments) and lists them, if you included at least the image source or marked it as your own image.
 
 == Installation ==
 
@@ -64,6 +85,8 @@ e.g.
 1. Upload `wg-image-source-control`-folder to the `/wp-content/plugins/` directory
 1. Activate ISC through the 'Plugins' menu in WordPress
 1. Visit _Settings > Image Control_ to set up the plugin
+
+See the _Instructions_ section [here](https://wordpress.org/plugins/image-source-control-isc/#description).
 
 == Screenshots ==
 
@@ -315,28 +338,3 @@ Read [this post](http://webgilde.com/en/image-source-control-1-6/) to learn more
 * [feature] List images with missing sources
 * [feature] Shortcode to include the sources in content fields
 * [feature] Function to include sources of a post in templates
-
-== Instructions ==
-
-Also have a look at the <a href="http://webgilde.com/en/image-source-control/image-source-control-manual/">image source control manual</a>.
-
-Find a list of images with missing sources under _Media > Missing sources_
-
-**automatic image sources**
-
-You can choose to display image sources automatically below the post content or as a small overlay above your images. Just visit the settings page of the plugin to enable those options.
-
-**manually included image sources on pages/posts**
-
-You can add the image source list manually to pages or post via the shortcode [isc_list] in your content editor. You can use `[isc_list id="123]` to show the list of any post or page.
-
-You can also add the list with the function `isc_list()` within the loop in your template files. Use `isc_list( $post_id )` to show the image source list outside the loop.
-
-You should also check first if the function exists before using it:
-`<?php if( function_exists('isc_list') ) { isc_list(); } ?>`
-
-**list all image sources**
-
-You can add a paginated list with ALL attachments and sources to a post or page using the shortcode [isc_list_all]. Use `[isc_list_all per_page="25"]` to show only a limited number of images per page.
-
-The plugin searches your post content and thumbnail for images (attachments) and lists them, if you included at least the image source or marked it as your own image.
