@@ -1,7 +1,7 @@
 <?php
 /*
   Plugin Name: Image Source Control
-  Version: 1.8.11.2
+  Version: 1.9
   Plugin URI: https://webgilde.com/en/image-source-control/
   Description: The Image Source Control saves the source of an image, lists them and warns if it is missing.
   Author: Thomas Maier
@@ -24,10 +24,6 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Followed the following tutorials
- * http://wpengineer.com/2076/add-custom-field-attachment-in-wordpress/
- * http://bueltge.de/eigene-felder-dateiverwaltung-wordpress/1226/ (same like above, but in German)
- *
  *
  */
 
@@ -38,11 +34,11 @@ if ( ! function_exists( 'add_action' ) ) {
     exit();
 }
 
-define( 'ISCVERSION', '1.8.11.2' );
+define( 'ISCVERSION', '1.9' );
 define( 'ISCNAME', 'Image Source Control' );
 define( 'ISCDIR', basename( dirname( __FILE__ ) ) );
 define( 'ISCPATH', plugin_dir_path( __FILE__ ) );
-define( 'WEBGILDE', 'http://webgilde.com/en/image-source-control' );
+define( 'WEBGILDE', 'https://webgilde.com/en/image-source-control' );
 
 load_plugin_textdomain( 'image-source-control-isc', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
 

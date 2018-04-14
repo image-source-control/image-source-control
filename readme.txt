@@ -1,9 +1,9 @@
 === Image Source Control ===
 Contributors: webzunft
-Tags: image, images, picture, picture source, image source, mediathek, media, caption
+Tags: image, images, picture, picture source, image source, mediathek, media, caption, copyright
 Requires at least: 3.5
 Tested up to: 4.9
-Stable tag: 1.8.11.2
+Stable tag: 1.9
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -76,6 +76,10 @@ You can add a paginated list with ALL attachments and sources to a post or page 
 
 The plugin searches your post content and thumbnail for images (attachments) and lists them, if you included at least the image source or marked it as your own image.
 
+== Legal Notice ==
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
 == Installation ==
 
 This section describes how to install the plugin and get it working.
@@ -97,16 +101,15 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 
 == Changelog ==
 
-= untagged =
+= 1.9 =
 
-* works with version 2.4.0 of Gutenberg plugin
-* used more stable regex
-* place the overlay after DOM loaded completely to prevent wrong positioning
+* rewritten the way how images are detected in the content of the post or page
 * replaced use of image url with attachment ID where possible to lift some heavy loads
+* fix for image names including dimensions (e.g., 300x250)
+* works with version 2.4.0 of Gutenberg plugin
+* place overlay correctly even when page continues to shift after being loaded
 * load public JavaScript in footer by default
 * prevent saving ISC post meta information on non-public post types
-* place overlay correctly even when page continues to shift
-* fix for image names including dimensions (e.g., 300x250)
 
 = 1.8.11.2 =
 
