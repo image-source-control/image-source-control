@@ -328,9 +328,9 @@ if (!class_exists('ISC_Public')) {
                 $atts));
 
             if ('&#171; Previous' == $prev_text)
-                $prev_text = __('&#171; Previous', ISCTEXTDOMAIN);
+                $prev_text = __('&#171; Previous', 'image-source-control-isc');
             if ('Next &#187;' == $next_text)
-                $next_text = __('Next &#187;', ISCTEXTDOMAIN);
+                $next_text = __('Next &#187;', 'image-source-control-isc');
 
             // retrieve all attachments
             $args = array(
@@ -387,7 +387,7 @@ if (!class_exists('ISC_Public')) {
                     foreach($metadata as $data) {
                         // only list published posts
                         if(get_post_status($data) == 'publish') {
-                            $usage_data_array[] = sprintf(__('<li><a href="%1$s" title="View %2$s">%3$s</a></li>', ISCTEXTDOMAIN),
+                            $usage_data_array[] = sprintf(__('<li><a href="%1$s" title="View %2$s">%3$s</a></li>', 'image-source-control-isc'),
                                 esc_url(get_permalink($data)),
                                 esc_attr(get_the_title($data)),
                                 esc_html(get_the_title($data))
@@ -434,7 +434,7 @@ if (!class_exists('ISC_Public')) {
             }
             if (isset($options['webgilde']) && true == $options['webgilde']) {
             ?>
-                <p class="isc-backlink"><?php printf(__('Image list created by <a href="%s" title="Image Source Control">Image Source Control Plugin</a>', ISCTEXTDOMAIN), WEBGILDE); ?></p>
+                <p class="isc-backlink"><?php printf(__('Image list created by <a href="%s" title="Image Source Control">Image Source Control Plugin</a>', 'image-source-control-isc'), WEBGILDE); ?></p>
             <?php
             }
 
@@ -458,12 +458,12 @@ if (!class_exists('ISC_Public')) {
             <table>
                 <thead>
                     <?php if ($options['thumbnail_in_list']) : ?>
-                        <th><?php _e('Thumbnail', ISCTEXTDOMAIN); ?></th>
+                        <th><?php _e('Thumbnail', 'image-source-control-isc'); ?></th>
                     <?php endif; ?>
-                    <th><?php _e("Attachment's ID", ISCTEXTDOMAIN); ?></th>
-                    <th><?php _e('Title', ISCTEXTDOMAIN); ?></th>
-                    <th><?php _e('Attached to', ISCTEXTDOMAIN); ?></th>
-                    <th><?php _e('Source', ISCTEXTDOMAIN); ?></th>
+                    <th><?php _e("Attachment's ID", 'image-source-control-isc'); ?></th>
+                    <th><?php _e('Title', 'image-source-control-isc'); ?></th>
+                    <th><?php _e('Attached to', 'image-source-control-isc'); ?></th>
+                    <th><?php _e('Source', 'image-source-control-isc'); ?></th>
                 </thead>
                 <tbody>
                 <?php foreach ($atts as $id => $data) : ?>

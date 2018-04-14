@@ -3,8 +3,8 @@ if ($posts_with_images->have_posts()) : ?>
     <table class="widefat isc-table" style="width: 80%;" >
         <thead>
             <tr>
-                <th><?php _e('Post / Page', ISCTEXTDOMAIN); ?></th>
-                <th><?php _e('Images', ISCTEXTDOMAIN); ?></th>
+                <th><?php _e('Post / Page', 'image-source-control-isc'); ?></th>
+                <th><?php _e('Images', 'image-source-control-isc'); ?></th>
             </tr>
         </thead><tbody><?php
 
@@ -18,7 +18,7 @@ if ($posts_with_images->have_posts()) : ?>
                     <ul><?php
                     foreach($_images as $_image_id => $_image) : ?>
                         <li><?php if($_image_id != '') : ?>
-                            <a href="<?php echo admin_url('media.php?attachment_id=' . $_image_id . '&action=edit'); ?>" title="<?php _e('edit this image', ISCTEXTDOMAIN); ?>"><?php echo $_image['src']; ?></a></li>
+                            <a href="<?php echo admin_url('media.php?attachment_id=' . $_image_id . '&action=edit'); ?>" title="<?php _e('edit this image', 'image-source-control-isc'); ?>"><?php echo $_image['src']; ?></a></li>
                         <?php else : ?>
                             <?php print_r($_images); ?>
                         <?php endif; ?>

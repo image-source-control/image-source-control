@@ -402,10 +402,10 @@ class ISC_Class {
             $default['display_type'] = array('list');
             $default['list_on_archives'] = false;
             $default['list_on_excerpts'] = false;
-            $default['image_list_headline'] = __('image sources', ISCTEXTDOMAIN);
+            $default['image_list_headline'] = __('image sources', 'image-source-control-isc');
             $default['exclude_own_images'] = false;
             $default['use_authorname'] = true;
-            $default['by_author_text'] = __('Owned by the author', ISCTEXTDOMAIN);
+            $default['by_author_text'] = __('Owned by the author', 'image-source-control-isc');
             $default['installed'] = false;
             $default['version'] = ISCVERSION;
             $default['webgilde'] = false;
@@ -417,9 +417,9 @@ class ISC_Class {
             $default['warning_onesource_missing'] = true;
             $default['hide_list'] = false;
             $default['caption_position'] = 'top-left';
-            $default['source_pretext'] = __('Source:', ISCTEXTDOMAIN);
+            $default['source_pretext'] = __('Source:', 'image-source-control-isc');
             $default['enable_licences'] = false;
-            $default['licences'] = __("CC BY 2.0|http://creativecommons.org/licenses/by/2.0/legalcode", ISCTEXTDOMAIN);
+            $default['licences'] = __("CC BY 2.0|http://creativecommons.org/licenses/by/2.0/legalcode", 'image-source-control-isc');
             return $default;
         }
 

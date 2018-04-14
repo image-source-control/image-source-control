@@ -3,8 +3,8 @@ if ($images_with_posts->have_posts()) : ?>
     <table class="widefat isc-table" style="width: 80%;" >
         <thead>
             <tr>
-                <th><?php _e('Image', ISCTEXTDOMAIN); ?></th>
-                <th><?php _e('Posts', ISCTEXTDOMAIN); ?></th>
+                <th><?php _e('Image', 'image-source-control-isc'); ?></th>
+                <th><?php _e('Posts', 'image-source-control-isc'); ?></th>
             </tr>
         </thead><tbody><?php
 
