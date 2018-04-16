@@ -2,24 +2,27 @@ var isc_nb = 0;
 
 jQuery(document).ready(function(){
     /**
-    * Move caption into image
+    * Move caption into image with a short delay to way for the images to load
     */
-    jQuery('.isc-source').each(function(){
-        jQuery(this).find('.isc-source-text').css({
-            position: 'absolute',
-            fontSize: '0.9em',
-            backgroundColor: "#333",
-            color: "#fff",
-            opacity: "0.70",
-            padding: '0 0.15em',
-            textShadow: 'none'
-        });
-        // Some themes handle the bottom padding of the attachment's div with the caption text (which is in between
-        // the image and the bottom border) not with the div itself. The following line set the padding on the bottom equal to the top.
-        jQuery(this).css('padding-bottom', jQuery(this).css('padding-top'));
-        isc_update_caption_position(jQuery(this));
-    });
-
+    setTimeout( function(){
+            jQuery('.isc-source').each(function(){
+                jQuery(this).find('.isc-source-text').css({
+                    position: 'absolute',
+                    fontSize: '0.9em',
+                    backgroundColor: "#333",
+                    color: "#fff",
+                    opacity: "0.70",
+                    padding: '0 0.15em',
+                    textShadow: 'none',
+                    display: 'block',
+                });
+                // Some themes handle the bottom padding of the attachment's div with the caption text (which is in between
+                // the image and the bottom border) not with the div itself. The following line set the padding on the bottom equal to the top.
+                jQuery(this).css('padding-bottom', jQuery(this).css('padding-top'));
+                isc_update_caption_position(jQuery(this));
+            });
+    }, 100 );
+    
     jQuery(window).resize(function(){
         isc_update_captions_positions();
     });
@@ -45,7 +48,7 @@ function isc_update_caption_position(jQ_Obj) {
     // console.log( att );
     var attw = att.width();
     var atth = att.height();
-
+    
     //relative position
     var l = att.position().left;
     //relative position
@@ -94,7 +97,7 @@ function isc_update_caption_position(jQ_Obj) {
             break;
         case 'bottom-center':
             posl = l + (Math.round(attw/2) - (Math.round(tw/2))) + attpl + attml;
-            post = t + attpt + attmt - tmt - th + atth;
+            post = t + attpt + attmt - tmt - th + atth;          
             break;
         case 'bottom-right':
             posl = l - attpl + attml - tml + attw - tw;

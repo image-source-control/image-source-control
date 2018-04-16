@@ -101,6 +101,11 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 
 == Changelog ==
 
+= untagged =
+
+* delayed displaying source overlay by 100 ms to give images a chance to load their height
+* fixed wrong height of the overlay being used 
+
 = 1.9 =
 
 THIS UPDATE CONTAINS SOME BASIC CHANGES ON HOW IMAGES ARE DETECTED IN THE CONTENT. PLEASE TEST IT.
