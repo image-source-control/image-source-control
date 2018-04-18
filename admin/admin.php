@@ -157,7 +157,7 @@ if (!class_exists('ISC_Admin')) {
             // add input field for source
             $form_fields['isc_image_source']['label'] = __('Image Source', 'image-source-control-isc');
             $form_fields['isc_image_source']['value'] = get_post_meta($post->ID, 'isc_image_source', true);
-            $form_fields['isc_image_source']['helps'] = __('Include the image source here.', 'image-source-control-isc');
+            $form_fields['isc_image_source']['helps'] = __('Include the image source here.', 'image-source-control-isc' );
 
             // add checkbox to mark as your own image
             $form_fields['isc_image_source_own']['input'] = 'html';
