@@ -101,6 +101,10 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 
 == Changelog ==
 
+= untagged =
+
+* moved German translation to wordpress.org
+
 = 1.9.1 =
 
 * delayed displaying source overlay by 100 ms to give images a chance to load their height
