@@ -14,7 +14,7 @@ if (!class_exists('ISC_Public')) {
      * @todo move frontend-only functions from general class here
      */
     class ISC_Public extends ISC_Class {
-
+        
         public function __construct() {
             parent::__construct();
 
@@ -22,7 +22,7 @@ if (!class_exists('ISC_Public')) {
             add_action('wp_head', array($this, 'front_head'));
             
             /**
-             * filters need to be above 10 in order to have interpreted also gallery shortcode
+             * filters need to be above 10 in order to interpret also gallery shortcode
              */
             add_filter('the_content', array($this, 'content_filter'), 20);
             add_filter('the_excerpt', array($this, 'excerpt_filter'), 20);
@@ -69,28 +69,11 @@ if (!class_exists('ISC_Public')) {
          */
         public function content_filter($content)
         {
-
+            
             // display inline sources
             $options = $this->get_isc_options();
-            if (isset($options['display_type']) && is_array($options['display_type']) && in_array('overlay', $options['display_type'])) {
+            if( isset($options['display_type']) && is_array($options['display_type']) && in_array('overlay', $options['display_type'] ) ) {
                 /**
-                 * DEPRECATED VERSION FOR REFERENCE
-                 * what do we get from the regex?
-                 * 
-                 * 0 – full match
-                 * 1 – starting caption shortcode
-                 * 2 – alignment
-                 * 3 – (starting link tag)
-                 * 4 – (img tag)
-                 * 5 – alignment
-                 * 6 – attachment id
-                 * 7 – source URL
-                 * 
-                 */
-                $pattern = '#(\[caption.*align="(.+)"[^\]*]{0,}\])? *(<a [^>]+>)? *(<img [^>]*class="[^"]*(alignleft|alignright|alignnone|aligncenter)??[^"]*wp-image-(\d+)\D*"[^>]*src="(.+)".*/?>).*(?(3)(?:</a>)|.*).*(?(1)(?:\[/caption\])|.*)#isU';
-                /**
-                 * NEW VERSION
-                 * 
                  * removed [caption], because this check runs after the hook that interprets shortcodes
                  * img tag is checked individually since there is a different order of attributes when images are used in gallery or individually
                  * 
@@ -115,7 +98,7 @@ if (!class_exists('ISC_Public')) {
                  */
                 $pattern = '#(<[^>]*class="[^"]*(alignleft|alignright|alignnone|aligncenter).*)?((<a [^>]*(rel="[^"]*[^"]*wp-att-(\d+)"[^>]*)>)? *(<img [^>]*[^>]*src="(.+)".*\/?>).*(</a>)??[^<]*).*(<\/figure.*>)?#isU';
                 $count = preg_match_all($pattern, $content, $matches);
-                
+
                 // error_log(print_r($content, true)); error_log(print_r($matches, true));
                 if (false !== $count) {
                     for ($i=0; $i < $count; $i++) {
@@ -167,10 +150,10 @@ if (!class_exists('ISC_Public')) {
                     }
                 }
             }
-
+            
             // attach image source list to content, if option is enabled
             if ((isset($options['list_on_archives']) && $options['list_on_archives']) ||
-                    (is_singular() && isset($options['display_type']) && is_array($options['display_type']) && in_array('list', $options['display_type']))) {
+                    (is_singular() && isset($options['display_type']) && is_array($options['display_type']) && in_array('list', $options['display_type']))) {                
                 $content = $content . $this->list_post_attachments_with_sources();
             }
 
@@ -221,17 +204,20 @@ if (!class_exists('ISC_Public')) {
                     return;
                 }
             }
-
+            
             $attachments = get_post_meta($post_id, 'isc_post_images', true);
 
             // if attachments is an empty string, search for images in it
             if ($attachments == '') {
-                $this->save_image_information_on_load();
-                $this->update_image_posts_meta($post_id, $post->post_content);
-
-                $attachments = get_post_meta($post_id, 'isc_post_images', true);
+                    // unregister our content filter in order to prevent infinite loops when calling the_content in the next steps
+                    remove_filter( 'the_content', array( $this, 'content_filter' ), 20 );
+                    
+                    $this->save_image_information_on_load();
+                    $this->update_image_posts_meta($post_id, $post->post_content);
+                    
+                    $attachments = get_post_meta($post_id, 'isc_post_images', true);
             }
-
+            
             $return = '';
             if (!empty($attachments)) {
                 $atts = array();
@@ -746,7 +732,7 @@ if (!class_exists('ISC_Public')) {
             if (empty($post->ID)) {
                 return;
             }
-
+            
             $post_id = $post->ID;
             $_content = $post->post_content;
 

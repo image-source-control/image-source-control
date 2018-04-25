@@ -103,6 +103,7 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 
 = untagged =
 
+* prevent infinite loop for posts with automatic image source lists where images are not index yet
 * moved German translation to wordpress.org
 
 = 1.9.1 =

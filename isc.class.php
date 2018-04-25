@@ -123,6 +123,7 @@ class ISC_Class {
          */
         public function save_image_information($post_id, $content = '' )
         {
+            // creates an infinite loop if not secured, see ISC_Public::list_post_attachments_with_sources()
             $content = apply_filters( 'the_content', $content );
             
             /*$_image_urls = $this->_filter_src_attributes($_content);
@@ -289,7 +290,7 @@ class ISC_Class {
         * Update isc_image_posts meta field for all images found in a post with a given ID.
         * @param $post_id ID of the target post
         * @param $content content of the target post
-         * @updated 1.3.5 added images_in_posts_simple filter
+        * @updated 1.3.5 added images_in_posts_simple filter
         */
         public function update_image_posts_meta($post_id, $content)
         {

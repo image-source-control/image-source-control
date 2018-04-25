@@ -260,7 +260,6 @@ if (!class_exists('ISC_Admin')) {
 
             // Needs to be called before the 'isc_post_images' field is updated.
             $this->update_image_posts_meta($post_id, $_content);
-
             $this->save_image_information($post_id, $_content);
         }
 
