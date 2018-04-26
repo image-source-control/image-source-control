@@ -55,50 +55,70 @@ if (!class_exists('ISC_Admin')) {
         */
         public function admin_notices()
         {
+            
+                // only check, if check-option was enabled
+                $options = $this->get_isc_options();
+                if( empty( $options['warning_onesource_missing'] ) ){
+                        return;
+                };
 
-            // attachments without sources
-            $args = array(
-                'post_type' => 'attachment',
-                'numberposts' => -1,
-                'post_status' => null,
-                'post_parent' => null,
-                'meta_query' => array(
-                    array(
-                        'key' => 'isc_image_source',
-                        'value' => '',
-                        'compare' => '='
-                    ),
-                    array(
-                        'key' => 'isc_image_source_own',
-                        'value' => '1',
-                        'compare' => '!=',
-                    )
-                )
-            );
-            $attachments = get_posts($args);
+                $show_warning = get_transient( 'isc-show-missing-sources-warning' );
+                
+                // attachments without sources
+                if( ! $show_warning ){
+                        $args = array(
+                            'post_type' => 'attachment',
+                            'numberposts' => 1,
+                            'post_status' => null,
+                            'post_parent' => null,
+                            'meta_query' => array(
+                                array(
+                                    'key' => 'isc_image_source',
+                                    'value' => '',
+                                    'compare' => '='
+                                ),
+                                array(
+                                    'key' => 'isc_image_source_own',
+                                    'value' => '1',
+                                    'compare' => '!=',
+                                )
+                            )
+                        );
+                        $attachments = get_posts($args);
+                        
+                        if( !empty( $attachments ) ){
+                                $show_warning = true;
+                        } else {
+                                // load unindexed attachments
+                                $args = array(
+                                    'post_type' => 'attachment',
+                                    'numberposts' => 1,
+                                    'post_status' => null,
+                                    'post_parent' => null,
+                                    'meta_query' => array(
+                                        array(
+                                            'key' => 'isc_image_source',
+                                            'value' => 'any',
+                                            'compare' => 'NOT EXISTS'
+                                        ),
+                                    )
+                                );
+                                $attachments2 = get_posts($args);
+                                if( !empty( $attachments2 ) ){
+                                        $show_warning = true;
+                                }
+                        }
+                }
+                
+                if ( $show_warning ){
+                        $missing_src = esc_url(admin_url('upload.php?page=isc_missing_sources_page'));
+                        ?><div class="error"><p><?php 
+                                printf(__('One or more attachments still have no source. See the <a href="%s">missing sources</a> list', 'image-source-control-isc'), $missing_src);
+                                ?></p></div><?php
+                }
 
-            // load unindexed attachments
-            $args = array(
-                'post_type' => 'attachment',
-                'numberposts' => -1,
-                'post_status' => null,
-                'post_parent' => null,
-                'meta_query' => array(
-                    array(
-                        'key' => 'isc_image_source',
-                        'value' => 'any',
-                        'compare' => 'NOT EXISTS'
-                    ),
-                )
-            );
-            $attachments2 = get_posts($args);
-            $options = $this->get_isc_options();
-            if ((!empty($attachments) || !empty($attachments2)) && $options['warning_onesource_missing'] ) {
-            $missing_src = esc_url(admin_url('upload.php?page=isc_missing_sources_page'));
-            ?>
-                <div class="error"><p><?php printf(__('One or more attachments still have no source. See the <a href="%s">missing sources</a> list', 'image-source-control-isc'), $missing_src);?></p></div>
-            <?php
-            }
+                // save result in transient and don’t check for 24 hours
+                set_transient( 'isc-show-missing-sources-warning', $show_warning, DAY_IN_SECONDS );
         }
 
         /**
@@ -216,6 +236,16 @@ if (!class_exists('ISC_Admin')) {
             if (isset($attachment['isc_image_licence'])) {
                 update_post_meta($post['ID'], 'isc_image_licence', $attachment['isc_image_licence']);
             }
+            
+            // remove transient that shows the warning, if true, to re-check image source warning with next call to admin_notices()
+            $options = $this->get_isc_options();
+            if( isset( $options['warning_onesource_missing'] )
+                    && $options['warning_onesource_missing'] 
+                    && get_transient( 'isc-show-missing-sources-warning' ) ){
+                    
+                    delete_transient( 'isc-show-missing-sources-warning' );
+            };
+            
             return $post;
         }
 

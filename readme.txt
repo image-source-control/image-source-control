@@ -102,6 +102,11 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 
 == Changelog ==
 
+= untagged =
+
+* optimized query of missing-sources check
+* only check for missing sources when an image was uploaded or once every 24 hours
+
 = 1.9.2 =
 
 * prevent infinite loop for posts with automatic image source lists where images are not index yet
