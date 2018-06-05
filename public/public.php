@@ -76,8 +76,11 @@ if (!class_exists('ISC_Public')) {
                 /**
                  * split content where `isc_stop_overlay` is found to not display overlays starting there
                  */
-                $content_after = '';
-                list( $content, $content_after ) = explode('isc_stop_overlay', $content, 2);
+                if( strpos( $content, 'isc_stop_overlay' ) ){
+                    list( $content, $content_after )  = explode( 'isc_stop_overlay', $content, 2 );
+                } else {
+                    $content_after = '';
+                }
                 
                 /**
                  * removed [caption], because this check runs after the hook that interprets shortcodes

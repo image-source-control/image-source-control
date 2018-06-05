@@ -3,7 +3,7 @@ Contributors: webzunft
 Tags: image, images, picture, picture source, image source, mediathek, media, caption, copyright
 Requires at least: 3.5
 Tested up to: 4.9
-Stable tag: 1.9.3
+Stable tag: 1.9.4
 Requires PHP: 5.3
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -101,6 +101,10 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 1. added two new fields to media library
 
 == Changelog ==
+
+= 1.9.4 =
+
+* fixed index error
 
 = 1.9.3 =
 
