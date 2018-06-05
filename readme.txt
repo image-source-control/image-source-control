@@ -104,6 +104,7 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 
 = untagged =
 
+* prevent image source overlay on full image source list and below
 * optimized query of missing-sources check
 * only check for missing sources when an image was uploaded or once every 24 hours
 

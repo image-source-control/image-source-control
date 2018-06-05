@@ -74,6 +74,12 @@ if (!class_exists('ISC_Public')) {
             $options = $this->get_isc_options();
             if( isset($options['display_type']) && is_array($options['display_type']) && in_array('overlay', $options['display_type'] ) ) {
                 /**
+                 * split content where `isc_stop_overlay` is found to not display overlays starting there
+                 */
+                $content_after = '';
+                list( $content, $content_after ) = explode('isc_stop_overlay', $content, 2);
+                
+                /**
                  * removed [caption], because this check runs after the hook that interprets shortcodes
                  * img tag is checked individually since there is a different order of attributes when images are used in gallery or individually
                  * 
@@ -98,7 +104,7 @@ if (!class_exists('ISC_Public')) {
                  */
                 $pattern = '#(<[^>]*class="[^"]*(alignleft|alignright|alignnone|aligncenter).*)?((<a [^>]*(rel="[^"]*[^"]*wp-att-(\d+)"[^>]*)>)? *(<img [^>]*[^>]*src="(.+)".*\/?>).*(</a>)??[^<]*).*(<\/figure.*>)?#isU';
                 $count = preg_match_all($pattern, $content, $matches);
-
+                
                 // error_log(print_r($content, true)); error_log(print_r($matches, true));
                 if (false !== $count) {
                     for ($i=0; $i < $count; $i++) {
@@ -150,6 +156,11 @@ if (!class_exists('ISC_Public')) {
                     }
                 }
             }
+            
+            /**
+             * attach follow content back
+             */
+            $content = $content . 'ist_stop_overlay' . $content_after;
             
             // attach image source list to content, if option is enabled
             if ((isset($options['list_on_archives']) && $options['list_on_archives']) ||
@@ -439,8 +450,13 @@ if (!class_exists('ISC_Public')) {
             if (!is_array($atts) || $atts == array())
                 return;
             $options = $this->get_isc_options();
-            ?>
-            <div class="isc_all_image_list_box">
+            
+            /**
+             * added comment `isc_stop_overlay` as a class to the table to suppress overlays within it starting at that point
+             * todo: allow overlays to start again after the table
+             * 
+             */
+            ?><div class="isc_all_image_list_box isc_stop_overlay">
             <table>
                 <thead>
                     <?php if ($options['thumbnail_in_list']) : ?>
