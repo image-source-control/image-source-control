@@ -163,9 +163,7 @@ if (!class_exists('ISC_Public')) {
             /**
              * attach follow content back
              */
-            if( "" !== $content_after ){
-                    $content = $content . 'ist_stop_overlay' . $content_after;
-            }
+            $content = $content . $content_after;
             
             // attach image source list to content, if option is enabled
             if ((isset($options['list_on_archives']) && $options['list_on_archives']) ||
