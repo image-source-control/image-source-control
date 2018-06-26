@@ -158,12 +158,11 @@ if (!class_exists('ISC_Public')) {
                         
                     }
                 }
+                /**
+                 * attach follow content back
+                 */
+                $content = $content . $content_after;
             }
-            
-            /**
-             * attach follow content back
-             */
-            $content = $content . $content_after;
             
             // attach image source list to content, if option is enabled
             if ((isset($options['list_on_archives']) && $options['list_on_archives']) ||

@@ -102,6 +102,10 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 
 == Changelog ==
 
+= untagged =
+
+* fixed issue using [isc_list] without overlays
+
 = 1.9.5 =
 
 * removed additional output introduced in 1.9.3
