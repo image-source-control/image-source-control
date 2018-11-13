@@ -2,7 +2,7 @@
 Contributors: webzunft
 Tags: image, images, picture, picture source, image source, mediathek, media, caption, copyright
 Requires at least: 3.5
-Tested up to: 4.9
+Tested up to: 5.0
 Stable tag: 1.9.6
 Requires PHP: 5.3
 License: GPLv3 or later
