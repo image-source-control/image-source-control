@@ -22,6 +22,8 @@ Image Source Control (ISC) helps to prevent this situation.
 > I will definitely review them there.
 > https://github.com/webgilde/image-source-control
 
+For changes in WordPress 5.0 and the block editor see [this post](https://wordpress.org/support/topic/gutenberg-support-27/).
+
 **Image Sources Lists**
 
 You can choose between different image source list types:
