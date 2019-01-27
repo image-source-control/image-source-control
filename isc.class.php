@@ -420,7 +420,6 @@ class ISC_Class {
             $default['caption_position'] = 'top-left';
             $default['source_pretext'] = __('Source:', 'image-source-control-isc');
             $default['enable_licences'] = false;
-            $default['licences'] = __("CC BY 2.0|http://creativecommons.org/licenses/by/2.0/legalcode", 'image-source-control-isc');
             $default['licences'] = __("All Rights Reserved
 Public Domain Mark 1.0|https://creativecommons.org/publicdomain/mark/1.0/
 CC0 1.0 Universal|https://creativecommons.org/publicdomain/zero/1.0/
