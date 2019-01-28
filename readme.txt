@@ -104,6 +104,10 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 
 == Changelog ==
 
+= untagged =
+
+* extended list of copyright licenses
+
 = 1.9.6 =
 
 * fixed issue using [isc_list] without overlays
