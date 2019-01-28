@@ -652,6 +652,16 @@ if (!class_exists('ISC_Admin')) {
         {
             $options = $this->get_isc_options();
             $description = __('List of licences the author can choose for an image. Enter a licence per line and separate the name from the optional link with a pipe symbol (e.g. <em>CC BY 2.0|http://creativecommons.org/licenses/by/2.0/legalcode</em>).' ,'image-source-control-isc');
+            
+            // fall back to default if field is empty
+            if( empty( $options['licences'] ) ){
+                    // retrieve default options
+                    $default = ISC_Class::get_instance()->default_options();
+                    if( !empty( $default['licences'] ) ){
+                            $options['licences'] = $default['licences'];
+                    }
+            }
+            
             ?>
             <div id="licences">
                 <textarea name="isc_options[licences]"><?php echo $options['licences'] ?></textarea>

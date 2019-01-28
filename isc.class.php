@@ -400,27 +400,8 @@ class ISC_Class {
         */
         public function default_options()
         {
-            $default['display_type'] = array('list');
-            $default['list_on_archives'] = false;
-            $default['list_on_excerpts'] = false;
-            $default['image_list_headline'] = __('image sources', 'image-source-control-isc');
-            $default['exclude_own_images'] = false;
-            $default['use_authorname'] = true;
-            $default['by_author_text'] = __('Owned by the author', 'image-source-control-isc');
-            $default['installed'] = false;
-            $default['version'] = ISCVERSION;
-            $default['webgilde'] = false;
-            $default['thumbnail_in_list'] = false;
-            $default['thumbnail_size'] = 'thumbnail';
-            $default['thumbnail_width'] = 150;
-            $default['thumbnail_height'] = 150;
-            $default['warning_nosource'] = true;
-            $default['warning_onesource_missing'] = true;
-            $default['hide_list'] = false;
-            $default['caption_position'] = 'top-left';
-            $default['source_pretext'] = __('Source:', 'image-source-control-isc');
-            $default['enable_licences'] = false;
-            $default['licences'] = __("All Rights Reserved
+                
+                $licences = "All Rights Reserved
 Public Domain Mark 1.0|https://creativecommons.org/publicdomain/mark/1.0/
 CC0 1.0 Universal|https://creativecommons.org/publicdomain/zero/1.0/
 CC BY 4.0 International|https://creativecommons.org/licenses/by/4.0/
@@ -446,8 +427,29 @@ CC BY-SA 2.0 Generic|https://creativecommons.org/licenses/by-sa/2.0/
 CC BY-ND 2.0 Generic|https://creativecommons.org/licenses/by-nd/2.0/
 CC BY-NC 2.0 Generic|https://creativecommons.org/licenses/by-nc/2.0/
 CC BY-NC-SA 2.0 Generic|https://creativecommons.org/licenses/by-nc-sa/2.0/
-CC BY-NC-ND 2.0 Generic|https://creativecommons.org/licenses/by-nc-nd/2.0/
-", 'image-source-control-isc');
+CC BY-NC-ND 2.0 Generic|https://creativecommons.org/licenses/by-nc-nd/2.0/";
+                
+            $default['display_type'] = array('list');
+            $default['list_on_archives'] = false;
+            $default['list_on_excerpts'] = false;
+            $default['image_list_headline'] = __('image sources', 'image-source-control-isc');
+            $default['exclude_own_images'] = false;
+            $default['use_authorname'] = true;
+            $default['by_author_text'] = __('Owned by the author', 'image-source-control-isc');
+            $default['installed'] = false;
+            $default['version'] = ISCVERSION;
+            $default['webgilde'] = false;
+            $default['thumbnail_in_list'] = false;
+            $default['thumbnail_size'] = 'thumbnail';
+            $default['thumbnail_width'] = 150;
+            $default['thumbnail_height'] = 150;
+            $default['warning_nosource'] = true;
+            $default['warning_onesource_missing'] = true;
+            $default['hide_list'] = false;
+            $default['caption_position'] = 'top-left';
+            $default['source_pretext'] = __('Source:', 'image-source-control-isc');
+            $default['enable_licences'] = false;
+            $default['licences'] = apply_filters( 'isc-licences-list', $licences );
             return $default;
         }
 
