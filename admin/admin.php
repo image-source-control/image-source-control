@@ -21,9 +21,9 @@ if (!class_exists('ISC_Admin')) {
          * @since 1.7
          */
         public function __construct() {
-            
+
             parent::__construct();
-            
+
             register_activation_hook(ISCPATH . '../isc.php', array($this, 'activation'));
 
             // attachment field handling
@@ -55,7 +55,7 @@ if (!class_exists('ISC_Admin')) {
         */
         public function admin_notices()
         {
-            
+
                 // only check, if check-option was enabled
                 $options = $this->get_isc_options();
                 if( empty( $options['warning_onesource_missing'] ) ){
@@ -63,7 +63,7 @@ if (!class_exists('ISC_Admin')) {
                 };
 
                 $show_warning = get_transient( 'isc-show-missing-sources-warning' );
-                
+
                 // attachments without sources
                 if( ! $show_warning ){
                         $args = array(
@@ -85,7 +85,7 @@ if (!class_exists('ISC_Admin')) {
                             )
                         );
                         $attachments = get_posts($args);
-                        
+
                         if( !empty( $attachments ) ){
                                 $show_warning = true;
                         } else {
@@ -109,10 +109,10 @@ if (!class_exists('ISC_Admin')) {
                                 }
                         }
                 }
-                
+
                 if ( $show_warning ){
                         $missing_src = esc_url(admin_url('upload.php?page=isc_missing_sources_page'));
-                        ?><div class="error"><p><?php 
+                        ?><div class="error"><p><?php
                                 printf(__('One or more attachments still have no source. See the <a href="%s">missing sources</a> list', 'image-source-control-isc'), $missing_src);
                                 ?></p></div><?php
                 }
@@ -165,7 +165,7 @@ if (!class_exists('ISC_Admin')) {
          *
          * @since 1.0
          * @updated 1.1
-         * @updated 1.3.5 added field for licence
+         * @updated 1.3.5 added field for license
          * @updated 1.5 added field for url
 
          * @param arr $form_fields
@@ -199,8 +199,8 @@ if (!class_exists('ISC_Admin')) {
             $options = $this->get_isc_options();
             if($options['enable_licences'] && $licences = $this->licences_text_to_array($options['licences'])) {
                 $form_fields['isc_image_licence']['input'] = 'html';
-                $form_fields['isc_image_licence']['label'] = __('Image Licence', 'image-source-control-isc');
-                $form_fields['isc_image_licence']['helps'] = __('Choose the image licence.', 'image-source-control-isc');
+                $form_fields['isc_image_licence']['label'] = __('Image License', 'image-source-control-isc');
+                $form_fields['isc_image_licence']['helps'] = __('Choose the image license.', 'image-source-control-isc');
                 $html = '<select name="attachments['.$post->ID.'][isc_image_licence]" id="attachments['.$post->ID.'][isc_image_licence]">';
                     $html .= '<option value="">--</option>';
                 foreach($licences as $_licence_name => $_licence_data) {
@@ -236,16 +236,16 @@ if (!class_exists('ISC_Admin')) {
             if (isset($attachment['isc_image_licence'])) {
                 update_post_meta($post['ID'], 'isc_image_licence', $attachment['isc_image_licence']);
             }
-            
+
             // remove transient that shows the warning, if true, to re-check image source warning with next call to admin_notices()
             $options = $this->get_isc_options();
             if( isset( $options['warning_onesource_missing'] )
-                    && $options['warning_onesource_missing'] 
+                    && $options['warning_onesource_missing']
                     && get_transient( 'isc-show-missing-sources-warning' ) ){
-                    
+
                     delete_transient( 'isc-show-missing-sources-warning' );
             };
-            
+
             return $post;
         }
 
@@ -258,21 +258,21 @@ if (!class_exists('ISC_Admin')) {
         {
             // return, if save_post is called more than one time
             if ( did_action('save_post') !== 1
-                || ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) 
+                || ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE )
                 || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
                 return;
             }
-            
+
             /**
              * don’t save meta data for non-public post types, since those shouldn’t be visible in the frontend
              * ignore also attachment posts
              */
-            if ( ! isset( $_POST['post_type'] ) 
+            if ( ! isset( $_POST['post_type'] )
                     || ! in_array( $_POST['post_type'], get_post_types( array( 'public' => true ), 'names' ) ) // is the post type public
                     || 'attachment' == $_POST['post_type']) {
                 return;
             }
-            
+
             // check if this is a revision and if so, use parent post id
             if ($_id = wp_is_post_revision($post_id)) {
                 $post_id = $_id;
@@ -381,8 +381,8 @@ if (!class_exists('ISC_Admin')) {
             add_settings_field('thumbnail_height', __("Thumbnails max-height", 'image-source-control-isc'), array($this, 'renderfield_thumbnail_height'), 'isc_settings_page', 'isc_settings_section');
 
             // Licence settings group
-            add_settings_field('enable_licences', __("Enable licences", 'image-source-control-isc'), array($this, 'renderfield_enable_licences'), 'isc_settings_page', 'isc_settings_section');
-            add_settings_field('licences', __('List of licences', 'image-source-control-isc'), array($this, 'renderfield_licences'), 'isc_settings_page', 'isc_settings_section');
+            add_settings_field('enable_licences', __("Enable licenses", 'image-source-control-isc'), array($this, 'renderfield_enable_licences'), 'isc_settings_page', 'isc_settings_section');
+            add_settings_field('licences', __('List of licenses', 'image-source-control-isc'), array($this, 'renderfield_licences'), 'isc_settings_page', 'isc_settings_section');
 
             // Misc settings group
             add_settings_field('exclude_own_images', __('Exclude own images', 'image-source-control-isc'), array($this, 'renderfield_exclude_own_images'), 'isc_settings_page', 'isc_settings_section');
@@ -638,7 +638,7 @@ if (!class_exists('ISC_Admin')) {
         public function renderfield_enable_licences()
         {
             $options = $this->get_isc_options();
-            $description = __("Enable this to be able to add and display copyright/copyleft licences for your images and manage them in the field below.", 'image-source-control-isc');
+            $description = __("Enable this to be able to add and display copyright/copyleft licenses for your images and manage them in the field below.", 'image-source-control-isc');
 
             ?>
             <div id="enable-licences">
@@ -651,8 +651,8 @@ if (!class_exists('ISC_Admin')) {
         public function renderfield_licences()
         {
             $options = $this->get_isc_options();
-            $description = __('List of licences the author can choose for an image. Enter a licence per line and separate the name from the optional link with a pipe symbol (e.g. <em>CC BY 2.0|http://creativecommons.org/licenses/by/2.0/legalcode</em>).' ,'image-source-control-isc');
-            
+            $description = __('List of licenses the author can choose for an image. Enter a license per line and separate the name from the optional link with a pipe symbol (e.g. <em>CC BY 2.0|http://creativecommons.org/licenses/by/2.0/legalcode</em>).' ,'image-source-control-isc');
+
             // fall back to default if field is empty
             if( empty( $options['licences'] ) ){
                     // retrieve default options
@@ -661,7 +661,7 @@ if (!class_exists('ISC_Admin')) {
                             $options['licences'] = $default['licences'];
                     }
             }
-            
+
             ?>
             <div id="licences">
                 <textarea name="isc_options[licences]"><?php echo $options['licences'] ?></textarea>
@@ -728,7 +728,7 @@ if (!class_exists('ISC_Admin')) {
             </td></tr></tbody></table>
             </div><!-- .postbox -->
             <div class="postbox isc-setting-group">
-            <h3 class="setting-group-head"><?php _e('Licences settings', 'image-source-control-isc'); ?></h3>
+            <h3 class="setting-group-head"><?php _e('Licenses settings', 'image-source-control-isc'); ?></h3>
             <table class="form-table"><tbody><tr>
             <?php
         }
@@ -883,7 +883,7 @@ if (!class_exists('ISC_Admin')) {
         /**
         * Input validation function.
         * @param array $input values from the admin panel
-         * @updated 1.3.5 added licences fields
+         * @updated 1.3.5 added licenses fields
         */
         public function settings_validation($input)
         {
