@@ -2,8 +2,8 @@
 Contributors: webzunft
 Tags: image, images, picture, picture source, image source, mediathek, media, caption, copyright
 Requires at least: 3.5
-Tested up to: 5.0
-Stable tag: 1.9.6
+Tested up to: 5.1
+Stable tag: 1.9.7
 Requires PHP: 5.3
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -104,8 +104,9 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 
 == Changelog ==
 
-= untagged =
+= 1.9.7 =
 
+* changed `licence` string to `license` to match en_US language base
 * extended list of copyright licenses
 
 = 1.9.6 =
