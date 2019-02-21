@@ -48,7 +48,7 @@ You can choose between different image source list types:
 * lists images with missing sources in the backend
 * warnings, if image source is missing
 * link sources to any url
-* manage, display and link licences
+* manage, display and link licenses
 
 **Localization**
 

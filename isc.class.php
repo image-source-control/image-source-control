@@ -125,7 +125,7 @@ class ISC_Class {
         {
             // creates an infinite loop if not secured, see ISC_Public::list_post_attachments_with_sources()
             $content = apply_filters( 'the_content', $content );
-            
+
             /*$_image_urls = $this->_filter_src_attributes($_content);
             $_imgs = array();
 
@@ -136,7 +136,7 @@ class ISC_Class {
                     'src' => $_image_url
                 );
             }*/
-            
+
             $_imgs = $this->_filter_image_ids($content);
 
             // add thumbnail information
@@ -196,7 +196,7 @@ class ISC_Class {
 
             return $srcs;
         }
-        
+
         /**
          * filter image ids from text
 +        * @return array with image ids => image src uri-s
@@ -242,7 +242,7 @@ class ISC_Class {
                 }
 
                 return $srcs;
-        }        
+        }
 
         /**
          * get image by url accessing the database directly
@@ -266,7 +266,7 @@ class ISC_Class {
              *   additional query vars
              */
             $newurl = esc_url( preg_replace( "/(-e\d+){0,1}(-\d+x\d+){0,1}\.({$types})(.*)/i", '.${3}', $url ) );
-            
+
             // remove protocoll (http or https)
             $url = str_ireplace( array( 'http:', 'https:' ) , '', $url );
             $newurl = str_ireplace( array( 'http:', 'https:' ) , '', $newurl );
@@ -279,10 +279,10 @@ class ISC_Class {
                 "http:$newurl",
                 "https:$newurl"
             );
-            
+
             $query = apply_filters( 'isc_get_image_by_url_query', $raw_query, $newurl );
             $id = $wpdb->get_var($query);
-            
+
             return intval( $id );
         }
 
@@ -302,10 +302,10 @@ class ISC_Class {
 
             // add thumbnail information
             $thumb_id = get_post_thumbnail_id($post_id);
-            if ( !empty( $thumb_id )) { 
-                $image_ids[$thumb_id] = wp_get_attachment_url($thumb_id); 
+            if ( !empty( $thumb_id )) {
+                $image_ids[$thumb_id] = wp_get_attachment_url($thumb_id);
             }
-            
+
             // get urls from gallery images
             // this might not be needed, since the gallery shortcode might have run already, but just in case
             // only for php 5.3 and higher
@@ -400,7 +400,7 @@ class ISC_Class {
         */
         public function default_options()
         {
-                
+
                 $licences = "All Rights Reserved
 Public Domain Mark 1.0|https://creativecommons.org/publicdomain/mark/1.0/
 CC0 1.0 Universal|https://creativecommons.org/publicdomain/zero/1.0/
@@ -428,7 +428,7 @@ CC BY-ND 2.0 Generic|https://creativecommons.org/licenses/by-nd/2.0/
 CC BY-NC 2.0 Generic|https://creativecommons.org/licenses/by-nc/2.0/
 CC BY-NC-SA 2.0 Generic|https://creativecommons.org/licenses/by-nc-sa/2.0/
 CC BY-NC-ND 2.0 Generic|https://creativecommons.org/licenses/by-nc-nd/2.0/";
-                
+
             $default['display_type'] = array('list');
             $default['list_on_archives'] = false;
             $default['list_on_excerpts'] = false;
@@ -497,10 +497,10 @@ CC BY-NC-ND 2.0 Generic|https://creativecommons.org/licenses/by-nc-nd/2.0/";
         }
 
         /**
-         * transform the licences from the options textfield into an array
+         * transform the licenses from the options textfield into an array
          *
-         * @param string $licences text with licences
-         * @return array $new_licences array with licences and licence information
+         * @param string $licences text with licenses
+         * @return array $new_licences array with licenses and license information
          * @return false if no array created
          * @since 1.3.5
          */

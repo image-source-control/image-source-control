@@ -14,13 +14,13 @@ if (!class_exists('ISC_Public')) {
      * @todo move frontend-only functions from general class here
      */
     class ISC_Public extends ISC_Class {
-        
+
         public function __construct() {
             parent::__construct();
 
             add_action('wp_enqueue_scripts', array($this, 'front_scripts'));
             add_action('wp_head', array($this, 'front_head'));
-            
+
             /**
              * filters need to be above 10 in order to interpret also gallery shortcode
              */
@@ -69,7 +69,7 @@ if (!class_exists('ISC_Public')) {
          */
         public function content_filter($content)
         {
-            
+
             // display inline sources
             $options = $this->get_isc_options();
             if( isset($options['display_type']) && is_array($options['display_type']) && in_array('overlay', $options['display_type'] ) ) {
@@ -81,11 +81,11 @@ if (!class_exists('ISC_Public')) {
                 } else {
                     $content_after = '';
                 }
-                
+
                 /**
                  * removed [caption], because this check runs after the hook that interprets shortcodes
                  * img tag is checked individually since there is a different order of attributes when images are used in gallery or individually
-                 * 
+                 *
                  * 0 – full match
                  * 1 - <figure> if set
                  * 2 – alignment
@@ -97,55 +97,55 @@ if (!class_exists('ISC_Public')) {
                  * 8 – image URL
                  * 9 – (unused)
                  * 10 - </figure>
-                 * 
+                 *
                  * tested with:
                  * * with and without [caption]
                  * * with and without link attibute
-                 * 
+                 *
                  * potential issues:
                  * * line breaks in the code
                  */
                 $pattern = '#(<[^>]*class="[^"]*(alignleft|alignright|alignnone|aligncenter).*)?((<a [^>]*(rel="[^"]*[^"]*wp-att-(\d+)"[^>]*)>)? *(<img [^>]*[^>]*src="(.+)".*\/?>).*(</a>)??[^<]*).*(<\/figure.*>)?#isU';
                 $count = preg_match_all($pattern, $content, $matches);
-                
+
                 // error_log(print_r($content, true)); error_log(print_r($matches, true));
                 if (false !== $count) {
                     for ($i=0; $i < $count; $i++) {
-                        
+
                         /**
                          * interpret the image tag
-                         * 
+                         *
                          * we only need the ID if we don’t have it yet
                          * it can be retrieved from "wp-image-" class (single) or "aria-describedby="gallery-1-34" in gallery
                          */
                         $id = $matches[6][$i];
                         $img_tag = $matches[7][$i];
-                        
+
                         if( ! $id ){
                                 $success = preg_match('#wp-image-(\d+)|aria-describedby="gallery-1-(\d+)#is', $img_tag, $matches_id);
                                 if( $success ){
                                     $id = $matches_id[1] ? intval( $matches_id[1] ) : intval( $matches_id[2] );
                                 }
                         }
-                        
+
                         // if ID is still missing get image by URL
                         if( ! $id ){
                             $src = $matches[8][$i];
                             $id = $this->get_image_by_url($src);
                         }
-                        
+
                         // don’t show caption for own image if admin choose not to do so
                         if($options['exclude_own_images']){
                                 if(get_post_meta($id, 'isc_image_source_own', true)) {
                                         continue;
                                 }
                         }
-                        
+
                         // don’t display empty sources
                         if( !$source_string = $this->render_image_source_string( $id ) ) {
                                 continue;
                         }
-                        
+
                         // get any alignment from the original code
                         preg_match('#alignleft|alignright|alignnone|aligncenter#is', $matches[0][$i], $matches_align);
                         $alignment = isset( $matches_align[0] ) ? $matches_align[0] : '';
@@ -155,7 +155,7 @@ if (!class_exists('ISC_Public')) {
                         $new_content = str_replace('wp-image-' . $id, 'wp-image-' . $id . ' with-source', $old_content);
 
                         $content = str_replace($old_content, '<div id="isc_attachment_' . $id . '" class="isc-source ' . $alignment . '"> ' . $new_content . $source . '</div>', $content);
-                        
+
                     }
                 }
                 /**
@@ -163,10 +163,10 @@ if (!class_exists('ISC_Public')) {
                  */
                 $content = $content . $content_after;
             }
-            
+
             // attach image source list to content, if option is enabled
             if ((isset($options['list_on_archives']) && $options['list_on_archives']) ||
-                    (is_singular() && isset($options['display_type']) && is_array($options['display_type']) && in_array('list', $options['display_type']))) {                
+                    (is_singular() && isset($options['display_type']) && is_array($options['display_type']) && in_array('list', $options['display_type']))) {
                 $content = $content . $this->list_post_attachments_with_sources();
             }
 
@@ -217,20 +217,20 @@ if (!class_exists('ISC_Public')) {
                     return;
                 }
             }
-            
+
             $attachments = get_post_meta($post_id, 'isc_post_images', true);
 
             // if attachments is an empty string, search for images in it
             if ($attachments == '') {
                     // unregister our content filter in order to prevent infinite loops when calling the_content in the next steps
                     remove_filter( 'the_content', array( $this, 'content_filter' ), 20 );
-                    
+
                     $this->save_image_information_on_load();
                     $this->update_image_posts_meta($post_id, $post->post_content);
-                    
+
                     $attachments = get_post_meta($post_id, 'isc_post_images', true);
             }
-            
+
             $return = '';
             if (!empty($attachments)) {
                 $atts = array();
@@ -261,7 +261,7 @@ if (!class_exists('ISC_Public')) {
          *
          * @param array $attachments
          * @updated 1.3.5
-         * @updated 1.5 removed rendering the licence to an earlier function
+         * @updated 1.5 removed rendering the license to an earlier function
          */
         protected function render_attachments($attachments)
         {
@@ -452,11 +452,11 @@ if (!class_exists('ISC_Public')) {
             if (!is_array($atts) || $atts == array())
                 return;
             $options = $this->get_isc_options();
-            
+
             /**
              * added comment `isc_stop_overlay` as a class to the table to suppress overlays within it starting at that point
              * todo: allow overlays to start again after the table
-             * 
+             *
              */
             ?><div class="isc_all_image_list_box isc_stop_overlay">
             <table>
@@ -679,7 +679,7 @@ if (!class_exists('ISC_Public')) {
 
         /**
          * render source string of single image by its id
-         *  this only returns the string with source and licence (and urls),
+         *  this only returns the string with source and license (and urls),
          *  but no wrapping, because the string is used in a lot of functions
          *  (e.g. image source list where title is prepended)
          *
@@ -723,7 +723,7 @@ if (!class_exists('ISC_Public')) {
                 $source = sprintf('<a href="%2$s" target="_blank" rel="nofollow">%1$s</a>', $source, $metadata['source_url']);
             }
 
-            // add licence if enabled
+            // add license if enabled
             if($options['enable_licences'] && isset($metadata['licence']) && $metadata['licence']) {
                 $licences = $this->licences_text_to_array($options['licences']);
                 if(isset($licences[$metadata['licence']]['url'])) $licence_url = $licences[$metadata['licence']]['url'];
@@ -750,7 +750,7 @@ if (!class_exists('ISC_Public')) {
             if (empty($post->ID)) {
                 return;
             }
-            
+
             $post_id = $post->ID;
             $_content = $post->post_content;
 
