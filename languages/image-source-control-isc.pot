@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Image Source Control\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-04-14 16:50+0000\n"
+"POT-Creation-Date: 2019-02-21 09:34+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -14,174 +14,170 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Loco https://localise.biz/"
 
-#: isc.class.php:405
+#: isc.class.php:435
 msgid "image sources"
 msgstr ""
 
-#: isc.class.php:408
+#: isc.class.php:438
 msgid "Owned by the author"
 msgstr ""
 
-#: isc.class.php:420
+#: isc.class.php:450
 msgid "Source:"
 msgstr ""
 
-#: isc.class.php:422
-msgid "CC BY 2.0|http://creativecommons.org/licenses/by/2.0/legalcode"
-msgstr ""
-
-#: admin/admin.php:99
+#: admin/admin.php:116
 #, php-format
 msgid ""
 "One or more attachments still have no source. See the <a href=\"%s\">missing "
 "sources</a> list"
 msgstr ""
 
-#: admin/admin.php:135
+#: admin/admin.php:155
 msgid "Please specify the image source"
 msgstr ""
 
-#: admin/admin.php:158
+#: admin/admin.php:178
 msgid "Image Source"
 msgstr ""
 
-#: admin/admin.php:160
+#: admin/admin.php:180
 msgid "Include the image source here."
 msgstr ""
 
-#: admin/admin.php:166
+#: admin/admin.php:186
 msgid "Check this box if this is your own image and doesn't need a source."
 msgstr ""
 
-#: admin/admin.php:171
+#: admin/admin.php:191
 msgid "This is my image"
 msgstr ""
 
-#: admin/admin.php:174
+#: admin/admin.php:194
 msgid "Image Source URL"
 msgstr ""
 
-#: admin/admin.php:176
+#: admin/admin.php:196
 msgid "URL to link the source text to."
 msgstr ""
 
-#: admin/admin.php:182
-msgid "Image Licence"
+#: admin/admin.php:202
+msgid "Image License"
 msgstr ""
 
-#: admin/admin.php:183
-msgid "Choose the image licence."
+#: admin/admin.php:203
+msgid "Choose the image license."
 msgstr ""
 
-#: admin/admin.php:319
+#: admin/admin.php:348
 msgid "Missing Sources"
 msgstr ""
 
-#: admin/admin.php:320
+#: admin/admin.php:349
 msgid "Image control - ISC plugin"
 msgstr ""
 
-#: admin/admin.php:320
+#: admin/admin.php:349
 msgid "Image Sources"
 msgstr ""
 
-#: admin/admin.php:336
+#: admin/admin.php:365
 msgid "How to display sources"
 msgstr ""
 
-#: admin/admin.php:339
+#: admin/admin.php:368
 msgid "Sources below full posts"
 msgstr ""
 
-#: admin/admin.php:340
+#: admin/admin.php:369
 msgid "Sources below excerpts"
 msgstr ""
 
-#: admin/admin.php:343 admin/admin.php:520
+#: admin/admin.php:372 admin/admin.php:549
 msgid "Image list headline"
 msgstr ""
 
-#: admin/admin.php:346
+#: admin/admin.php:375
 msgid "Overlay pre-text"
 msgstr ""
 
-#: admin/admin.php:347
+#: admin/admin.php:376
 msgid "Overlay position"
 msgstr ""
 
-#: admin/admin.php:350
+#: admin/admin.php:379
 msgid "Use thumbnails in images list"
 msgstr ""
 
-#: admin/admin.php:351
+#: admin/admin.php:380
 msgid "Thumbnails max-width"
 msgstr ""
 
-#: admin/admin.php:352
+#: admin/admin.php:381
 msgid "Thumbnails max-height"
 msgstr ""
 
-#: admin/admin.php:355
-msgid "Enable licences"
+#: admin/admin.php:384
+msgid "Enable licenses"
 msgstr ""
 
-#: admin/admin.php:356
-msgid "List of licences"
+#: admin/admin.php:385
+msgid "List of licenses"
 msgstr ""
 
-#: admin/admin.php:359
+#: admin/admin.php:388
 msgid "Exclude own images"
 msgstr ""
 
-#: admin/admin.php:360
+#: admin/admin.php:389
 msgid "Use authors names"
 msgstr ""
 
-#: admin/admin.php:361
+#: admin/admin.php:390
 msgid "Custom text for owned images"
 msgstr ""
 
-#: admin/admin.php:362
+#: admin/admin.php:391
 msgid "Link to webgilde's website"
 msgstr ""
 
-#: admin/admin.php:363
+#: admin/admin.php:392
 msgid "Warning when there is at least one missing source"
 msgstr ""
 
-#: admin/admin.php:364
+#: admin/admin.php:393
 msgid "Warnings when source not available"
 msgstr ""
 
-#: admin/admin.php:413
+#: admin/admin.php:442
 msgid "Images control settings"
 msgstr ""
 
-#: admin/admin.php:417
+#: admin/admin.php:446
 msgid "How to display source in Frontend"
 msgstr ""
 
-#: admin/admin.php:453
+#: admin/admin.php:482
 msgid "Choose where to display image sources in the frontend"
 msgstr ""
 
-#: admin/admin.php:458
+#: admin/admin.php:487
 msgid "list below content"
 msgstr ""
 
-#: admin/admin.php:459
+#: admin/admin.php:488
 msgid "Displays a list of image sources below singular pages."
 msgstr ""
 
-#: admin/admin.php:462
+#: admin/admin.php:491
 msgid "overlay"
 msgstr ""
 
-#: admin/admin.php:463
+#: admin/admin.php:492
 msgid "Display image source as a simple overlay"
 msgstr ""
 
-#: admin/admin.php:465
+#: admin/admin.php:494
 msgid ""
 "If you don’t want to use any of these methods, you can still place the image "
 "source list manually as described <a href=\"http://webgilde.com/en/image-"
@@ -189,25 +185,25 @@ msgid ""
 "target=\"_blank\">here</a>"
 msgstr ""
 
-#: admin/admin.php:470
+#: admin/admin.php:499
 msgid "Archive Pages"
 msgstr ""
 
-#: admin/admin.php:486
+#: admin/admin.php:515
 msgid "Display sources list below full posts"
 msgstr ""
 
-#: admin/admin.php:487
+#: admin/admin.php:516
 msgid ""
 "Choose this option if you want to display the sources list attached to posts "
 "on archive and category pages that display the full content."
 msgstr ""
 
-#: admin/admin.php:503
+#: admin/admin.php:532
 msgid "Display sources list below excerpts"
 msgstr ""
 
-#: admin/admin.php:504
+#: admin/admin.php:533
 msgid ""
 "Choose this option if you want to display the source of the featured image "
 "below the post excerpt. The source will be attached to the excerpt and it "
@@ -215,147 +211,147 @@ msgid ""
 "the source manually in your template."
 msgstr ""
 
-#: admin/admin.php:509
+#: admin/admin.php:538
 msgid "List below content"
 msgstr ""
 
-#: admin/admin.php:517
+#: admin/admin.php:546
 msgid ""
 "The headline of the image list added via shortcode or function in your theme."
 msgstr ""
 
-#: admin/admin.php:527
+#: admin/admin.php:556
 msgid "Overlay"
 msgstr ""
 
-#: admin/admin.php:538
+#: admin/admin.php:567
 msgid "The text preceding the source."
 msgstr ""
 
-#: admin/admin.php:546
+#: admin/admin.php:575
 msgid "Position of overlay into images"
 msgstr ""
 
-#: admin/admin.php:559
+#: admin/admin.php:588
 msgid "Full images list"
 msgstr ""
 
-#: admin/admin.php:572
+#: admin/admin.php:601
 msgid ""
 "Exclude images marked as 'own image' from image lists (post and full) and "
 "overlay in the frontend. You can still manage them in the dashboard."
 msgstr ""
 
-#: admin/admin.php:576
+#: admin/admin.php:605
 msgid "Hide sources for own images"
 msgstr ""
 
-#: admin/admin.php:586
+#: admin/admin.php:615
 msgid ""
 "Display the author's public name as source when the image is owned by the "
 "author (the uploader of the image, not necessarily the author of the post "
 "the image is displayed on). Uncheck to use a custom text instead."
 msgstr ""
 
-#: admin/admin.php:590
+#: admin/admin.php:619
 msgid "Use author name"
 msgstr ""
 
-#: admin/admin.php:600
+#: admin/admin.php:629
 msgid ""
 "Enter the custom text to display if you do not want to use the author's "
 "public name."
 msgstr ""
 
-#: admin/admin.php:612
+#: admin/admin.php:641
 msgid ""
-"Enable this to be able to add and display copyright/copyleft licences for "
+"Enable this to be able to add and display copyright/copyleft licenses for "
 "your images and manage them in the field below."
 msgstr ""
 
-#: admin/admin.php:625
+#: admin/admin.php:654
 msgid ""
-"List of licences the author can choose for an image. Enter a licence per "
+"List of licenses the author can choose for an image. Enter a license per "
 "line and separate the name from the optional link with a pipe symbol (e.g. "
 "<em>CC BY 2.0|http://creativecommons.org/licenses/by/2.0/legalcode</em>)."
 msgstr ""
 
-#: admin/admin.php:634
+#: admin/admin.php:673
 msgid "Miscellaneous settings"
 msgstr ""
 
-#: admin/admin.php:642
+#: admin/admin.php:681
 #, php-format
 msgid ""
 "Display a link to <a href=\"%s\">Image Source Control plugin&#39;s "
 "website</a> below the list of all images in the blog?"
 msgstr ""
 
-#: admin/admin.php:654
+#: admin/admin.php:693
 msgid "Display thumbnails on the list of all images in the blog."
 msgstr ""
 
-#: admin/admin.php:671
+#: admin/admin.php:710
 msgid "Custom value of the maximum allowed width for thumbnail."
 msgstr ""
 
-#: admin/admin.php:683
+#: admin/admin.php:722
 msgid "Custom value of the maximum allowed height for thumbnail."
 msgstr ""
 
-#: admin/admin.php:692
-msgid "Licences settings"
+#: admin/admin.php:731
+msgid "Licenses settings"
 msgstr ""
 
-#: admin/admin.php:700
+#: admin/admin.php:739
 msgid ""
 "Warn and prevent data to be saved when an attachment is edited and the "
 "source has not been specified."
 msgstr ""
 
-#: admin/admin.php:712
+#: admin/admin.php:751
 msgid ""
 "Display an admin notice in admin pages when one or more image sources are "
 "missing."
 msgstr ""
 
-#: public/public.php:331
+#: public/public.php:330
 msgid "&#171; Previous"
 msgstr ""
 
-#: public/public.php:333
+#: public/public.php:332
 msgid "Next &#187;"
 msgstr ""
 
-#: public/public.php:390
+#: public/public.php:389
 #, php-format
 msgid "<li><a href=\"%1$s\" title=\"View %2$s\">%3$s</a></li>"
 msgstr ""
 
-#: public/public.php:437
+#: public/public.php:436
 #, php-format
 msgid ""
 "Image list created by <a href=\"%s\" title=\"Image Source Control\">Image "
 "Source Control Plugin</a>"
 msgstr ""
 
-#: public/public.php:461
+#: public/public.php:465
 msgid "Thumbnail"
 msgstr ""
 
-#: public/public.php:463
+#: public/public.php:467
 msgid "Attachment's ID"
 msgstr ""
 
-#: public/public.php:464
+#: public/public.php:468
 msgid "Title"
 msgstr ""
 
-#: public/public.php:465
+#: public/public.php:469
 msgid "Attached to"
 msgstr ""
 
-#: public/public.php:466
+#: public/public.php:470
 msgid "Source"
 msgstr ""
 
