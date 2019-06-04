@@ -172,7 +172,7 @@ var isc_withSourceControl = createHigherOrderComponent(function (BlockEdit) {
     var isFetching = (isc_image_source_fetching === true) ? true : null;
     //Extends the block by adding the source control fields.
     return React.createElement(Fragment, null, React.createElement(BlockEdit, props), React.createElement(InspectorControls, null, React.createElement(PanelBody, {
-      title: __('My Source Control'),
+      title: __('Image Source Control'),
       initialOpen: true,
     }, React.createElement(TextControl, {
       label: __('Image Source'),
