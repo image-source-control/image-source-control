@@ -62,3 +62,5 @@ if ( is_admin() ) {
 } else {
     new ISC_Class;
 }
+
+require_once ISCPATH . 'gutenberg/gutenberg.php';
