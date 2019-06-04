@@ -1,10 +1,10 @@
 === Image Source Control ===
 Contributors: webzunft
 Tags: image, images, picture, picture source, image source, mediathek, media, caption, copyright
-Requires at least: 3.5
-Tested up to: 5.1
-Stable tag: 1.9.7
-Requires PHP: 5.3
+Requires at least: 5.0
+Tested up to: 5.2
+Stable tag: 1.10
+Requires PHP: 5.6
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -21,8 +21,6 @@ Image Source Control (ISC) helps to prevent this situation.
 > I might not always be able to work on feature requests or fix buxes, but you can submit them to the github repository.
 > I will definitely review them there.
 > https://github.com/webgilde/image-source-control
-
-For changes in WordPress 5.0 and the block editor see [this post](https://wordpress.org/support/topic/gutenberg-support-27/).
 
 **Image Sources Lists**
 
@@ -43,7 +41,7 @@ You can choose between different image source list types:
 
 **Backend Features**
 
-* manage image source within media dashboard
+* manage image source within media dashboard and in the Image block settings
 * mark an image to belong to the uploader
 * lists images with missing sources in the backend
 * warnings, if image source is missing
@@ -97,12 +95,16 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 
 == Screenshots ==
 
+1. edit image source settings in the Image block
 1. display a list with all images of your site and their sources
 1. display image source within the image
 1. some of the settings to customize how to display image sources
-1. added two new fields to media library
 
 == Changelog ==
+
+= 1.10 =
+
+* added image source settings to Image block
 
 = 1.9.7 =
 
