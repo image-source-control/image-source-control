@@ -470,3 +470,27 @@ msgstr ""
 #. Author URI of the plugin
 msgid "https://webgilde.com/"
 msgstr ""
+
+#. Author URI of the plugin
+msgid "https://webgilde.com/"
+msgstr ""
+
+#. Label for Source Control Accordion on Gutenberg Sidebar
+msgid "Source Control"
+msgstr ""
+
+#. Label for Image Source Input on Gutenberg Sidebar
+msgid "Image Source"
+msgstr ""
+
+#. Label for Image Ownership Checkbox Input on Gutenberg Sidebar
+msgid "This is my image"
+msgstr ""
+
+#. Label for Image Source URL Input on Gutenberg Sidebar
+msgid "Image Source URL"
+msgstr ""
+
+#. Label for Image License Input on Gutenberg Sidebar
+msgid "Image License"
+msgstr ""
