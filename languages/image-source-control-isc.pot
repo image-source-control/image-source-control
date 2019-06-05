@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Image Source Control\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-02-21 09:34+0000\n"
+"POT-Creation-Date: 2019-06-05 11:35+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -469,28 +469,4 @@ msgstr ""
 
 #. Author URI of the plugin
 msgid "https://webgilde.com/"
-msgstr ""
-
-#. Author URI of the plugin
-msgid "https://webgilde.com/"
-msgstr ""
-
-#. Label for Source Control Accordion on Gutenberg Sidebar
-msgid "Source Control"
-msgstr ""
-
-#. Label for Image Source Input on Gutenberg Sidebar
-msgid "Image Source"
-msgstr ""
-
-#. Label for Image Ownership Checkbox Input on Gutenberg Sidebar
-msgid "This is my image"
-msgstr ""
-
-#. Label for Image Source URL Input on Gutenberg Sidebar
-msgid "Image Source URL"
-msgstr ""
-
-#. Label for Image License Input on Gutenberg Sidebar
-msgid "Image License"
 msgstr ""
