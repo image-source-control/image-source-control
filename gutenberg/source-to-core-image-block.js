@@ -172,10 +172,10 @@ var isc_withSourceControl = createHigherOrderComponent(function (BlockEdit) {
     var isFetching = (isc_image_source_fetching === true) ? true : null;
     //Extends the block by adding the source control fields.
     return React.createElement(Fragment, null, React.createElement(BlockEdit, props), React.createElement(InspectorControls, null, React.createElement(PanelBody, {
-      title: __('Image Source Control'),
+      title: __('Source Control', 'image-source-control-isc'),
       initialOpen: true,
     }, React.createElement(TextControl, {
-      label: __('Image Source'),
+      label: __('Image Source', 'image-source-control-isc'),
       disabled: isFetching,
       value: isc_image_source,
       placeholder: 'Some explanation text...',
@@ -194,7 +194,7 @@ var isc_withSourceControl = createHigherOrderComponent(function (BlockEdit) {
         });
       }
     }), React.createElement(CheckboxControl, {
-      label: "This is my image",
+      label: __('This is my image', 'image-source-control-isc'),
       disabled: isFetching,
       checked: isc_image_source_own,
       onChange: function onChange(isc_image_source_own) {
@@ -205,7 +205,7 @@ var isc_withSourceControl = createHigherOrderComponent(function (BlockEdit) {
         isc_update_meta_field(id, 'isc_image_source_own', isc_image_source_own | 0, props.setAttributes);
       }
     }), React.createElement(TextControl, {
-      label: __('Image Source URL'),
+      label: __('Image Source URL', 'image-source-control-isc'),
       disabled: isFetching,
       value: isc_image_source_url,
       placeholder: 'Some explanation text...',
@@ -225,7 +225,7 @@ var isc_withSourceControl = createHigherOrderComponent(function (BlockEdit) {
       }
     }),
     React.createElement(SelectControl, {
-      label: __('Image License'),
+      label: __('Image License', 'image-source-control-isc'),
       disabled: isFetching,
       value: isc_image_licence,
       onChange: function onChange(isc_image_licence) {
