@@ -36,6 +36,7 @@ var isc_update_meta_field = function(id, field, value, setAttributes) {
     headers: {
       'Accept': 'application/json, text/plain, */*',
       'Content-Type': 'application/json',
+      'Cache-Control': 'no-cache',
       'X-WP-Nonce': wpApiSettings.nonce
     },
     body: JSON.stringify(opts)
@@ -126,6 +127,7 @@ var isc_withSourceControl = createHigherOrderComponent(function (BlockEdit) {
       });
       fetch('/wp-json/wp/v2/media/'+id, {
         headers: {
+          'Cache-Control': 'no-cache',
           'X-WP-Nonce': wpApiSettings.nonce
         }
       })
@@ -186,6 +188,7 @@ var isc_withSourceControl = createHigherOrderComponent(function (BlockEdit) {
         });
       },
       onBlur: (e) => {
+        if(props.attributes.isc_image_source_done) return;
         var text = e.target.value;
         isc_update_meta_field(id, 'isc_image_source', text, props.setAttributes);
         props.setAttributes({
@@ -216,6 +219,7 @@ var isc_withSourceControl = createHigherOrderComponent(function (BlockEdit) {
         });
       },
       onBlur: (e) => {
+        if(props.attributes.isc_image_source_done) return;
         var text = e.target.value;
         isc_update_meta_field(id, 'isc_image_source_url', text, props.setAttributes);
         props.setAttributes({
