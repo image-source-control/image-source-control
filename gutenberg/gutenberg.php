@@ -24,7 +24,7 @@ function isc_addSourceToCoreImageBlock() {
   wp_enqueue_script(
     'source-to-core-image-block',
     plugin_dir_url(__FILE__) . 'source-to-core-image-block.js',
-    array('wp-api', 'lodash', 'wp-blocks', 'wp-editor', 'wp-element', 'wp-i18n',),
+    array('jquery', 'wp-api', 'lodash', 'wp-blocks', 'wp-editor', 'wp-element', 'wp-i18n',),
     true
   );
 

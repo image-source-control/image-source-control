@@ -16,36 +16,39 @@ var isc_enableSourceControlOnBlocks = [
     'core/image',
 ];
 
-
 var isc_refresh = [];
-var isc_forceRefresh = function(id) {
-  if(isc_refresh.indexOf(id) === -1) {
-    isc_refresh.push(id);
-  }
-}
 var isc_disableRefresh = function(id) {
-  var index = isc_refresh.indexOf(id);
-  isc_refresh.splice(index, 1);
+  if(isc_refresh.indexOf(id) > -1) {
+    isc_refresh.splice(isc_refresh.indexOf(id), 1);
+  }
 }
 
 var isc_update_meta_field = function(id, field, value, setAttributes) {
   var opts = {};
   opts[field] = value;
-  fetch( '/wp-json/wp/v2/media/'+id , {
-    method: 'post',
-    headers: {
-      'Accept': 'application/json, text/plain, */*',
-      'Content-Type': 'application/json',
-      'Cache-Control': 'no-cache',
-      'X-WP-Nonce': wpApiSettings.nonce
-    },
-    body: JSON.stringify(opts)
-  })
-  .then(res=>{ setAttributes({isc_image_source_fetching: false}); })
-  .catch(function() {
-    setAttributes({isc_image_source_fetching: false});
-    //TODO: Handle errors.
-  });
+  jQuery.ajax({
+   url: '/wp-json/wp/v2/media/'+id,
+   type: 'POST',
+   headers: {
+     'Cache-Control': 'no-cache',
+     'X-WP-Nonce': wpApiSettings.nonce
+   },
+   cache: false,
+   contentType: "application/json",
+   dataType: 'json',
+   data: JSON.stringify(opts),
+   success: function(data, textStatus, jqXHR){
+     //Nothing really...
+   },
+   error: function(jqXHR, textStatus, errorThrown) {
+     //TODO: Handle errors
+   },
+   complete: function(jqXHR, textStatus) {
+     setAttributes({isc_fetching: false});
+   }
+ });
+
+
 }
 
 var isc_addSourceControlAttribute = function( settings, name ) {
@@ -75,11 +78,11 @@ var isc_addSourceControlAttribute = function( settings, name ) {
 			type: 'boolean',
 			default: true,
 		},
-    isc_image_source_must_refresh: {
+    isc_force_first_time_refresh: {
 			type: 'boolean',
 			default: true,
 		},
-    isc_image_source_fetching: {
+    isc_fetching: {
 			type: 'boolean',
 			default: false,
 		}
@@ -102,76 +105,61 @@ var isc_withSourceControl = createHigherOrderComponent(function (BlockEdit) {
       return React.createElement(BlockEdit, props);
     }
 
-    props.setAttributes({
-      isc_image_source_must_refresh: (isc_refresh.indexOf(props.attributes.id) > -1) ? true : false
-    });
-
     var isc_image_source = props.attributes.isc_image_source;
     var isc_image_source_own = props.attributes.isc_image_source_own;
     var isc_image_source_url = props.attributes.isc_image_source_url;
     var isc_image_licence = props.attributes.isc_image_licence;
     var id = props.attributes.id;
     var isc_image_source_done = props.attributes.isc_image_source_done;
-    var isc_image_source_must_refresh = props.attributes.isc_image_source_must_refresh;
-    var isc_image_source_fetching = props.attributes.isc_image_source_fetching;
+    var isc_force_first_time_refresh = props.attributes.isc_force_first_time_refresh;
+    var isc_fetching = props.attributes.isc_fetching;
 
     //Add source control class to the node, in case a source is set.
     if (isc_image_source && isc_image_source.trim() !== '' && isc_image_source.trim() !== isc_loading_text) {
-      props.attributes.className = "has-source-control";
+      props.attributes.className = 'isc-has-source-control-'+id;
     }
 
     //If the data has not been fetched, fetch it using the endpoints we defined in gutenberg.php
-    if(isc_image_source_done && isc_image_source_must_refresh && !isc_image_source_fetching) {
-      props.setAttributes({
-        isc_image_source_fetching: true
-      });
-      fetch('/wp-json/wp/v2/media/'+id, {
-        headers: {
-          'Cache-Control': 'no-cache',
-          'X-WP-Nonce': wpApiSettings.nonce
-        }
-      })
-      .then((response) => response.json())
-      .then(function(data) {
+    //We are encapsulating this on a setTimeout to lower its dispatching priorirty.
+    setTimeout(function() {
+      var forceRefresh = (isc_refresh.indexOf(props.attributes.id) > -1 || isc_force_first_time_refresh);
+      if(isc_image_source_done && forceRefresh && !isc_fetching) {
         props.setAttributes({
-          isc_image_source: data.isc_image_source,
-          isc_image_source_own: (data.isc_image_source_own == '1') ? true : false,
-          isc_image_source_url: data.isc_image_source_url,
-          isc_image_licence: data.isc_image_licence,
-          isc_image_source_must_refresh: false,
-          isc_image_source_fetching: false
+          isc_fetching: true
         });
-        isc_disableRefresh(id);
-      })
-      .catch(function() {
-        props.setAttributes({
-          isc_image_source_fetching: false
-        });
-        //TODO: Handle errors.
-      });
-    }
-
-    //This is using native backbone client, however, it does not support catching errors:
-    /*
-    if(isc_image_source_done) {
-      wp.api.loadPromise.done( function() {
-        window.media = new wp.api.models.Media({id: id });
-        window.media.fetch()
-        .then(function(response) {
-          props.setAttributes({
-            isc_image_source: response.isc_image_source,
-            isc_image_source_own: (response.isc_image_source_own == '1') ? true : false,
-            isc_image_source_url: response.isc_image_source_url
-          });
-        });
-      });
-    }
-    */
-
-    BlockEdit.onClick = isc_forceRefresh(id);
+        jQuery.ajax({
+         url: '/wp-json/wp/v2/media/'+id,
+         headers: {
+           'Cache-Control': 'no-cache',
+           'X-WP-Nonce': wpApiSettings.nonce
+         },
+         cache: false,
+         contentType: "application/json",
+         dataType: 'json',
+         success: function(data, textStatus, jqXHR){
+           props.setAttributes({
+             isc_image_source: data.isc_image_source,
+             isc_image_source_own: (data.isc_image_source_own == '1') ? true : false,
+             isc_image_source_url: data.isc_image_source_url,
+             isc_image_licence: data.isc_image_licence,
+             isc_force_first_time_refresh: false,
+           });
+           isc_disableRefresh(id);
+         },
+         error: function(jqXHR, textStatus, errorThrown) {
+           //TODO: Handle errors
+         },
+         complete: function(jqXHR, textStatus) {
+           props.setAttributes({
+             isc_fetching: false
+           });
+         }
+       });
+      }
+    }, 100);
 
     var enable_licences = (isc_options.length > 0) ? {} : { display: 'none' };
-    var isFetching = (isc_image_source_fetching === true) ? true : null;
+    var isFetching = (isc_fetching === true) ? true : null;
     //Extends the block by adding the source control fields.
     return React.createElement(Fragment, null, React.createElement(BlockEdit, props), React.createElement(InspectorControls, null, React.createElement(PanelBody, {
       title: __('Image Source Control', 'image-source-control-isc'),
@@ -193,7 +181,7 @@ var isc_withSourceControl = createHigherOrderComponent(function (BlockEdit) {
         isc_update_meta_field(id, 'isc_image_source', text, props.setAttributes);
         props.setAttributes({
           isc_image_source_done: true,
-          isc_image_source_fetching: true
+          isc_fetching: true
         });
       }
     }), React.createElement(CheckboxControl, {
@@ -203,7 +191,7 @@ var isc_withSourceControl = createHigherOrderComponent(function (BlockEdit) {
       onChange: function onChange(isc_image_source_own) {
         props.setAttributes({
           isc_image_source_own: isc_image_source_own,
-          isc_image_source_fetching: true
+          isc_fetching: true
         });
         isc_update_meta_field(id, 'isc_image_source_own', isc_image_source_own | 0, props.setAttributes);
       }
@@ -224,7 +212,7 @@ var isc_withSourceControl = createHigherOrderComponent(function (BlockEdit) {
         isc_update_meta_field(id, 'isc_image_source_url', text, props.setAttributes);
         props.setAttributes({
           isc_image_source_done: true,
-          isc_image_source_fetching: true
+          isc_fetching: true
         });
       }
     }),
@@ -236,7 +224,7 @@ var isc_withSourceControl = createHigherOrderComponent(function (BlockEdit) {
         isc_update_meta_field(id, 'isc_image_licence', isc_image_licence, props.setAttributes);
         props.setAttributes({
           isc_image_licence: isc_image_licence,
-          isc_image_source_fetching: true
+          isc_fetching: true
         });
       },
       options: isc_options,
@@ -247,3 +235,13 @@ var isc_withSourceControl = createHigherOrderComponent(function (BlockEdit) {
 }, 'isc_withSourceControl');
 
 addFilter( 'editor.BlockEdit', 'image-source-control/editor', isc_withSourceControl );
+
+//Force Source Control Refresh when Clicking over a CORE/Image Block.
+jQuery(document).ready(function() {
+  $('#editor').on('click', '[class*="isc-has-source-control-"]', function() {
+    var isClass = jQuery(this).attr('class').match(/isc-has-source-control-[0-9]*/g)[0];
+    var imageID = parseInt(isClass.split('-')[isClass.split('-').length-1]);
+    var index = isc_refresh.indexOf(imageID);
+    if(index === -1) isc_refresh.push(imageID);
+  });
+});
