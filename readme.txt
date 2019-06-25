@@ -102,6 +102,10 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 
 == Changelog ==
 
+= untagged =
+
+* fix for block translations
+
 = 1.10 =
 
 * added image source settings to Image block
