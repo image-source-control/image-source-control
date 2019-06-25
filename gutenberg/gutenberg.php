@@ -39,7 +39,7 @@ function isc_addSourceToCoreImageBlock() {
   }
   wp_localize_script('source-to-core-image-block', 'isc_options', $licenses_js_array );
   if(function_exists('wp_set_script_translations')) {
-    wp_set_script_translations('image-source-control-isc', 'image-source-control-isc');
+    wp_set_script_translations('source-to-core-image-block', 'image-source-control-isc', ISCPATH . 'languages');
   }
 }
 
