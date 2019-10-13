@@ -115,9 +115,9 @@ var isc_withSourceControl = createHigherOrderComponent(function (BlockEdit) {
     var isc_fetching = props.attributes.isc_fetching;
 
     //Add source control class to the node, in case a source is set.
-    if (isc_image_source && isc_image_source.trim() !== '' && isc_image_source.trim() !== isc_loading_text) {
-      props.attributes.className = 'isc-has-source-control-'+id;
-    }
+    // if (isc_image_source && isc_image_source.trim() !== '' && isc_image_source.trim() !== isc_loading_text) {
+    //   props.attributes.className = 'isc-has-source-control-'+id;
+    // }
 
     //If the data has not been fetched, fetch it using the endpoints we defined in gutenberg.php
     //We are encapsulating this on a setTimeout to lower its dispatching priorirty.
