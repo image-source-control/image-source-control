@@ -3,7 +3,7 @@ Contributors: webzunft
 Tags: image, images, picture, picture source, image source, mediathek, media, caption, copyright
 Requires at least: 5.0
 Tested up to: 5.2
-Stable tag: 1.10.1
+Stable tag: 1.10.2
 Requires PHP: 5.6
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -101,6 +101,10 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 1. some of the settings to customize how to display image sources
 
 == Changelog ==
+
+= 1.10.2 =
+
+* removed CSS class which was set automatically in the image block
 
 = 1.10.1 =
 
