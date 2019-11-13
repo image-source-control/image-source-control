@@ -102,6 +102,10 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 
 == Changelog ==
 
+= untagged =
+
+* fixed minor JavaScript bug in block editor
+
 = 1.10.2 =
 
 * removed CSS class which was set automatically in the image block
