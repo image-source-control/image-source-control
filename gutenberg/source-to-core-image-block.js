@@ -238,7 +238,7 @@ addFilter( 'editor.BlockEdit', 'image-source-control/editor', isc_withSourceCont
 
 //Force Source Control Refresh when Clicking over a CORE/Image Block.
 jQuery(document).ready(function() {
-  $('#editor').on('click', '[class*="isc-has-source-control-"]', function() {
+  jQuery('#editor').on('click', '[class*="isc-has-source-control-"]', function() {
     var isClass = jQuery(this).attr('class').match(/isc-has-source-control-[0-9]*/g)[0];
     var imageID = parseInt(isClass.split('-')[isClass.split('-').length-1]);
     var index = isc_refresh.indexOf(imageID);
