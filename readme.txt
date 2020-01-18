@@ -58,11 +58,11 @@ Also have a look at the [image source control website](http://webgilde.com/en/im
 
 Find a list of images with missing sources under _Media > Missing sources_
 
-**automatic image sources**
+**Automatic image sources**
 
 You can choose to display image sources automatically below the post content or as a small overlay above your images. Just visit the settings page of the plugin to enable those options.
 
-**manually included image sources on pages/posts**
+**Manually included image sources on pages/posts**
 
 You can add the image source list manually to pages or post via the shortcode `[isc_list]` in your content editor. You can use `[isc_list id="123]` to show the list of any post or page.
 
@@ -71,9 +71,13 @@ You can also add the list with the function `isc_list()` within the loop in your
 You should also check first if the function exists before using it:
 `<?php if( function_exists('isc_list') ) { isc_list(); } ?>`
 
-**list all image sources**
+**List all image sources**
 
-You can add a paginated list with ALL attachments and sources to a post or page using the shortcode `[isc_list_all]`. Use `[isc_list_all per_page="25"]` to show only a limited number of images per page.
+You can add a paginated list with ALL attachments and sources attached to posts and pages using the shortcode `[isc_list_all]`.
+
+Use `[isc_list_all per_page="25"]` to show only a limited number of images per page.
+
+Use `[isc_list_all included="all"]` to show all attachments in the list, including those not explicitly attached to a post.
 
 The plugin searches your post content and thumbnail for images (attachments) and lists them, if you included at least the image source or marked it as your own image.
 
