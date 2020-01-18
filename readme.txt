@@ -35,8 +35,8 @@ You can choose between different image source list types:
 * display sources for images in content, galleries, shortcodes and featured images
 * show image source directly in the image (not working with all images and themes)
 * include a list with all images and their sources of the current page/post
-* include a list with all images and their sources with all images or only those included in posts
-* attach lists be the content automatically or using shortcodes or template functions
+* include a list with all images and their sources of the whole website
+* attach lists below the content automatically or using shortcodes or template functions
 * display image sources on archive pages
 
 **Backend Features**
