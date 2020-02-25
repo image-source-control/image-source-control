@@ -106,6 +106,10 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 
 == Changelog ==
 
+= untagged =
+
+* fixed block editor files being loaded in the frontend
+
 = 1.10.3 =
 
 * fixed JavaScript bug in block editor with WordPress 5.3
