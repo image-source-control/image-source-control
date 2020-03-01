@@ -96,6 +96,6 @@ function slug_update_attachment_meta($value, $object, $field_name ) {
   return update_post_meta($object->ID, $field_name, $value);
 }
 
-add_action('init', function() { wp_enqueue_script( 'wp-api' ); });
+// add_action('init', function() { wp_enqueue_script( 'wp-api' ); });
 add_action('rest_api_init', 'isc_register_api_fields');
 add_action('enqueue_block_editor_assets', 'isc_addSourceToCoreImageBlock');
