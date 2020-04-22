@@ -63,4 +63,6 @@ if ( is_admin() ) {
     new ISC_Class;
 }
 
-require_once ISCPATH . 'gutenberg/gutenberg.php';
+if ( ! class_exists( 'Isc_Gutenberg' ) ) {
+	require_once ISCPATH . 'gutenberg/gutenberg.php';
+}

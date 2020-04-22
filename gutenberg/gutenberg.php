@@ -1,101 +1,75 @@
 <?php
+/**
+ * Integration with Gutenberg
+ */
 
-function isc_licences_text_to_array($licences = '') {
-  if($licences == '') return false;
-  // split the text by line
-  $licences_array = preg_split('/\r?\n/', trim($licences));
-  if(count($licences_array) == 0 ) return false;
-  // create the array with licence => url
-  $new_licences = array();
-  foreach($licences_array as $_licence) {
-      if(trim($_licence) != '') {
-          $temp = explode('|', $_licence);
-          $new_licences[$temp[0]] = array();
-          if( isset($temp[1]))
-              $new_licences[$temp[0]]['url'] = esc_url ($temp[1]);
-      }
-  }
-
-  if($new_licences == array()) return false;
-  else return $new_licences;
+class Isc_Gutenberg{
+	
+	/**
+	 * Construct an instance of Isc_Gutenberg
+	 */
+	public function __construct() {
+		if ( !function_exists( 'register_block_type' ) ) {
+			return;
+		}
+		add_action( 'enqueue_block_editor_assets', array( $this, 'editor_assets' ) );
+		add_action( 'wp_ajax_isc_save_meta', array( $this, 'save_meta' ) );
+	}
+	
+	public function save_meta() {
+		$_post = wp_unslash( $_POST );
+		if ( isset( $_post['nonce'] ) && false !== wp_verify_nonce( $_post['nonce'], 'isc-gutenberg-nonce' ) ) {
+			if ( current_user_can( 'edit_posts' ) ) {
+				update_post_meta( absint( $_post['id'] ), $_post['key'], $_post['value'] );
+				wp_send_json( $_post );
+			}
+		}
+		die;
+	}
+	
+	/**
+	 * Enqueue JS file
+	 */
+	public function editor_assets() {
+		
+		wp_register_script(
+			'isc/image-block',
+			plugin_dir_url( __FILE__ ) . 'isc-image-block.js',
+			array( 'jquery', 'wp-api', 'lodash', 'wp-blocks', 'wp-editor', 'wp-element', 'wp-i18n', ),
+			true
+		);
+		
+		global $wpdb;
+		$table = $wpdb->prefix . 'postmeta';
+		$query = "SELECT * FROM $table WHERE `meta_key` LIKE '%isc_image%'";
+		
+		$results = $wpdb->get_results( $query, 'ARRAY_A' );
+		
+		$metas = array();
+		
+		foreach( $results as $meta ) {
+			if ( 'isc_image_posts' == $meta['meta_key'] ) {
+				continue;
+			}
+			if ( ! isset( $metas[ $meta['post_id'] ] ) ) {
+				$metas[ $meta['post_id'] ] = array();
+			}
+			$metas[ $meta['post_id'] ][ $meta['meta_key'] ] = ( 'isc_image_source_own' != $meta['meta_key'] )? $meta['meta_value'] : (bool)$meta['meta_value'];
+		}
+		
+		$plugin_options = ISC_Class::get_instance()->get_isc_options();
+		
+		$isc_data = array(
+			'option' => $plugin_options,
+			'postmeta' => $metas,
+			'nonce' => wp_create_nonce( 'isc-gutenberg-nonce' ),
+		);
+		
+		wp_add_inline_script( 'isc/image-block', 'var iscData = ' . wp_json_encode( $isc_data ) . ';', 'before' );
+		
+		wp_enqueue_script( 'isc/image-block' );
+	}
+	
 }
+new Isc_Gutenberg();
 
-function isc_addSourceToCoreImageBlock() {
-  wp_enqueue_script(
-    'source-to-core-image-block',
-    plugin_dir_url(__FILE__) . 'source-to-core-image-block.js',
-    array('jquery', 'wp-api', 'lodash', 'wp-blocks', 'wp-editor', 'wp-element', 'wp-i18n',),
-    true
-  );
-
-  //Reading the options and making them avaialable for our Gutenberg block
-  $options = get_option('isc_options');
-  $licenses_js_array = array();
-  if($options['enable_licences'] && $licences = isc_licences_text_to_array($options['licences'])) {
-    $licenses_js_array[] = array('value' => '', 'label' => '--');
-    foreach($licences as $_licence_name => $_licence_data) {
-      $licenses_js_array[] = array('value' => $_licence_name, 'label' => $_licence_name);
-    }
-  }
-  wp_localize_script('source-to-core-image-block', 'isc_options', $licenses_js_array );
-  if(function_exists('wp_set_script_translations')) {
-    wp_set_script_translations('source-to-core-image-block', 'image-source-control-isc', ISCPATH . 'languages');
-  }
-}
-
-//Making our custom meta fields available to wp rest api.
-function isc_register_api_fields() {
- register_rest_field( 'attachment', 'isc_image_source',
-    array(
-      'get_callback'    => 'isc_get_attachment_meta',
-      'update_callback' => 'slug_update_attachment_meta',
-      'schema'          => null,
-      'auth_callback' => function(){
-        return current_user_can('edit_posts');
-       }
-    )
- );
- register_rest_field( 'attachment', 'isc_image_source_own',
-    array(
-       'get_callback'    => 'isc_get_attachment_meta',
-       'update_callback' => 'slug_update_attachment_meta',
-       'schema'          => null,
-       'auth_callback' => function(){
-         return current_user_can('edit_posts');
-        }
-    )
- );
- register_rest_field( 'attachment', 'isc_image_source_url',
-    array(
-       'get_callback'    => 'isc_get_attachment_meta',
-       'update_callback' => 'slug_update_attachment_meta',
-       'schema'          => null,
-       'auth_callback' => function(){
-         return current_user_can('edit_posts');
-        }
-    )
- );
- register_rest_field( 'attachment', 'isc_image_licence',
-    array(
-       'get_callback'    => 'isc_get_attachment_meta',
-       'update_callback' => 'slug_update_attachment_meta',
-       'schema'          => null,
-       'auth_callback' => function(){
-         return current_user_can('edit_posts');
-        }
-    )
- );
-}
-
-//Function to get a meta field, otherwise it will return a null value
-function isc_get_attachment_meta($object, $field_name, $request) {
-  return get_post_meta($object['id'], $field_name, true);
-}
-//Function to get a meta field, otherwise it becomes read only.
-function slug_update_attachment_meta($value, $object, $field_name ) {
-  return update_post_meta($object->ID, $field_name, $value);
-}
-
-// add_action('init', function() { wp_enqueue_script( 'wp-api' ); });
-add_action('rest_api_init', 'isc_register_api_fields');
-add_action('enqueue_block_editor_assets', 'isc_addSourceToCoreImageBlock');
