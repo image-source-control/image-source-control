@@ -28,7 +28,7 @@ class Isc_Gutenberg{
 	}
 	
 	/**
-	 * Enqueue JS file
+	 * Enqueue JS file and print all needed JS variables
 	 */
 	public function editor_assets() {
 		
@@ -39,14 +39,16 @@ class Isc_Gutenberg{
 			true
 		);
 		
+		// Gather all info about images with any of the source data.
 		global $wpdb;
 		$table = $wpdb->prefix . 'postmeta';
-		$query = "SELECT * FROM $table WHERE `meta_key` LIKE '%isc_image%'";
+		$query = "SELECT * FROM $table WHERE `meta_key` LIKE %s";
 		
-		$results = $wpdb->get_results( $query, 'ARRAY_A' );
+		$results = $wpdb->get_results( $wpdb->prepare( $query, '%isc_image%' ), 'ARRAY_A' );
 		
 		$metas = array();
 		
+		// Group all the results in an associative array with the image ID as array keys.
 		foreach( $results as $meta ) {
 			if ( 'isc_image_posts' == $meta['meta_key'] ) {
 				continue;
@@ -65,6 +67,7 @@ class Isc_Gutenberg{
 			'nonce' => wp_create_nonce( 'isc-gutenberg-nonce' ),
 		);
 		
+		// Add all our data as a variable in an inline script.
 		wp_add_inline_script( 'isc/image-block', 'var iscData = ' . wp_json_encode( $isc_data ) . ';', 'before' );
 		
 		wp_enqueue_script( 'isc/image-block' );
@@ -72,4 +75,3 @@ class Isc_Gutenberg{
 	
 }
 new Isc_Gutenberg();
-
