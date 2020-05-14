@@ -148,7 +148,7 @@
 							props.setAttributes({
 								isc_image_source_own: newValue
 							});
-							var metaValue = newValue ? '1' : '0';
+							var metaValue = newValue ? '1' : '';
 							isc_update_meta_field(id, 'isc_image_source_own', metaValue, props.setAttributes);
 							props.setAttributes({
 								isc_doing_ajax: true,
