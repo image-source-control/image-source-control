@@ -165,7 +165,7 @@
 							}
 							iscData.postmeta[id]['isc_image_source_url'] = newValue;
 							props.setAttributes({
-								isc_image_source_url: isc_image_source_url,
+								isc_image_source_url: newValue,
 								isc_need_ajax: true,
 							});
 						},
