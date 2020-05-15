@@ -68,7 +68,7 @@ class ISC_Class {
         }
 
         /**
-         * Setup registers filterts and actions.
+         * Setup registers filters and actions.
          */
         public function __construct()
         {
