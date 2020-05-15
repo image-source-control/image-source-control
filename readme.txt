@@ -38,10 +38,11 @@ You can choose between different image source list types:
 * include a list with all images and their sources of the whole website
 * attach lists below the content automatically or using shortcodes or template functions
 * display image sources on archive pages
+* works with the image, cover image and gallery blocks
 
 **Backend Features**
 
-* manage image source within media dashboard and in the Image block settings
+* manage image source within media dashboard and in the settings of the Image and Cover Image blocks
 * mark an image to belong to the uploader
 * lists images with missing sources in the backend
 * warnings, if image source is missing
@@ -105,6 +106,10 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 1. some of the settings to customize how to display image sources
 
 == Changelog ==
+
+= untagged =
+
+* rewrite of the block options to make them more stable
 
 = 1.10.4 =
 
