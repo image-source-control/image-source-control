@@ -105,7 +105,7 @@ if (!class_exists('ISC_Public')) {
                  * potential issues:
                  * * line breaks in the code
                  */
-                $pattern = '#(<[^>]*class="[^"]*(alignleft|alignright|alignnone|aligncenter).*)?((<a [^>]*(rel="[^"]*[^"]*wp-att-(\d+)"[^>]*)>)? *(<img [^>]*[^>]*src="(.+)".*\/?>).*(</a>)??[^<]*).*(<\/figure.*>)?#isU';
+                $pattern = '#(<[^>]*class="[^"]*(alignleft|alignright|alignnone|aligncenter|rev-slidebg).*)?((<a [^>]*(rel="[^"]*[^"]*wp-att-(\d+)"[^>]*)>)? *(<img [^>]*[^>]*src="(.+)".*\/?>).*(</a>)??[^<]*).*(<\/figure.*>)?#isU';
                 $count = preg_match_all($pattern, $content, $matches);
 
                 // error_log(print_r($content, true)); error_log(print_r($matches, true));
@@ -122,10 +122,10 @@ if (!class_exists('ISC_Public')) {
                         $img_tag = $matches[7][$i];
 
                         if( ! $id ){
-                                $success = preg_match('#wp-image-(\d+)|aria-describedby="gallery-1-(\d+)#is', $img_tag, $matches_id);
-                                if( $success ){
-                                    $id = $matches_id[1] ? intval( $matches_id[1] ) : intval( $matches_id[2] );
-                                }
+                            $success = preg_match('#wp-image-(\d+)|aria-describedby="gallery-1-(\d+)#is', $img_tag, $matches_id);
+                            if( $success ){
+                                $id = $matches_id[1] ? intval( $matches_id[1] ) : intval( $matches_id[2] );
+                            }
                         }
 
                         // if ID is still missing get image by URL
@@ -136,19 +136,24 @@ if (!class_exists('ISC_Public')) {
 
                         // don’t show caption for own image if admin choose not to do so
                         if($options['exclude_own_images']){
-                                if(get_post_meta($id, 'isc_image_source_own', true)) {
-                                        continue;
-                                }
+                            if(get_post_meta($id, 'isc_image_source_own', true)) {
+                                continue;
+                            }
                         }
 
                         // don’t display empty sources
                         if( !$source_string = $this->render_image_source_string( $id ) ) {
-                                continue;
+                            continue;
                         }
 
                         // get any alignment from the original code
-                        preg_match('#alignleft|alignright|alignnone|aligncenter#is', $matches[0][$i], $matches_align);
+                        preg_match('#alignleft|alignright|alignnone|aligncenter|rev-slidebg#is', $matches[0][$i], $matches_align);
                         $alignment = isset( $matches_align[0] ) ? $matches_align[0] : '';
+						
+                        // revolution slider is not working with overlay source
+                        if($alignment == 'rev-slidebg') {
+                            continue;
+                        }
 
                         $source = '<span class="isc-source-text">' . $options['source_pretext'] . ' ' . $source_string . '</span>';
                         $old_content = $matches[3][$i];
