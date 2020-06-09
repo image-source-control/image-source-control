@@ -28,11 +28,11 @@
  *
  */
 
-//avoid direct calls to this file
+// avoid direct calls to this file
 if ( ! function_exists( 'add_action' ) ) {
-    header( 'Status: 403 Forbidden' );
-    header( 'HTTP/1.1 403 Forbidden' );
-    exit();
+	header( 'Status: 403 Forbidden' );
+	header( 'HTTP/1.1 403 Forbidden' );
+	exit();
 }
 
 define( 'ISCVERSION', '1.10.4' );
@@ -43,31 +43,31 @@ define( 'WEBGILDE', 'https://webgilde.com/en/image-source-control' );
 
 load_plugin_textdomain( 'image-source-control-isc', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
 
-if ( ! class_exists('ISC_Class')) {
-    require_once ISCPATH . 'isc.class.php' ;
+if ( ! class_exists( 'ISC_Class' ) ) {
+	require_once ISCPATH . 'isc.class.php';
 }
 
 if ( is_admin() ) {
-    if ( ! class_exists( 'ISC_Admin' ) ) {
-        require_once ISCPATH . 'admin/admin.php' ;
-    }
-    new ISC_Admin;
-} elseif (!is_admin() && ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX )) {
-    // include frontend functions
-    if ( ! class_exists( 'ISC_Public' ) ) {
-        require_once ISCPATH . 'public/public.php';
-    }
-    new ISC_Public;
-    require_once ISCPATH . 'functions.php';
+	if ( ! class_exists( 'ISC_Admin' ) ) {
+		require_once ISCPATH . 'admin/admin.php';
+	}
+	new ISC_Admin();
+} elseif ( ! is_admin() && ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) ) {
+	// include frontend functions
+	if ( ! class_exists( 'ISC_Public' ) ) {
+		require_once ISCPATH . 'public/public.php';
+	}
+	new ISC_Public();
+	require_once ISCPATH . 'functions.php';
 } else {
-    new ISC_Class;
+	new ISC_Class();
 }
 
 if ( ! class_exists( 'Isc_Gutenberg', true ) ) {
 	require_once ISCPATH . 'gutenberg/gutenberg.php';
 }
 
-if( ! class_exists( 'ISC_Pro', true ) && file_exists( ISCPATH . 'pro/isc-pro.php') ) {
+if ( ! class_exists( 'ISC_Pro', true ) && file_exists( ISCPATH . 'pro/isc-pro.php' ) ) {
 	require_once ISCPATH . 'pro/isc-pro.php';
-	new ISC_Pro;
+	new ISC_Pro();
 }
