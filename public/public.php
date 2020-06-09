@@ -299,14 +299,13 @@ if (!class_exists('ISC_Public')) {
             extract(shortcode_atts(array('id' => 0), $atts));
 
             // if $id not set, use the current ID from the post
-            if (empty($id)) {
+            if ( empty($id) && isset( $post->ID ) ) {
                 $id = $post->ID;
-            }
+            } else {
+				return;
+			}
 
-            if (empty($id)) {
-                return;
-            }
-            return $this->list_post_attachments_with_sources($id);
+            return $this->list_post_attachments_with_sources( $id );
         }
 
         /**
