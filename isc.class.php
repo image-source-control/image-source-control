@@ -137,7 +137,7 @@ class ISC_Class {
                 );
             }*/
 
-            $_imgs = $this->_filter_image_ids($content);
+            $_imgs = $this->filter_image_ids($content);
 
             // add thumbnail information
             $thumb_id = get_post_thumbnail_id($post_id);
@@ -165,7 +165,7 @@ class ISC_Class {
          * filter image src attribute from text
          * @since 1.1
          * @updated 1.1.3
-         * @deprecated since 1.9 use _filter_image_ids instead
+         * @deprecated since 1.9 use filter_image_ids instead
          * @return array with image src uri-s
          */
         public function _filter_src_attributes($content = '')
@@ -201,7 +201,7 @@ class ISC_Class {
          * filter image ids from text
 +        * @return array with image ids => image src uri-s
 +        */
-        public function _filter_image_ids($content = '') {
+        public function filter_image_ids($content = '') {
                 $srcs = array();
                 if (empty($content)){
                         return $srcs;
@@ -296,7 +296,7 @@ class ISC_Class {
         {
             $content = apply_filters( 'the_content', $content );
 
-            $image_ids = $this->_filter_image_ids($content);
+            $image_ids = $this->filter_image_ids($content);
             $added_images = array();
             $removed_images = array();
 
@@ -480,7 +480,7 @@ CC BY-NC-ND 2.0 Generic|https://creativecommons.org/licenses/by-nc-nd/2.0/";
                     $image_id = intval($this->get_image_by_url($url));
                     array_push($image_ids,$image_id);
                 }*/
-                $image_ids = $this->_filter_image_ids($post->post_content);
+                $image_ids = $this->filter_image_ids($post->post_content);
                 foreach ($image_ids as $id) {
                     $meta = get_post_meta($id, 'isc_image_posts', true);
                     if (empty($meta)) {

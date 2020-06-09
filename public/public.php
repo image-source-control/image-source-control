@@ -263,7 +263,7 @@ if (!class_exists('ISC_Public')) {
          * @updated 1.3.5
          * @updated 1.5 removed rendering the license to an earlier function
          */
-        protected function render_attachments($attachments)
+        public function render_attachments( $attachments )
         {
             // don't display anything, if no image sources displayed
             if ($attachments == array()) {
