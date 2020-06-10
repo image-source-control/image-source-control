@@ -4,8 +4,10 @@ class ISC_Class {
 
 		/**
 		 * Define default meta fields
+		 *
+		 * @var array option fields.
 		 */
-		protected $_fields = array(
+		protected $fields = array(
 			'image_source'     => array(
 				'id'      => 'isc_image_source',
 				'default' => '',
@@ -31,9 +33,9 @@ class ISC_Class {
 		/**
 		 * Allowed image file types/extensions
 		 *
-		 * @since 1.1
+		 * @var array allowed image extensions.
 		 */
-		protected $_allowedExtensions = array(
+		protected $allowed_extensions = array(
 			'jpg',
 			'png',
 			'gif',
@@ -43,21 +45,23 @@ class ISC_Class {
 		/**
 		 * Thumbnail size in list of all images.
 		 *
-		 * @since 1.2
+		 * @var array available thumbnail sizes.
 		 */
-		protected $_thumbnail_size = array( 'thumbnail', 'medium', 'large', 'custom' );
+		protected $thumbnail_size = array( 'thumbnail', 'medium', 'large', 'custom' );
 
 		/**
 		 * Options saved in the db
 		 *
-		 * @since 1.2
+		 * @var array plugin options.
 		 */
-		protected $_options = array();
+		protected $options = array();
 
 		/**
 		 * Position of image's caption
+		 *
+		 * @var array available positions for the image source overlay.
 		 */
-		protected $_caption_position = array(
+		protected $caption_position = array(
 			'top-left',
 			'top-center',
 			'top-right',
@@ -67,8 +71,18 @@ class ISC_Class {
 			'bottom-right',
 		);
 
+		/**
+		 * Instance of this class.
+		 *
+		 * @var ISC_Class
+		 */
 		protected static $instance;
 
+		/**
+		 * Get instance of ISC_Class
+		 *
+		 * @return ISC_Class
+		 */
 		public static function get_instance() {
 			return self::$instance;
 		}
@@ -78,7 +92,7 @@ class ISC_Class {
 		 */
 		public function __construct() {
 			// load all plugin options
-			$this->_options = get_option( 'isc_options' );
+			$this->options  = get_option( 'isc_options' );
 			self::$instance = $this;
 		}
 
@@ -107,7 +121,7 @@ class ISC_Class {
 			foreach ( $attachments as $_attachment ) {
 				$set = false;
 				setup_postdata( $_attachment );
-				foreach ( $this->_fields as $_field ) {
+				foreach ( $this->fields as $_field ) {
 					$meta = get_post_meta( $_attachment->ID, $_field['id'], true );
 					if ( empty( $meta ) ) {
 						update_post_meta( $_attachment->ID, $_field['id'], $_field['default'] );
@@ -126,13 +140,16 @@ class ISC_Class {
 		 * @since 1.1
 		 * @updated 1.3.5 added isc_images_in_posts filter
 		 * @todo check for more post types that maybe should not be parsed here
+		 *
+		 * @param integer $post_id ID of a post.
+		 * @param string  $content post content.
 		 */
 		public function save_image_information( $post_id, $content = '' ) {
 			// creates an infinite loop if not secured, see ISC_Public::list_post_attachments_with_sources()
 			$content = apply_filters( 'the_content', $content );
 
 			/*
-			$_image_urls = $this->_filter_src_attributes($_content);
+			$_image_urls = $this->filter_src_attributes($_content);
 			$_imgs = array();
 
 			foreach ($_image_urls as $_image_url) {
@@ -173,9 +190,11 @@ class ISC_Class {
 		 * @since 1.1
 		 * @updated 1.1.3
 		 * @deprecated since 1.9 use filter_image_ids instead
+		 *
+		 * @param string $content post content.
 		 * @return array with image src uri-s
 		 */
-		public function _filter_src_attributes( $content = '' ) {
+		public function filter_src_attributes( $content = '' ) {
 			$srcs = array();
 			if ( empty( $content ) ) {
 				return $srcs;
@@ -206,6 +225,8 @@ class ISC_Class {
 
 		/**
 		 * Filter image ids from text
+		 *
+		 * @param string $content post content.
 +        * @return array with image ids => image src uri-s
 +        */
 		public function filter_image_ids( $content = '' ) {
@@ -256,8 +277,8 @@ class ISC_Class {
 		 *
 		 * @since 1.1
 		 * @updated 1.1.3
-		 * @param string $url url of the image
-		 * @return id of the image
+		 * @param string $url url of the image.
+		 * @return integer ID of the image.
 		 */
 		public function get_image_by_url( $url = '' ) {
 			global $wpdb;
@@ -265,7 +286,7 @@ class ISC_Class {
 			if ( empty( $url ) ) {
 				return 0;
 			}
-			$types = implode( '|', $this->_allowedExtensions );
+			$types = implode( '|', $this->allowed_extensions );
 			/**
 			 * Check for the format 'image-title-(e12452112-)300x200.jpg(?query…)' and removes
 			 *   the image size
@@ -296,8 +317,8 @@ class ISC_Class {
 		/**
 		 * Update isc_image_posts meta field for all images found in a post with a given ID.
 		 *
-		 * @param $post_id ID of the target post
-		 * @param $content content of the target post
+		 * @param integer $post_id ID of the target post.
+		 * @param string  $content content of the target post.
 		 * @updated 1.3.5 added images_in_posts_simple filter
 		 */
 		public function update_image_posts_meta( $post_id, $content ) {
@@ -332,10 +353,10 @@ class ISC_Class {
 			// $image_urls = apply_filters('isc_images_in_posts_simple', $image_urls, $post_id);
 			$filtered_image_ids = apply_filters( 'isc_images_in_posts_simple', $image_ids, $post_id );
 			// for backwards compatibilty: check if the array-keys are valid image ids
-			if ( $filtered_image_ids != $image_ids ) {
+			if ( $filtered_image_ids !== $image_ids ) {
 					$image_ids        = array();
 					$valid_post_types = apply_filters( 'isc_valid_post_types', array( 'attachment' ) );
-				if ( in_array( get_post_type( $post_id ), $valid_post_types ) ) {
+				if ( in_array( get_post_type( $post_id ), $valid_post_types, true ) ) {
 					if ( $id = $this->get_image_by_url( $url ) ) {
 						$image_ids[ $id ] = $url;
 					}
@@ -482,7 +503,7 @@ CC BY-NC-ND 2.0 Generic|https://creativecommons.org/licenses/by-nc-nd/2.0/';
 			foreach ( $posts as $post ) {
 				setup_postdata( $post );
 				/*
-				$image_urls = $this->_filter_src_attributes($post->post_content);
+				$image_urls = $this->filter_src_attributes($post->post_content);
 				$image_ids = array();
 				foreach ($image_urls as $url) {
 					$image_id = intval($this->get_image_by_url($url));
@@ -507,24 +528,23 @@ CC BY-NC-ND 2.0 Generic|https://creativecommons.org/licenses/by-nc-nd/2.0/';
 		/**
 		 * Transform the licenses from the options textfield into an array
 		 *
-		 * @param string $licences text with licenses
-		 * @return array $new_licences array with licenses and license information
-		 * @return false if no array created
+		 * @param string $licences text with licenses.
+		 * @return array|bool $new_licences array with licenses and license information or false if no array created.
 		 * @since 1.3.5
 		 */
 		public function licences_text_to_array( $licences = '' ) {
-			if ( $licences == '' ) {
+			if ( $licences === '' ) {
 				return false;
 			}
 			// split the text by line
 			$licences_array = preg_split( '/\r?\n/', trim( $licences ) );
-			if ( count( $licences_array ) == 0 ) {
+			if ( count( $licences_array ) === 0 ) {
 				return false;
 			}
 			// create the array with licence => url
 			$new_licences = array();
 			foreach ( $licences_array as $_licence ) {
-				if ( trim( $_licence ) != '' ) {
+				if ( trim( $_licence ) !== '' ) {
 					$temp                     = explode( '|', $_licence );
 					$new_licences[ $temp[0] ] = array();
 					if ( isset( $temp[1] ) ) {
@@ -533,7 +553,7 @@ CC BY-NC-ND 2.0 Generic|https://creativecommons.org/licenses/by-nc-nd/2.0/';
 				}
 			}
 
-			if ( $new_licences == array() ) {
+			if ( $new_licences === array() ) {
 				return false;
 			} else {
 				return $new_licences;

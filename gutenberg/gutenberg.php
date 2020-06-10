@@ -16,6 +16,9 @@ class Isc_Gutenberg {
 		add_action( 'wp_ajax_isc_save_meta', array( $this, 'save_meta' ) );
 	}
 
+	/**
+	 * Save meta data
+	 */
 	public function save_meta() {
 		$_post = wp_unslash( $_POST );
 		if ( isset( $_post['nonce'] ) && false !== wp_verify_nonce( $_post['nonce'], 'isc-gutenberg-nonce' ) ) {
