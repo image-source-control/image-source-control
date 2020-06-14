@@ -200,16 +200,17 @@ class ISC_Public extends ISC_Class {
 	 */
 	public function list_post_attachments_with_sources( $post_id = 0 ) {
 		global $post;
-		if ( empty( $post_id ) ) {
-			if ( ! empty( $post->ID ) ) {
+		if ( empty( $post_id ) && ! empty( $post->ID ) ) {
 				$post_id = $post->ID;
-			} else {
-				/**
-				 * Filter: isc_list_shortcode_output_without_post_id
-				 * allow to return some output even if there is no post ID (e.g., on archive pages).
-				 */
-				return apply_filters( 'isc_list_shortcode_output_without_post_id', '' );
-			}
+		}
+
+		// do not render an empty source list on non-post pages unless explicitly stated.
+		if ( empty( $post_id ) ) {
+			/**
+			 * Filter: isc_list_shortcode_empty_output
+			 * allow to return some output even if there is no post ID (e.g., on archive pages).
+			 */
+			return apply_filters( 'isc_list_shortcode_empty_output', '' );
 		}
 
 		$attachments = get_post_meta( $post_id, 'isc_post_images', true );
@@ -225,7 +226,6 @@ class ISC_Public extends ISC_Class {
 				$attachments = get_post_meta( $post_id, 'isc_post_images', true );
 		}
 
-		$return = '';
 		if ( ! empty( $attachments ) ) {
 			$atts = array();
 			foreach ( $attachments as $attachment_id => $attachment_array ) {
@@ -243,10 +243,11 @@ class ISC_Public extends ISC_Class {
 				}
 			}
 
-			$return = $this->render_attachments( $atts );
+			return $this->render_attachments( $atts );
+		} else {
+			// see description above
+			return apply_filters( 'isc_list_shortcode_empty_output', '' );
 		}
-
-		return $return;
 	}
 
 	/**
@@ -263,7 +264,7 @@ class ISC_Public extends ISC_Class {
 			return '';
 		}
 
-		$options = $this->get_isc_options();
+		$options  = $this->get_isc_options();
 		$headline = $this->options['image_list_headline'];
 
 		ob_start();
@@ -279,7 +280,9 @@ class ISC_Public extends ISC_Class {
 			}
 			printf( '<li>%1$s: %2$s</li>', $atts_array['title'], $atts_array['source'] );
 		}
-		?></ul><?php
+		?>
+		</ul>
+		<?php
 		return $this->render_image_source_box( ob_get_clean() );
 	}
 
