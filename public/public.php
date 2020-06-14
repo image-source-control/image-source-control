@@ -100,7 +100,6 @@ class ISC_Public extends ISC_Class {
 			$pattern = '#(<[^>]*class="[^"]*(alignleft|alignright|alignnone|aligncenter).*)?((<a [^>]*(rel="[^"]*[^"]*wp-att-(\d+)"[^>]*)>)? *(<img [^>]*[^>]*src="(.+)".*\/?>).*(</a>)??[^<]*).*(<\/figure.*>)?#isU';
 			$count   = preg_match_all( $pattern, $content, $matches );
 
-			// error_log(print_r($content, true)); error_log(print_r($matches, true));
 			if ( false !== $count ) {
 				for ( $i = 0; $i < $count; $i++ ) {
 
@@ -205,7 +204,11 @@ class ISC_Public extends ISC_Class {
 			if ( ! empty( $post->ID ) ) {
 				$post_id = $post->ID;
 			} else {
-				return;
+				/**
+				 * Filter: isc_list_shortcode_output_without_post_id
+				 * allow to return some output even if there is no post ID (e.g., on archive pages).
+				 */
+				return apply_filters( 'isc_list_shortcode_output_without_post_id', '' );
 			}
 		}
 
@@ -261,12 +264,10 @@ class ISC_Public extends ISC_Class {
 		}
 
 		$options = $this->get_isc_options();
+		$headline = $this->options['image_list_headline'];
 
 		ob_start();
-		$headline = $this->options['image_list_headline'];
-		?>
-			<div class="isc_image_list_box">
-		<?php
+
 		printf( '<p class="isc_image_list_title">%1$s</p>', $headline );
 		?>
 			<ul class="isc_image_list">
@@ -278,10 +279,8 @@ class ISC_Public extends ISC_Class {
 			}
 			printf( '<li>%1$s: %2$s</li>', $atts_array['title'], $atts_array['source'] );
 		}
-		?>
-			</ul></div>
-		<?php
-		return ob_get_clean();
+		?></ul><?php
+		return $this->render_image_source_box( ob_get_clean() );
 	}
 
 	/**
@@ -297,15 +296,13 @@ class ISC_Public extends ISC_Class {
 		// if $id not set, use the current ID from the post
 		if ( empty( $id ) && isset( $post->ID ) ) {
 			$id = $post->ID;
-		} else {
-			return '';
 		}
 
 		return $this->list_post_attachments_with_sources( $id );
 	}
 
 	/**
-	 * Create shortcode to list all image sources in the frontend
+	 * Create a shortcode to list all image sources in the frontend
 	 *
 	 * @param array $atts attributes.
 	 * @since 1.1.3
@@ -644,7 +641,7 @@ class ISC_Public extends ISC_Class {
 	 * @param integer $post_id post object ID.
 	 * @return string source
 	 */
-	function get_thumbnail_source_string( $post_id = 0 ) {
+	public function get_thumbnail_source_string( $post_id = 0 ) {
 
 		if ( empty( $post_id ) ) {
 			return '';
@@ -663,7 +660,7 @@ class ISC_Public extends ISC_Class {
 				}
 			}
 			// don’t display empty sources
-			$src = $thumb->guid;
+			$src           = $thumb->guid;
 			$source_string = $this->render_image_source_string( $id );
 			if ( ! $source_string ) {
 				return '';
@@ -692,6 +689,18 @@ class ISC_Public extends ISC_Class {
 	}
 
 	/**
+	 * Render the image source box
+	 * dedicated to displaying an empty box as well so don’t add more visible elements
+	 *
+	 * @param string $content content of the source box, i.e., list of sources.
+	 */
+	public function render_image_source_box( $content = null ) {
+		ob_start();
+		require ISCPATH . 'public/views/image-source-box.php';
+		return ob_get_clean();
+	}
+
+	/**
 	 * Render source string of single image by its id
 	 *  this only returns the string with source and license (and urls),
 	 *  but no wrapping, because the string is used in a lot of functions
@@ -699,7 +708,7 @@ class ISC_Public extends ISC_Class {
 	 *
 	 * @updated 1.5 wrapped source into source url
 	 *
-	 * @param int $id id of the image
+	 * @param int $id id of the image.
 	 * @return bool|string false if no source was given, else string with source
 	 */
 	public function render_image_source_string( $id ) {
