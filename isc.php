@@ -42,8 +42,6 @@ require_once ISCPATH . 'isc.class.php';
 require_once ISCPATH . 'includes/model.php';
 require_once ISCPATH . 'includes/gutenberg/gutenberg.php';
 
-new ISC_Model();
-
 if ( is_admin() ) {
 	if ( ! class_exists( 'ISC_Admin' ) ) {
 		require_once ISCPATH . 'admin/admin.php';

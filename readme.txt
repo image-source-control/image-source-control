@@ -113,6 +113,7 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 - rewrite of the block options to make them more stable
 - fixed indexing post content for images when the post is saved in the block editor
 - removed unneeded code to recognize the gallery shortcode in classic editor
+- removed broken PHP code causing an issue when using the `isc_images_in_posts_simple` filter
 
 = 1.10.4 =
 
