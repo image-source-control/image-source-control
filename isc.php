@@ -38,8 +38,6 @@ define( 'ISCDIR', basename( dirname( __FILE__ ) ) );
 define( 'ISCPATH', plugin_dir_path( __FILE__ ) );
 define( 'WEBGILDE', 'https://webgilde.com/en/image-source-control' );
 
-load_plugin_textdomain( 'image-source-control-isc', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
-
 require_once ISCPATH . 'isc.class.php';
 require_once ISCPATH . 'includes/model.php';
 require_once ISCPATH . 'includes/gutenberg/gutenberg.php';
