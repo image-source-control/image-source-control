@@ -102,21 +102,6 @@ class ISC_Model {
 			$image_ids[ $thumb_id ] = wp_get_attachment_url( $thumb_id );
 		}
 
-		// get urls from gallery images
-		// this might not be needed, since the gallery shortcode might have run already, but just in case
-		// only for php 5.3 and higher
-		if ( -1 !== version_compare( phpversion(), '5.3' ) && preg_match_all( '/\[gallery([^\]]+)\]/m', $content, $results, PREG_SET_ORDER ) ) {
-			foreach ( $results as $result ) {
-				if ( ! preg_match( '/ids="([^"]+)"/m', $result[1], $ids ) ) {
-					continue;
-				}
-				// $image_urls = array_merge($image_urls, array_map( 'map_walker', explode(',', $ids[1])));
-				foreach ( explode( ',', $ids[1] ) as $id ) {
-					$image_ids[ intval( $id ) ] = get_the_guid( $id );
-				}
-			}
-		}
-
 		// apply filter to image array, so other developers can add their own logic
 		// $image_urls = apply_filters('isc_images_in_posts_simple', $image_urls, $post_id);
 		$filtered_image_ids = apply_filters( 'isc_images_in_posts_simple', $image_ids, $post_id );
