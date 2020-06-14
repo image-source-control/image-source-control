@@ -103,21 +103,14 @@ class ISC_Model {
 		}
 
 		// apply filter to image array, so other developers can add their own logic
-		// $image_urls = apply_filters('isc_images_in_posts_simple', $image_urls, $post_id);
-		$filtered_image_ids = apply_filters( 'isc_images_in_posts_simple', $image_ids, $post_id );
-		// for backwards compatibilty: check if the array-keys are valid image ids
-		if ( $filtered_image_ids !== $image_ids ) {
-			$image_ids        = array();
-			$valid_post_types = apply_filters( 'isc_valid_post_types', array( 'attachment' ) );
-			if ( in_array( get_post_type( $post_id ), $valid_post_types, true ) ) {
-				if ( $id = ISC_Class::get_instance()->get_image_by_url( $url ) ) {
-					$image_ids[ $id ] = $url;
-				}
-			} else {
-				$image_ids[ $post_id ] = $url;
+		$image_ids = apply_filters( 'isc_images_in_posts_simple', $image_ids, $post_id );
+
+		// check if image IDs refer to an attachment post type
+		$valid_image_post_types = apply_filters( 'isc_valid_post_types', array( 'attachment' ) );
+		foreach ( $image_ids as $_id => $_url ) {
+			if ( ! in_array( get_post_type( $_id ), $valid_image_post_types, true ) ) {
+				unset( $image_ids[ $_id ] );
 			}
-		} else {
-			$image_ids = $filtered_image_ids;
 		}
 
 		$isc_post_images = get_post_meta( $post_id, 'isc_post_images', true );
@@ -303,8 +296,8 @@ class ISC_Model {
 		// remove transient that shows the warning, if true, to re-check image source warning with next call to admin_notices()
 		$options = ISC_Class::get_instance()->get_isc_options();
 		if ( isset( $options['warning_onesource_missing'] )
-		     && $options['warning_onesource_missing']
-		     && get_transient( 'isc-show-missing-sources-warning' ) ) {
+			 && $options['warning_onesource_missing']
+			 && get_transient( 'isc-show-missing-sources-warning' ) ) {
 
 			delete_transient( 'isc-show-missing-sources-warning' );
 		};
