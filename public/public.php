@@ -217,7 +217,7 @@ class ISC_Public extends ISC_Class {
 				remove_filter( 'the_content', array( $this, 'content_filter' ), 20 );
 
 				$this->save_image_information_on_load();
-				$this->update_image_posts_meta( $post_id, $post->post_content );
+				$this->model->update_image_posts_meta( $post_id, $post->post_content );
 
 				$attachments = get_post_meta( $post_id, 'isc_post_images', true );
 		}
@@ -771,7 +771,7 @@ class ISC_Public extends ISC_Class {
 		$post_id  = $post->ID;
 		$_content = $post->post_content;
 
-		$this->save_image_information( $post_id, $_content );
+		$this->model->save_image_information( $post_id, $_content );
 	}
 
 }

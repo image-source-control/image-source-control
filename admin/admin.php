@@ -1,6 +1,8 @@
 <?php
 	/**
-	 * Handles all admin functionalities
+	 * Handles everything displayed in WP Admin
+	 * storing updated information is not part of this class since it is only included if is_admin() returns true
+	 * which is not the case for the Customizer of Block editor
 	 *
 	 * @since 1.7 - move a lot of functions here from general class
 	 */
@@ -17,13 +19,8 @@ class ISC_Admin extends ISC_Class {
 
 		register_activation_hook( ISCPATH . '../isc.php', array( $this, 'activation' ) );
 
-		// attachment field handling
-		add_action( 'add_attachment', array( $this, 'attachment_added' ), 10, 2 );
+		// register attachment fields
 		add_filter( 'attachment_fields_to_edit', array( $this, 'add_isc_fields' ), 10, 2 );
-		add_filter( 'attachment_fields_to_save', array( $this, 'isc_fields_save' ), 10, 2 );
-
-		// save image information in meta field after a post was saved
-		add_action( 'wp_insert_post', array( $this, 'save_image_information_on_post_save' ) );
 
 		// admin notices
 		add_action( 'admin_notices', array( $this, 'admin_notices' ) );
@@ -212,98 +209,6 @@ class ISC_Admin extends ISC_Class {
 		}
 
 		return $form_fields;
-	}
-
-	/**
-	 * Save image source to post_meta
-	 *
-	 * @updated 1.5 added field for url
-	 *
-	 * @param array $post post data.
-	 * @param array $attachment attachment data.
-	 * @return array $post updated post data
-	 */
-	public function isc_fields_save( $post, $attachment ) {
-		if ( isset( $attachment['isc_image_source'] ) ) {
-			update_post_meta( $post['ID'], 'isc_image_source', trim( $attachment['isc_image_source'] ) );
-		}
-		if ( isset( $attachment['isc_image_source_url'] ) ) {
-			$url = esc_url_raw( $attachment['isc_image_source_url'] );
-			update_post_meta( $post['ID'], 'isc_image_source_url', $url );
-		}
-		$own = ( isset( $attachment['isc_image_source_own'] ) ) ? $attachment['isc_image_source_own'] : '';
-		update_post_meta( $post['ID'], 'isc_image_source_own', $own );
-		if ( isset( $attachment['isc_image_licence'] ) ) {
-			update_post_meta( $post['ID'], 'isc_image_licence', $attachment['isc_image_licence'] );
-		}
-
-		// remove transient that shows the warning, if true, to re-check image source warning with next call to admin_notices()
-		$options = $this->get_isc_options();
-		if ( isset( $options['warning_onesource_missing'] )
-				&& $options['warning_onesource_missing']
-				&& get_transient( 'isc-show-missing-sources-warning' ) ) {
-
-				delete_transient( 'isc-show-missing-sources-warning' );
-		};
-
-		return $post;
-	}
-
-	/**
-	 * This is an entry function to save image information to a post when it is saved
-	 *
-	 * @since 1.1
-	 * @param integer $post_id post id.
-	 */
-	public function save_image_information_on_post_save( $post_id ) {
-
-		// return, if save_post is called more than one time
-		if ( did_action( 'save_post' ) !== 1
-			|| ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE )
-			|| ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
-			return;
-		}
-
-		/**
-		 * Don’t save meta data for non-public post types, since those shouldn’t be visible in the frontend
-		 * ignore also attachment posts
-		 */
-		if ( ! isset( $_POST['post_type'] )
-				|| ! in_array( $_POST['post_type'], get_post_types( array( 'public' => true ), 'names' ), true ) // is the post type public
-				|| 'attachment' === $_POST['post_type'] ) {
-			return;
-		}
-
-		// check if this is a revision and if so, use parent post id
-		$id = wp_is_post_revision( $post_id );
-		if ( $id ) {
-			$post_id = $id;
-		}
-
-		$_content = '';
-		if ( ! empty( $_POST['content'] ) ) {
-			$_content = stripslashes( $_POST['content'] );
-		} else { // retrieve content with Gutenberg, because no content included in $_POST object then
-			$_post = get_post( $post_id );
-			if ( isset( $_post->post_content ) ) {
-				$_content = $_post->post_content;
-			}
-		}
-
-		// Needs to be called before the 'isc_post_images' field is updated.
-		$this->update_image_posts_meta( $post_id, $_content );
-		$this->save_image_information( $post_id, $_content );
-	}
-
-	/**
-	 * Update attachment meta field
-	 *
-	 * @param integer $att_id attachment post ID.
-	 */
-	public function attachment_added( $att_id ) {
-		foreach ( $this->fields as $field ) {
-			update_post_meta( $att_id, $field['id'], $field['default'] );
-		}
 	}
 
 	/**

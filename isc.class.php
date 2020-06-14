@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * Main controller of ISC
+ */
 class ISC_Class {
 
 		/**
@@ -72,11 +74,18 @@ class ISC_Class {
 		);
 
 		/**
-		 * Instance of this class.
+		 * Instance of ISC_Class.
 		 *
 		 * @var ISC_Class
 		 */
 		protected static $instance;
+
+		/**
+		 * Instance of ISC_Model.
+		 *
+		 * @var ISC_Model
+		 */
+		protected $model;
 
 		/**
 		 * Get instance of ISC_Class
@@ -94,94 +103,7 @@ class ISC_Class {
 			// load all plugin options
 			$this->options  = get_option( 'isc_options' );
 			self::$instance = $this;
-		}
-
-		/**
-		 * Add meta values to all attachments
-		 *
-		 * @todo probably need to fix this when more fields are added along the way
-		 * @todo use compare => 'NOT EXISTS' when WP 3.5 is up to retrieve only values where it is not set
-		 * @todo this currently updates all empty fields; empty in this context is empty string, 0, false or not existing; add check if meta field already existed before
-		 */
-		public function add_meta_values_to_attachments() {
-			// retrieve all attachments
-			$args = array(
-				'post_type'   => 'attachment',
-				'numberposts' => -1,
-				'post_status' => null,
-				'post_parent' => null,
-			);
-
-			$attachments = get_posts( $args );
-			if ( empty( $attachments ) || ! is_array( $attachments ) ) {
-				return;
-			}
-
-			$count = 0;
-			foreach ( $attachments as $_attachment ) {
-				$set = false;
-				setup_postdata( $_attachment );
-				foreach ( $this->fields as $_field ) {
-					$meta = get_post_meta( $_attachment->ID, $_field['id'], true );
-					if ( empty( $meta ) ) {
-						update_post_meta( $_attachment->ID, $_field['id'], $_field['default'] );
-						$set = true;
-					}
-				}
-				if ( $set ) {
-					$count++;
-				}
-			}
-		}
-
-		/**
-		 * Retrieve images added to a post or page and save all information as a post meta value for the post
-		 *
-		 * @since 1.1
-		 * @updated 1.3.5 added isc_images_in_posts filter
-		 * @todo check for more post types that maybe should not be parsed here
-		 *
-		 * @param integer $post_id ID of a post.
-		 * @param string  $content post content.
-		 */
-		public function save_image_information( $post_id, $content = '' ) {
-			// creates an infinite loop if not secured, see ISC_Public::list_post_attachments_with_sources()
-			$content = apply_filters( 'the_content', $content );
-
-			/*
-			$_image_urls = $this->filter_src_attributes($_content);
-			$_imgs = array();
-
-			foreach ($_image_urls as $_image_url) {
-				// get ID of images by url
-				$img_id = $this->get_image_by_url($_image_url);
-				$_imgs[$img_id] = array(
-					'src' => $_image_url
-				);
-			}*/
-
-			$_imgs = $this->filter_image_ids( $content );
-
-			// add thumbnail information
-			$thumb_id = get_post_thumbnail_id( $post_id );
-
-			/**
-			* If an image is used both inside the post and as post thumbnail, the thumbnail entry overrides the regular image.
-			*/
-			if ( ! empty( $thumb_id ) ) {
-				$_imgs[ $thumb_id ] = array(
-					'src'       => wp_get_attachment_url( $thumb_id ),
-					'thumbnail' => true,
-				);
-			}
-
-			// apply filter to image array, so other developers can add their own logic
-			$_imgs = apply_filters( 'isc_images_in_posts', $_imgs, $post_id );
-
-			if ( empty( $_imgs ) ) {
-				$_imgs = array();
-			}
-			update_post_meta( $post_id, 'isc_post_images', $_imgs );
+			$this->model = new ISC_Model();
 		}
 
 		/**
@@ -312,117 +234,6 @@ class ISC_Class {
 			$id    = $wpdb->get_var( $query );
 
 			return intval( $id );
-		}
-
-		/**
-		 * Update isc_image_posts meta field for all images found in a post with a given ID.
-		 *
-		 * @param integer $post_id ID of the target post.
-		 * @param string  $content content of the target post.
-		 * @updated 1.3.5 added images_in_posts_simple filter
-		 */
-		public function update_image_posts_meta( $post_id, $content ) {
-			$content = apply_filters( 'the_content', $content );
-
-			$image_ids      = $this->filter_image_ids( $content );
-			$added_images   = array();
-			$removed_images = array();
-
-			// add thumbnail information
-			$thumb_id = get_post_thumbnail_id( $post_id );
-			if ( ! empty( $thumb_id ) ) {
-				$image_ids[ $thumb_id ] = wp_get_attachment_url( $thumb_id );
-			}
-
-			// get urls from gallery images
-			// this might not be needed, since the gallery shortcode might have run already, but just in case
-			// only for php 5.3 and higher
-			if ( -1 !== version_compare( phpversion(), '5.3' ) && preg_match_all( '/\[gallery([^\]]+)\]/m', $content, $results, PREG_SET_ORDER ) ) {
-				foreach ( $results as $result ) {
-					if ( ! preg_match( '/ids="([^"]+)"/m', $result[1], $ids ) ) {
-							continue;
-					}
-						// $image_urls = array_merge($image_urls, array_map( 'map_walker', explode(',', $ids[1])));
-					foreach ( explode( ',', $ids[1] ) as $id ) {
-							$image_ids[ intval( $id ) ] = get_the_guid( $id );
-					}
-				}
-			}
-
-			// apply filter to image array, so other developers can add their own logic
-			// $image_urls = apply_filters('isc_images_in_posts_simple', $image_urls, $post_id);
-			$filtered_image_ids = apply_filters( 'isc_images_in_posts_simple', $image_ids, $post_id );
-			// for backwards compatibilty: check if the array-keys are valid image ids
-			if ( $filtered_image_ids !== $image_ids ) {
-					$image_ids        = array();
-					$valid_post_types = apply_filters( 'isc_valid_post_types', array( 'attachment' ) );
-				if ( in_array( get_post_type( $post_id ), $valid_post_types, true ) ) {
-					if ( $id = $this->get_image_by_url( $url ) ) {
-						$image_ids[ $id ] = $url;
-					}
-				} else {
-						$image_ids[ $post_id ] = $url;
-				}
-			} else {
-					$image_ids = $filtered_image_ids;
-			}
-
-			$isc_post_images = get_post_meta( $post_id, 'isc_post_images', true );
-			// just needed in very rare cases, when updates comes from outside of isc and meta fields doesn’t exist yet
-			if ( empty( $isc_post_images ) ) {
-				$isc_post_images = array();
-			}
-
-			foreach ( $image_ids as $id => $url ) {
-				if ( is_array( $isc_post_images ) && ! array_key_exists( $id, $isc_post_images ) ) {
-					array_push( $added_images, $id );
-				}
-			}
-			if ( is_array( $isc_post_images ) ) {
-				foreach ( $isc_post_images as $old_id => $value ) {
-					// if (!in_array($old_id, $image_ids)) {
-					if ( ! array_key_exists( $old_id, $image_ids ) ) {
-						array_push( $removed_images, $old_id );
-					} else {
-						if ( ! empty( $old_id ) ) {
-							$meta = get_post_meta( $old_id, 'isc_image_posts', true );
-							if ( empty( $meta ) ) {
-								update_post_meta( $old_id, 'isc_image_posts', array( $post_id ) );
-							} else {
-								// In case the isc_image_posts is not up to date
-								if ( is_array( $meta ) && ! in_array( $post_id, $meta ) ) {
-									array_push( $meta, $post_id );
-									$meta = array_unique( $meta );
-									update_post_meta( $old_id, 'isc_image_posts', $meta );
-								}
-							}
-						}
-					}
-				}
-			}
-
-			foreach ( $added_images as $id ) {
-				$meta = get_post_meta( $id, 'isc_image_posts', true );
-				if ( ! is_array( $meta ) || array() == $meta ) {
-					update_post_meta( $id, 'isc_image_posts', array( $post_id ) );
-				} else {
-					array_push( $meta, $post_id );
-					$meta = array_unique( $meta );
-					update_post_meta( $id, 'isc_image_posts', $meta );
-				}
-			}
-
-			foreach ( $removed_images as $id ) {
-				$image_meta = get_post_meta( $id, 'isc_image_posts', true );
-				if ( is_array( $image_meta ) ) {
-					$offset = array_search( $post_id, $image_meta );
-					if ( false !== $offset ) {
-						array_splice( $image_meta, $offset, 1 );
-						$image_meta = array_unique( $image_meta );
-						update_post_meta( $id, 'isc_image_posts', $image_meta );
-					}
-				}
-			}
 		}
 
 		/**

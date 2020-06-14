@@ -109,7 +109,9 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 
 = untagged =
 
-* rewrite of the block options to make them more stable
+- introducing a model class
+- rewrite of the block options to make them more stable
+- fixed indexing post content for images when the post is saved in the block editor
 
 = 1.10.4 =
 

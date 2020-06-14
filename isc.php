@@ -28,11 +28,8 @@
  *
  */
 
-// avoid direct calls to this file
-if ( ! function_exists( 'add_action' ) ) {
-	header( 'Status: 403 Forbidden' );
-	header( 'HTTP/1.1 403 Forbidden' );
-	exit();
+if ( class_exists( 'ISC_Class' ) ) {
+	exit;
 }
 
 define( 'ISCVERSION', '1.10.4' );
@@ -43,9 +40,11 @@ define( 'WEBGILDE', 'https://webgilde.com/en/image-source-control' );
 
 load_plugin_textdomain( 'image-source-control-isc', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
 
-if ( ! class_exists( 'ISC_Class' ) ) {
-	require_once ISCPATH . 'isc.class.php';
-}
+require_once ISCPATH . 'isc.class.php';
+require_once ISCPATH . 'includes/model.php';
+require_once ISCPATH . 'includes/gutenberg/gutenberg.php';
+
+new ISC_Model();
 
 if ( is_admin() ) {
 	if ( ! class_exists( 'ISC_Admin' ) ) {
@@ -61,10 +60,6 @@ if ( is_admin() ) {
 	require_once ISCPATH . 'functions.php';
 } else {
 	new ISC_Class();
-}
-
-if ( ! class_exists( 'Isc_Gutenberg', true ) ) {
-	require_once ISCPATH . 'gutenberg/gutenberg.php';
 }
 
 if ( ! class_exists( 'ISC_Pro', true ) && file_exists( ISCPATH . 'pro/isc-pro.php' ) ) {
