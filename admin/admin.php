@@ -157,15 +157,14 @@ class ISC_Admin extends ISC_Class {
 				</script>
 				<?php
 		}
-		error_log( print_r( $pagenow, true ) );
 		// texts on missing sources page
 		if ( 'upload.php' === $pagenow && 'isc_missing_sources_page' === $_GET['page'] ) {
 			?>
-            <script type="text/javascript">
-                isc_data = {
-                    confirm_message : '<?php esc_html_e( 'Are you sure?', 'image-source-control-isc' ); ?>'
-                }
-            </script>
+			<script type="text/javascript">
+				isc_data = {
+					confirm_message : '<?php esc_html_e( 'Are you sure?', 'image-source-control-isc' ); ?>'
+				}
+			</script>
 			<?php
 		}
 		// add nonce to all pages
@@ -796,7 +795,7 @@ class ISC_Admin extends ISC_Class {
 		if ( $posts_with_images->have_posts() ) {
 			require_once ISCPATH . '/admin/templates/post_images_list.php';
 		} else {
-		    die( __( 'No entries available', 'image-source-control-isc' ) );
+			die( __( 'No entries available', 'image-source-control-isc' ) );
 		}
 
 		wp_reset_postdata();

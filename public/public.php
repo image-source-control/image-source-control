@@ -204,6 +204,12 @@ class ISC_Public extends ISC_Class {
 				$post_id = $post->ID;
 		}
 
+		// don’t do anything on REST requests since that causes issues with the block editor rendering a "post" for each image
+        // just in case, we also prevent output for "content" from attachments
+		if ( defined( 'REST_REQUEST' ) || ! isset( $post->post_type ) || 'attachment' === $post->post_type ) {
+			return '';
+		}
+
 		// do not render an empty source list on non-post pages unless explicitly stated.
 		if ( empty( $post_id ) ) {
 			/**
