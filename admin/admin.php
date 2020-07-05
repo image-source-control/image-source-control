@@ -295,7 +295,6 @@ class ISC_Admin extends ISC_Class {
 		add_settings_field( 'exclude_own_images', __( 'Exclude own images', 'image-source-control-isc' ), array( $this, 'renderfield_exclude_own_images' ), 'isc_settings_page', 'isc_settings_section' );
 		add_settings_field( 'use_authorname', __( 'Use authors names', 'image-source-control-isc' ), array( $this, 'renderfield_use_authorname' ), 'isc_settings_page', 'isc_settings_section' );
 		add_settings_field( 'by_author_text', __( 'Custom text for owned images', 'image-source-control-isc' ), array( $this, 'renderfield_byauthor_text' ), 'isc_settings_page', 'isc_settings_section' );
-		add_settings_field( 'webgilde_backlink', __( "Link to webgilde's website", 'image-source-control-isc' ), array( $this, 'renderfield_webgile' ), 'isc_settings_page', 'isc_settings_section' );
 		add_settings_field( 'warning_one_source', __( 'Warning when there is at least one missing source', 'image-source-control-isc' ), array( $this, 'renderfield_warning_onesource_misisng' ), 'isc_settings_page', 'isc_settings_section' );
 		add_settings_field( 'warning_nosource', __( 'Warnings when source not available', 'image-source-control-isc' ), array( $this, 'renderfield_warning_nosource' ), 'isc_settings_page', 'isc_settings_section' );
 	}
@@ -620,20 +619,6 @@ class ISC_Admin extends ISC_Class {
 	}
 
 			/**
-			 *
-			 */
-	public function renderfield_webgile() {
-		$options     = $this->get_isc_options();
-		$description = sprintf( __( 'Display a link to <a href="%s">Image Source Control plugin&#39;s website</a> below the list of all images in the blog?', 'image-source-control-isc' ), WEBGILDE );
-		?>
-			<div id="webgilde-block">
-				<input type="checkbox" id="webgilde-link" name="isc_options[webgilde_field]" <?php checked( $options['webgilde'] ); ?> />
-				<p><em><?php echo $description; ?></em></p>
-			</div>
-			<?php
-	}
-
-			/**
 			 * Render option to display thumbnails in the full image source list
 			 */
 	public function renderfield_use_thumbnail() {
@@ -863,11 +848,6 @@ class ISC_Admin extends ISC_Class {
 			$output['exclude_own_images'] = true;
 		} else {
 			$output['exclude_own_images'] = false;
-		}
-		if ( isset( $input['webgilde_field'] ) ) {
-			$output['webgilde'] = true;
-		} else {
-			$output['webgilde'] = false;
 		}
 		if ( isset( $input['enable_licences'] ) ) {
 			$output['enable_licences'] = true;

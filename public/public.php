@@ -435,15 +435,9 @@ class ISC_Public extends ISC_Class {
 			$this->display_all_attachment_list( $paged_atts );
 			$this->pagination_links( $up_limit, $a['before_links'], $a['after_links'], $prev_text, $next_text );
 		}
-		if ( isset( $options['webgilde'] ) && true == $options['webgilde'] ) {
-			?>
-				<p class="isc-backlink"><?php printf( __( 'Image list created by <a href="%s" title="Image Source Control">Image Source Control Plugin</a>', 'image-source-control-isc' ), WEBGILDE ); ?></p>
-				<?php
-		}
 
 		return ob_get_clean();
 	}
-
 
 	/**
 	 * Performs rendering of all attachments list
