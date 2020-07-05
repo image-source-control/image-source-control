@@ -218,7 +218,7 @@ class ISC_Public extends ISC_Class {
 		// if attachments is an empty string, search for images in it
 		if ( $attachments == '' ) {
 				// unregister our content filter in order to prevent infinite loops when calling the_content in the next steps
-                // todo: there also seems to be a loop caused by REST requests as reported and hotfixed in https://github.com/webgilde/image-source-control/issues/48
+				// todo: there also seems to be a loop caused by REST requests as reported and hotfixed in https://github.com/webgilde/image-source-control/issues/48
 				remove_filter( 'the_content', array( $this, 'content_filter' ), 20 );
 
 				$this->save_image_information_on_load();
@@ -298,17 +298,17 @@ class ISC_Public extends ISC_Class {
 
 		// hotfix for https://github.com/webgilde/image-source-control/issues/48 to prevent loops
 		if ( defined( 'REST_REQUEST' ) ) {
-		    return '';
+			return '';
 		}
 
-		extract( shortcode_atts( array( 'id' => 0 ), $atts ) );
+		$a = shortcode_atts( array( 'id' => 0 ), $atts );
 
 		// if $id not set, use the current ID from the post
-		if ( empty( $id ) && isset( $post->ID ) ) {
-			$id = $post->ID;
+		if ( ! $a['id'] && isset( $post->ID ) ) {
+			$a['id'] = $post->ID;
 		}
 
-		return $this->list_post_attachments_with_sources( $id );
+		return $this->list_post_attachments_with_sources( $a['id'] );
 	}
 
 	/**
@@ -318,26 +318,21 @@ class ISC_Public extends ISC_Class {
 	 * @since 1.1.3
 	 */
 	public function list_all_post_attachments_sources_shortcode( $atts = array() ) {
-		extract(
-			shortcode_atts(
-				array(
-					'per_page'     => 99999,
-					'before_links' => '',
-					'after_links'  => '',
-					'prev_text'    => '&#171; Previous',
-					'next_text'    => 'Next &#187;',
-					'included'     => 'displayed',
-				),
-				$atts
-			)
+		$a = shortcode_atts(
+			array(
+				'per_page'     => 99999,
+				'before_links' => '',
+				'after_links'  => '',
+				'prev_text'    => '&#171; Previous',
+				'next_text'    => 'Next &#187;',
+				'included'     => 'displayed',
+			),
+			$atts
 		);
 
-		if ( '&#171; Previous' === $prev_text ) {
-			$prev_text = __( '&#171; Previous', 'image-source-control-isc' );
-		}
-		if ( 'Next &#187;' === $next_text ) {
-			$next_text = __( 'Next &#187;', 'image-source-control-isc' );
-		}
+		// use proper translation if attribute is not given
+		$prev_text = '&#171; Previous' === $a['prev_text'] ? __( '&#171; Previous', 'image-source-control-isc' ) : $a['prev_text'];
+		$next_text = 'Next &#187;' === $a['next_text'] ? __( 'Next &#187;', 'image-source-control-isc' ) : $a['next_text'];
 
 		// retrieve all attachments
 		$args = array(
@@ -348,7 +343,7 @@ class ISC_Public extends ISC_Class {
 		);
 
 		// check mode
-		if ( $included === 'all' ) {
+		if ( $a['included'] === 'all' ) {
 			// load all images
 
 		} else { // load only images attached to posts
@@ -402,7 +397,7 @@ class ISC_Public extends ISC_Class {
 						);
 					}
 				}
-				if ( 'all' !== $included && $usage_data_array === array() ) {
+				if ( 'all' !== $a['included'] && $usage_data_array === array() ) {
 					unset( $connected_atts[ $_attachment->ID ] );
 					continue;
 				}
@@ -424,9 +419,9 @@ class ISC_Public extends ISC_Class {
 
 		$up_limit = 1;
 
-		if ( $per_page < $total ) {
-			$rem      = $total % $per_page; // The Remainder of $total/$per_page
-			$up_limit = ( $total - $rem ) / $per_page;
+		if ( $a['per_page'] < $total ) {
+			$rem      = $total % $a['per_page']; // The Remainder of $total/$per_page
+			$up_limit = ( $total - $rem ) / $a['per_page'];
 			if ( 0 < $rem ) {
 				$up_limit++; // If rem is positive, add the last page that contains less than $per_page attachment;
 			}
@@ -436,10 +431,10 @@ class ISC_Public extends ISC_Class {
 		if ( 2 > $up_limit ) {
 			$this->display_all_attachment_list( $connected_atts );
 		} else {
-			$starting_atts = $per_page * ( $page - 1 ); // for page 2 and 3 $per_page start display on $connected_atts[3*(2-1) = 3]
-			$paged_atts    = array_slice( $connected_atts, $starting_atts, $per_page, true );
+			$starting_atts = $a['per_page'] * ( $page - 1 ); // for page 2 and 3 $per_page start display on $connected_atts[3*(2-1) = 3]
+			$paged_atts    = array_slice( $connected_atts, $starting_atts, $a['per_page'], true );
 			$this->display_all_attachment_list( $paged_atts );
-			$this->pagination_links( $up_limit, $before_links, $after_links, $prev_text, $next_text );
+			$this->pagination_links( $up_limit, $a['before_links'], $a['after_links'], $prev_text, $next_text );
 		}
 		if ( isset( $options['webgilde'] ) && true == $options['webgilde'] ) {
 			?>
