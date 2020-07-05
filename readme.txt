@@ -16,12 +16,6 @@ Did you ever forget to add the source to an image file in the frontend and the l
 
 Image Source Control (ISC) helps to prevent this situation.
 
-> <strong>github repository</strong>
-> 
-> I might not always be able to work on feature requests or fix buxes, but you can submit them to the github repository.
-> I will definitely review them there.
-> https://github.com/webgilde/image-source-control
-
 **Image Sources Lists**
 
 You can choose between different image source list types:
