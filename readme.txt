@@ -116,6 +116,7 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 - fixed infinite loops breaking autosave feature in the block editor
 - removed unneeded code to recognize the gallery shortcode in classic editor
 - removed broken PHP code causing an issue when using the `isc_images_in_posts_simple` filter
+- removed option to add a link to the ISC website in the frontend
 
 = 1.10.4 =
 

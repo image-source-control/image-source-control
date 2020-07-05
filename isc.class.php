@@ -278,7 +278,6 @@ CC BY-NC-ND 2.0 Generic|https://creativecommons.org/licenses/by-nc-nd/2.0/';
 			$default['by_author_text']            = __( 'Owned by the author', 'image-source-control-isc' );
 			$default['installed']                 = false;
 			$default['version']                   = ISCVERSION;
-			$default['webgilde']                  = false;
 			$default['thumbnail_in_list']         = false;
 			$default['thumbnail_size']            = 'thumbnail';
 			$default['thumbnail_width']           = 150;
