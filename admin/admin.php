@@ -146,21 +146,31 @@ class ISC_Admin extends ISC_Class {
 	public function admin_headjs() {
 		global $pagenow;
 		$options = $this->get_isc_options();
+		// warning on post edit pages
 		if ( 'post.php' === $pagenow ) {
 			?>
 				<script type="text/javascript">
-				/* <![CDATA[ */
 					isc_data = {
 						warning_nosource : <?php echo ( ( $options['warning_nosource'] ) ? 'true' : 'false' ); ?>,
 						block_form_message : '<?php esc_html_e( 'Please specify the image source', 'image-source-control-isc' ); ?>'
 					}
-				/* ]]> */
 				</script>
 				<?php
 		}
+		error_log( print_r( $pagenow, true ) );
+		// texts on missing sources page
+		if ( 'upload.php' === $pagenow && 'isc_missing_sources_page' === $_GET['page'] ) {
+			?>
+            <script type="text/javascript">
+                isc_data = {
+                    confirm_message : '<?php esc_html_e( 'Are you sure?', 'image-source-control-isc' ); ?>'
+                }
+            </script>
+			<?php
+		}
 		// add nonce to all pages
 		$params = array(
-			'ajax_nonce' => wp_create_nonce( 'isc-admin-ajax-nonce' ),
+			'ajaxNonce' => wp_create_nonce( 'isc-admin-ajax-nonce' ),
 		);
 		wp_localize_script( 'jquery', 'isc', $params );
 	}
@@ -769,6 +779,7 @@ class ISC_Admin extends ISC_Class {
 	 * @since 1.6.1
 	 */
 	public function list_post_image_relations() {
+
 		// get all meta fields
 		$args              = array(
 			'posts_per_page' => -1,
@@ -784,6 +795,8 @@ class ISC_Admin extends ISC_Class {
 
 		if ( $posts_with_images->have_posts() ) {
 			require_once ISCPATH . '/admin/templates/post_images_list.php';
+		} else {
+		    die( __( 'No entries available', 'image-source-control-isc' ) );
 		}
 
 		wp_reset_postdata();
@@ -797,6 +810,13 @@ class ISC_Admin extends ISC_Class {
 	 * @since 1.6.1
 	 */
 	public function list_image_post_relations() {
+
+		check_ajax_referer( 'isc-admin-ajax-nonce', 'nonce' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			die( 'Wrong capabilities' );
+		}
+
 		// get all images
 		$args              = array(
 			'post_type'      => 'attachment',
@@ -812,6 +832,8 @@ class ISC_Admin extends ISC_Class {
 
 		if ( $images_with_posts->have_posts() ) {
 			require_once ISCPATH . '/admin/templates/image_posts_list.php';
+		} else {
+			die( __( 'No entries available', 'image-source-control-isc' ) );
 		}
 
 		wp_reset_postdata();

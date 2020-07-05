@@ -111,10 +111,11 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 
 - introducing a model class
 - rewrite of the block options to make them more stable
+- introduced option to reindex image-post relations again
 - introduced `isc_list_shortcode_empty_output` shortcode to allow output when a list of sources is empty
 - fixed indexing post content for images when the post is saved in the block editor
 - fixed infinite loops breaking autosave feature in the block editor
-- fixed debug tables
+- various fixes to debug tables
 - removed unneeded code to recognize the gallery shortcode in classic editor
 - removed broken PHP code causing an issue when using the `isc_images_in_posts_simple` filter
 - removed option to add a link to the ISC website in the frontend
