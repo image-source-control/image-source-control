@@ -299,42 +299,6 @@ CC BY-NC-ND 2.0 Generic|https://creativecommons.org/licenses/by-nc-nd/2.0/';
 		}
 
 		/**
-		 * Add isc_image_posts on all attachments. Launched during first installation.
-		 */
-		public function init_image_posts_metafield() {
-			$args  = array(
-				'post_type'   => 'any',
-				'numberposts' => -1,
-				'post_status' => null,
-				'post_parent' => null,
-			);
-			$posts = get_posts( $args );
-			foreach ( $posts as $post ) {
-				setup_postdata( $post );
-				/*
-				$image_urls = $this->filter_src_attributes($post->post_content);
-				$image_ids = array();
-				foreach ($image_urls as $url) {
-					$image_id = intval($this->get_image_by_url($url));
-					array_push($image_ids,$image_id);
-				}*/
-				$image_ids = $this->filter_image_ids( $post->post_content );
-				foreach ( $image_ids as $id ) {
-					$meta = get_post_meta( $id, 'isc_image_posts', true );
-					if ( empty( $meta ) ) {
-						update_post_meta( $id, 'isc_image_posts', array( $post->ID ) );
-					} else {
-						if ( ! in_array( $post->ID, $meta ) ) {
-							array_push( $meta, $post->ID );
-							$meta = array_unique( $meta );
-							update_post_meta( $id, 'isc_image_posts', $meta );
-						}
-					}
-				}
-			}
-		}
-
-		/**
 		 * Transform the licenses from the options textfield into an array
 		 *
 		 * @param string $licences text with licenses.
@@ -368,4 +332,4 @@ CC BY-NC-ND 2.0 Generic|https://creativecommons.org/licenses/by-nc-nd/2.0/';
 				return $new_licences;
 			}
 		}
-}//end class
+}

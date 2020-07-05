@@ -286,7 +286,7 @@ class ISC_Admin extends ISC_Class {
 	public function upgrade_management() {
 
 		/**
-		 * this function checks options in database
+		 * This function checks options in database
 		 * during the admin_init hook to handle plugin's upgrade.
 		 */
 
@@ -303,11 +303,6 @@ class ISC_Admin extends ISC_Class {
 					$options['display_type'][] = 'overlay';
 				}
 			}
-		} else {
-			// special case for version prior to 1.2 (which don't have options)
-			$options = $this->default_options();
-			$this->init_image_posts_metafield();
-			update_option( 'isc_options', $options );
 		}
 
 		if ( ISCVERSION !== $options['version'] ) {
