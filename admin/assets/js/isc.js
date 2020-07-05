@@ -21,6 +21,10 @@ jQuery(document).ready(function($) {
     // debug function – load image-post relations
     // call post-image relation (meta fields saved for posts)
     $('#isc-list-post-image-relation').click(function(){
+        // disable the button
+        var button = this;
+        button.disabled = true;
+
         $.ajax({
             type: 'POST',
             url: ajaxurl,
@@ -31,16 +35,22 @@ jQuery(document).ready(function($) {
             success:function(data, textStatus, XMLHttpRequest){
                 // display return messages
                 $('#isc-post-image-relations').html(data);
+                button.disabled = false;
             },
 
             error: function(MLHttpRequest, textStatus, errorThrown){
                 $('#isc-post-image-relations').html(errorThrown);
+                button.disabled = false;
             }
 
         });
     });
     // call image-post relation (meta fields saved for posts)
     $('#isc-list-image-post-relation').click(function(){
+        // disable the button
+        var button = this;
+        button.disabled = true;
+
         $.ajax({
             type: 'POST',
             url: ajaxurl,
@@ -51,12 +61,12 @@ jQuery(document).ready(function($) {
             success:function(data, textStatus, XMLHttpRequest){
                 // display return messages
                 $('#isc-image-post-relations').html(data);
+                button.disabled = false;
             },
-
             error: function(MLHttpRequest, textStatus, errorThrown){
                 $('#isc-image-post-relations').html(errorThrown);
+                button.disabled = false;
             }
-
         });
     });
     // remove image-post index
@@ -68,6 +78,10 @@ jQuery(document).ready(function($) {
             return;
         }
 
+        // disable the button
+        var button = this;
+        button.disabled = true;
+
         $.ajax({
             type: 'POST',
             url: ajaxurl,
@@ -78,9 +92,11 @@ jQuery(document).ready(function($) {
             success:function(data, textStatus, XMLHttpRequest){
                 // display return messages
                 $('#isc-clear-index-feedback').html(data);
+                button.disabled = false;
             },
             error: function(MLHttpRequest, textStatus, errorThrown){
                 $('#isc-clear-index-feedback').html(errorThrown);
+                button.disabled = false;
             }
 
         });
