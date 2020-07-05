@@ -46,23 +46,9 @@ class ISC_Model {
 			return;
 		}
 
-		/**
-		 * Don’t save meta data for non-public post types, since those shouldn’t be visible in the frontend
-		 * ignore also attachment posts
-		 * ignore revisions
-		 */
-		if ( ! isset( $post->post_type )
-			|| ! in_array( $post->post_type, get_post_types( array( 'public' => true ), 'names' ), true ) // is the post type public
-			|| 'attachment' === $post->post_type
-			|| 'revision' === $post->post_type ) {
+		// check if we can even save the image information
+		if ( ! $this->can_save_image_information( $post, $post_id ) ) {
 			return;
-		}
-
-		// check if this is a revision and if so, use parent post id
-		// todo: check if this is really needed after we excluded revisions
-		$id = wp_is_post_revision( $post_id );
-		if ( $id ) {
-			$post_id = $id;
 		}
 
 		$content = '';
@@ -197,6 +183,11 @@ class ISC_Model {
 			);
 		}*/
 
+		// check if we can even save the image information
+		if ( ! $this->can_save_image_information( null, $post_id ) ) {
+			return;
+		}
+
 		$_imgs = ISC_Class::get_instance()->filter_image_ids( $content );
 
 		// add thumbnail information
@@ -265,6 +256,11 @@ class ISC_Model {
 	 * @param integer $att_id attachment post ID.
 	 */
 	public function attachment_added( $att_id ) {
+
+		if ( ! isset( $this->fields ) ) {
+			return;
+		}
+
 		foreach ( $this->fields as $field ) {
 			update_post_meta( $att_id, $field['id'], $field['default'] );
 		}
@@ -305,4 +301,28 @@ class ISC_Model {
 		return $post;
 	}
 
+	/**
+	 * Don’t save meta data for non-public post types, since those shouldn’t be visible in the frontend
+	 * ignore also attachment posts
+	 * ignore revisions
+	 *
+	 * @param WP_Post $post post object.
+	 * @param integer $post_id WP_Post ID. Useful if post object is not given.
+	 */
+	private function can_save_image_information( $post, $post_id = null ) {
+
+		// load post if not given
+		if ( ! $post || ! $post instanceof WP_Post ) {
+			$post = get_post( $post_id );
+		}
+
+		if ( ! isset( $post->post_type )
+			 || ! in_array( $post->post_type, get_post_types( array( 'public' => true ), 'names' ), true ) // is the post type public
+			 || 'attachment' === $post->post_type
+			 || 'revision' === $post->post_type ) {
+			return false;
+		}
+
+		return true;
+	}
 }
