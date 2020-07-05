@@ -325,4 +325,23 @@ class ISC_Model {
 
 		return true;
 	}
+
+	/**
+	 * Remove all image-post relations
+	 * this concerns the post meta fields `isc_image_posts` and `isc_post_images`
+	 *
+	 * @return int|false The number of rows updated, or false on error.
+	 */
+	public function clear_index() {
+		global $wpdb;
+
+		$rows_deleted_1 = $wpdb->delete( $wpdb->postmeta, array( 'meta_key' => 'isc_post_images' ), array( '%s' ) );
+		$rows_deleted_2 = $wpdb->delete( $wpdb->postmeta, array( 'meta_key' => 'isc_image_posts' ), array( '%s' ) );
+
+		if ( false !== $rows_deleted_1 && false !== $rows_deleted_2 ) {
+			return $rows_deleted_1 + $rows_deleted_2;
+		}
+
+		return false;
+	}
 }
