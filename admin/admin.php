@@ -36,6 +36,7 @@ class ISC_Admin extends ISC_Class {
 		// ajax calls
 		add_action( 'wp_ajax_isc-post-image-relations', array( $this, 'list_post_image_relations' ) );
 		add_action( 'wp_ajax_isc-image-post-relations', array( $this, 'list_image_post_relations' ) );
+		add_action( 'wp_ajax_isc-clear-index', array( $this, 'clear_index' ) );
 	}
 
 	/**
@@ -157,6 +158,11 @@ class ISC_Admin extends ISC_Class {
 				</script>
 				<?php
 		}
+		// add nonce to all pages
+		$params = array(
+			'ajax_nonce' => wp_create_nonce( 'isc-admin-ajax-nonce' ),
+		);
+		wp_localize_script( 'jquery', 'isc', $params );
 	}
 
 	/**
@@ -811,6 +817,22 @@ class ISC_Admin extends ISC_Class {
 		wp_reset_postdata();
 
 		die();
+	}
+
+	/**
+	 * Callback to clear all image-post relations
+	 */
+	public function clear_index() {
+
+		check_ajax_referer( 'isc-admin-ajax-nonce', 'nonce' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			die( 'Wrong capabilities' );
+		}
+
+		$removed_rows = $this->model->clear_index();
+
+		die( "$removed_rows entries deleted" );
 	}
 
 	/**

@@ -88,9 +88,15 @@ else :
 }
 ?>
 <h2><?php esc_html_e( 'Debug', 'image-source-control-isc' ); ?></h2>
-<button type="button" id="isc-list-post-image-relation"><?php esc_html_e( 'list post-image relations', 'image-source-control-isc' ); ?></button>
+<button id="isc-list-post-image-relation" class="button button-secondary"><?php esc_html_e( 'list post-image relations', 'image-source-control-isc' ); ?></button>
 <p class="description"><?php esc_html_e( 'This will list the information ISC knows about the connection between posts and images.', 'image-source-control-isc' ); ?></p>
 <div id="isc-post-image-relations"></div>
-<button type="button" id="isc-list-image-post-relation"><?php esc_html_e( 'list image-post relations', 'image-source-control-isc' ); ?></button>
+<hr/>
+<button id="isc-list-image-post-relation" class="button button-secondary"><?php esc_html_e( 'list image-post relations', 'image-source-control-isc' ); ?></button>
 <p class="description"><?php esc_html_e( 'This will list the information ISC knows about the connection between images and posts.', 'image-source-control-isc' ); ?></p>
 <div id="isc-image-post-relations"></div>
+<hr/>
+<button id="isc-clear-index" class="button button-secondary"><?php esc_html_e( 'clear image-post index', 'image-source-control-isc' ); ?></button>
+<p class="description"><?php esc_html_e( 'Click the button to remove the connections between images and posts as listed above.', 'image-source-control-isc' ); ?>
+<br/><?php esc_html_e( 'The index is rebuilt automatically when a page with images on it is visited in the frontend.', 'image-source-control-isc' ); ?></p>
+<div id="isc-clear-index-feedback"></div>

@@ -53,6 +53,25 @@ jQuery(document).ready(function($) {
 
         });
     });
+    // remove image-post index
+    $('#isc-clear-index').click(function(){
+        $.ajax({
+            type: 'POST',
+            url: ajaxurl,
+            data: {
+                action: 'isc-clear-index',
+                nonce: isc.ajax_nonce,
+            },
+            success:function(data, textStatus, XMLHttpRequest){
+                // display return messages
+                $('#isc-clear-index-feedback').html(data);
+            },
+            error: function(MLHttpRequest, textStatus, errorThrown){
+                $('#isc-clear-index-feedback').html(errorThrown);
+            }
+
+        });
+    });
 });
 
 function isc_thumbnail_input_checkstate(){
