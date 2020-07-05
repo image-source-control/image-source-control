@@ -218,6 +218,7 @@ class ISC_Public extends ISC_Class {
 		// if attachments is an empty string, search for images in it
 		if ( $attachments == '' ) {
 				// unregister our content filter in order to prevent infinite loops when calling the_content in the next steps
+                // todo: there also seems to be a loop caused by REST requests as reported and hotfixed in https://github.com/webgilde/image-source-control/issues/48
 				remove_filter( 'the_content', array( $this, 'content_filter' ), 20 );
 
 				$this->save_image_information_on_load();
@@ -294,6 +295,12 @@ class ISC_Public extends ISC_Class {
 	 */
 	public function list_post_attachments_with_sources_shortcode( $atts = array() ) {
 		global $post;
+
+		// hotfix for https://github.com/webgilde/image-source-control/issues/48 to prevent loops
+		if ( defined( 'REST_REQUEST' ) ) {
+		    return '';
+		}
+
 		extract( shortcode_atts( array( 'id' => 0 ), $atts ) );
 
 		// if $id not set, use the current ID from the post
