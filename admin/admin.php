@@ -17,8 +17,6 @@ class ISC_Admin extends ISC_Class {
 
 		parent::__construct();
 
-		register_activation_hook( ISCPATH . '../isc.php', array( $this, 'activation' ) );
-
 		// register attachment fields
 		add_filter( 'attachment_fields_to_edit', array( $this, 'add_isc_fields' ), 10, 2 );
 
@@ -227,38 +225,6 @@ class ISC_Admin extends ISC_Class {
 	}
 
 	/**
-	 * The activation function
-	 */
-	public function activation() {
-		if ( ! is_array( get_option( 'isc_options' ) ) ) {
-			update_option( 'isc_options', $this->default_options() );
-		}
-		$options = $this->get_isc_options();
-		if ( ! $options['installed'] ) {
-			/**
-			* Here, all jobs to perform during first activation, especially options and custom fields.
-			* Important: NO add_action('something', 'somefunction') here.
-			*/
-
-			/**
-			 * Auto indexation removed in version 1.6
-			 * not needed due to NOT EXISTS for meta fields since WP 3.5
-			 *
-			 * @todo remove the functions completely
-			 */
-
-			// adds meta fields for attachments
-			// $this->add_meta_values_to_attachments();
-
-			// set all isc_image_posts meta fields.
-			// $this->init_image_posts_metafield();
-
-			$options['installed'] = true;
-			update_option( 'isc_options', $options );
-		}
-	}
-
-	/**
 	 * Create the menu pages for isc
 	 *
 	 * @since 1.0
@@ -320,7 +286,7 @@ class ISC_Admin extends ISC_Class {
 	public function upgrade_management() {
 
 		/**
-		 * Since the activation hook is not executed on plugin upgrade, this function checks options in database
+		 * this function checks options in database
 		 * during the admin_init hook to handle plugin's upgrade.
 		 */
 
@@ -341,7 +307,6 @@ class ISC_Admin extends ISC_Class {
 			// special case for version prior to 1.2 (which don't have options)
 			$options = $this->default_options();
 			$this->init_image_posts_metafield();
-			$options['installed'] = true;
 			update_option( 'isc_options', $options );
 		}
 
