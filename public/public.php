@@ -315,7 +315,7 @@ class ISC_Public extends ISC_Class {
 	 * Create a shortcode to list all image sources in the frontend
 	 *
 	 * @param array $atts attributes.
-	 * @since 1.1.3
+	 * @return string
 	 */
 	public function list_all_post_attachments_sources_shortcode( $atts = array() ) {
 		$a = shortcode_atts(
@@ -343,10 +343,8 @@ class ISC_Public extends ISC_Class {
 		);
 
 		// check mode
-		if ( $a['included'] === 'all' ) {
-			// load all images
-
-		} else { // load only images attached to posts
+		if ( 'all' !== $a['included'] ) {
+			// only load images attached to posts
 			$args['meta_query'] = array(
 				array(
 					'key'     => 'isc_image_posts',
@@ -358,7 +356,7 @@ class ISC_Public extends ISC_Class {
 
 		$attachments = get_posts( $args );
 		if ( empty( $attachments ) ) {
-			return;
+			return '';
 		}
 
 		$options = $this->get_isc_options();
@@ -390,6 +388,7 @@ class ISC_Public extends ISC_Class {
 					// only list published posts
 					if ( get_post_status( $data ) === 'publish' ) {
 						$usage_data_array[] = sprintf(
+						        // translators: %1$s is a URL, %2$s is the title of an image, %3$s is the link text.
 							__( '<li><a href="%1$s" title="View %2$s">%3$s</a></li>', 'image-source-control-isc' ),
 							esc_url( get_permalink( $data ) ),
 							esc_attr( get_the_title( $data ) ),
@@ -411,7 +410,7 @@ class ISC_Public extends ISC_Class {
 		$total = count( $connected_atts );
 
 		if ( 0 == $total ) {
-			return;
+			return '';
 		}
 
 		$page       = isset( $_GET['isc-page'] ) ? intval( $_GET['isc-page'] ) : 1;
@@ -442,8 +441,7 @@ class ISC_Public extends ISC_Class {
 				<?php
 		}
 
-		$output = ob_get_clean();
-		return $output;
+		return ob_get_clean();
 	}
 
 
