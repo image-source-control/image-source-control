@@ -701,7 +701,7 @@ class ISC_Admin extends ISC_Class {
 	/**
 	 * Get all attachments with empty sources string
 	 */
-	public function get_attachments_with_empty_sources() {
+	public static function get_attachments_with_empty_sources() {
 		$args = array(
 			'post_type'   => 'attachment',
 			'numberposts' => -1,
@@ -734,7 +734,7 @@ class ISC_Admin extends ISC_Class {
 	 *
 	 * @since 1.6
 	 */
-	public function get_attachments_without_sources() {
+	public static function get_attachments_without_sources() {
 		$args = array(
 			'post_type'   => 'attachment',
 			'numberposts' => -1,
