@@ -35,6 +35,25 @@ class ISC_Admin extends ISC_Class {
 		add_action( 'wp_ajax_isc-post-image-relations', array( $this, 'list_post_image_relations' ) );
 		add_action( 'wp_ajax_isc-image-post-relations', array( $this, 'list_image_post_relations' ) );
 		add_action( 'wp_ajax_isc-clear-index', array( $this, 'clear_index' ) );
+
+		// add settings link to plugin page
+		add_action( 'plugin_action_links_' . ISCBASE, array( $this, 'add_settings_link_to_plugin_page' ) );
+	}
+
+	/**
+	 * Add link to settings page from plugins.php
+	 *
+	 * @var array $links
+	 * @return array
+	 */
+	public function add_settings_link_to_plugin_page( $links ) {
+		$links[] = sprintf(
+			'<a href="%s">%s</a>',
+			esc_url( add_query_arg( 'page', 'isc-settings', get_admin_url() . 'options-general.php' ) ),
+			__( 'Settings', 'image-source-control-isc' )
+		);
+
+		return $links;
 	}
 
 	/**
@@ -97,7 +116,6 @@ class ISC_Admin extends ISC_Class {
 		}
 
 		if ( $show_warning ) {
-				$missing_src = admin_url( 'upload.php?page=isc_missing_sources_page' );
 			?><div class="error"><p>
 					<?php
 						printf(
@@ -110,7 +128,7 @@ class ISC_Admin extends ISC_Class {
 									),
 								)
 							),
-							esc_url( $missing_src )
+							esc_url( admin_url( 'upload.php?page=isc-sources' ) )
 						);
 					?>
 								</p></div>
@@ -155,8 +173,8 @@ class ISC_Admin extends ISC_Class {
 				</script>
 				<?php
 		}
-		// texts on missing sources page
-		if ( 'upload.php' === $pagenow && isset( $_GET['page'] ) && 'isc_missing_sources_page' === $_GET['page'] ) {
+		// texts in JavaScript on sources page
+		if ( 'upload.php' === $pagenow && isset( $_GET['page'] ) && 'isc-sources' === $_GET['page'] ) {
 			?>
 			<script type="text/javascript">
 				isc_data = {
@@ -230,12 +248,12 @@ class ISC_Admin extends ISC_Class {
 	 * @since 1.0
 	 */
 	public function create_menu() {
-		global $isc_missing;
+		global $isc_page;
 		global $isc_setting;
 
 		// These pages should be available only for editors and higher
-		$isc_missing = add_submenu_page( 'upload.php', 'missing image sources by Image Source Control Plugin', __( 'Missing Sources', 'image-source-control-isc' ), 'edit_others_posts', 'isc_missing_sources_page', array( $this, 'render_missing_sources_page' ) );
-		$isc_setting = add_options_page( __( 'Image control - ISC plugin', 'image-source-control-isc' ), __( 'Image Sources', 'image-source-control-isc' ), 'edit_others_posts', 'isc_settings_page', array( $this, 'render_isc_settings_page' ) );
+		$isc_page    = add_submenu_page( 'upload.php', 'Manage image sources with the Image Source Control Plugin', __( 'Image Sources', 'image-source-control-isc' ), 'edit_others_posts', 'isc-sources', array( $this, 'render_sources_page' ) );
+		$isc_setting = add_options_page( __( 'Image control - ISC plugin', 'image-source-control-isc' ), __( 'Image Sources', 'image-source-control-isc' ), 'edit_others_posts', 'isc-settings', array( $this, 'render_isc_settings_page' ) );
 	}
 
 	/**
@@ -319,7 +337,24 @@ class ISC_Admin extends ISC_Class {
 	public function render_isc_settings_page() {
 		?>
 			<div id="icon-options-general" class="icon32"><br></div>
-			<h2><?php esc_html_e( 'Images control settings', 'image-source-control-isc' ); ?></h2>
+			<h1><?php esc_html_e( 'Images control settings', 'image-source-control-isc' ); ?></h1>
+			<p>
+			<?php
+			printf(
+				wp_kses(
+						// translators: %1$s is a starting a-tag, %2$s is the closing one.
+					__( 'You can manage and debug image sources under %1$sMedia > Image Sources%2$s.', 'image-source-control-isc' ),
+					array(
+						'a' => array(
+							'href' => array(),
+						),
+					)
+				),
+				'<a href="' . esc_url( admin_url( 'upload.php?page=isc-sources' ) ) . '">',
+				'</a>'
+			);
+			?>
+					</p>
 			<div id="isc-admin-wrap">
 				<form id="image-control-form" method="post" action="options.php">
 					<div id="isc-setting-group-type" class="postbox isc-setting-group"><?php // Open the div for the first settings group ?>
@@ -340,8 +375,8 @@ class ISC_Admin extends ISC_Class {
 	/**
 	 * Missing sources page callback
 	 */
-	public function render_missing_sources_page() {
-		require_once ISCPATH . '/admin/templates/missing_sources.php';
+	public function render_sources_page() {
+		require_once ISCPATH . '/admin/templates/sources.php';
 	}
 
 	/**

@@ -36,6 +36,7 @@ define( 'ISCVERSION', '1.10.4' );
 define( 'ISCNAME', 'Image Source Control' );
 define( 'ISCDIR', basename( dirname( __FILE__ ) ) );
 define( 'ISCPATH', plugin_dir_path( __FILE__ ) );
+define( 'ISCBASE', plugin_basename( __FILE__ ) ); // plugin base as used by WordPress to identify it.
 
 require_once ISCPATH . 'isc.class.php';
 require_once ISCPATH . 'includes/model.php';

@@ -1,9 +1,9 @@
 <?php
 /**
- * Renders the ISC debugging page which shows missing sources and allows debugging of existing entries.
+ * Renders the ISC debugging page which shows image sources and allows debugging of existing entries.
  */
 ?>
-<h1><?php esc_html_e( 'Missing Sources', 'image-source-control-isc' ); ?></h1>
+<h1><?php esc_html_e( 'Image Sources', 'image-source-control-isc' ); ?></h1>
 
 <?php
 $attachments = ISC_Admin::get_attachments_with_empty_sources();
