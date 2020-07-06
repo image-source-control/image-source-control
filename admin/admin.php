@@ -156,7 +156,7 @@ class ISC_Admin extends ISC_Class {
 				<?php
 		}
 		// texts on missing sources page
-		if ( 'upload.php' === $pagenow && 'isc_missing_sources_page' === $_GET['page'] ) {
+		if ( 'upload.php' === $pagenow && isset( $_GET['page'] ) && 'isc_missing_sources_page' === $_GET['page'] ) {
 			?>
 			<script type="text/javascript">
 				isc_data = {
