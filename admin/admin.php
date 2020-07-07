@@ -308,7 +308,7 @@ class ISC_Admin extends ISC_Class {
 		 * during the admin_init hook to handle plugin's upgrade.
 		 */
 
-		$options = get_option( 'isc_options' );
+		$options = get_option( 'isc_options', $this->default_options() );
 
 		if ( is_array( $options ) ) {
 			// version 1.7 and higher
@@ -321,6 +321,9 @@ class ISC_Admin extends ISC_Class {
 					$options['display_type'][] = 'overlay';
 				}
 			}
+		} else {
+			// create options from default just in case the isc_option is stored with something other than an array in it.
+			update_option( 'isc_options', $this->default_options() );
 		}
 
 		if ( ISCVERSION !== $options['version'] ) {
