@@ -67,76 +67,19 @@ class ISC_Admin extends ISC_Class {
 				return;
 		};
 
-		$show_warning = get_transient( 'isc-show-missing-sources-warning' );
+		$show_warning = get_site_transient( 'isc-show-missing-sources-warning' );
 
-			// attachments without sources
+		// check for missing sources if the transient is empty and store that value
 		if ( ! $show_warning ) {
-				$args        = array(
-					'post_type'   => 'attachment',
-					'numberposts' => 1,
-					'post_status' => null,
-					'post_parent' => null,
-					'meta_query'  => array(
-						array(
-							'key'     => 'isc_image_source',
-							'value'   => '',
-							'compare' => '=',
-						),
-						array(
-							'key'     => 'isc_image_source_own',
-							'value'   => '1',
-							'compare' => '!=',
-						),
-					),
-				);
-				$attachments = get_posts( $args );
-
-				if ( ! empty( $attachments ) ) {
-						$show_warning = true;
-				} else {
-						// load unindexed attachments
-						$args         = array(
-							'post_type'   => 'attachment',
-							'numberposts' => 1,
-							'post_status' => null,
-							'post_parent' => null,
-							'meta_query'  => array(
-								array(
-									'key'     => 'isc_image_source',
-									'value'   => 'any',
-									'compare' => 'NOT EXISTS',
-								),
-							),
-						);
-						$attachments2 = get_posts( $args );
-						if ( ! empty( $attachments2 ) ) {
-								$show_warning = true;
-						}
-				}
+			$show_warning = ISC_Model::has_missing_sources() ? true : 'no';
+			// save result in transient and don’t check for 1 hour.
+			set_site_transient( 'isc-show-missing-sources-warning', $show_warning, HOUR_IN_SECONDS );
 		}
 
-		if ( $show_warning ) {
-			?><div class="error"><p>
-					<?php
-						printf(
-							wp_kses(
-								// translators: %s is a URL
-								__( 'One or more attachments still have no source. See the <a href="%s">missing sources</a> list', 'image-source-control-isc' ),
-								array(
-									'a' => array(
-										'href' => array(),
-									),
-								)
-							),
-							esc_url( admin_url( 'upload.php?page=isc-sources' ) )
-						);
-					?>
-								</p></div>
-							<?php
+		// attachments without sources
+		if ( $show_warning && 'no' !== $show_warning ) {
+			require_once ISCPATH . '/admin/templates/notice-missing.php';
 		}
-
-		// save result in transient and don’t check for 24 hours
-		set_transient( 'isc-show-missing-sources-warning', $show_warning, DAY_IN_SECONDS );
 	}
 
 	/**
@@ -704,15 +647,17 @@ class ISC_Admin extends ISC_Class {
 		$options     = $this->get_isc_options();
 		$description = esc_html__( 'Display an admin notice in admin pages when one or more image sources are missing.', 'image-source-control-isc' );
 		?>
-			<div id="one-source-block">
-				<input type="checkbox" id="one-source" name="isc_options[one_source]" value="1" <?php checked( $options['warning_onesource_missing'] ); ?>/>
+			<div id="one-source-missing-block">
+				<input type="checkbox" name="isc_options[warning_onesource_missing]" value="1" <?php checked( $options['warning_onesource_missing'] ); ?>/>
 				<p><em><?php echo $description; ?></em></p>
 			</div>
 			<?php
 	}
 
 	/**
-	 * Get all attachments with empty sources string
+	 * Get all attachments with empty sources options.
+	 *
+	 * @return array with attachments.
 	 */
 	public static function get_attachments_with_empty_sources() {
 		$args = array(
@@ -736,18 +681,18 @@ class ISC_Admin extends ISC_Class {
 			),
 		);
 
-		$attachments = get_posts( $args );
-		if ( ! empty( $attachments ) ) {
-			return $attachments;
-		}
+		// is per function definition always returning an array, even if empty.
+		return get_posts( $args );
 	}
 
 	/**
-	 * Get all attachments without the proper meta values (needed mostly after installing the plugin for unindexed images)
+	 * Get all attachments that are not used
+	 * read: they don’t have the proper meta values set up, yet.
 	 *
 	 * @since 1.6
+	 * @return array with attachments.
 	 */
-	public static function get_attachments_without_sources() {
+	public static function get_unused_attachments() {
 		$args = array(
 			'post_type'   => 'attachment',
 			'numberposts' => -1,
@@ -763,10 +708,8 @@ class ISC_Admin extends ISC_Class {
 			),
 		);
 
-		$attachments = get_posts( $args );
-		if ( ! empty( $attachments ) ) {
-			return $attachments;
-		}
+		// is per function definition always returning an array, even if empty.
+		return get_posts( $args );
 	}
 
 
@@ -791,9 +734,9 @@ class ISC_Admin extends ISC_Class {
 		$posts_with_images = new WP_Query( $args );
 
 		if ( $posts_with_images->have_posts() ) {
-			require_once ISCPATH . '/admin/templates/post_images_list.php';
+			require_once ISCPATH . '/admin/templates/post-images-list.php';
 		} else {
-			die( __( 'No entries available', 'image-source-control-isc' ) );
+			die( esc_html__( 'No entries available', 'image-source-control-isc' ) );
 		}
 
 		wp_reset_postdata();
@@ -828,9 +771,9 @@ class ISC_Admin extends ISC_Class {
 		$images_with_posts = new WP_Query( $args );
 
 		if ( $images_with_posts->have_posts() ) {
-			require_once ISCPATH . '/admin/templates/image_posts_list.php';
+			require_once ISCPATH . '/admin/templates/image-posts-list.php';
 		} else {
-			die( __( 'No entries available', 'image-source-control-isc' ) );
+			die( esc_html__( 'No entries available', 'image-source-control-isc' ) );
 		}
 
 		wp_reset_postdata();
@@ -851,7 +794,7 @@ class ISC_Admin extends ISC_Class {
 
 		$removed_rows = $this->model->clear_index();
 
-		die( "$removed_rows entries deleted" );
+		die( esc_html( "$removed_rows entries deleted" ) );
 	}
 
 	/**
@@ -867,16 +810,9 @@ class ISC_Admin extends ISC_Class {
 		} else {
 			$output['display_type'] = $input['display_type'];
 		}
-		if ( isset( $input['list_on_archives'] ) ) {
-			$output['list_on_archives'] = true;
-		} else {
-			$output['list_on_archives'] = false;
-		}
-		if ( isset( $input['list_on_excerpts'] ) ) {
-			$output['list_on_excerpts'] = true;
-		} else {
-			$output['list_on_excerpts'] = false;
-		}
+		$output['list_on_archives'] = isset( $input['list_on_archives'] );
+		$output['list_on_excerpts'] = isset( $input['list_on_excerpts'] );
+
 		$output['image_list_headline'] = esc_html( $input['image_list_headline_field'] );
 		if ( isset( $input['use_authorname_ckbox'] ) ) {
 			// Don't worry about the custom text if the author name is selected.
@@ -885,16 +821,9 @@ class ISC_Admin extends ISC_Class {
 			$output['use_authorname'] = false;
 			$output['by_author_text'] = esc_html( $input['by_author_text_field'] );
 		}
-		if ( isset( $input['exclude_own_images'] ) ) {
-			$output['exclude_own_images'] = true;
-		} else {
-			$output['exclude_own_images'] = false;
-		}
-		if ( isset( $input['enable_licences'] ) ) {
-			$output['enable_licences'] = true;
-		} else {
-			$output['enable_licences'] = false;
-		}
+		$output['exclude_own_images'] = isset( $input['exclude_own_images'] );
+		$output['enable_licences']    = isset( $input['enable_licences'] );
+
 		if ( isset( $input['licences'] ) ) {
 			$output['licences'] = esc_textarea( $input['licences'] );
 		} else {
@@ -917,21 +846,10 @@ class ISC_Admin extends ISC_Class {
 		} else {
 			$output['thumbnail_in_list'] = false;
 		}
-		if ( isset( $input['no_source'] ) ) {
-			$output['warning_nosource'] = true;
-		} else {
-			$output['warning_nosource'] = false;
-		}
-		if ( isset( $input['one_source'] ) ) {
-			$output['warning_onesource_missing'] = true;
-		} else {
-			$output['warning_onesource_missing'] = false;
-		}
-		if ( isset( $input['hide_list'] ) ) {
-			$output['hide_list'] = true;
-		} else {
-			$output['hide_list'] = false;
-		}
+		$output['warning_nosource']          = isset( $input['no_source'] );
+		$output['warning_onesource_missing'] = isset( $input['warning_onesource_missing'] );
+		$output['hide_list']                 = isset( $input['hide_list'] );
+
 		if ( in_array( $input['cap_pos'], $this->caption_position, true ) ) {
 			$output['caption_position'] = $input['cap_pos'];
 		}

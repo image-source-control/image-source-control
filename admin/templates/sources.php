@@ -40,15 +40,16 @@ else :
 	<?php
 else :
 	?>
-	<div class="notice notice-success"><p><span class="dashicons dashicons-yes" style="color: #46b450"></span><?php esc_html_e( 'All images have sources assigned.', 'image-source-control-isc' ); ?></p></div>
+	<div class="notice notice-success"><p><span class="dashicons dashicons-yes" style="color: #46b450"></span><?php esc_html_e( 'All images found in the frontend have sources assigned.', 'image-source-control-isc' ); ?></p></div>
 	<?php
 endif;
 
-$attachments = ISC_Admin::get_attachments_without_sources();
+$attachments = ISC_Admin::get_unused_attachments();
 if ( ! empty( $attachments ) ) :
 	?>
-	<h2><?php esc_html_e( 'Unindexed images', 'image-source-control-isc' ); ?></h2>
-	<p><?php esc_html_e( 'Images that haven’t been indexed yet or are not used.', 'image-source-control-isc' ); ?></p>
+	<h2><?php esc_html_e( 'Images with unknown position', 'image-source-control-isc' ); ?></h2>
+	<p><?php esc_html_e( 'The list contains images that neither have sources nor were yet found by ISC on your site.', 'image-source-control-isc' ); ?>&nbsp;
+	<?php esc_html_e( 'They might not need a source after all.', 'image-source-control-isc' ); ?></p>
 	<table class="widefat isc-table" style="width: 80%;" >
 		<thead>
 			<tr>
@@ -65,10 +66,6 @@ if ( ! empty( $attachments ) ) :
 		</tr>
 		<?php endforeach; ?>
 	</tbody></table>
-	<?php
-else :
-	?>
-	<h2><?php esc_html_e( 'All images are indexed.', 'image-source-control-isc' ); ?></h2>
 	<?php
 endif;
 ?>

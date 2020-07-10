@@ -103,7 +103,14 @@ class ISC_Class {
 			// load all plugin options
 			$this->options  = get_option( 'isc_options' );
 			self::$instance = $this;
-			$this->model = new ISC_Model();
+			$this->model    = new ISC_Model();
+
+			/**
+			 * Register actions to update missing sources checks each time attachments’ post meta is updated
+			 *
+			 * See the "updated_post_meta" action hook
+			 */
+			add_action( 'updated_post_meta', array( $this, 'maybe_update_attachment_post_meta' ), 10, 3 );
 		}
 
 		/**
@@ -330,6 +337,20 @@ CC BY-NC-ND 2.0 Generic|https://creativecommons.org/licenses/by-nc-nd/2.0/';
 				return false;
 			} else {
 				return $new_licences;
+			}
+		}
+
+		/**
+		 * Control if we are dynamically checking if sources are missing each time attachments are updated
+		 * using the "updated_{$meta_type}_meta" hook
+		 *
+		 * @param int    $meta_id     ID of updated metadata entry.
+		 * @param int    $object_id   ID of the object metadata is for.
+		 * @param string $meta_key    Metadata key.
+		 */
+		public function maybe_update_attachment_post_meta( $meta_id, $object_id, $meta_key ) {
+			if ( in_array( $meta_key, array( 'isc_image_source_own', 'isc_image_source' ), true ) ) {
+				ISC_Model::update_missing_sources_transient();
 			}
 		}
 }
