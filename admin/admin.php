@@ -104,18 +104,6 @@ class ISC_Admin extends ISC_Class {
 	 */
 	public function admin_headjs() {
 		global $pagenow;
-		$options = $this->get_isc_options();
-		// warning on post edit pages
-		if ( 'post.php' === $pagenow ) {
-			?>
-				<script type="text/javascript">
-					isc_data = {
-						warning_nosource : <?php echo ( ( $options['warning_nosource'] ) ? 'true' : 'false' ); ?>,
-						block_form_message : '<?php esc_html_e( 'Please specify the image source', 'image-source-control-isc' ); ?>'
-					}
-				</script>
-				<?php
-		}
 		// texts in JavaScript on sources page
 		if ( 'upload.php' === $pagenow && isset( $_GET['page'] ) && 'isc-sources' === $_GET['page'] ) {
 			?>
@@ -238,7 +226,6 @@ class ISC_Admin extends ISC_Class {
 		add_settings_field( 'use_authorname', __( 'Use authors names', 'image-source-control-isc' ), array( $this, 'renderfield_use_authorname' ), 'isc_settings_page', 'isc_settings_section' );
 		add_settings_field( 'by_author_text', __( 'Custom text for owned images', 'image-source-control-isc' ), array( $this, 'renderfield_byauthor_text' ), 'isc_settings_page', 'isc_settings_section' );
 		add_settings_field( 'warning_one_source', __( 'Warning when there is at least one missing source', 'image-source-control-isc' ), array( $this, 'renderfield_warning_onesource_misisng' ), 'isc_settings_page', 'isc_settings_section' );
-		add_settings_field( 'warning_nosource', __( 'Warnings when source not available', 'image-source-control-isc' ), array( $this, 'renderfield_warning_nosource' ), 'isc_settings_page', 'isc_settings_section' );
 	}
 
 	/**
@@ -626,23 +613,9 @@ class ISC_Admin extends ISC_Class {
 			<?php
 	}
 
-			/**
-			 * Render option to prevent saving attachments without image sources.
-			 */
-	public function renderfield_warning_nosource() {
-		$options     = $this->get_isc_options();
-		$description = esc_html__( 'Warn and prevent data to be saved when an attachment is edited and the source has not been specified.', 'image-source-control-isc' );
-		?>
-			<div id="no-source-block">
-				<input type="checkbox" id="no-source" name="isc_options[no_source]" value="1" <?php checked( $options['warning_nosource'] ); ?>/>
-				<p><em><?php echo $description; ?></em></p>
-			</div>
-			<?php
-	}
-
-			/**
-			 * Render the option to display a warning in the admin area if an image source is missing.
-			 */
+    /**
+     * Render the option to display a warning in the admin area if an image source is missing.
+     */
 	public function renderfield_warning_onesource_misisng() {
 		$options     = $this->get_isc_options();
 		$description = esc_html__( 'Display an admin notice in admin pages when one or more image sources are missing.', 'image-source-control-isc' );
@@ -846,7 +819,6 @@ class ISC_Admin extends ISC_Class {
 		} else {
 			$output['thumbnail_in_list'] = false;
 		}
-		$output['warning_nosource']          = isset( $input['no_source'] );
 		$output['warning_onesource_missing'] = isset( $input['warning_onesource_missing'] );
 		$output['hide_list']                 = isset( $input['hide_list'] );
 

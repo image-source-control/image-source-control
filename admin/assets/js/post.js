@@ -202,34 +202,3 @@ function IscBlockForm(selector, message, target, event)
         }
     }
 }
-
-/**
-* The main program
-*/
-jQuery(function(){
-    if (isc_data.warning_nosource) {
-        classic_form = new IscBlockForm('#post', isc_data.block_form_message, '.compat-attachment-fields', 'submit');
-        classic_form.register_field('source', '#post .compat-field-isc_image_source input');
-        classic_form.register_field('own', '#post .compat-field-isc_image_source_own input');
-        classic_form.filter(function(data){
-            if ('' == data['source'].value && false == data['own'].value) {
-                return false;
-            } else {
-                return true;
-            }
-        });
-        classic_form.attach();
-
-        live_form = new IscBlockForm('.compat-item', isc_data.block_form_message, '.compat-attachment-fields', 'live');
-        live_form.register_field('source', '.compat-item .compat-field-isc_image_source input');
-        live_form.register_field('own', '.compat-item .compat-field-isc_image_source_own input');
-        live_form.filter(function(data){
-            if ('' == data['source'].value && false == data['own'].value) {
-                return false;
-            } else {
-                return true;
-            }
-        });
-        live_form.attach();
-    }
-});

@@ -288,7 +288,6 @@ CC BY-NC-ND 2.0 Generic|https://creativecommons.org/licenses/by-nc-nd/2.0/';
 			$default['thumbnail_size']            = 'thumbnail';
 			$default['thumbnail_width']           = 150;
 			$default['thumbnail_height']          = 150;
-			$default['warning_nosource']          = true;
 			$default['warning_onesource_missing'] = true;
 			$default['hide_list']                 = false;
 			$default['caption_position']          = 'top-left';
