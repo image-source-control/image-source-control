@@ -344,4 +344,64 @@ class ISC_Model {
 
 		return false;
 	}
+
+	/**
+	 * Checks if there are image with missing sources
+	 * this includes attachments that were not indexed yet (don’t have the appropriate meta values)
+	 *
+	 * @return bool true if sources are missing.
+	 */
+	public static function has_missing_sources() {
+		$args = array(
+			'post_type'   => 'attachment',
+			'numberposts' => 1,
+			'post_status' => null,
+			'post_parent' => null,
+			'meta_query'  => array(
+				array(
+					'key'     => 'isc_image_source',
+					'value'   => '',
+					'compare' => '=',
+				),
+				array(
+					'key'     => 'isc_image_source_own',
+					'value'   => '1',
+					'compare' => '!=',
+				),
+			),
+		);
+
+		if ( ! empty( get_posts( $args ) ) ) {
+			return true;
+		}
+
+		// look for unindexed attachments
+		$args = array(
+			'post_type'   => 'attachment',
+			'numberposts' => 1,
+			'post_status' => null,
+			'post_parent' => null,
+			'meta_query'  => array(
+				array(
+					'key'     => 'isc_image_source',
+					'value'   => 'any',
+					'compare' => 'NOT EXISTS',
+				),
+			),
+		);
+
+		return ! empty( get_posts( $args ) );
+	}
+
+	/**
+	 * Update the transient we set for missing sources
+	 * running each time we are writing the `isc_image_source` post meta key
+	 */
+	public static function update_missing_sources_transient() {
+		if ( self::has_missing_sources() ) {
+			set_site_transient( 'isc-show-missing-sources-warning', true, HOUR_IN_SECONDS );
+		} else {
+			set_site_transient( 'isc-show-missing-sources-warning', 'no', HOUR_IN_SECONDS );
+		}
+	}
 }
