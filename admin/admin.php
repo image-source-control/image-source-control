@@ -223,7 +223,8 @@ class ISC_Admin extends ISC_Class {
 		add_settings_field( 'exclude_own_images', __( 'Exclude own images', 'image-source-control-isc' ), array( $this, 'renderfield_exclude_own_images' ), 'isc_settings_page', 'isc_settings_section' );
 		add_settings_field( 'use_authorname', __( 'Use authors names', 'image-source-control-isc' ), array( $this, 'renderfield_use_authorname' ), 'isc_settings_page', 'isc_settings_section' );
 		add_settings_field( 'by_author_text', __( 'Custom text for owned images', 'image-source-control-isc' ), array( $this, 'renderfield_byauthor_text' ), 'isc_settings_page', 'isc_settings_section' );
-		add_settings_field( 'warning_one_source', __( 'Warning when there is at least one missing source', 'image-source-control-isc' ), array( $this, 'renderfield_warning_onesource_misisng' ), 'isc_settings_page', 'isc_settings_section' );
+		add_settings_field( 'warning_one_source', __( 'Warn about missing sources', 'image-source-control-isc' ), array( $this, 'renderfield_warning_onesource_misisng' ), 'isc_settings_page', 'isc_settings_section' );
+		add_settings_field( 'remove_on_uninstall', __( 'Deleta data on uninstall', 'image-source-control-isc' ), array( $this, 'renderfield_remove_on_uninstall' ), 'isc_settings_page', 'isc_settings_section' );
 	}
 
 	/**
@@ -268,7 +269,7 @@ class ISC_Admin extends ISC_Class {
 	public function render_isc_settings_page() {
 		?>
 			<div id="icon-options-general" class="icon32"><br></div>
-			<h1><?php esc_html_e( 'Images control settings', 'image-source-control-isc' ); ?></h1>
+			<h1><?php esc_html_e( 'ISC settings', 'image-source-control-isc' ); ?></h1>
 			<p>
 			<?php
 			printf(
@@ -611,9 +612,9 @@ class ISC_Admin extends ISC_Class {
 			<?php
 	}
 
-    /**
-     * Render the option to display a warning in the admin area if an image source is missing.
-     */
+	/**
+	 * Render the option to display a warning in the admin area if an image source is missing.
+	 */
 	public function renderfield_warning_onesource_misisng() {
 		$options     = $this->get_isc_options();
 		$description = esc_html__( 'Display an admin notice in admin pages when one or more image sources are missing.', 'image-source-control-isc' );
@@ -622,6 +623,19 @@ class ISC_Admin extends ISC_Class {
 				<input type="checkbox" name="isc_options[warning_onesource_missing]" value="1" <?php checked( $options['warning_onesource_missing'] ); ?>/>
 				<p><em><?php echo $description; ?></em></p>
 			</div>
+			<?php
+	}
+
+	/**
+	 * Render the option to remove all options and meta data when the plugin is deleted.
+	 */
+	public function renderfield_remove_on_uninstall() {
+		$options     = $this->get_isc_options();
+		$description = esc_html__( 'Remove plugin options and image sources from the database when you delete the plugin.', 'image-source-control-isc' );
+		$checked     = ! empty( $options['remove_on_uninstall'] );
+		?>
+		<input type="checkbox" name="isc_options[remove_on_uninstall]" value="1" <?php checked( $checked ); ?>/>
+				<p class="description"><?php echo $description; ?></p>
 			<?php
 	}
 
@@ -763,7 +777,7 @@ class ISC_Admin extends ISC_Class {
 			die( 'Wrong capabilities' );
 		}
 
-		$removed_rows = $this->model->clear_index();
+		$removed_rows = ISC_Model::clear_index();
 
 		die( esc_html( "$removed_rows entries deleted" ) );
 	}
@@ -784,13 +798,13 @@ class ISC_Admin extends ISC_Class {
 		$output['list_on_archives'] = isset( $input['list_on_archives'] );
 		$output['list_on_excerpts'] = isset( $input['list_on_excerpts'] );
 
-		$output['image_list_headline'] = esc_html( $input['image_list_headline_field'] );
+		$output['image_list_headline'] = isset( $input['image_list_headline_field'] ) ? esc_html( $input['image_list_headline_field'] ) : '';
 		if ( isset( $input['use_authorname_ckbox'] ) ) {
 			// Don't worry about the custom text if the author name is selected.
 			$output['use_authorname'] = true;
 		} else {
 			$output['use_authorname'] = false;
-			$output['by_author_text'] = esc_html( $input['by_author_text_field'] );
+			$output['by_author_text'] = isset( $input['by_author_text_field'] ) ? esc_html( $input['by_author_text_field'] ) : '';
 		}
 		$output['exclude_own_images'] = isset( $input['exclude_own_images'] );
 		$output['enable_licences']    = isset( $input['enable_licences'] );
@@ -818,9 +832,10 @@ class ISC_Admin extends ISC_Class {
 			$output['thumbnail_in_list'] = false;
 		}
 		$output['warning_onesource_missing'] = isset( $input['warning_onesource_missing'] );
+		$output['remove_on_uninstall']       = isset( $input['remove_on_uninstall'] );
 		$output['hide_list']                 = isset( $input['hide_list'] );
 
-		if ( in_array( $input['cap_pos'], $this->caption_position, true ) ) {
+		if ( isset( $input['cap_pos'] ) && in_array( $input['cap_pos'], $this->caption_position, true ) ) {
 			$output['caption_position'] = $input['cap_pos'];
 		}
 		if ( isset( $input['source_pretext'] ) ) {

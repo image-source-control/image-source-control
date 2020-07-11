@@ -289,6 +289,7 @@ CC BY-NC-ND 2.0 Generic|https://creativecommons.org/licenses/by-nc-nd/2.0/';
 			$default['thumbnail_width']           = 150;
 			$default['thumbnail_height']          = 150;
 			$default['warning_onesource_missing'] = true;
+			$default['remove_on_uninstall']       = false;
 			$default['hide_list']                 = false;
 			$default['caption_position']          = 'top-left';
 			$default['source_pretext']            = __( 'Source:', 'image-source-control-isc' );

@@ -323,7 +323,7 @@ class ISC_Model {
 	 *
 	 * @return int|false The number of rows updated, or false on error.
 	 */
-	public function clear_index() {
+	public static function clear_index() {
 		global $wpdb;
 
 		$rows_deleted_1 = $wpdb->delete( $wpdb->postmeta, array( 'meta_key' => 'isc_post_images' ), array( '%s' ) );
