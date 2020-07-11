@@ -416,13 +416,12 @@ class ISC_Admin extends ISC_Class {
 			 * Render option to define a headline for the image list
 			 */
 	public function renderfield_list_headline() {
-		$options     = $this->get_isc_options();
-		$description = esc_html__( 'The headline of the image list added via shortcode or function in your theme.', 'image-source-control-isc' );
+		$options = $this->get_isc_options();
 		?>
 			<div id="image-list-headline-block">
 				<label for="list-head"><?php esc_html_e( 'Image list headline', 'image-source-control-isc' ); ?></label>
 				<input type="text" name="isc_options[image_list_headline_field]" id="list-head" value="<?php echo esc_attr( $options['image_list_headline'] ); ?>" class="regular-text" />
-				<p><em><?php echo $description; ?></em></p>
+				<p class="description"><?php esc_html_e( 'The headline of the image list added via shortcode or function in your theme.', 'image-source-control-isc' ); ?></p>
 			</div>
 			</td></tr></tbody></table>
 			</div><!-- .postbox -->
@@ -440,7 +439,7 @@ class ISC_Admin extends ISC_Class {
 		?>
 			<div id="overlay-block">
 				<input type="text" id='source-pretext' name="isc_options[source_pretext]" value="<?php echo esc_attr( $options['source_pretext'] ); ?>" />
-				<p><em><?php esc_html_e( 'The text preceding the source.', 'image-source-control-isc' ); ?></em></p>
+				<p class="description"><?php esc_html_e( 'The text preceding the source.', 'image-source-control-isc' ); ?></p>
 			</div>
 			<?php
 	}
@@ -449,8 +448,7 @@ class ISC_Admin extends ISC_Class {
 			 * Render option for the position of the overlay on images
 			 */
 	public function renderfield_overlay_position() {
-		$options     = $this->get_isc_options();
-		$description = esc_html__( 'Position of overlay into images', 'image-source-control-isc' );
+		$options = $this->get_isc_options();
 		?>
 			<div id="caption-position-block">
 					<select id="caption-pos" name="isc_options[cap_pos]">
@@ -458,7 +456,7 @@ class ISC_Admin extends ISC_Class {
 							<option value="<?php echo esc_attr( $pos ); ?>" <?php selected( $pos, $options['caption_position'] ); ?>><?php echo esc_html( $pos ); ?></option>
 						<?php endforeach; ?>
 					</select>
-					<p><em><?php echo $description; ?></em></p>
+				<p class="description"><?php esc_html_e( 'Position of overlay into images', 'image-source-control-isc' ); ?></p>
 			</div>
 			</td></tr></tbody></table>
 			</div><!-- .postbox -->
@@ -474,14 +472,12 @@ class ISC_Admin extends ISC_Class {
 	 * @since 1.3.7
 	 */
 	public function renderfield_exclude_own_images() {
-		$options     = $this->get_isc_options();
-		$description = esc_html__( "Exclude images marked as 'own image' from image lists (post and full) and overlay in the frontend. You can still manage them in the dashboard.", 'image-source-control-isc' );
-
+		$options = $this->get_isc_options();
 		?>
 			<div id="use-authorname-block">
 				<label for="exclude_own_images"><?php esc_html_e( 'Hide sources for own images', 'image-source-control-isc' ); ?></label>
 				<input type="checkbox" name="isc_options[exclude_own_images]" id="exclude_own_images" <?php checked( $options['exclude_own_images'] ); ?> />
-				<p><em><?php echo $description; ?></em></p>
+				<p class="description"><?php esc_html_e( "Exclude images marked as 'own image' from image lists (post and full) and overlay in the frontend. You can still manage them in the dashboard.", 'image-source-control-isc' ); ?></p>
 			</div>
 			<?php
 	}
@@ -490,14 +486,12 @@ class ISC_Admin extends ISC_Class {
 			 * Render option to choose if the author’s public name should be displayed for their images.
 			 */
 	public function renderfield_use_authorname() {
-		$options     = $this->get_isc_options();
-		$description = esc_html__( "Display the author's public name as source when the image is owned by the author (the uploader of the image, not necessarily the author of the post the image is displayed on). Uncheck to use a custom text instead.", 'image-source-control-isc' );
-
+		$options = $this->get_isc_options();
 		?>
 			<div id="use-authorname-block">
 				<label for="use_authorname"><?php esc_html_e( 'Use author name', 'image-source-control-isc' ); ?></label>
 				<input type="checkbox" name="isc_options[use_authorname_ckbox]" id="use_authorname" <?php checked( $options['use_authorname'] ); ?> />
-				<p><em><?php echo $description; ?></em></p>
+				<p class="description"><?php esc_html_e( "Display the author's public name as source when the image is owned by the author (the uploader of the image, not necessarily the author of the post the image is displayed on). Uncheck to use a custom text instead.", 'image-source-control-isc' ); ?></p>
 			</div>
 			<?php
 	}
@@ -506,12 +500,11 @@ class ISC_Admin extends ISC_Class {
 			 * Render option to enter a string that should show instead of the author name.
 			 */
 	public function renderfield_byauthor_text() {
-		$options     = $this->get_isc_options();
-		$description = esc_html__( "Enter the custom text to display if you do not want to use the author's public name.", 'image-source-control-isc' );
+		$options = $this->get_isc_options();
 		?>
 			<div id="by-author-text">
 				<input type="text" id="byauthor" name="isc_options[by_author_text_field]" value="<?php echo esc_attr( $options['by_author_text'] ); ?>" <?php disabled( $options['use_authorname'] ); ?> class="regular-text" />
-				<p><em><?php echo $description; ?></em></p>
+				<p class="description"><?php esc_html_e( "Enter the custom text to display if you do not want to use the author's public name.", 'image-source-control-isc' ); ?></p>
 			</div>
 			<?php
 	}
@@ -520,13 +513,11 @@ class ISC_Admin extends ISC_Class {
 			 * Render option to enable the license settings.
 			 */
 	public function renderfield_enable_licences() {
-		$options     = $this->get_isc_options();
-		$description = esc_html__( 'Enable this to be able to add and display copyright/copyleft licenses for your images and manage them in the field below.', 'image-source-control-isc' );
-
+		$options = $this->get_isc_options();
 		?>
 			<div id="enable-licences">
 				<input type="checkbox" name="isc_options[enable_licences]" id="enable_licences" <?php checked( $options['enable_licences'] ); ?> />
-				<p><em><?php echo $description; ?></em></p>
+				<p class="description"><?php esc_html_e( 'Enable this to be able to add and display copyright/copyleft licenses for your images and manage them in the field below.', 'image-source-control-isc' ); ?></p>
 			</div>
 			<?php
 	}
@@ -535,8 +526,7 @@ class ISC_Admin extends ISC_Class {
 			 * Render option to define the available licenses
 			 */
 	public function renderfield_licences() {
-		$options     = $this->get_isc_options();
-		$description = esc_html__( 'List of licenses the author can choose for an image. Enter a license per line and separate the name from the optional link with a pipe symbol (e.g. <em>CC BY 2.0|http://creativecommons.org/licenses/by/2.0/legalcode</em>).', 'image-source-control-isc' );
+		$options = $this->get_isc_options();
 
 		// fall back to default if field is empty
 		if ( empty( $options['licences'] ) ) {
@@ -550,7 +540,7 @@ class ISC_Admin extends ISC_Class {
 		?>
 			<div id="licences">
 				<textarea name="isc_options[licences]"><?php echo esc_html( $options['licences'] ); ?></textarea>
-				<p><em><?php echo $description; ?></em></p>
+				<p class="description"><?php esc_html_e( 'List of licenses the author can choose for an image. Enter a license per line and separate the name from the optional link with a pipe symbol (e.g. CC BY 2.0|http://creativecommons.org/licenses/by/2.0/legalcode).', 'image-source-control-isc' ); ?></p>
 			</div>
 			</td></tr></tbody></table>
 			</div><!-- .postbox -->
@@ -564,8 +554,7 @@ class ISC_Admin extends ISC_Class {
 			 * Render option to display thumbnails in the full image source list
 			 */
 	public function renderfield_use_thumbnail() {
-		$options     = $this->get_isc_options();
-		$description = esc_html__( 'Display thumbnails on the list of all images in the blog.', 'image-source-control-isc' );
+		$options = $this->get_isc_options();
 		?>
 			<div id="use-thumbnail-block">
 				<input type="checkbox" id="use-thumbnail" name="isc_options[use_thumbnail]" value="1" <?php checked( $options['thumbnail_in_list'] ); ?> />
@@ -574,7 +563,7 @@ class ISC_Admin extends ISC_Class {
 						<option value="<?php echo esc_html( $size ); ?>" <?php selected( $size, $options['thumbnail_size'] ); ?>><?php echo esc_html( $size ); ?></option>
 					<?php endforeach; ?>
 				</select>
-				<p><em><?php echo $description; ?></em></p>
+				<p class="description"><?php esc_html_e( 'Display thumbnails on the list of all images in the blog.', 'image-source-control-isc' ); ?></p>
 			</div>
 			<?php
 	}
@@ -583,12 +572,11 @@ class ISC_Admin extends ISC_Class {
 			 * Render option to define the width of the thumbnails displayed in the full image source list.
 			 */
 	public function renderfield_thumbnail_width() {
-		$options     = $this->get_isc_options();
-		$description = esc_html__( 'Custom value of the maximum allowed width for thumbnail.', 'image-source-control-isc' );
+		$options = $this->get_isc_options();
 		?>
 			<div id="thumbnail-custom-width">
 				<input type="text" id="custom-width" name="isc_options[thumbnail_width]" class="small-text" value="<?php echo esc_attr( $options['thumbnail_width'] ); ?>" /> px
-				<p><em><?php echo $description; ?></em></p>
+				<p class="description"><?php esc_html_e( 'Custom value of the maximum allowed width for thumbnail.', 'image-source-control-isc' ); ?></p>
 			</div>
 			<?php
 	}
@@ -597,12 +585,11 @@ class ISC_Admin extends ISC_Class {
 	 * Render option to define the height of the thumbnails displayed in the full image source list.
 	 */
 	public function renderfield_thumbnail_height() {
-		$options     = $this->get_isc_options();
-		$description = esc_html__( 'Custom value of the maximum allowed height for thumbnail.', 'image-source-control-isc' );
+		$options = $this->get_isc_options();
 		?>
 			<div id="thumbnail-custom-height">
 				<input type="text" id="custom-height" name="isc_options[thumbnail_height]" class="small-text" value="<?php echo esc_attr( $options['thumbnail_height'] ); ?>"/> px
-				<p><em><?php echo $description; ?></em></p>
+				<p class="description"><?php esc_html_e( 'Custom value of the maximum allowed height for thumbnail.', 'image-source-control-isc' ); ?></p>
 			</div>
 			</td></tr></tbody></table>
 			</div><!-- .postbox -->
@@ -616,12 +603,11 @@ class ISC_Admin extends ISC_Class {
 	 * Render the option to display a warning in the admin area if an image source is missing.
 	 */
 	public function renderfield_warning_onesource_misisng() {
-		$options     = $this->get_isc_options();
-		$description = esc_html__( 'Display an admin notice in admin pages when one or more image sources are missing.', 'image-source-control-isc' );
+		$options = $this->get_isc_options();
 		?>
 			<div id="one-source-missing-block">
 				<input type="checkbox" name="isc_options[warning_onesource_missing]" value="1" <?php checked( $options['warning_onesource_missing'] ); ?>/>
-				<p><em><?php echo $description; ?></em></p>
+				<p class="description"><?php esc_html_e( 'Display an admin notice in admin pages when one or more image sources are missing.', 'image-source-control-isc' ); ?></p>
 			</div>
 			<?php
 	}
@@ -630,12 +616,11 @@ class ISC_Admin extends ISC_Class {
 	 * Render the option to remove all options and meta data when the plugin is deleted.
 	 */
 	public function renderfield_remove_on_uninstall() {
-		$options     = $this->get_isc_options();
-		$description = esc_html__( 'Remove plugin options and image sources from the database when you delete the plugin.', 'image-source-control-isc' );
-		$checked     = ! empty( $options['remove_on_uninstall'] );
+		$options = $this->get_isc_options();
+		$checked = ! empty( $options['remove_on_uninstall'] );
 		?>
 		<input type="checkbox" name="isc_options[remove_on_uninstall]" value="1" <?php checked( $checked ); ?>/>
-				<p class="description"><?php echo $description; ?></p>
+				<p class="description"><?php esc_html_e( 'Remove plugin options and image sources from the database when you delete the plugin.', 'image-source-control-isc' ); ?></p>
 			<?php
 	}
 
