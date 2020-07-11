@@ -67,13 +67,11 @@ class ISC_Admin extends ISC_Class {
 				return;
 		};
 
-		$show_warning = get_site_transient( 'isc-show-missing-sources-warning' );
+		$show_warning = get_transient( 'isc-show-missing-sources-warning' );
 
 		// check for missing sources if the transient is empty and store that value
 		if ( ! $show_warning ) {
-			$show_warning = ISC_Model::has_missing_sources() ? true : 'no';
-			// save result in transient and don’t check for 1 hour.
-			set_site_transient( 'isc-show-missing-sources-warning', $show_warning, HOUR_IN_SECONDS );
+			$show_warning = ISC_Model::update_missing_sources_transient();
 		}
 
 		// attachments without sources

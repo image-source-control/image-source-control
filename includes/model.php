@@ -289,15 +289,6 @@ class ISC_Model {
 			update_post_meta( $post['ID'], 'isc_image_licence', $attachment['isc_image_licence'] );
 		}
 
-		// remove transient that shows the warning, if true, to re-check image source warning with next call to admin_notices()
-		$options = ISC_Class::get_instance()->get_isc_options();
-		if ( isset( $options['warning_onesource_missing'] )
-			 && $options['warning_onesource_missing']
-			 && get_transient( 'isc-show-missing-sources-warning' ) ) {
-
-			delete_transient( 'isc-show-missing-sources-warning' );
-		};
-
 		return $post;
 	}
 
@@ -394,14 +385,18 @@ class ISC_Model {
 	}
 
 	/**
-	 * Update the transient we set for missing sources
+	 * Update the transient we set for missing sources to not check them for another hour
 	 * running each time we are writing the `isc_image_source` post meta key
+	 *
+	 * @return string value of the transient.
 	 */
 	public static function update_missing_sources_transient() {
 		if ( self::has_missing_sources() ) {
-			set_site_transient( 'isc-show-missing-sources-warning', true, HOUR_IN_SECONDS );
+			set_transient( 'isc-show-missing-sources-warning', true, DAY_IN_SECONDS );
+			return true;
 		} else {
-			set_site_transient( 'isc-show-missing-sources-warning', 'no', HOUR_IN_SECONDS );
+			set_transient( 'isc-show-missing-sources-warning', 'no', DAY_IN_SECONDS );
+			return 'no';
 		}
 	}
 }
