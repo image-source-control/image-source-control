@@ -464,7 +464,7 @@ class ISC_Public extends ISC_Class {
 		 * todo: allow overlays to start again after the table
 		 */
 		?>
-			<div class="isc_all_image_list_box isc_stop_overlay">
+			<div class="isc_all_image_list_box isc_stop_overlay" style="overflow: scroll;">
 			<table>
 				<thead>
 				<?php if ( $options['thumbnail_in_list'] ) : ?>
