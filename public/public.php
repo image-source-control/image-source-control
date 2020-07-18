@@ -7,21 +7,46 @@
 class ISC_Public extends ISC_Class {
 
 	/**
+     * Instance of ISC_Public
+     *
+	 * @var $instance
+	 */
+	protected static $instance = NULL;
+
+	/**
 	 * ISC_Public constructor.
 	 */
 	public function __construct() {
 		parent::__construct();
 
+		add_action( 'plugins_loaded', array( $this, 'plugins_loaded' ) );
+	}
+
+	/**
+	 * Load after plugins are loaded
+	 */
+	public function plugins_loaded() {
 		add_action( 'wp_enqueue_scripts', array( $this, 'front_scripts' ) );
 		add_action( 'wp_head', array( $this, 'front_head' ) );
 
-		/**
-		 * Filters need to be above 10 in order to interpret also gallery shortcode
-		 */
-		add_filter( 'the_content', array( $this, 'content_filter' ), 20 );
+		// Content filters need to be above 10 in order to interpret also gallery shortcode
+        // registering the classes using an instance so that we remove the filter somewhere else
+		add_filter( 'the_content', array( ISC_Public::get_instance(), 'add_source_captions_to_content' ), 20 );
+		add_filter( 'the_content', array( ISC_Public::get_instance(), 'add_source_list_to_content' ), 21 );
 		add_filter( 'the_excerpt', array( $this, 'excerpt_filter' ), 20 );
+
 		add_shortcode( 'isc_list', array( $this, 'list_post_attachments_with_sources_shortcode' ) );
 		add_shortcode( 'isc_list_all', array( $this, 'list_all_post_attachments_sources_shortcode' ) );
+    }
+
+	/**
+     * Get an instance of ISC_Public
+     *
+	 * @return ISC_Public|null
+	 */
+	public static function get_instance() {
+		NULL === self::$instance and self::$instance = new self;
+		return self::$instance;
 	}
 
 	/**
@@ -57,124 +82,134 @@ class ISC_Public extends ISC_Class {
 	 *
 	 * @param string $content post content.
 	 * @return string $content
-	 *
-	 * @update 1.4.3
 	 */
-	public function content_filter( $content ) {
+	public function add_source_captions_to_content( $content ) {
 
-	    // create a new line in the log to separate different posts
+		// create a new line in the log to separate different posts
 		ISC_Log::log( '---' );
-		if ( isset( $_SERVER['REQUEST_URI'] ) ) {
-			ISC_Log::log( 'enter content_filter() for ' . $_SERVER['REQUEST_URI'] );
-		}
 
 		// display inline sources
 		$options = $this->get_isc_options();
-		if ( isset( $options['display_type'] ) && is_array( $options['display_type'] ) && in_array( 'overlay', $options['display_type'], true ) ) {
-			ISC_Log::log( 'start creating source overlays' );
-
-			/**
-			 * Split content where `isc_stop_overlay` is found to not display overlays starting there
-			 */
-			if ( strpos( $content, 'isc_stop_overlay' ) ) {
-				list( $content, $content_after ) = explode( 'isc_stop_overlay', $content, 2 );
-			} else {
-				$content_after = '';
-			}
-
-			/**
-			 * Removed [caption], because this check runs after the hook that interprets shortcodes
-			 * img tag is checked individually since there is a different order of attributes when images are used in gallery or individually
-			 *
-			 * 0 – full match
-			 * 1 - <figure> if set
-			 * 2 – alignment
-			 * 3 – inner code starting with <a>
-			 * 4 – opening link attribute
-			 * 5 – "rel" attribute from link tag
-			 * 6 – image id from link wp-att- value in "rel" attribute
-			 * 7 – full img tag
-			 * 8 – image URL
-			 * 9 – (unused)
-			 * 10 - </figure>
-			 *
-			 * tested with:
-			 * * with and without [caption]
-			 * * with and without link attibute
-			 *
-			 * potential issues:
-			 * * line breaks in the code
-			 */
-			$pattern = '#(<[^>]*class="[^"]*(alignleft|alignright|alignnone|aligncenter).*)?((<a [^>]*(rel="[^"]*[^"]*wp-att-(\d+)"[^>]*)>)? *(<img [^>]*[^>]*src="(.+)".*\/?>).*(</a>)??[^<]*).*(<\/figure.*>)?#isU';
-			$count   = preg_match_all( $pattern, $content, $matches );
-
-			ISC_Log::log( 'embedded images found: ' . $count );
-
-			if ( false !== $count ) {
-				for ( $i = 0; $i < $count; $i++ ) {
-
-					/**
-					 * Interpret the image tag
-					 * we only need the ID if we don’t have it yet
-					 * it can be retrieved from "wp-image-" class (single) or "aria-describedby="gallery-1-34" in gallery
-					 */
-					$id      = $matches[6][ $i ];
-					$img_tag = $matches[7][ $i ];
-
-					ISC_Log::log( sprintf( 'found ID "%s" and img tag "%s"', $id, $img_tag ) );
-
-					if ( ! $id ) {
-							$success = preg_match( '#wp-image-(\d+)|aria-describedby="gallery-1-(\d+)#is', $img_tag, $matches_id );
-						if ( $success ) {
-							$id = $matches_id[1] ? intval( $matches_id[1] ) : intval( $matches_id[2] );
-							ISC_Log::log( sprintf( 'found ID "%s"', $id ) );
-						} else {
-							ISC_Log::log( sprintf( 'no ID found for "%s"', $img_tag ) );
-						}
-					}
-
-					// if ID is still missing get image by URL
-					if ( ! $id ) {
-						$src = $matches[8][ $i ];
-						$id  = $this->get_image_by_url( $src );
-						ISC_Log::log( sprintf( 'ID for source "%s": "%s"', $src, $id ) );
-					}
-
-					// don’t show caption for own image if admin choose not to do so
-					if ( $options['exclude_own_images'] ) {
-						if ( get_post_meta( $id, 'isc_image_source_own', true ) ) {
-							ISC_Log::log( sprintf( 'skipped "own" image for ID "%s"', $id ) );
-							continue;
-						}
-					}
-
-					// don’t display empty sources
-					if ( ! $source_string = $this->render_image_source_string( $id ) ) {
-						ISC_Log::log( sprintf( 'skipped empty sources string for ID "%s"', $id ) );
-						continue;
-					}
-
-					// get any alignment from the original code
-					preg_match( '#alignleft|alignright|alignnone|aligncenter#is', $matches[0][ $i ], $matches_align );
-					$alignment = isset( $matches_align[0] ) ? $matches_align[0] : '';
-
-					$source      = '<span class="isc-source-text">' . $options['source_pretext'] . ' ' . $source_string . '</span>';
-					$old_content = $matches[3][ $i ];
-					$new_content = str_replace( 'wp-image-' . $id, 'wp-image-' . $id . ' with-source', $old_content );
-
-					$content = str_replace( $old_content, '<div id="isc_attachment_' . $id . '" class="isc-source ' . $alignment . '"> ' . $new_content . $source . '</div>', $content );
-
-				}
-			}
-			/**
-			 * Attach follow content back
-			 */
-			$content = $content . $content_after;
+		if ( empty( $options['display_type'] ) || ! is_array( $options['display_type'] ) || ! in_array( 'overlay', $options['display_type'], true ) ) {
+		    ISC_Log::log( 'not creating image overlays because the option is disabled' );
+			return $content;
 		}
 
-		// attach image source list to content, if option is enabled
+		ISC_Log::log( 'start creating source overlays' );
+
+		/**
+		 * Split content where `isc_stop_overlay` is found to not display overlays starting there
+		 */
+		if ( strpos( $content, 'isc_stop_overlay' ) ) {
+			list( $content, $content_after ) = explode( 'isc_stop_overlay', $content, 2 );
+		} else {
+			$content_after = '';
+		}
+
+		/**
+		 * Removed [caption], because this check runs after the hook that interprets shortcodes
+		 * img tag is checked individually since there is a different order of attributes when images are used in gallery or individually
+		 *
+		 * 0 – full match
+		 * 1 - <figure> if set
+		 * 2 – alignment
+		 * 3 – inner code starting with <a>
+		 * 4 – opening link attribute
+		 * 5 – "rel" attribute from link tag
+		 * 6 – image id from link wp-att- value in "rel" attribute
+		 * 7 – full img tag
+		 * 8 – image URL
+		 * 9 – (unused)
+		 * 10 - </figure>
+		 *
+		 * tested with:
+		 * * with and without [caption]
+		 * * with and without link attibute
+		 *
+		 * potential issues:
+		 * * line breaks in the code
+		 */
+		$pattern = '#(<[^>]*class="[^"]*(alignleft|alignright|alignnone|aligncenter).*)?((<a [^>]*(rel="[^"]*[^"]*wp-att-(\d+)"[^>]*)>)? *(<img [^>]*[^>]*src="(.+)".*\/?>).*(</a>)??[^<]*).*(<\/figure.*>)?#isU';
+		$count   = preg_match_all( $pattern, $content, $matches );
+
+		ISC_Log::log( 'embedded images found: ' . $count );
+
+		if ( false !== $count ) {
+			for ( $i = 0; $i < $count; $i++ ) {
+
+				/**
+				 * Interpret the image tag
+				 * we only need the ID if we don’t have it yet
+				 * it can be retrieved from "wp-image-" class (single) or "aria-describedby="gallery-1-34" in gallery
+				 */
+				$id      = $matches[6][ $i ];
+				$img_tag = $matches[7][ $i ];
+
+				ISC_Log::log( sprintf( 'found ID "%s" and img tag "%s"', $id, $img_tag ) );
+
+				if ( ! $id ) {
+						$success = preg_match( '#wp-image-(\d+)|aria-describedby="gallery-1-(\d+)#is', $img_tag, $matches_id );
+					if ( $success ) {
+						$id = $matches_id[1] ? intval( $matches_id[1] ) : intval( $matches_id[2] );
+						ISC_Log::log( sprintf( 'found ID "%s"', $id ) );
+					} else {
+						ISC_Log::log( sprintf( 'no ID found for "%s"', $img_tag ) );
+					}
+				}
+
+				// if ID is still missing get image by URL
+				if ( ! $id ) {
+					$src = $matches[8][ $i ];
+					$id  = $this->get_image_by_url( $src );
+					ISC_Log::log( sprintf( 'ID for source "%s": "%s"', $src, $id ) );
+				}
+
+				// don’t show caption for own image if admin choose not to do so
+				if ( $options['exclude_own_images'] ) {
+					if ( get_post_meta( $id, 'isc_image_source_own', true ) ) {
+						ISC_Log::log( sprintf( 'skipped "own" image for ID "%s"', $id ) );
+						continue;
+					}
+				}
+
+				// don’t display empty sources
+				if ( ! $source_string = $this->render_image_source_string( $id ) ) {
+					ISC_Log::log( sprintf( 'skipped empty sources string for ID "%s"', $id ) );
+					continue;
+				}
+
+				// get any alignment from the original code
+				preg_match( '#alignleft|alignright|alignnone|aligncenter#is', $matches[0][ $i ], $matches_align );
+				$alignment = isset( $matches_align[0] ) ? $matches_align[0] : '';
+
+				$source      = '<span class="isc-source-text">' . $options['source_pretext'] . ' ' . $source_string . '</span>';
+				$old_content = $matches[3][ $i ];
+				$new_content = str_replace( 'wp-image-' . $id, 'wp-image-' . $id . ' with-source', $old_content );
+
+				$content = str_replace( $old_content, '<div id="isc_attachment_' . $id . '" class="isc-source ' . $alignment . '"> ' . $new_content . $source . '</div>', $content );
+
+			}
+		}
+		/**
+		 * Attach follow content back
+		 */
+		$content = $content . $content_after;
+
+		return $content;
+	}
+
+	/**
+	 * Add the image source list ot the content if the option is enabled
+	 *
+	 * @param string $content post content.
+	 * @return string $content
+	 */
+	public function add_source_list_to_content( $content ) {
+
+		$options = $this->get_isc_options();
+
 		if ( ( isset( $options['list_on_archives'] ) && $options['list_on_archives'] ) ||
-				( is_singular() && isset( $options['display_type'] ) && is_array( $options['display_type'] ) && in_array( 'list', $options['display_type'], true ) ) ) {
+			 ( is_singular() && isset( $options['display_type'] ) && is_array( $options['display_type'] ) && in_array( 'list', $options['display_type'], true ) ) ) {
 			ISC_Log::log( 'start creating source list below content' );
 			$content = $content . $this->list_post_attachments_with_sources();
 		}
@@ -271,7 +306,11 @@ class ISC_Public extends ISC_Class {
 
 				// check if source of own images can be displayed
 				if ( ( $own == '' && $source == '' ) || ( $own != '' && $this->options['exclude_own_images'] ) ) {
-					ISC_Log::log( 'skipped because "own" sources are excluded for image ' . $attachment_id );
+				    if ( $own != '' && $this->options['exclude_own_images'] ) {
+					    ISC_Log::log( 'skipped because "own" sources are excluded for image ' . $attachment_id );
+				    } else {
+					    ISC_Log::log( 'skipped because of empty source for image ' . $attachment_id );
+				    }
 					unset( $atts[ $attachment_id ] );
 					continue;
 				} else {
@@ -299,7 +338,7 @@ class ISC_Public extends ISC_Class {
 	 */
 	public function render_attachments( $attachments ) {
 
-		ISC_Log::log( 'enter render_attachments() to render attachments list' );
+		ISC_Log::log( 'start to render attachments list' );
 
 		// don't display anything, if no image sources displayed
 		if ( $attachments === array() ) {

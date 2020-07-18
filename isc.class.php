@@ -156,8 +156,8 @@ class ISC_Class {
 		 * Filter image ids from text
 		 *
 		 * @param string $content post content.
-+        * @return array with image ids => image src uri-s
-+        */
+		 * @return array with image ids => image src uri-s
+		 */
 		public function filter_image_ids( $content = '' ) {
 			$srcs = array();
 
@@ -254,7 +254,7 @@ class ISC_Class {
 			$query = apply_filters( 'isc_get_image_by_url_query', $raw_query, $newurl );
 			$id    = $wpdb->get_var( $query );
 
-			ISC_Log::log( 'found image ID ' . $id );
+			$id ? ISC_Log::log( 'found image ID ' . $id ) : ISC_Log::log( 'found image ID –' );
 
 			return intval( $id );
 		}
