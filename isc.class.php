@@ -159,35 +159,45 @@ class ISC_Class {
 +        * @return array with image ids => image src uri-s
 +        */
 		public function filter_image_ids( $content = '' ) {
-				$srcs = array();
+			$srcs = array();
+
+			ISC_Class::log( 'enter filter_image_ids() to look for image IDs within the content' );
+
 			if ( empty( $content ) ) {
-					return $srcs;
+				ISC_Class::log( 'exit save_image_information() due to missing content' );
+				return $srcs;
 			}
 
-				// parse HTML with DOM
-				$dom = new DOMDocument();
+			// parse HTML with DOM
+			$dom = new DOMDocument();
 
-				libxml_use_internal_errors( true );
+			libxml_use_internal_errors( true );
 			if ( function_exists( 'mb_convert_encoding' ) ) {
 					$content = mb_convert_encoding( $content, 'HTML-ENTITIES', 'UTF-8' );
 			}
-				$dom->loadHTML( $content );
+			$dom->loadHTML( $content );
 
-				// Prevents from sending E_WARNINGs notice (Outputs are forbidden during activation)
-				libxml_clear_errors();
+			// Prevents from sending E_WARNINGs notice (Outputs are forbidden during activation)
+			libxml_clear_errors();
 
 			foreach ( $dom->getElementsByTagName( 'img' ) as $node ) {
 				if ( isset( $node->attributes ) ) {
 						$matched = false;
 					if ( null !== $node->attributes->getNamedItem( 'class' ) ) {
+
+						ISC_Class::log( sprintf( 'found class attribute "%s"', $node->attributes->getNamedItem( 'class' )->textContent ) );
+
 						if ( preg_match( '#.*wp-image-(\d+?).*#U', $node->attributes->getNamedItem( 'class' )->textContent, $matches ) ) {
 								$srcs[ intval( $matches[1] ) ] = $node->attributes->getNamedItem( 'src' )->textContent;
 								$matched                       = true;
+
+								ISC_Class::log( sprintf( 'found image ID "%d" with src "%s"', intval( $matches[1] ), $srcs[ intval( $matches[1] ) ] ) );
 						}
 					}
 					if ( ! $matched ) {
 						if ( null !== $node->attributes->getNamedItem( 'src' ) ) {
 							$url = $node->attributes->getNamedItem( 'src' )->textContent;
+							ISC_Class::log( sprintf( 'found src "%s"', $url ) );
 							// get ID of images by url
 							$id = $this->get_image_by_url( $url );
 							if ( $id ) {
@@ -198,7 +208,7 @@ class ISC_Class {
 				}
 			}
 
-				return $srcs;
+			return $srcs;
 		}
 
 		/**
@@ -211,6 +221,8 @@ class ISC_Class {
 		 */
 		public function get_image_by_url( $url = '' ) {
 			global $wpdb;
+
+			self::log( 'enter get_image_by_url() to look for URL ' . $url );
 
 			if ( empty( $url ) ) {
 				return 0;
@@ -237,8 +249,12 @@ class ISC_Class {
 				"https:$newurl"
 			);
 
+			self::log( 'SQL: ' . $raw_query );
+
 			$query = apply_filters( 'isc_get_image_by_url_query', $raw_query, $newurl );
 			$id    = $wpdb->get_var( $query );
+
+			self::log( 'found image ID ' . $id );
 
 			return intval( $id );
 		}
@@ -352,5 +368,22 @@ CC BY-NC-ND 2.0 Generic|https://creativecommons.org/licenses/by-nc-nd/2.0/';
 			if ( in_array( $meta_key, array( 'isc_image_source_own', 'isc_image_source' ), true ) ) {
 				ISC_Model::update_missing_sources_transient();
 			}
+		}
+
+		/**
+		 * Log image source extraction into a separate file
+		 * can be used for debugging
+		 * set define( 'ISC_LOG', true ); in wp-config.php to enable it
+		 *
+		 * @param string|array $message log message. Arrays will be converted into strings
+		 */
+		public function log( $message = '' ) {
+			if( ! defined( 'ISC_LOG' ) || ! ISC_LOG || null === $message ) {
+				return;
+			}
+
+			$message = is_array( $message ) ? print_r( $message, true ) : $message;
+
+			error_log( gmdate('Y-m-d H:i') . ': ' . $message . "\n", 3, ISCPATH . '/isc.log' );
 		}
 }

@@ -62,9 +62,15 @@ class ISC_Public extends ISC_Class {
 	 */
 	public function content_filter( $content ) {
 
+	    if( isset( $_SERVER[ 'REQUEST_URI' ] ) ) {
+	        self::log( 'entering content_filter() for ' . $_SERVER[ 'REQUEST_URI' ] );
+	    }
+
 		// display inline sources
 		$options = $this->get_isc_options();
 		if ( isset( $options['display_type'] ) && is_array( $options['display_type'] ) && in_array( 'overlay', $options['display_type'], true ) ) {
+		    self::log( 'start creating source overlays' );
+
 			/**
 			 * Split content where `isc_stop_overlay` is found to not display overlays starting there
 			 */
@@ -100,6 +106,8 @@ class ISC_Public extends ISC_Class {
 			$pattern = '#(<[^>]*class="[^"]*(alignleft|alignright|alignnone|aligncenter).*)?((<a [^>]*(rel="[^"]*[^"]*wp-att-(\d+)"[^>]*)>)? *(<img [^>]*[^>]*src="(.+)".*\/?>).*(</a>)??[^<]*).*(<\/figure.*>)?#isU';
 			$count   = preg_match_all( $pattern, $content, $matches );
 
+			self::log( 'embedded images found: ' . $count );
+
 			if ( false !== $count ) {
 				for ( $i = 0; $i < $count; $i++ ) {
 
@@ -111,10 +119,15 @@ class ISC_Public extends ISC_Class {
 					$id      = $matches[6][ $i ];
 					$img_tag = $matches[7][ $i ];
 
+					self::log( sprintf( 'found ID "%s" and img tag "%s"', $id, $img_tag ) );
+
 					if ( ! $id ) {
 							$success = preg_match( '#wp-image-(\d+)|aria-describedby="gallery-1-(\d+)#is', $img_tag, $matches_id );
 						if ( $success ) {
 							$id = $matches_id[1] ? intval( $matches_id[1] ) : intval( $matches_id[2] );
+							self::log( sprintf( 'found ID "%s"', $id ) );
+						} else {
+							self::log( sprintf( 'no ID found for "%s"', $img_tag ) );
 						}
 					}
 
@@ -122,18 +135,21 @@ class ISC_Public extends ISC_Class {
 					if ( ! $id ) {
 						$src = $matches[8][ $i ];
 						$id  = $this->get_image_by_url( $src );
+						self::log( sprintf( 'ID for source "%s": "%s"', $src, $id ) );
 					}
 
 					// don’t show caption for own image if admin choose not to do so
 					if ( $options['exclude_own_images'] ) {
 						if ( get_post_meta( $id, 'isc_image_source_own', true ) ) {
-								continue;
+							self::log( sprintf( 'skipped "own" image for ID "%s"', $id ) );
+							continue;
 						}
 					}
 
 					// don’t display empty sources
 					if ( ! $source_string = $this->render_image_source_string( $id ) ) {
-							continue;
+						self::log( sprintf( 'skipped empty sources string for ID "%s"', $id ) );
+						continue;
 					}
 
 					// get any alignment from the original code
@@ -157,6 +173,7 @@ class ISC_Public extends ISC_Class {
 		// attach image source list to content, if option is enabled
 		if ( ( isset( $options['list_on_archives'] ) && $options['list_on_archives'] ) ||
 				( is_singular() && isset( $options['display_type'] ) && is_array( $options['display_type'] ) && in_array( 'list', $options['display_type'], true ) ) ) {
+			self::log( 'start creating source list below content' );
 			$content = $content . $this->list_post_attachments_with_sources();
 		}
 
@@ -200,6 +217,11 @@ class ISC_Public extends ISC_Class {
 	 */
 	public function list_post_attachments_with_sources( $post_id = 0 ) {
 		global $post;
+
+		if( isset( $_SERVER[ 'REQUEST_URI' ] ) ) {
+			self::log( 'enter list_post_attachments_with_sources() for ' . $_SERVER[ 'REQUEST_URI' ] );
+		}
+
 		if ( empty( $post_id ) && ! empty( $post->ID ) ) {
 				$post_id = $post->ID;
 		}
@@ -207,6 +229,7 @@ class ISC_Public extends ISC_Class {
 		// don’t do anything on REST requests since that causes issues with the block editor rendering a "post" for each image
         // just in case, we also prevent output for "content" from attachments
 		if ( defined( 'REST_REQUEST' ) || ! isset( $post->post_type ) || 'attachment' === $post->post_type ) {
+			self::log( 'exit list_post_attachments_with_sources() because of invalid request' );
 			return '';
 		}
 
@@ -223,6 +246,7 @@ class ISC_Public extends ISC_Class {
 
 		// if attachments is an empty string, search for images in it
 		if ( $attachments == '' ) {
+			    self::log( 'isc_post_images is empty for post ID ' . $post_id );
 				// unregister our content filter in order to prevent infinite loops when calling the_content in the next steps
 				// todo: there also seems to be a loop caused by REST requests as reported and hotfixed in https://github.com/webgilde/image-source-control/issues/48
 				remove_filter( 'the_content', array( $this, 'content_filter' ), 20 );
@@ -234,6 +258,7 @@ class ISC_Public extends ISC_Class {
 		}
 
 		if ( ! empty( $attachments ) ) {
+			self::log( sprintf( 'going through %d attachments', count( $attachments ) ) );
 			$atts = array();
 			foreach ( $attachments as $attachment_id => $attachment_array ) {
 
@@ -242,10 +267,12 @@ class ISC_Public extends ISC_Class {
 
 				// check if source of own images can be displayed
 				if ( ( $own == '' && $source == '' ) || ( $own != '' && $this->options['exclude_own_images'] ) ) {
+					self::log( 'skipped because "own" sources are excluded for image ' . $attachment_id );
 					unset( $atts[ $attachment_id ] );
 					continue;
 				} else {
 					$atts[ $attachment_id ]['title']  = get_the_title( $attachment_id );
+					self::log( sprintf( 'getting title for image %d: %s', $attachment_id, $atts[ $attachment_id ]['title'] ) );
 					$atts[ $attachment_id ]['source'] = $this->render_image_source_string( $attachment_id );
 				}
 			}
@@ -253,6 +280,7 @@ class ISC_Public extends ISC_Class {
 			return $this->render_attachments( $atts );
 		} else {
 			// see description above
+			self::log( 'exit list_post_attachments_with_sources() without any images found ' );
 			return apply_filters( 'isc_list_shortcode_empty_output', '' );
 		}
 	}
@@ -266,8 +294,12 @@ class ISC_Public extends ISC_Class {
 	 * @return string
 	 */
 	public function render_attachments( $attachments ) {
+
+		self::log( 'enter render_attachments() to render attachments list' );
+
 		// don't display anything, if no image sources displayed
 		if ( $attachments === array() ) {
+			self::log( 'exit render_attachments() due to missing attachments' );
 			return '';
 		}
 
@@ -281,8 +313,11 @@ class ISC_Public extends ISC_Class {
 			<ul class="isc_image_list">
 		<?php
 
+		self::log( sprintf( 'start listing %d attachments', count( $attachments ) ) );
+
 		foreach ( $attachments as $atts_id => $atts_array ) {
 			if ( empty( $atts_array['source'] ) ) {
+				self::log( sprintf( 'skip image %d because of empty source', $atts_id ) );
 				continue;
 			}
 			printf( '<li>%1$s: %2$s</li>', $atts_array['title'], $atts_array['source'] );
@@ -776,7 +811,11 @@ class ISC_Public extends ISC_Class {
 	 */
 	public function save_image_information_on_load() {
 		global $post;
+
+		self::log( 'enter save_image_information_on_load()' );
+
 		if ( empty( $post->ID ) ) {
+			self::log( 'exit save_image_information_on_load() due to empty post ID' );
 			return;
 		}
 
