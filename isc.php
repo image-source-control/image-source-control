@@ -37,9 +37,11 @@ define( 'ISCNAME', 'Image Source Control' );
 define( 'ISCDIR', basename( dirname( __FILE__ ) ) );
 define( 'ISCPATH', plugin_dir_path( __FILE__ ) );
 define( 'ISCBASE', plugin_basename( __FILE__ ) ); // plugin base as used by WordPress to identify it.
+define( 'ISCBASEURL', plugin_dir_url( __FILE__ ) ); // URL to the plugin directory
 
 require_once ISCPATH . 'isc.class.php';
 require_once ISCPATH . 'includes/model.php';
+require_once ISCPATH . 'includes/log.php';
 require_once ISCPATH . 'includes/gutenberg/gutenberg.php';
 
 if ( is_admin() ) {

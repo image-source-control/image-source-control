@@ -104,6 +104,7 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 = untagged =
 
 - introducing a model class
+- introduced debug option
 - rewrite of the block options to make them more stable
 - introduced option to reindex image-post relations again
 - introduced `isc_list_shortcode_empty_output` shortcode to allow output when a list of sources is empty
