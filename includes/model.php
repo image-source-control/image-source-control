@@ -169,7 +169,7 @@ class ISC_Model {
 	 */
 	public function save_image_information( $post_id, $content = '' ) {
 
-		ISC_Class::log( 'enter save_image_information()' );
+		ISC_Log::log( 'enter save_image_information()' );
 
 		// creates an infinite loop if not secured, see ISC_Public::list_post_attachments_with_sources()
 		$content = apply_filters( 'the_content', $content );
@@ -188,7 +188,7 @@ class ISC_Model {
 
 		// check if we can even save the image information
 		if ( ! $this->can_save_image_information( null, $post_id ) ) {
-			ISC_Class::log( 'exit save_image_information() because we cannot save image information for post ID ' . $post_id );
+			ISC_Log::log( 'exit save_image_information() because we cannot save image information for post ID ' . $post_id );
 			return;
 		}
 

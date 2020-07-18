@@ -224,6 +224,7 @@ class ISC_Admin extends ISC_Class {
 		add_settings_field( 'use_authorname', __( 'Use authors names', 'image-source-control-isc' ), array( $this, 'renderfield_use_authorname' ), 'isc_settings_page', 'isc_settings_section' );
 		add_settings_field( 'by_author_text', __( 'Custom text for owned images', 'image-source-control-isc' ), array( $this, 'renderfield_byauthor_text' ), 'isc_settings_page', 'isc_settings_section' );
 		add_settings_field( 'warning_one_source', __( 'Warn about missing sources', 'image-source-control-isc' ), array( $this, 'renderfield_warning_onesource_misisng' ), 'isc_settings_page', 'isc_settings_section' );
+		add_settings_field( 'enable_log', __( 'Debug log', 'image-source-control-isc' ), array( $this, 'renderfield_enable_log' ), 'isc_settings_page', 'isc_settings_section' );
 		add_settings_field( 'remove_on_uninstall', __( 'Deleta data on uninstall', 'image-source-control-isc' ), array( $this, 'renderfield_remove_on_uninstall' ), 'isc_settings_page', 'isc_settings_section' );
 	}
 
@@ -613,6 +614,27 @@ class ISC_Admin extends ISC_Class {
 	}
 
 	/**
+	 * Render the option to log image source activity in isc.log
+	 */
+	public function renderfield_enable_log() {
+		$options = $this->get_isc_options();
+		$checked = ! empty( $options['enable_log'] );
+		?>
+		<input type="checkbox" name="isc_options[enable_log]" value="1" <?php checked( $checked ); ?>/>
+				<p class="description">
+				<?php
+				echo sprintf(
+						// translators: $s is replaced by starting and ending a tags to create a link
+					esc_html__( 'Writes image source activity to the %sisc.log%s file.', 'image-source-control-isc' ),
+					'<a href="' . ISC_Log::get_log_file_URL() . '" target="_blank">',
+					'</a>'
+				);
+				?>
+					</p>
+			<?php
+	}
+
+	/**
 	 * Render the option to remove all options and meta data when the plugin is deleted.
 	 */
 	public function renderfield_remove_on_uninstall() {
@@ -817,6 +839,13 @@ class ISC_Admin extends ISC_Class {
 			$output['thumbnail_in_list'] = false;
 		}
 		$output['warning_onesource_missing'] = isset( $input['warning_onesource_missing'] );
+
+		// remove the debug log file when it was disabled
+        if( isset( $output['enable_log'] ) && ! isset( $input['enable_log'] ) ) {
+            ISC_Log::delete_log_file();
+        }
+		$output['enable_log']                = isset( $input['enable_log'] );
+
 		$output['remove_on_uninstall']       = isset( $input['remove_on_uninstall'] );
 		$output['hide_list']                 = isset( $input['hide_list'] );
 
