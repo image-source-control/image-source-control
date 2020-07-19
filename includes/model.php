@@ -16,7 +16,7 @@ class ISC_Model {
 	 */
 	public function __construct() {
 		// save image information in meta field after a post was saved
-		add_action( 'wp_insert_post', array( $this, 'save_image_information_on_post_save' ), 10, 2 );
+		// add_action( 'wp_insert_post', array( $this, 'save_image_information_on_post_save' ), 10, 2 );
 		// attachment field handling
 		add_action( 'add_attachment', array( $this, 'attachment_added' ), 10, 2 );
 		add_filter( 'attachment_fields_to_save', array( $this, 'isc_fields_save' ), 10, 2 );
