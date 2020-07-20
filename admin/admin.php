@@ -36,21 +36,28 @@ class ISC_Admin extends ISC_Class {
 		add_action( 'wp_ajax_isc-image-post-relations', array( $this, 'list_image_post_relations' ) );
 		add_action( 'wp_ajax_isc-clear-index', array( $this, 'clear_index' ) );
 
-		// add settings link to plugin page
-		add_action( 'plugin_action_links_' . ISCBASE, array( $this, 'add_settings_link_to_plugin_page' ) );
+		// add links to setting and source list to plugin page
+		add_action( 'plugin_action_links_' . ISCBASE, array( $this, 'add_links_to_plugin_page' ) );
 	}
 
 	/**
-	 * Add link to settings page from plugins.php
+	 * Add links to setting and source list pages from plugins.php
 	 *
 	 * @var array $links
 	 * @return array
 	 */
-	public function add_settings_link_to_plugin_page( $links ) {
-		$links[] = sprintf(
+	public function add_links_to_plugin_page( $links ) {
+		// settings link
+	    $links[] = sprintf(
 			'<a href="%s">%s</a>',
 			esc_url( add_query_arg( 'page', 'isc-settings', get_admin_url() . 'options-general.php' ) ),
 			__( 'Settings', 'image-source-control-isc' )
+		);
+		// image source link
+		$links[] = sprintf(
+			'<a href="%s">%s</a>',
+			esc_url( add_query_arg( 'page', 'isc-sources', get_admin_url() . 'upload.php' ) ),
+			__( 'Image Sources', 'image-source-control-isc' )
 		);
 
 		return $links;
