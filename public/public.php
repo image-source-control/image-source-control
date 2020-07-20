@@ -331,16 +331,16 @@ class ISC_Public extends ISC_Class {
 
 				// check if source of own images can be displayed
 				if ( ( $own == '' && $source == '' ) || ( $own != '' && $this->options['exclude_own_images'] ) ) {
-					if ( $own != '' && $this->options['exclude_own_images'] ) {
-						ISC_Log::log( 'skipped because "own" sources are excluded for image ' . $attachment_id );
-					} else {
-						ISC_Log::log( 'skipped because of empty source for image ' . $attachment_id );
-					}
+				    if ( $own != '' && $this->options['exclude_own_images'] ) {
+					    ISC_Log::log( sprintf( 'image %d: "own" sources are excluded', $attachment_id ) );
+				    } else {
+					    ISC_Log::log( sprintf( 'image %d: skipped because of empty source', $attachment_id ) );
+				    }
 					unset( $atts[ $attachment_id ] );
 					continue;
 				} else {
 					$atts[ $attachment_id ]['title'] = get_the_title( $attachment_id );
-					ISC_Log::log( sprintf( 'getting title for image %d: %s', $attachment_id, $atts[ $attachment_id ]['title'] ) );
+					ISC_Log::log( sprintf( 'image %d: getting title "%s"', $attachment_id, $atts[ $attachment_id ]['title'] ) );
 					$atts[ $attachment_id ]['source'] = $this->render_image_source_string( $attachment_id );
 				}
 			}
