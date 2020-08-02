@@ -211,7 +211,7 @@ class ISC_Public extends ISC_Class {
 
 		if ( ( isset( $options['list_on_archives'] ) && $options['list_on_archives'] ) ||
 			 ( is_singular() && isset( $options['display_type'] ) && is_array( $options['display_type'] ) && in_array( 'list', $options['display_type'], true ) ) ) {
-			ISC_Log::log( 'start creating source list below content' );
+		    ISC_Log::log( 'start creating source list below content' );
 			$content = $content . $this->list_post_attachments_with_sources();
 		}
 
@@ -256,14 +256,14 @@ class ISC_Public extends ISC_Class {
 	public function list_post_attachments_with_sources( $post_id = 0 ) {
 		global $post;
 
-		if ( isset( $_SERVER['REQUEST_URI'] ) ) {
-			ISC_Log::log( 'enter list_post_attachments_with_sources() for ' . $_SERVER['REQUEST_URI'] );
-		}
-
 		// ISC_Log::log( debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS ) );
 
 		if ( empty( $post_id ) && ! empty( $post->ID ) ) {
 				$post_id = $post->ID;
+		}
+
+		if ( isset( $_SERVER['REQUEST_URI'] ) ) {
+			ISC_Log::log( 'enter list_post_attachments_with_sources() for ' . $_SERVER['REQUEST_URI'] . ' and post_id ' . $post_id );
 		}
 
 		// don’t do anything on REST requests since that causes issues with the block editor rendering a "post" for each image
