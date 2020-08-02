@@ -28,7 +28,7 @@
  *
  */
 
-if ( class_exists( 'ISC_Class' ) ) {
+if ( class_exists( 'ISC_Class', false ) ) {
 	exit;
 }
 
@@ -45,13 +45,13 @@ require_once ISCPATH . 'includes/log.php';
 require_once ISCPATH . 'includes/gutenberg/gutenberg.php';
 
 if ( is_admin() ) {
-	if ( ! class_exists( 'ISC_Admin' ) ) {
+	if ( ! class_exists( 'ISC_Admin', false ) ) {
 		require_once ISCPATH . 'admin/admin.php';
 	}
 	new ISC_Admin();
 } elseif ( ! is_admin() && ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) ) {
 	// include frontend functions
-	if ( ! class_exists( 'ISC_Public' ) ) {
+	if ( ! class_exists( 'ISC_Public', false ) ) {
 		require_once ISCPATH . 'public/public.php';
 	}
 	new ISC_Public();
@@ -60,7 +60,7 @@ if ( is_admin() ) {
 	new ISC_Class();
 }
 
-if ( ! class_exists( 'ISC_Pro', true ) && file_exists( ISCPATH . 'pro/isc-pro.php' ) ) {
+if ( ! class_exists( 'ISC_Pro', false ) && file_exists( ISCPATH . 'pro/isc-pro.php' ) ) {
 	require_once ISCPATH . 'pro/isc-pro.php';
 	new ISC_Pro();
 }

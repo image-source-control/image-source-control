@@ -7,11 +7,11 @@
 class ISC_Public extends ISC_Class {
 
 	/**
-     * Instance of ISC_Public
-     *
+	 * Instance of ISC_Public
+	 *
 	 * @var $instance
 	 */
-	protected static $instance = NULL;
+	protected static $instance = null;
 
 	/**
 	 * ISC_Public constructor.
@@ -30,22 +30,23 @@ class ISC_Public extends ISC_Class {
 		add_action( 'wp_head', array( $this, 'front_head' ) );
 
 		// Content filters need to be above 10 in order to interpret also gallery shortcode
-        // registering the classes using an instance so that we remove the filter somewhere else
-		add_filter( 'the_content', array( ISC_Public::get_instance(), 'add_source_captions_to_content' ), 20 );
-		add_filter( 'the_content', array( ISC_Public::get_instance(), 'add_source_list_to_content' ), 21 );
+		// registering the classes using an instance so that we remove the filter somewhere else
+		add_filter( 'the_content', array( self::get_instance(), 'add_source_captions_to_content' ), 20 );
+		// this filter needs to be used in the call to remove_filter() in the list_post_attachments_with_sources() function to prevent an infinite loop
+		add_filter( 'the_content', array( self::get_instance(), 'add_source_list_to_content' ), 21 );
 		add_filter( 'the_excerpt', array( $this, 'excerpt_filter' ), 20 );
 
 		add_shortcode( 'isc_list', array( $this, 'list_post_attachments_with_sources_shortcode' ) );
 		add_shortcode( 'isc_list_all', array( $this, 'list_all_post_attachments_sources_shortcode' ) );
-    }
+	}
 
 	/**
-     * Get an instance of ISC_Public
-     *
+	 * Get an instance of ISC_Public
+	 *
 	 * @return ISC_Public|null
 	 */
 	public static function get_instance() {
-		NULL === self::$instance and self::$instance = new self;
+		null === self::$instance and self::$instance = new self();
 		return self::$instance;
 	}
 
@@ -91,7 +92,7 @@ class ISC_Public extends ISC_Class {
 		// display inline sources
 		$options = $this->get_isc_options();
 		if ( empty( $options['display_type'] ) || ! is_array( $options['display_type'] ) || ! in_array( 'overlay', $options['display_type'], true ) ) {
-		    ISC_Log::log( 'not creating image overlays because the option is disabled' );
+			ISC_Log::log( 'not creating image overlays because the option is disabled' );
 			return $content;
 		}
 
@@ -288,7 +289,7 @@ class ISC_Public extends ISC_Class {
 				ISC_Log::log( 'isc_post_images is empty for post ID ' . $post_id );
 				// unregister our content filter in order to prevent infinite loops when calling the_content in the next steps
 				// todo: there also seems to be a loop caused by REST requests as reported and hotfixed in https://github.com/webgilde/image-source-control/issues/48
-				remove_filter( 'the_content', array( $this, 'content_filter' ), 20 );
+				remove_filter( 'the_content', array( ISC_Public::get_instance(), 'add_source_list_to_content' ), 21 );
 
 				$this->save_image_information_on_load();
 				$this->model->update_image_posts_meta( $post_id, $post->post_content );
@@ -306,11 +307,11 @@ class ISC_Public extends ISC_Class {
 
 				// check if source of own images can be displayed
 				if ( ( $own == '' && $source == '' ) || ( $own != '' && $this->options['exclude_own_images'] ) ) {
-				    if ( $own != '' && $this->options['exclude_own_images'] ) {
-					    ISC_Log::log( 'skipped because "own" sources are excluded for image ' . $attachment_id );
-				    } else {
-					    ISC_Log::log( 'skipped because of empty source for image ' . $attachment_id );
-				    }
+					if ( $own != '' && $this->options['exclude_own_images'] ) {
+						ISC_Log::log( 'skipped because "own" sources are excluded for image ' . $attachment_id );
+					} else {
+						ISC_Log::log( 'skipped because of empty source for image ' . $attachment_id );
+					}
 					unset( $atts[ $attachment_id ] );
 					continue;
 				} else {
