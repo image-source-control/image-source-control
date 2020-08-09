@@ -51,7 +51,7 @@ class ISC_Model {
 		// todo: maybe handle thumbnails here as well, the content is different, though
 
 		// retrieve images added to a post or page and save all information as a post meta value for the post
-		self::save_image_information( $post_id, $image_ids );
+		self::update_post_images_meta( $post_id, $image_ids );
 
 		// add the post ID to the list of posts associated with a given image
 		self::update_image_posts_meta( $post_id, $image_ids );
@@ -157,9 +157,9 @@ class ISC_Model {
 	 *
 	 * @todo check for more post types that maybe should not be parsed here
 	 */
-	public static function save_image_information( $post_id, $image_ids ) {
+	public static function update_post_images_meta( $post_id, $image_ids ) {
 
-		ISC_Log::log( 'enter save_image_information()' );
+		ISC_Log::log( 'enter update_post_images_meta()' );
 
 		// add thumbnail information
 		$thumb_id = get_post_thumbnail_id( $post_id );
@@ -409,7 +409,7 @@ class ISC_Model {
 		ISC_Log::log( 'enter filter_image_ids() to look for image IDs within the content' );
 
 		if ( empty( $content ) ) {
-			ISC_Log::log( 'exit save_image_information() due to missing content' );
+			ISC_Log::log( 'exit filter_image_ids() due to missing content' );
 			return $srcs;
 		}
 

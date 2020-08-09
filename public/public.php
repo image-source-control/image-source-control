@@ -913,28 +913,4 @@ class ISC_Public extends ISC_Class {
 
 		return $source;
 	}
-
-	/**
-	 * Save image information for a post when it is viewed –� only called when using isc_list function
-	 * (to help indexing old posts)
-	 *
-	 * @since 1.1
-	 * @deprecated
-	 */
-	public function save_image_information_on_load() {
-		global $post;
-
-		ISC_Log::log( 'enter save_image_information_on_load()' );
-
-		if ( empty( $post->ID ) ) {
-			ISC_Log::log( 'exit save_image_information_on_load() due to empty post ID' );
-			return;
-		}
-
-		$post_id  = $post->ID;
-		$_content = $post->post_content;
-
-		$this->model->save_image_information( $post_id, $_content );
-	}
-
 }
