@@ -169,9 +169,9 @@ class ISC_Public extends ISC_Class {
 						$success = preg_match( '#wp-image-(\d+)|aria-describedby="gallery-1-(\d+)#is', $img_tag, $matches_id );
 					if ( $success ) {
 						$id = $matches_id[1] ? intval( $matches_id[1] ) : intval( $matches_id[2] );
-						ISC_Log::log( sprintf( 'found ID "%s"', $id ) );
+						ISC_Log::log( sprintf( 'found ID "%s" in the image tag', $id ) );
 					} else {
-						ISC_Log::log( sprintf( 'no ID found for "%s"', $img_tag ) );
+						ISC_Log::log( sprintf( 'no ID found for "%s" in the image tag', $img_tag ) );
 					}
 				}
 
@@ -226,7 +226,13 @@ class ISC_Public extends ISC_Class {
 
 		$options = $this->get_isc_options();
 
-		if ( ( isset( $options['list_on_archives'] ) && $options['list_on_archives'] ) ||
+		/**
+		 * Display the image source list below the content
+         * on single pages if the following option is enabled: How to display source in Frontend > list below content
+         * on archive pages and home pages with posts if the following option is enabled: Archive Pages > Display sources list below full posts
+		 */
+		if ( ( ( is_archive() || is_home() )
+               && isset( $options['list_on_archives'] ) && $options['list_on_archives'] ) ||
 			 ( is_singular() && isset( $options['display_type'] ) && is_array( $options['display_type'] ) && in_array( 'list', $options['display_type'], true ) ) ) {
 			ISC_Log::log( 'start creating source list below content' );
 			$content = $content . $this->list_post_attachments_with_sources();

@@ -108,6 +108,7 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 - rewrite of the block options to make them more stable
 - introduced option to reindex image-post relations again
 - introduced `isc_list_shortcode_empty_output` shortcode to allow output when a list of sources is empty
+- fixed showing the sources list on single pages when the "list below content" was disabled while the same option for archive pages was
 - fixed indexing post content for images when the post is saved in the block editor
 - fixed infinite loops breaking autosave feature in the block editor
 - various fixes to debug tables
