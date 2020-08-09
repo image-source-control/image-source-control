@@ -26,6 +26,7 @@ class ISC_Log {
 
 		// get calling function
 		// source: https://stackoverflow.com/questions/190421/get-name-of-caller-function-in-php
+		// currently unused, keeping the code in case we need it again
 		$trace            = debug_backtrace();
 		$caller           = $trace[1];
 		$calling_function = '';
@@ -39,7 +40,7 @@ class ISC_Log {
 
 		$message = is_array( $message ) ? print_r( $message, true ) : $message;
 
-		error_log( '[' . date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ) ) . ", $calling_function] $message\n", 3, self::get_log_file_path() );
+		error_log( '[' . date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ) ) . "] $message\n", 3, self::get_log_file_path() );
 	}
 
 	/**

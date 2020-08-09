@@ -103,6 +103,7 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 
 = untagged =
 
+- the full source list is now updated when a post is visited for the first time not after being saved
 - introducing a model class
 - introduced debug option
 - rewrite of the block options to make them more stable

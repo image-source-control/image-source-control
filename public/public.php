@@ -41,20 +41,21 @@ class ISC_Public extends ISC_Class {
 	 * Register our the_content filters
 	 */
 	public static function register_the_content_filters() {
+
 		// Content filters need to be above 10 in order to interpret also gallery shortcode
-		// registering the classes using an instance so that we remove the filter somewhere else
-		add_filter( 'the_content', array( self::get_instance(), 'add_source_captions_to_content' ), 20 );
-		// this filter needs to be used in the call to remove_filter() in the list_post_attachments_with_sources() function to prevent an infinite loop
-		add_filter( 'the_content', array( self::get_instance(), 'add_source_list_to_content' ), 21 );
+		// needs to be added to remove_the_content_filters() as well to prevent infinite loops
+		add_filter( 'the_content', array( self::get_instance(), 'add_sources_to_content' ), 20 );
 	}
 
 	/**
 	 * Unregister our the_content filters
 	 * used in places where we want to prevent infinite loops
+	 *
+	 * @deprecated probably deprecated after ISC ist not using apply_filter( 'the_content' ) anymore.
 	 */
 	public static function remove_the_content_filters() {
-		remove_filter( 'the_content', array( self::get_instance(), 'add_source_captions_to_content' ), 20 );
-		remove_filter( 'the_content', array( self::get_instance(), 'add_source_list_to_content' ), 21 );
+
+		remove_filter( 'the_content', array( self::get_instance(), 'add_sources_to_content' ), 20 );
 	}
 
 	/**
@@ -96,6 +97,60 @@ class ISC_Public extends ISC_Class {
 	}
 
 	/**
+	 * Find images in the content, create the index, and maybe add sources to it
+	 *
+	 * @param string $content post content.
+	 * @return string $content
+	 */
+	public function add_sources_to_content( $content ) {
+
+		// create a new line in the log to separate different posts
+		ISC_Log::log( '---' );
+
+		// disabling the content filters while working in page builders or block editor
+		if ( wp_is_json_request() || defined( 'REST_REQUEST' ) ) {
+			ISC_Log::log( 'skipped adding sources while working in page builders' );
+			return;
+		}
+
+		global $post;
+
+		if ( empty( $post->ID ) ) {
+			if ( isset( $_SERVER['REQUEST_URI'] ) ) {
+				ISC_Log::log( 'exit content for ' . $_SERVER['REQUEST_URI'] . ' due to missing post_id' );
+			}
+			return $content;
+		}
+
+		if ( isset( $_SERVER['REQUEST_URI'] ) ) {
+			ISC_Log::log( 'index content for ' . $_SERVER['REQUEST_URI'] . ' and post ID ' . $post->ID );
+		}
+
+		// create index, if doesn’t exist, yet
+		$attachments = get_post_meta( $post->ID, 'isc_post_images', true );
+
+		/**
+		 * $attachments is an empty string if it was never set and an array if it was set
+		 * the array is empty if no images were found in the past. This prevents re-indexing as well
+		 */
+		if ( $attachments === '' ) {
+			ISC_Log::log( 'isc_post_images is empty. Updating index for post ID ' . $post->ID );
+
+			// retrieve images added to a post or page and save all information as a post meta value for the post
+			ISC_Model::update_indexes( $post->ID, $content );
+		} elseif ( is_array( $attachments ) ) {
+			ISC_Log::log( sprintf( 'found existing list of %d sources for post ID %d', count( $attachments ), $post->ID ) );
+		}
+
+		// maybe add source captions
+		$content = self::add_source_captions_to_content( $content );
+		// maybe add source list
+		$content = self::add_source_list_to_content( $content );
+
+		return $content;
+
+	}
+	/**
 	 * Add captions to post content and include source into caption, if this setting is enabled
 	 *
 	 * @param string $content post content.
@@ -103,11 +158,9 @@ class ISC_Public extends ISC_Class {
 	 */
 	public function add_source_captions_to_content( $content ) {
 
-		// create a new line in the log to separate different posts
-		ISC_Log::log( '---' );
+		$options = $this->get_isc_options();
 
 		// display inline sources
-		$options = $this->get_isc_options();
 		if ( empty( $options['display_type'] ) || ! is_array( $options['display_type'] ) || ! in_array( 'overlay', $options['display_type'], true ) ) {
 			ISC_Log::log( 'not creating image overlays because the option is disabled' );
 			return $content;
@@ -228,11 +281,11 @@ class ISC_Public extends ISC_Class {
 
 		/**
 		 * Display the image source list below the content
-         * on single pages if the following option is enabled: How to display source in Frontend > list below content
-         * on archive pages and home pages with posts if the following option is enabled: Archive Pages > Display sources list below full posts
+		 * on single pages if the following option is enabled: How to display source in Frontend > list below content
+		 * on archive pages and home pages with posts if the following option is enabled: Archive Pages > Display sources list below full posts
 		 */
 		if ( ( ( is_archive() || is_home() )
-               && isset( $options['list_on_archives'] ) && $options['list_on_archives'] ) ||
+			   && isset( $options['list_on_archives'] ) && $options['list_on_archives'] ) ||
 			 ( is_singular() && isset( $options['display_type'] ) && is_array( $options['display_type'] ) && in_array( 'list', $options['display_type'], true ) ) ) {
 			ISC_Log::log( 'start creating source list below content' );
 			$content = $content . $this->list_post_attachments_with_sources();
@@ -279,8 +332,6 @@ class ISC_Public extends ISC_Class {
 	public function list_post_attachments_with_sources( $post_id = 0 ) {
 		global $post;
 
-		// ISC_Log::log( debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS ) );
-
 		if ( empty( $post_id ) && ! empty( $post->ID ) ) {
 				$post_id = $post->ID;
 		}
@@ -307,20 +358,6 @@ class ISC_Public extends ISC_Class {
 
 		$attachments = get_post_meta( $post_id, 'isc_post_images', true );
 
-		// if attachments is an empty string, search for images in it
-		if ( $attachments == '' ) {
-				ISC_Log::log( 'isc_post_images is empty for post ID ' . $post_id );
-				// unregister our content filter in order to prevent infinite loops when calling the_content in the next steps
-				// todo: there also seems to be a loop caused by REST requests as reported and hotfixed in https://github.com/webgilde/image-source-control/issues/48
-				remove_filter( 'the_content', array( self::get_instance(), 'add_source_list_to_content' ), 21 );
-
-				$this->save_image_information_on_load();
-				// the following might not be needed anymore.
-				// $this->model->update_image_posts_meta( $post_id, $post->post_content );
-
-				$attachments = get_post_meta( $post_id, 'isc_post_images', true );
-		}
-
 		if ( ! empty( $attachments ) ) {
 			ISC_Log::log( sprintf( 'going through %d attachments', count( $attachments ) ) );
 			$atts = array();
@@ -332,15 +369,15 @@ class ISC_Public extends ISC_Class {
 				// check if source of own images can be displayed
 				if ( ( $own == '' && $source == '' ) || ( $own != '' && $this->options['exclude_own_images'] ) ) {
 					if ( $own != '' && $this->options['exclude_own_images'] ) {
-						ISC_Log::log( 'skipped because "own" sources are excluded for image ' . $attachment_id );
+						ISC_Log::log( sprintf( 'image %d: "own" sources are excluded', $attachment_id ) );
 					} else {
-						ISC_Log::log( 'skipped because of empty source for image ' . $attachment_id );
+						ISC_Log::log( sprintf( 'image %d: skipped because of empty source', $attachment_id ) );
 					}
 					unset( $atts[ $attachment_id ] );
 					continue;
 				} else {
 					$atts[ $attachment_id ]['title'] = get_the_title( $attachment_id );
-					ISC_Log::log( sprintf( 'getting title for image %d: %s', $attachment_id, $atts[ $attachment_id ]['title'] ) );
+					ISC_Log::log( sprintf( 'image %d: getting title "%s"', $attachment_id, $atts[ $attachment_id ]['title'] ) );
 					$atts[ $attachment_id ]['source'] = $this->render_image_source_string( $attachment_id );
 				}
 			}
@@ -876,27 +913,4 @@ class ISC_Public extends ISC_Class {
 
 		return $source;
 	}
-
-	/**
-	 * Save image information for a post when it is viewed –� only called when using isc_list function
-	 * (to help indexing old posts)
-	 *
-	 * @since 1.1
-	 */
-	public function save_image_information_on_load() {
-		global $post;
-
-		ISC_Log::log( 'enter save_image_information_on_load()' );
-
-		if ( empty( $post->ID ) ) {
-			ISC_Log::log( 'exit save_image_information_on_load() due to empty post ID' );
-			return;
-		}
-
-		$post_id  = $post->ID;
-		$_content = $post->post_content;
-
-		$this->model->save_image_information( $post_id, $_content );
-	}
-
 }

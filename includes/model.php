@@ -15,8 +15,6 @@ class ISC_Model {
 	 * Setup registers filters and actions.
 	 */
 	public function __construct() {
-		// save image information in meta field after a post was saved
-		add_action( 'wp_insert_post', array( $this, 'save_image_information_on_post_save' ), 10, 2 );
 		// attachment field handling
 		add_action( 'add_attachment', array( $this, 'attachment_added' ), 10, 2 );
 		add_filter( 'attachment_fields_to_save', array( $this, 'isc_fields_save' ), 10, 2 );
@@ -32,54 +30,44 @@ class ISC_Model {
 	}
 
 	/**
-	 * Save image information to a post when it is saved
+	 * Update the isc_image_posts and isc_post_images indexes
 	 *
-	 * @since 1.1
-	 * @param integer $post_id post id.
-	 * @param WP_Post $post post object.
+	 * @since 2.0
+	 * @param integer $post_id ID of the target post.
+	 * @param string  $content content of the target post.
 	 */
-	public function save_image_information_on_post_save( $post_id, $post ) {
-
-		// don’t run on autosave of AJAX requests
-		if ( ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE )
-			 || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
-			return;
-		}
+	public static function update_indexes( $post_id, $content ) {
 
 		// check if we can even save the image information
-		if ( ! $this->can_save_image_information( $post, $post_id ) ) {
+		// abort on archive pages since some output from other plugins might be disabled here
+		if (
+			is_archive()
+			|| is_home()
+			|| ! self::can_save_image_information( $post_id ) ) {
 			return;
 		}
 
-		$content = '';
-		if ( ! empty( $post->post_content ) ) {
-			$content = stripslashes( $post->post_content );
-		} else {
-			// retrieve content with Gutenberg, because no content included in $_POST object then
-			// todo: check if this is really needed after we also have access to the $post object here.
-			$_post = get_post( $post_id );
-			if ( isset( $_post->post_content ) ) {
-				$content = $_post->post_content;
-			}
-		}
+		$image_ids = self::filter_image_ids( $content );
+		// todo: maybe handle thumbnails here as well, the content is different, though
 
-		// Needs to be called before the 'isc_post_images' field is updated.
-		$this->update_image_posts_meta( $post_id, $content );
-		$this->save_image_information( $post_id, $content );
+		// retrieve images added to a post or page and save all information as a post meta value for the post
+		self::update_post_images_meta( $post_id, $image_ids );
+
+		// add the post ID to the list of posts associated with a given image
+		self::update_image_posts_meta( $post_id, $image_ids );
 	}
 
 	/**
-	 * Update isc_image_posts meta field for all images found in a post with a given ID.
+	 * Update isc_image_posts meta field with includes IDs of all posts that have the image in its content
+	 * the function should be used to push a post ID to the (maybe) existing meta field
 	 *
 	 * @param integer $post_id ID of the target post.
-	 * @param string  $content content of the target post.
-	 * @updated 1.3.5 added images_in_posts_simple filter
+	 * @param array   $image_ids IDs of the attachments in the content.
 	 */
-	public function update_image_posts_meta( $post_id, $content ) {
-		ISC_Public::remove_the_content_filters();
-		$content = apply_filters( 'the_content', $content );
+	public static function update_image_posts_meta( $post_id, $image_ids ) {
 
-		$image_ids      = ISC_Class::get_instance()->filter_image_ids( $content );
+		ISC_Log::log( 'enter update_image_posts_meta()' );
+
 		$added_images   = array();
 		$removed_images = array();
 
@@ -87,6 +75,7 @@ class ISC_Model {
 		$thumb_id = get_post_thumbnail_id( $post_id );
 		if ( ! empty( $thumb_id ) ) {
 			$image_ids[ $thumb_id ] = wp_get_attachment_url( $thumb_id );
+			ISC_Log::log( 'thumbnail found with ID' . $thumb_id );
 		}
 
 		// apply filter to image array, so other developers can add their own logic
@@ -108,6 +97,7 @@ class ISC_Model {
 
 		foreach ( $image_ids as $id => $url ) {
 			if ( is_array( $isc_post_images ) && ! array_key_exists( $id, $isc_post_images ) ) {
+				ISC_Log::log( 'add new image: ' . $id );
 				array_push( $added_images, $id );
 			}
 		}
@@ -116,6 +106,7 @@ class ISC_Model {
 				// if (!in_array($old_id, $image_ids)) {
 				if ( ! array_key_exists( $old_id, $image_ids ) ) {
 					array_push( $removed_images, $old_id );
+					ISC_Log::log( 'remove image: ' . $id );
 				} else {
 					if ( ! empty( $old_id ) ) {
 						$meta = get_post_meta( $old_id, 'isc_image_posts', true );
@@ -161,42 +152,14 @@ class ISC_Model {
 	/**
 	 * Retrieve images added to a post or page and save all information as a post meta value for the post
 	 *
-	 * @since 1.1
-	 * @updated 1.3.5 added isc_images_in_posts filter
-	 * @todo check for more post types that maybe should not be parsed here
-	 *
 	 * @param integer $post_id ID of a post.
-	 * @param string  $content post content.
+	 * @param array   $image_ids IDs of the attachments in the content.
+	 *
+	 * @todo check for more post types that maybe should not be parsed here
 	 */
-	public function save_image_information( $post_id, $content = '' ) {
+	public static function update_post_images_meta( $post_id, $image_ids ) {
 
-		ISC_Log::log( 'enter save_image_information()' );
-
-		// creates an infinite loop if not secured, see ISC_Public::list_post_attachments_with_sources()
-		// we need to unregister our own content filters before running these
-		ISC_Public::remove_the_content_filters();
-		$content = apply_filters( 'the_content', $content );
-		// ISC_Public::register_the_content_filters();
-
-		/*
-		$_image_urls = $this->filter_src_attributes($_content);
-		$_imgs = array();
-
-		foreach ($_image_urls as $_image_url) {
-			// get ID of images by url
-			$img_id = $this->get_image_by_url($_image_url);
-			$_imgs[$img_id] = array(
-				'src' => $_image_url
-			);
-		}*/
-
-		// check if we can even save the image information
-		if ( ! $this->can_save_image_information( null, $post_id ) ) {
-			ISC_Log::log( 'exit save_image_information() because we cannot save image information for post ID ' . $post_id );
-			return;
-		}
-
-		$_imgs = ISC_Class::get_instance()->filter_image_ids( $content );
+		ISC_Log::log( 'enter update_post_images_meta()' );
 
 		// add thumbnail information
 		$thumb_id = get_post_thumbnail_id( $post_id );
@@ -205,24 +168,29 @@ class ISC_Model {
 		 * If an image is used both inside the post and as post thumbnail, the thumbnail entry overrides the regular image.
 		 */
 		if ( ! empty( $thumb_id ) ) {
-			$_imgs[ $thumb_id ] = array(
+			$image_ids[ $thumb_id ] = array(
 				'src'       => wp_get_attachment_url( $thumb_id ),
 				'thumbnail' => true,
 			);
+			ISC_Log::log( 'thumbnail found with ID' . $thumb_id );
 		}
 
 		// apply filter to image array, so other developers can add their own logic
-		$_imgs = apply_filters( 'isc_images_in_posts', $_imgs, $post_id );
+		$image_ids = apply_filters( 'isc_images_in_posts', $image_ids, $post_id );
 
-		if ( empty( $_imgs ) ) {
-			$_imgs = array();
+		if ( empty( $image_ids ) ) {
+			$image_ids = array();
 		}
-		update_post_meta( $post_id, 'isc_post_images', $_imgs );
+
+		ISC_Log::log( 'save isc_post_images with size of ' . count( $image_ids ) );
+
+		update_post_meta( $post_id, 'isc_post_images', $image_ids );
 	}
 
 	/**
 	 * Add meta values to all attachments
 	 *
+	 * @todo probably deprecated
 	 * @todo probably need to fix this when more fields are added along the way
 	 * @todo use compare => 'NOT EXISTS' when WP 3.5 is up to retrieve only values where it is not set
 	 * @todo this currently updates all empty fields; empty in this context is empty string, 0, false or not existing; add check if meta field already existed before
@@ -305,15 +273,12 @@ class ISC_Model {
 	 * ignore also attachment posts
 	 * ignore revisions
 	 *
-	 * @param WP_Post $post post object.
 	 * @param integer $post_id WP_Post ID. Useful if post object is not given.
 	 */
-	private function can_save_image_information( $post, $post_id = null ) {
+	private static function can_save_image_information( $post_id = null ) {
 
-		// load post if not given
-		if ( ! $post || ! $post instanceof WP_Post ) {
-			$post = get_post( $post_id );
-		}
+		// load post
+		$post = get_post( $post_id );
 
 		if ( ! isset( $post->post_type )
 			 || ! in_array( $post->post_type, get_post_types( array( 'public' => true ), 'names' ), true ) // is the post type public
@@ -326,6 +291,30 @@ class ISC_Model {
 	}
 
 	/**
+	 * Remove post_images index
+	 * namely the post meta field `isc_post_images`
+	 *
+	 * @return int|false The number of rows updated, or false on error.
+	 */
+	public static function clear_post_images_index() {
+		global $wpdb;
+
+		return $wpdb->delete( $wpdb->postmeta, array( 'meta_key' => 'isc_post_images' ), array( '%s' ) );
+	}
+
+	/**
+	 * Remove image_posts index
+	 * namely the post meta field `isc_image_posts`
+	 *
+	 * @return int|false The number of rows updated, or false on error.
+	 */
+	public static function clear_image_posts_index() {
+		global $wpdb;
+
+		return $wpdb->delete( $wpdb->postmeta, array( 'meta_key' => 'isc_image_posts' ), array( '%s' ) );
+	}
+
+	/**
 	 * Remove all image-post relations
 	 * this concerns the post meta fields `isc_image_posts` and `isc_post_images`
 	 *
@@ -334,8 +323,8 @@ class ISC_Model {
 	public static function clear_index() {
 		global $wpdb;
 
-		$rows_deleted_1 = $wpdb->delete( $wpdb->postmeta, array( 'meta_key' => 'isc_post_images' ), array( '%s' ) );
-		$rows_deleted_2 = $wpdb->delete( $wpdb->postmeta, array( 'meta_key' => 'isc_image_posts' ), array( '%s' ) );
+		$rows_deleted_1 = self::clear_post_images_index();
+		$rows_deleted_2 = self::clear_image_posts_index();
 
 		if ( false !== $rows_deleted_1 && false !== $rows_deleted_2 ) {
 			return $rows_deleted_1 + $rows_deleted_2;
@@ -406,5 +395,112 @@ class ISC_Model {
 			set_transient( 'isc-show-missing-sources-warning', 'no', DAY_IN_SECONDS );
 			return 'no';
 		}
+	}
+
+	/**
+	 * Filter image ids from content
+	 *
+	 * @param string $content post content.
+	 * @return array with image ids => image src uri-s
+	 */
+	public static function filter_image_ids( $content = '' ) {
+		$srcs = array();
+
+		ISC_Log::log( 'enter filter_image_ids() to look for image IDs within the content' );
+
+		if ( empty( $content ) ) {
+			ISC_Log::log( 'exit filter_image_ids() due to missing content' );
+			return $srcs;
+		}
+
+		// parse HTML with DOM
+		$dom = new DOMDocument();
+
+		libxml_use_internal_errors( true );
+		if ( function_exists( 'mb_convert_encoding' ) ) {
+			$content = mb_convert_encoding( $content, 'HTML-ENTITIES', 'UTF-8' );
+		}
+		$dom->loadHTML( $content );
+
+		// Prevents from sending E_WARNINGs notice (Outputs are forbidden during activation)
+		libxml_clear_errors();
+
+		foreach ( $dom->getElementsByTagName( 'img' ) as $node ) {
+			if ( isset( $node->attributes ) ) {
+				$matched = false;
+				if ( null !== $node->attributes->getNamedItem( 'class' ) ) {
+
+					ISC_Log::log( sprintf( 'found class attribute "%s"', $node->attributes->getNamedItem( 'class' )->textContent ) );
+
+					if ( preg_match( '#.*wp-image-(\d+?).*#U', $node->attributes->getNamedItem( 'class' )->textContent, $matches ) ) {
+						$srcs[ intval( $matches[1] ) ] = $node->attributes->getNamedItem( 'src' )->textContent;
+						$matched                       = true;
+
+						ISC_Log::log( sprintf( 'found image ID "%d" with src "%s"', intval( $matches[1] ), $srcs[ intval( $matches[1] ) ] ) );
+					}
+				}
+				if ( ! $matched ) {
+					if ( null !== $node->attributes->getNamedItem( 'src' ) ) {
+						$url = $node->attributes->getNamedItem( 'src' )->textContent;
+						ISC_Log::log( sprintf( 'found src "%s"', $url ) );
+						// get ID of images by url
+						$id = self::get_image_by_url( $url );
+						if ( $id ) {
+							$srcs[ $id ] = $url;
+						}
+					}
+				}
+			}
+		}
+
+		return $srcs;
+	}
+
+	/**
+	 * Get image by url accessing the database directly
+	 *
+	 * @since 1.1
+	 * @updated 1.1.3
+	 * @param string $url url of the image.
+	 * @return integer ID of the image.
+	 */
+	public static function get_image_by_url( $url = '' ) {
+		global $wpdb;
+
+		ISC_Log::log( 'enter get_image_by_url() to look for URL ' . $url );
+
+		if ( empty( $url ) ) {
+			return 0;
+		}
+		$types = implode( '|', ISC_Class::get_instance()->allowed_extensions );
+		/**
+		 * Check for the format 'image-title-(e12452112-)300x200.jpg(?query…)' and removes
+		 *   the image size
+		 *   edit marks
+		 *   additional query vars
+		 */
+		$newurl = esc_url( preg_replace( "/(-e\d+){0,1}(-\d+x\d+){0,1}\.({$types})(.*)/i", '.${3}', $url ) );
+
+		// remove protocoll (http or https)
+		$url    = str_ireplace( array( 'http:', 'https:' ), '', $url );
+		$newurl = str_ireplace( array( 'http:', 'https:' ), '', $newurl );
+
+		// not escaped, because escaping already happened above
+		$raw_query = $wpdb->prepare(
+			"SELECT ID FROM `$wpdb->posts` WHERE post_type='attachment' AND guid = %s OR guid = %s OR guid = %s OR guid = %s LIMIT 1",
+			"http:$url",
+			"https:$url",
+			"http:$newurl",
+			"https:$newurl"
+		);
+
+		ISC_Log::log( 'SQL: ' . $raw_query );
+
+		$query = apply_filters( 'isc_get_image_by_url_query', $raw_query, $newurl );
+		$id    = $wpdb->get_var( $query );
+
+		$id ? ISC_Log::log( 'found image ID ' . $id ) : ISC_Log::log( 'found image ID –' );
+
+		return intval( $id );
 	}
 }

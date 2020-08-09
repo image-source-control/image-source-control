@@ -37,7 +37,7 @@ class ISC_Class {
 		 *
 		 * @var array allowed image extensions.
 		 */
-		protected $allowed_extensions = array(
+		public $allowed_extensions = array(
 			'jpg',
 			'png',
 			'gif',
@@ -111,6 +111,12 @@ class ISC_Class {
 			 * See the "updated_post_meta" action hook
 			 */
 			add_action( 'updated_post_meta', array( $this, 'maybe_update_attachment_post_meta' ), 10, 3 );
+
+			/**
+			 * Clear post-image index whenever the content of a post is updated
+			 * this could force reindexing the post after adding or removing image sources
+			 */
+			add_action( 'wp_insert_post', array( 'ISC_Model', 'clear_post_images_index' ) );
 		}
 
 		/**
@@ -150,113 +156,6 @@ class ISC_Class {
 			}
 
 			return $srcs;
-		}
-
-		/**
-		 * Filter image ids from text
-		 *
-		 * @param string $content post content.
-		 * @return array with image ids => image src uri-s
-		 */
-		public function filter_image_ids( $content = '' ) {
-			$srcs = array();
-
-			ISC_Log::log( 'enter filter_image_ids() to look for image IDs within the content' );
-
-			if ( empty( $content ) ) {
-				ISC_Log::log( 'exit save_image_information() due to missing content' );
-				return $srcs;
-			}
-
-			// parse HTML with DOM
-			$dom = new DOMDocument();
-
-			libxml_use_internal_errors( true );
-			if ( function_exists( 'mb_convert_encoding' ) ) {
-					$content = mb_convert_encoding( $content, 'HTML-ENTITIES', 'UTF-8' );
-			}
-			$dom->loadHTML( $content );
-
-			// Prevents from sending E_WARNINGs notice (Outputs are forbidden during activation)
-			libxml_clear_errors();
-
-			foreach ( $dom->getElementsByTagName( 'img' ) as $node ) {
-				if ( isset( $node->attributes ) ) {
-						$matched = false;
-					if ( null !== $node->attributes->getNamedItem( 'class' ) ) {
-
-						ISC_Log::log( sprintf( 'found class attribute "%s"', $node->attributes->getNamedItem( 'class' )->textContent ) );
-
-						if ( preg_match( '#.*wp-image-(\d+?).*#U', $node->attributes->getNamedItem( 'class' )->textContent, $matches ) ) {
-								$srcs[ intval( $matches[1] ) ] = $node->attributes->getNamedItem( 'src' )->textContent;
-								$matched                       = true;
-
-								ISC_Log::log( sprintf( 'found image ID "%d" with src "%s"', intval( $matches[1] ), $srcs[ intval( $matches[1] ) ] ) );
-						}
-					}
-					if ( ! $matched ) {
-						if ( null !== $node->attributes->getNamedItem( 'src' ) ) {
-							$url = $node->attributes->getNamedItem( 'src' )->textContent;
-							ISC_Log::log( sprintf( 'found src "%s"', $url ) );
-							// get ID of images by url
-							$id = $this->get_image_by_url( $url );
-							if ( $id ) {
-									$srcs[ $id ] = $url;
-							}
-						}
-					}
-				}
-			}
-
-			return $srcs;
-		}
-
-		/**
-		 * Get image by url accessing the database directly
-		 *
-		 * @since 1.1
-		 * @updated 1.1.3
-		 * @param string $url url of the image.
-		 * @return integer ID of the image.
-		 */
-		public function get_image_by_url( $url = '' ) {
-			global $wpdb;
-
-			ISC_Log::log( 'enter get_image_by_url() to look for URL ' . $url );
-
-			if ( empty( $url ) ) {
-				return 0;
-			}
-			$types = implode( '|', $this->allowed_extensions );
-			/**
-			 * Check for the format 'image-title-(e12452112-)300x200.jpg(?query…)' and removes
-			 *   the image size
-			 *   edit marks
-			 *   additional query vars
-			 */
-			$newurl = esc_url( preg_replace( "/(-e\d+){0,1}(-\d+x\d+){0,1}\.({$types})(.*)/i", '.${3}', $url ) );
-
-			// remove protocoll (http or https)
-			$url    = str_ireplace( array( 'http:', 'https:' ), '', $url );
-			$newurl = str_ireplace( array( 'http:', 'https:' ), '', $newurl );
-
-			// not escaped, because escaping already happened above
-			$raw_query = $wpdb->prepare(
-				"SELECT ID FROM `$wpdb->posts` WHERE post_type='attachment' AND guid = %s OR guid = %s OR guid = %s OR guid = %s LIMIT 1",
-				"http:$url",
-				"https:$url",
-				"http:$newurl",
-				"https:$newurl"
-			);
-
-			ISC_Log::log( 'SQL: ' . $raw_query );
-
-			$query = apply_filters( 'isc_get_image_by_url_query', $raw_query, $newurl );
-			$id    = $wpdb->get_var( $query );
-
-			$id ? ISC_Log::log( 'found image ID ' . $id ) : ISC_Log::log( 'found image ID –' );
-
-			return intval( $id );
 		}
 
 		/**
