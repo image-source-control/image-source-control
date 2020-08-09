@@ -30,14 +30,31 @@ class ISC_Public extends ISC_Class {
 		add_action( 'wp_head', array( $this, 'front_head' ) );
 
 		// Content filters need to be above 10 in order to interpret also gallery shortcode
-		// registering the classes using an instance so that we remove the filter somewhere else
-		add_filter( 'the_content', array( self::get_instance(), 'add_source_captions_to_content' ), 20 );
-		// this filter needs to be used in the call to remove_filter() in the list_post_attachments_with_sources() function to prevent an infinite loop
-		add_filter( 'the_content', array( self::get_instance(), 'add_source_list_to_content' ), 21 );
+		self::register_the_content_filters();
 		add_filter( 'the_excerpt', array( $this, 'excerpt_filter' ), 20 );
 
 		add_shortcode( 'isc_list', array( $this, 'list_post_attachments_with_sources_shortcode' ) );
 		add_shortcode( 'isc_list_all', array( $this, 'list_all_post_attachments_sources_shortcode' ) );
+	}
+
+	/**
+	 * Register our the_content filters
+	 */
+	public static function register_the_content_filters() {
+		// Content filters need to be above 10 in order to interpret also gallery shortcode
+		// registering the classes using an instance so that we remove the filter somewhere else
+		add_filter( 'the_content', array( self::get_instance(), 'add_source_captions_to_content' ), 20 );
+		// this filter needs to be used in the call to remove_filter() in the list_post_attachments_with_sources() function to prevent an infinite loop
+		add_filter( 'the_content', array( self::get_instance(), 'add_source_list_to_content' ), 21 );
+	}
+
+	/**
+	 * Unregister our the_content filters
+	 * used in places where we want to prevent infinite loops
+	 */
+	public static function remove_the_content_filters() {
+		remove_filter( 'the_content', array( self::get_instance(), 'add_source_captions_to_content' ), 20 );
+		remove_filter( 'the_content', array( self::get_instance(), 'add_source_list_to_content' ), 21 );
 	}
 
 	/**
@@ -211,7 +228,7 @@ class ISC_Public extends ISC_Class {
 
 		if ( ( isset( $options['list_on_archives'] ) && $options['list_on_archives'] ) ||
 			 ( is_singular() && isset( $options['display_type'] ) && is_array( $options['display_type'] ) && in_array( 'list', $options['display_type'], true ) ) ) {
-		    ISC_Log::log( 'start creating source list below content' );
+			ISC_Log::log( 'start creating source list below content' );
 			$content = $content . $this->list_post_attachments_with_sources();
 		}
 
@@ -289,10 +306,11 @@ class ISC_Public extends ISC_Class {
 				ISC_Log::log( 'isc_post_images is empty for post ID ' . $post_id );
 				// unregister our content filter in order to prevent infinite loops when calling the_content in the next steps
 				// todo: there also seems to be a loop caused by REST requests as reported and hotfixed in https://github.com/webgilde/image-source-control/issues/48
-				remove_filter( 'the_content', array( ISC_Public::get_instance(), 'add_source_list_to_content' ), 21 );
+				remove_filter( 'the_content', array( self::get_instance(), 'add_source_list_to_content' ), 21 );
 
 				$this->save_image_information_on_load();
-				$this->model->update_image_posts_meta( $post_id, $post->post_content );
+				// the following might not be needed anymore.
+				// $this->model->update_image_posts_meta( $post_id, $post->post_content );
 
 				$attachments = get_post_meta( $post_id, 'isc_post_images', true );
 		}

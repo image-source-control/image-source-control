@@ -76,6 +76,7 @@ class ISC_Model {
 	 * @updated 1.3.5 added images_in_posts_simple filter
 	 */
 	public function update_image_posts_meta( $post_id, $content ) {
+		ISC_Public::remove_the_content_filters();
 		$content = apply_filters( 'the_content', $content );
 
 		$image_ids      = ISC_Class::get_instance()->filter_image_ids( $content );
@@ -172,7 +173,10 @@ class ISC_Model {
 		ISC_Log::log( 'enter save_image_information()' );
 
 		// creates an infinite loop if not secured, see ISC_Public::list_post_attachments_with_sources()
+		// we need to unregister our own content filters before running these
+		ISC_Public::remove_the_content_filters();
 		$content = apply_filters( 'the_content', $content );
+		// ISC_Public::register_the_content_filters();
 
 		/*
 		$_image_urls = $this->filter_src_attributes($_content);
