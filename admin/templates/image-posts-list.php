@@ -5,7 +5,7 @@
  * @var WP_Query $images_with_posts query with posts that have the "isc_image_posts" post meta.
  */
 if ( $images_with_posts->have_posts() ) : ?>
-	<table class="widefat isc-table" style="width: 80%;" >
+	<table class="widefat isc-table isc-table-debug-list" style="width: 80%;" >
 		<thead>
 			<tr>
 				<th><?php esc_html_e( 'Image', 'image-source-control-isc' ); ?></th>

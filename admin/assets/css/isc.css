@@ -1,3 +1,7 @@
+/*
+SETTINGS
+*/
+
 .isc-setting-group { width: 96%; }
 #display_types_block label { font-weight: bold; }
 #isc-setting-group-type table th { display: none; }
@@ -20,3 +24,9 @@
 
 /* tables */
 .isc-table tr:hover { background-color: #ddd;}
+
+/*
+SOURCES PAGE
+*/
+
+.isc-table-debug-list th { width: 50%; }

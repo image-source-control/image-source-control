@@ -70,12 +70,14 @@ if ( ! empty( $attachments ) ) :
 endif;
 ?>
 <h2><?php esc_html_e( 'Debug', 'image-source-control-isc' ); ?></h2>
+<p><?php esc_html_e( 'The following options allow you to see if ISC was able to detect all images.', 'image-source-control-isc' ); ?>
+<br/><?php esc_html_e( 'Please keep in mind that the plugin only knows about posts that have been visited at least once in the frontend.', 'image-source-control-isc' ); ?></p>
 <button id="isc-list-post-image-relation" class="button button-secondary"><?php esc_html_e( 'list post-image relations', 'image-source-control-isc' ); ?></button>
-<p class="description"><?php esc_html_e( 'This will list the information ISC knows about the connection between posts and images.', 'image-source-control-isc' ); ?></p>
+<p class="description"><?php esc_html_e( 'A list of posts and the images in them.', 'image-source-control-isc' ); ?></p>
 <div id="isc-post-image-relations"></div>
 <hr/>
 <button id="isc-list-image-post-relation" class="button button-secondary"><?php esc_html_e( 'list image-post relations', 'image-source-control-isc' ); ?></button>
-<p class="description"><?php esc_html_e( 'This will list the information ISC knows about the connection between images and posts.', 'image-source-control-isc' ); ?></p>
+<p class="description"><?php esc_html_e( 'A list of images and the posts they appear in.', 'image-source-control-isc' ); ?></p>
 <div id="isc-image-post-relations"></div>
 <hr/>
 <button id="isc-clear-index" class="button button-secondary"><?php esc_html_e( 'clear image-post index', 'image-source-control-isc' ); ?></button>

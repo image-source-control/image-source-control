@@ -101,7 +101,7 @@ class ISC_Admin extends ISC_Class {
 			wp_enqueue_script( 'isc_postphp_script', plugins_url( '/assets/js/post.js', __FILE__ ), array( 'jquery' ), ISCVERSION );
 		}
 		wp_enqueue_script( 'isc_script', plugins_url( '/assets/js/isc.js', __FILE__ ), false, ISCVERSION );
-		wp_enqueue_style( 'isc_image_settings_css', plugins_url( '/assets/css/image-settings.css', __FILE__ ), false, ISCVERSION );
+		wp_enqueue_style( 'isc_image_settings_css', plugins_url( '/assets/css/isc.css', __FILE__ ), false, ISCVERSION );
 	}
 
 	/**
@@ -735,7 +735,7 @@ class ISC_Admin extends ISC_Class {
 		if ( $posts_with_images->have_posts() ) {
 			require_once ISCPATH . '/admin/templates/post-images-list.php';
 		} else {
-			die( esc_html__( 'No entries available', 'image-source-control-isc' ) );
+			die( esc_html__( 'No entries found', 'image-source-control-isc' ) );
 		}
 
 		wp_reset_postdata();
@@ -772,7 +772,7 @@ class ISC_Admin extends ISC_Class {
 		if ( $images_with_posts->have_posts() ) {
 			require_once ISCPATH . '/admin/templates/image-posts-list.php';
 		} else {
-			die( esc_html__( 'No entries available', 'image-source-control-isc' ) );
+			die( esc_html__( 'No entries found', 'image-source-control-isc' ) );
 		}
 
 		wp_reset_postdata();
