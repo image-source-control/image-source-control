@@ -183,14 +183,14 @@ class ISC_Public extends ISC_Class {
 		 *
 		 * 0 – full match
 		 * 1 - <figure> if set
-		 * 2 – alignment
-		 * 3 – inner code starting with <a>
-		 * 4 – opening link attribute
-		 * 5 – "rel" attribute from link tag
-		 * 6 – image id from link wp-att- value in "rel" attribute
-		 * 7 – full img tag
-		 * 8 – image URL
-		 * 9 – (unused)
+		 * 2 – alignment
+		 * 3 – inner code starting with <a>
+		 * 4 – opening link attribute
+		 * 5 – "rel" attribute from link tag
+		 * 6 – image id from link wp-att- value in "rel" attribute
+		 * 7 – full img tag
+		 * 8 – image URL
+		 * 9 – (unused)
 		 * 10 - </figure>
 		 *
 		 * tested with:
@@ -231,7 +231,7 @@ class ISC_Public extends ISC_Class {
 				// if ID is still missing get image by URL
 				if ( ! $id ) {
 					$src = $matches[8][ $i ];
-					$id  = $this->get_image_by_url( $src );
+					$id  = ISC_Model::get_image_by_url( $src );
 					ISC_Log::log( sprintf( 'ID for source "%s": "%s"', $src, $id ) );
 				}
 
@@ -828,7 +828,7 @@ class ISC_Public extends ISC_Class {
 	 */
 	public function get_source_by_url( $url ) {
 		// get the id by the image source
-		$id = $this->get_image_by_url( $url );
+		$id = ISC_Model::get_image_by_url( $url );
 
 		return $this->render_image_source_string( $id );
 
