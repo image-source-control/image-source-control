@@ -511,7 +511,7 @@ class ISC_Admin extends ISC_Class {
 		$options = $this->get_isc_options();
 		?>
 			<div id="by-author-text">
-				<input type="text" id="byauthor" name="isc_options[by_author_text_field]" value="<?php echo esc_attr( $options['by_author_text'] ); ?>" <?php disabled( $options['use_authorname'] ); ?> class="regular-text" />
+				<input type="text" id="byauthor" name="isc_options[by_author_text_field]" value="<?php echo esc_attr( $options['by_author_text'] ); ?>" <?php disabled( $options['use_authorname'] ); ?> class="regular-text" placeholder="<?php esc_html_e( 'Owned by the author', 'image-source-control' ); ?>"/>
 				<p class="description"><?php esc_html_e( "Enter the custom text to display if you do not want to use the author's public name.", 'image-source-control-isc' ); ?></p>
 			</div>
 			<?php
