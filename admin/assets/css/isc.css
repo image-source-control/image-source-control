@@ -2,21 +2,9 @@
 SETTINGS
 */
 
-.isc-setting-group { width: 96%; }
-#display_types_block label { font-weight: bold; }
-#isc-setting-group-type table th { display: none; }
-#display_types_block .description { margin-left: 1.7em; margin-bottom: .5em; }
-
-#isc-admin-wrap h3 {
-    padding: 0.8em 1em;
-    cursor: default;
-}
-
-#isc-admin-wrap .form-table {
-    margin: 0 1em;
-}
-
-#licences textarea { width: 40em; height: 7em; }
+#isc-settings-position label { font-weight: bold; }
+#isc-settings-position .description { margin-left: 1.7em; margin-bottom: .5em; }
+#isc-settings-licenses textarea { width: 40em; height: 7em; }
 
 /* meta field in media view */
 .compat-attachment-fields input[type="text"] { width: 100%; }

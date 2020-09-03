@@ -10,8 +10,6 @@ class ISC_Admin extends ISC_Class {
 
 	/**
 	 * Initiate admin functions
-	 *
-	 * @since 1.7
 	 */
 	public function __construct() {
 
@@ -25,7 +23,7 @@ class ISC_Admin extends ISC_Class {
 
 		// settings page
 		add_action( 'admin_menu', array( $this, 'create_menu' ) );
-		add_action( 'admin_init', array( $this, 'SAPI_init' ) );
+		add_action( 'admin_init', array( $this, 'settings_init' ) );
 
 		// scripts and styles
 		add_action( 'admin_enqueue_scripts', array( $this, 'add_admin_scripts' ) );
@@ -43,12 +41,12 @@ class ISC_Admin extends ISC_Class {
 	/**
 	 * Add links to setting and source list pages from plugins.php
 	 *
-	 * @var array $links
+	 * @param array $links existing plugin links.
 	 * @return array
 	 */
 	public function add_links_to_plugin_page( $links ) {
 		// settings link
-	    $links[] = sprintf(
+		$links[] = sprintf(
 			'<a href="%s">%s</a>',
 			esc_url( add_query_arg( 'page', 'isc-settings', get_admin_url() . 'options-general.php' ) ),
 			__( 'Settings', 'image-source-control-isc' )
@@ -194,45 +192,45 @@ class ISC_Admin extends ISC_Class {
 
 	/**
 	 * Settings API initialization
-	 *
-	 * @update 1.3.5 added settings for sources
-	 * @todo rewrite this and following functions to a more practical form (esp. shorter) or at least bundle field into more useful sections
 	 */
-	public function SAPI_init() {
+	public function settings_init() {
 		$this->upgrade_management();
 		register_setting( 'isc_options_group', 'isc_options', array( $this, 'settings_validation' ) );
-		add_settings_section( 'isc_settings_section', '', '__return_false', 'isc_settings_page' );
 
-		// handle type of source display
-		add_settings_field( 'source_display_type', __( 'How to display sources', 'image-source-control-isc' ), array( $this, 'renderfield_sources_display_type' ), 'isc_settings_page', 'isc_settings_section' );
+		// decide where to display image sources
+		add_settings_section( 'isc_settings_section_position', __( 'Position of the image sources', 'image-source-control-isc' ), array( $this, 'render_section_position' ), 'isc_settings_page' );
+		add_settings_field( 'source_display_type', __( 'Single pages', 'image-source-control-isc' ), array( $this, 'renderfield_sources_position' ), 'isc_settings_page', 'isc_settings_section_position' );
+		add_settings_field( 'full_list_type', __( 'List with all sources', 'image-source-control-isc' ), array( $this, 'renderfield_complete_list' ), 'isc_settings_page', 'isc_settings_section_position' );
+		add_settings_field( 'list_on_archives', __( 'Archive Pages', 'image-source-control-isc' ), array( $this, 'renderfield_list_on_archives' ), 'isc_settings_page', 'isc_settings_section_position' );
 
-		// settings for archive pages
-		add_settings_field( 'list_on_archives', __( 'Sources below full posts', 'image-source-control-isc' ), array( $this, 'renderfield_list_on_archives' ), 'isc_settings_page', 'isc_settings_section' );
-		add_settings_field( 'list_on_excerpts', __( 'Sources below excerpts', 'image-source-control-isc' ), array( $this, 'renderfield_list_on_excerpts' ), 'isc_settings_page', 'isc_settings_section' );
-
-		// settings for sources list below single pages
-		add_settings_field( 'image_list_headline', __( 'Image list headline', 'image-source-control-isc' ), array( $this, 'renderfield_list_headline' ), 'isc_settings_page', 'isc_settings_section' );
+		// settings for sources list below content
+		add_settings_section( 'isc_settings_section_list_below_content', __( 'List below content', 'image-source-control-isc' ), '__return_false', 'isc_settings_page' );
+		add_settings_field( 'image_list_headline', __( 'Image list headline', 'image-source-control-isc' ), array( $this, 'renderfield_list_headline' ), 'isc_settings_page', 'isc_settings_section_list_below_content' );
 
 		// source in caption
-		add_settings_field( 'source_caption', __( 'Overlay pre-text', 'image-source-control-isc' ), array( $this, 'renderfield_overlay_text' ), 'isc_settings_page', 'isc_settings_section' );
-		add_settings_field( 'caption_position', __( 'Overlay position', 'image-source-control-isc' ), array( $this, 'renderfield_overlay_position' ), 'isc_settings_page', 'isc_settings_section' );
+		add_settings_section( 'isc_settings_section_caption', __( 'Overlay', 'image-source-control-isc' ), '__return_false', 'isc_settings_page' );
+		add_settings_field( 'source_caption', __( 'Overlay pre-text', 'image-source-control-isc' ), array( $this, 'renderfield_overlay_text' ), 'isc_settings_page', 'isc_settings_section_caption' );
+		add_settings_field( 'caption_position', __( 'Overlay position', 'image-source-control-isc' ), array( $this, 'renderfield_overlay_position' ), 'isc_settings_page', 'isc_settings_section_caption' );
 
 		// full image sources list group
-		add_settings_field( 'use_thumbnail', __( 'Use thumbnails in images list', 'image-source-control-isc' ), array( $this, 'renderfield_use_thumbnail' ), 'isc_settings_page', 'isc_settings_section' );
-		add_settings_field( 'thumbnail_width', __( 'Thumbnails max-width', 'image-source-control-isc' ), array( $this, 'renderfield_thumbnail_width' ), 'isc_settings_page', 'isc_settings_section' );
-		add_settings_field( 'thumbnail_height', __( 'Thumbnails max-height', 'image-source-control-isc' ), array( $this, 'renderfield_thumbnail_height' ), 'isc_settings_page', 'isc_settings_section' );
+		add_settings_section( 'isc_settings_section_complete_list', __( 'List with all sources', 'image-source-control-isc' ), '__return_false', 'isc_settings_page' );
+		add_settings_field( 'use_thumbnail', __( 'Use thumbnails in images list', 'image-source-control-isc' ), array( $this, 'renderfield_use_thumbnail' ), 'isc_settings_page', 'isc_settings_section_complete_list' );
+		add_settings_field( 'thumbnail_width', __( 'Thumbnails max-width', 'image-source-control-isc' ), array( $this, 'renderfield_thumbnail_width' ), 'isc_settings_page', 'isc_settings_section_complete_list' );
+		add_settings_field( 'thumbnail_height', __( 'Thumbnails max-height', 'image-source-control-isc' ), array( $this, 'renderfield_thumbnail_height' ), 'isc_settings_page', 'isc_settings_section_complete_list' );
 
 		// Licence settings group
-		add_settings_field( 'enable_licences', __( 'Enable licenses', 'image-source-control-isc' ), array( $this, 'renderfield_enable_licences' ), 'isc_settings_page', 'isc_settings_section' );
-		add_settings_field( 'licences', __( 'List of licenses', 'image-source-control-isc' ), array( $this, 'renderfield_licences' ), 'isc_settings_page', 'isc_settings_section' );
+		add_settings_section( 'isc_settings_section_licenses', __( 'Licenses settings', 'image-source-control-isc' ), '__return_false', 'isc_settings_page' );
+		add_settings_field( 'enable_licences', __( 'Enable licenses', 'image-source-control-isc' ), array( $this, 'renderfield_enable_licences' ), 'isc_settings_page', 'isc_settings_section_licenses' );
+		add_settings_field( 'licences', __( 'List of licenses', 'image-source-control-isc' ), array( $this, 'renderfield_licences' ), 'isc_settings_page', 'isc_settings_section_licenses' );
 
 		// Misc settings group
-		add_settings_field( 'exclude_own_images', __( 'Exclude own images', 'image-source-control-isc' ), array( $this, 'renderfield_exclude_own_images' ), 'isc_settings_page', 'isc_settings_section' );
-		add_settings_field( 'use_authorname', __( 'Use authors names', 'image-source-control-isc' ), array( $this, 'renderfield_use_authorname' ), 'isc_settings_page', 'isc_settings_section' );
-		add_settings_field( 'by_author_text', __( 'Custom text for owned images', 'image-source-control-isc' ), array( $this, 'renderfield_byauthor_text' ), 'isc_settings_page', 'isc_settings_section' );
-		add_settings_field( 'warning_one_source', __( 'Warn about missing sources', 'image-source-control-isc' ), array( $this, 'renderfield_warning_onesource_misisng' ), 'isc_settings_page', 'isc_settings_section' );
-		add_settings_field( 'enable_log', __( 'Debug log', 'image-source-control-isc' ), array( $this, 'renderfield_enable_log' ), 'isc_settings_page', 'isc_settings_section' );
-		add_settings_field( 'remove_on_uninstall', __( 'Delete data on uninstall', 'image-source-control-isc' ), array( $this, 'renderfield_remove_on_uninstall' ), 'isc_settings_page', 'isc_settings_section' );
+		add_settings_section( 'isc_settings_section_misc', __( 'Miscellaneous settings', 'image-source-control-isc' ), '__return_false', 'isc_settings_page' );
+		add_settings_field( 'exclude_own_images', __( 'Exclude own images', 'image-source-control-isc' ), array( $this, 'renderfield_exclude_own_images' ), 'isc_settings_page', 'isc_settings_section_misc' );
+		add_settings_field( 'use_authorname', __( 'Use authors names', 'image-source-control-isc' ), array( $this, 'renderfield_use_authorname' ), 'isc_settings_page', 'isc_settings_section_misc' );
+		add_settings_field( 'by_author_text', __( 'Custom text for owned images', 'image-source-control-isc' ), array( $this, 'renderfield_by_author_text' ), 'isc_settings_page', 'isc_settings_section_misc' );
+		add_settings_field( 'warning_one_source', __( 'Warn about missing sources', 'image-source-control-isc' ), array( $this, 'renderfield_warning_source_missing' ), 'isc_settings_page', 'isc_settings_section_misc' );
+		add_settings_field( 'enable_log', __( 'Debug log', 'image-source-control-isc' ), array( $this, 'renderfield_enable_log' ), 'isc_settings_page', 'isc_settings_section_misc' );
+		add_settings_field( 'remove_on_uninstall', __( 'Delete data on uninstall', 'image-source-control-isc' ), array( $this, 'renderfield_remove_on_uninstall' ), 'isc_settings_page', 'isc_settings_section_misc' );
 	}
 
 	/**
@@ -275,41 +273,54 @@ class ISC_Admin extends ISC_Class {
 	 * Image_control's page callback
 	 */
 	public function render_isc_settings_page() {
-		?>
-			<div id="icon-options-general" class="icon32"><br></div>
-			<h1><?php esc_html_e( 'ISC settings', 'image-source-control-isc' ); ?></h1>
-			<p>
-			<?php
-			printf(
-				wp_kses(
-						// translators: %1$s is a starting a-tag, %2$s is the closing one.
-					__( 'You can manage and debug image sources under %1$sMedia > Image Sources%2$s.', 'image-source-control-isc' ),
-					array(
-						'a' => array(
-							'href' => array(),
-						),
-					)
-				),
-				'<a href="' . esc_url( admin_url( 'upload.php?page=isc-sources' ) ) . '">',
-				'</a>'
-			);
+
+		require_once ISCPATH . '/admin/templates/settings.php';
+
+	}
+
+	/**
+	 * Prints out all settings sections added to a particular settings page
+	 *
+	 * Copy of do_settings_sections() in WP 5.5.1 with adjustments to design each settings section in a meta box.
+	 *
+	 * @global array $wp_settings_sections Storage array of all settings sections added to admin pages.
+	 * @global array $wp_settings_fields Storage array of settings fields and info about their pages/sections.
+	 *
+	 * @param string $page The slug name of the page whose settings sections you want to output.
+	 */
+	public static function do_settings_sections( $page ) {
+		global $wp_settings_sections;
+
+		if ( ! isset( $wp_settings_sections[ $page ] ) ) {
+			return;
+		}
+
+		foreach ( (array) $wp_settings_sections[ $page ] as $section ) {
+
 			?>
-					</p>
-			<div id="isc-admin-wrap">
-				<form id="image-control-form" method="post" action="options.php">
-					<div id="isc-setting-group-type" class="postbox isc-setting-group"><?php // Open the div for the first settings group ?>
-					<h3 class="setting-group-head"><?php esc_html_e( 'How to display source in Frontend', 'image-source-control-isc' ); ?></h3>
-				<?php
-					settings_fields( 'isc_options_group' );
-					do_settings_sections( 'isc_settings_page' );
-				?>
-					</div><?php // Close the last settings group div ?>
-					<p class="submit">
-						<input type="submit" name="submit" id="submit" class="button button-primary" value="Save Changes">
-					</p>
-				</form>
-			</div><!-- #isc-admin-wrap -->
+			<div class="postbox ">
 			<?php
+			if ( $section['title'] ) {
+				?>
+				<div class="postbox-header"><h2 class="hndle"><?php echo $section['title']; ?></h2></div>
+				<?php
+			}
+
+			?>
+			<div class="inside">
+			<div class="submitbox" id="submitpost">
+                <?php
+                if ( $section['callback'] ) {
+                    call_user_func( $section['callback'], $section );
+                }
+				?>
+                <table class="form-table" role="presentation">
+				<?php
+				do_settings_fields( $page, $section['id'] );
+				?>
+			</table></div></div></div>
+			<?php
+		}
 	}
 
 	/**
@@ -320,136 +331,49 @@ class ISC_Admin extends ISC_Class {
 	}
 
 	/**
-	 * Choose type of sources display in the frontend
-	 *
-	 * @since 1.7
+	 * Choose where to display image sources in the frontend.
 	 */
-	public function renderfield_sources_display_type() {
-		$options = $this->get_isc_options();
-		?>
-			<p class="description"><?php esc_html_e( 'Choose where to display image sources in the frontend', 'image-source-control-isc' ); ?></p><br/>
-			<div id="display_types_block">
-				<input type="hidden" name="isc_options[display_type]" value=""/>
-
-				<input type="checkbox" name="isc_options[display_type][]" id="display-types-list" value="list" <?php checked( in_array( 'list', $options['display_type'], true ), true ); ?> />
-				<label for="display-types-list">
-			<?php
-			esc_html_e( 'list below content', 'image-source-control-isc' );
-			?>
-				</label>
-				<p class="description"><?php esc_html_e( 'Displays a list of image sources below singular pages.', 'image-source-control-isc' ); ?></p>
-
-				<input type="checkbox" name="isc_options[display_type][]" id="display-types-overlay" value="overlay" <?php checked( in_array( 'overlay', $options['display_type'], true ), true ); ?> />
-				<label for="display-types-overlay">
-				<?php
-				esc_html_e( 'overlay', 'image-source-control-isc' );
-				?>
-				</label>
-				<p class="description">
-				<?php
-				esc_html_e( 'Display image source as a simple overlay', 'image-source-control-isc' );
-				?>
-				</p>
-
-				<p>
-				<?php
-				printf(
-					wp_kses(
-							// translators: %1$s is the beginning link tag, %2$s is the closing one.
-						__( 'If you don’t want to use any of these methods, you can still place the image source list manually as described %1$shere%2$s', 'image-source-control-isc' ),
-						array(
-							'a' => array( 'href' ),
-						)
-					),
-					'<a href="http://webgilde.com/en/image-source-control/image-sources-frontend/" target="_blank">',
-					'</a>'
-				)
-				?>
-				</p>
-			</div>
-			</td></tr></tbody></table>
-			</div><!-- .postbox -->
-			<div id="isc-setting-group-list" class="postbox isc-setting-group">
-			<h3 class="setting-group-head"><?php esc_html_e( 'Archive Pages', 'image-source-control-isc' ); ?></h3>
-			<table class="form-table"><tbody>
-			<?php
+	public function render_section_position() {
+		require_once ISCPATH . '/admin/templates/settings/section-position.php';
 	}
 
 	/**
-	 * Select the option for sources on archive pages
-	 *
-	 * @since 1.8
+	 * Choose where to display image sources in the frontend.
+	 */
+	public function renderfield_sources_position() {
+		$options = $this->get_isc_options();
+		require_once ISCPATH . '/admin/templates/settings/position.php';
+	}
+
+	/**
+	 * Instructions on how to insert the complete image list
+	 */
+	public function renderfield_complete_list() {
+		require_once ISCPATH . '/admin/templates/settings/complete-image-list.php';
+	}
+
+	/**
+	 * Select if and when sources should show on archive pages
 	 */
 	public function renderfield_list_on_archives() {
 		$options = $this->get_isc_options();
-		?>
-			<div id="display_types_block">
-				<input type="checkbox" name="isc_options[list_on_archives]" id="list-on-archives" value="1" <?php checked( 1, $options['list_on_archives'], true ); ?> />
-				<label for="list-on-archives">
-			<?php
-			esc_html_e( 'Display sources list below full posts', 'image-source-control-isc' );
-			?>
-				</label>
-				<p class="description"><?php esc_html_e( 'Choose this option if you want to display the sources list attached to posts on archive and category pages that display the full content.', 'image-source-control-isc' ); ?></p>
-			</div>
-			<?php
+		require_once ISCPATH . '/admin/templates/settings/archives.php';
 	}
 
 	/**
-	 * Select the option for sources on archive pages
-	 *
-	 * @since 1.8
+	 * Render option to define a headline for the image list
 	 */
-	public function renderfield_list_on_excerpts() {
-		$options = $this->get_isc_options();
-		?>
-			<div id="display_types_block">
-				<input type="checkbox" name="isc_options[list_on_excerpts]" id="list-on-excerpts" value="1" <?php checked( 1, $options['list_on_excerpts'], true ); ?> />
-				<label for="list-on-excerpts">
-			<?php
-			esc_html_e( 'Display sources list below excerpts', 'image-source-control-isc' );
-			?>
-				</label>
-				<p class="description"><?php esc_html_e( 'Choose this option if you want to display the source of the featured image below the post excerpt. The source will be attached to the excerpt and it might happen that you see it everywhere. If this happens you should display the source manually in your template.', 'image-source-control-isc' ); ?></p>
-			</div>
-			</td></tr></tbody></table>
-			</div><!-- .postbox -->
-			<div id="isc-setting-group-list" class="postbox isc-setting-group">
-			<h3 class="setting-group-head"><?php esc_html_e( 'List below content', 'image-source-control-isc' ); ?></h3>
-			<table class="form-table"><tbody>
-			<?php
-	}
-
-			/**
-			 * Render option to define a headline for the image list
-			 */
 	public function renderfield_list_headline() {
 		$options = $this->get_isc_options();
-		?>
-			<div id="image-list-headline-block">
-				<label for="list-head"><?php esc_html_e( 'Image list headline', 'image-source-control-isc' ); ?></label>
-				<input type="text" name="isc_options[image_list_headline_field]" id="list-head" value="<?php echo esc_attr( $options['image_list_headline'] ); ?>" class="regular-text" />
-				<p class="description"><?php esc_html_e( 'The headline of the image list added via shortcode or function in your theme.', 'image-source-control-isc' ); ?></p>
-			</div>
-			</td></tr></tbody></table>
-			</div><!-- .postbox -->
-			<div id="isc-setting-group-overlay" class="postbox isc-setting-group">
-			<h3 class="setting-group-head"><?php esc_html_e( 'Overlay', 'image-source-control-isc' ); ?></h3>
-			<table class="form-table"><tbody>
-			<?php
+		require_once ISCPATH . '/admin/templates/settings/source-list-headline.php';
 	}
 
-			/**
-			 * Render option for the text preceding the source.
-			 */
+	/**
+	 * Render option for the text preceding the source.
+	 */
 	public function renderfield_overlay_text() {
 		$options = $this->get_isc_options();
-		?>
-			<div id="overlay-block">
-				<input type="text" id='source-pretext' name="isc_options[source_pretext]" value="<?php echo esc_attr( $options['source_pretext'] ); ?>" />
-				<p class="description"><?php esc_html_e( 'The text preceding the source.', 'image-source-control-isc' ); ?></p>
-			</div>
-			<?php
+		require_once ISCPATH . '/admin/templates/settings/overlay-text.php';
 	}
 
 			/**
@@ -457,136 +381,24 @@ class ISC_Admin extends ISC_Class {
 			 */
 	public function renderfield_overlay_position() {
 		$options = $this->get_isc_options();
-		?>
-			<div id="caption-position-block">
-					<select id="caption-pos" name="isc_options[cap_pos]">
-					<?php foreach ( $this->caption_position as $pos ) : ?>
-							<option value="<?php echo esc_attr( $pos ); ?>" <?php selected( $pos, $options['caption_position'] ); ?>><?php echo esc_html( $pos ); ?></option>
-						<?php endforeach; ?>
-					</select>
-				<p class="description"><?php esc_html_e( 'Position of overlay into images', 'image-source-control-isc' ); ?></p>
-			</div>
-			</td></tr></tbody></table>
-			</div><!-- .postbox -->
-			<div class="postbox isc-setting-group">
-			<h3 class="setting-group-head"><?php esc_html_e( 'Full images list', 'image-source-control-isc' ); ?></h3>
-			<table class="form-table"><tbody>
-			<?php
+		require_once ISCPATH . '/admin/templates/settings/overlay-position.php';
+	}
+
+
+	/**
+	 * Render option to display thumbnails in the full image source list
+	 */
+	public function renderfield_use_thumbnail() {
+		$options = $this->get_isc_options();
+		require_once ISCPATH . '/admin/templates/settings/thumbnail-enable.php';
 	}
 
 	/**
-	 * Render option to exclude image from lists if it is makes as "by the author"
-	 *
-	 * @since 1.3.7
+	 * Render option to define the width of the thumbnails displayed in the full image source list.
 	 */
-	public function renderfield_exclude_own_images() {
-		$options = $this->get_isc_options();
-		?>
-			<div id="use-authorname-block">
-				<label for="exclude_own_images"><?php esc_html_e( 'Hide sources for own images', 'image-source-control-isc' ); ?></label>
-				<input type="checkbox" name="isc_options[exclude_own_images]" id="exclude_own_images" <?php checked( $options['exclude_own_images'] ); ?> />
-				<p class="description"><?php esc_html_e( "Exclude images marked as 'own image' from image lists (post and full) and overlay in the frontend. You can still manage them in the dashboard.", 'image-source-control-isc' ); ?></p>
-			</div>
-			<?php
-	}
-
-			/**
-			 * Render option to choose if the author’s public name should be displayed for their images.
-			 */
-	public function renderfield_use_authorname() {
-		$options = $this->get_isc_options();
-		?>
-			<div id="use-authorname-block">
-				<label for="use_authorname"><?php esc_html_e( 'Use author name', 'image-source-control-isc' ); ?></label>
-				<input type="checkbox" name="isc_options[use_authorname_ckbox]" id="use_authorname" <?php checked( $options['use_authorname'] ); ?> />
-				<p class="description"><?php esc_html_e( "Display the author's public name as source when the image is owned by the author (the uploader of the image, not necessarily the author of the post the image is displayed on). Uncheck to use a custom text instead.", 'image-source-control-isc' ); ?></p>
-			</div>
-			<?php
-	}
-
-			/**
-			 * Render option to enter a string that should show instead of the author name.
-			 */
-	public function renderfield_byauthor_text() {
-		$options = $this->get_isc_options();
-		?>
-			<div id="by-author-text">
-				<input type="text" id="byauthor" name="isc_options[by_author_text_field]" value="<?php echo esc_attr( $options['by_author_text'] ); ?>" <?php disabled( $options['use_authorname'] ); ?> class="regular-text" placeholder="<?php esc_html_e( 'Owned by the author', 'image-source-control' ); ?>"/>
-				<p class="description"><?php esc_html_e( "Enter the custom text to display if you do not want to use the author's public name.", 'image-source-control-isc' ); ?></p>
-			</div>
-			<?php
-	}
-
-			/**
-			 * Render option to enable the license settings.
-			 */
-	public function renderfield_enable_licences() {
-		$options = $this->get_isc_options();
-		?>
-			<div id="enable-licences">
-				<input type="checkbox" name="isc_options[enable_licences]" id="enable_licences" <?php checked( $options['enable_licences'] ); ?> />
-				<p class="description"><?php esc_html_e( 'Enable this to be able to add and display copyright/copyleft licenses for your images and manage them in the field below.', 'image-source-control-isc' ); ?></p>
-			</div>
-			<?php
-	}
-
-			/**
-			 * Render option to define the available licenses
-			 */
-	public function renderfield_licences() {
-		$options = $this->get_isc_options();
-
-		// fall back to default if field is empty
-		if ( empty( $options['licences'] ) ) {
-				// retrieve default options
-				$default = ISC_Class::get_instance()->default_options();
-			if ( ! empty( $default['licences'] ) ) {
-					$options['licences'] = $default['licences'];
-			}
-		}
-
-		?>
-			<div id="licences">
-				<textarea name="isc_options[licences]"><?php echo esc_html( $options['licences'] ); ?></textarea>
-				<p class="description"><?php esc_html_e( 'List of licenses the author can choose for an image. Enter a license per line and separate the name from the optional link with a pipe symbol (e.g. CC BY 2.0|http://creativecommons.org/licenses/by/2.0/legalcode).', 'image-source-control-isc' ); ?></p>
-			</div>
-			</td></tr></tbody></table>
-			</div><!-- .postbox -->
-			<div class="postbox isc-setting-group">
-			<h3 class="setting-group-head"><?php esc_html_e( 'Miscellaneous settings', 'image-source-control-isc' ); ?></h3>
-			<table class="form-table"><tbody><tr>
-			<?php
-	}
-
-			/**
-			 * Render option to display thumbnails in the full image source list
-			 */
-	public function renderfield_use_thumbnail() {
-		$options = $this->get_isc_options();
-		?>
-			<div id="use-thumbnail-block">
-				<input type="checkbox" id="use-thumbnail" name="isc_options[use_thumbnail]" value="1" <?php checked( $options['thumbnail_in_list'] ); ?> />
-				<select id="thumbnail-size-select" name="isc_options[size_select]" <?php disabled( ! $options['thumbnail_in_list'] ); ?>>
-				<?php foreach ( $this->thumbnail_size as $size ) : ?>
-						<option value="<?php echo esc_html( $size ); ?>" <?php selected( $size, $options['thumbnail_size'] ); ?>><?php echo esc_html( $size ); ?></option>
-					<?php endforeach; ?>
-				</select>
-				<p class="description"><?php esc_html_e( 'Display thumbnails on the list of all images in the blog.', 'image-source-control-isc' ); ?></p>
-			</div>
-			<?php
-	}
-
-			/**
-			 * Render option to define the width of the thumbnails displayed in the full image source list.
-			 */
 	public function renderfield_thumbnail_width() {
 		$options = $this->get_isc_options();
-		?>
-			<div id="thumbnail-custom-width">
-				<input type="text" id="custom-width" name="isc_options[thumbnail_width]" class="small-text" value="<?php echo esc_attr( $options['thumbnail_width'] ); ?>" /> px
-				<p class="description"><?php esc_html_e( 'Custom value of the maximum allowed width for thumbnail.', 'image-source-control-isc' ); ?></p>
-			</div>
-			<?php
+		require_once ISCPATH . '/admin/templates/settings/thumbnail-width.php';
 	}
 
 	/**
@@ -594,51 +406,75 @@ class ISC_Admin extends ISC_Class {
 	 */
 	public function renderfield_thumbnail_height() {
 		$options = $this->get_isc_options();
-		?>
-			<div id="thumbnail-custom-height">
-				<input type="text" id="custom-height" name="isc_options[thumbnail_height]" class="small-text" value="<?php echo esc_attr( $options['thumbnail_height'] ); ?>"/> px
-				<p class="description"><?php esc_html_e( 'Custom value of the maximum allowed height for thumbnail.', 'image-source-control-isc' ); ?></p>
-			</div>
-			</td></tr></tbody></table>
-			</div><!-- .postbox -->
-			<div class="postbox isc-setting-group">
-			<h3 class="setting-group-head"><?php esc_html_e( 'Licenses settings', 'image-source-control-isc' ); ?></h3>
-			<table class="form-table"><tbody><tr>
-			<?php
+		require_once ISCPATH . '/admin/templates/settings/thumbnail-height.php';
+	}
+
+	/**
+	 * Render option to enable the license settings.
+	 */
+	public function renderfield_enable_licences() {
+		$options = $this->get_isc_options();
+		require_once ISCPATH . '/admin/templates/settings/licenses-enable.php';
+	}
+
+	/**
+	 * Render option to define the available licenses
+	 */
+	public function renderfield_licences() {
+		$options = $this->get_isc_options();
+
+		// fall back to default if field is empty
+		if ( empty( $options['licences'] ) ) {
+			// retrieve default options
+			$default = ISC_Class::get_instance()->default_options();
+			if ( ! empty( $default['licences'] ) ) {
+				$options['licences'] = $default['licences'];
+			}
+		}
+
+		require_once ISCPATH . '/admin/templates/settings/licenses.php';
+	}
+
+	/**
+	 * Render option to exclude image from lists if it is makes as "by the author"
+	 */
+	public function renderfield_exclude_own_images() {
+		$options = $this->get_isc_options();
+		require_once ISCPATH . '/admin/templates/settings/exclude-own-image.php';
+	}
+
+	/**
+	 * Render option to choose if the author’s public name should be displayed for their images.
+	 */
+	public function renderfield_use_authorname() {
+		$options = $this->get_isc_options();
+		require_once ISCPATH . '/admin/templates/settings/use-authorname.php';
+	}
+
+	/**
+	 * Render option to enter a string that should show instead of the author name.
+	 */
+	public function renderfield_by_author_text() {
+		$options = $this->get_isc_options();
+		require_once ISCPATH . '/admin/templates/settings/by-author-text.php';
 	}
 
 	/**
 	 * Render the option to display a warning in the admin area if an image source is missing.
 	 */
-	public function renderfield_warning_onesource_misisng() {
+	public function renderfield_warning_source_missing() {
 		$options = $this->get_isc_options();
-		?>
-			<div id="one-source-missing-block">
-				<input type="checkbox" name="isc_options[warning_onesource_missing]" value="1" <?php checked( $options['warning_onesource_missing'] ); ?>/>
-				<p class="description"><?php esc_html_e( 'Display an admin notice in admin pages when one or more image sources are missing.', 'image-source-control-isc' ); ?></p>
-			</div>
-			<?php
+		require_once ISCPATH . '/admin/templates/settings/warn-source-missing.php';
 	}
 
 	/**
 	 * Render the option to log image source activity in isc.log
 	 */
 	public function renderfield_enable_log() {
-		$options = $this->get_isc_options();
-		$checked = ! empty( $options['enable_log'] );
-		?>
-		<input type="checkbox" name="isc_options[enable_log]" value="1" <?php checked( $checked ); ?>/>
-				<p class="description">
-				<?php
-				echo sprintf(
-						// translators: $s is replaced by starting and ending a tags to create a link
-					esc_html__( 'Writes image source activity to the %sisc.log%s file.', 'image-source-control-isc' ),
-					'<a href="' . ISC_Log::get_log_file_URL() . '" target="_blank">',
-					'</a>'
-				);
-				?>
-					</p>
-			<?php
+		$options      = $this->get_isc_options();
+		$checked      = ! empty( $options['enable_log'] );
+		$log_file_url = ISC_Log::get_log_file_URL();
+		require_once ISCPATH . '/admin/templates/settings/log-enable.php';
 	}
 
 	/**
@@ -647,10 +483,7 @@ class ISC_Admin extends ISC_Class {
 	public function renderfield_remove_on_uninstall() {
 		$options = $this->get_isc_options();
 		$checked = ! empty( $options['remove_on_uninstall'] );
-		?>
-		<input type="checkbox" name="isc_options[remove_on_uninstall]" value="1" <?php checked( $checked ); ?>/>
-				<p class="description"><?php esc_html_e( 'Remove plugin options and image sources from the database when you delete the plugin.', 'image-source-control-isc' ); ?></p>
-			<?php
+		require_once ISCPATH . '/admin/templates/settings/remove-on-uninstall.php';
 	}
 
 	/**
@@ -848,13 +681,13 @@ class ISC_Admin extends ISC_Class {
 		$output['warning_onesource_missing'] = isset( $input['warning_onesource_missing'] );
 
 		// remove the debug log file when it was disabled
-        if( isset( $output['enable_log'] ) && ! isset( $input['enable_log'] ) ) {
-            ISC_Log::delete_log_file();
-        }
-		$output['enable_log']                = isset( $input['enable_log'] );
+		if ( isset( $output['enable_log'] ) && ! isset( $input['enable_log'] ) ) {
+			ISC_Log::delete_log_file();
+		}
+		$output['enable_log'] = isset( $input['enable_log'] );
 
-		$output['remove_on_uninstall']       = isset( $input['remove_on_uninstall'] );
-		$output['hide_list']                 = isset( $input['hide_list'] );
+		$output['remove_on_uninstall'] = isset( $input['remove_on_uninstall'] );
+		$output['hide_list']           = isset( $input['hide_list'] );
 
 		if ( isset( $input['cap_pos'] ) && in_array( $input['cap_pos'], $this->caption_position, true ) ) {
 			$output['caption_position'] = $input['cap_pos'];
