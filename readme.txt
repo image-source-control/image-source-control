@@ -116,6 +116,7 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 - removed unneeded code to recognize the gallery shortcode in classic editor
 - removed broken PHP code causing an issue when using the `isc_images_in_posts_simple` filter
 - removed option to add a link to the ISC website in the frontend
+- use span instead of div container for source overlays
 
 = 1.10.4 =
 
