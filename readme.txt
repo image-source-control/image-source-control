@@ -1,7 +1,7 @@
 === Image Source Control ===
 Contributors: webzunft
 Tags: image, images, picture, picture source, image source, mediathek, media, caption, copyright
-Requires at least: 5.0
+Requires at least: 5.3
 Tested up to: 5.3
 Stable tag: 1.10.4
 Requires PHP: 5.6
@@ -107,6 +107,7 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 - introducing a model class
 - introduced debug option
 - rewrite of the block options to make them more stable
+- improved settings page visually and for more clarity
 - introduced option to reindex image-post relations again
 - introduced `isc_list_shortcode_empty_output` shortcode to allow output when a list of sources is empty
 - fixed showing the sources list on single pages when the "list below content" was disabled while the same option for archive pages was
