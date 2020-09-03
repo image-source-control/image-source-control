@@ -309,12 +309,12 @@ class ISC_Admin extends ISC_Class {
 			?>
 			<div class="inside">
 			<div class="submitbox" id="submitpost">
-                <?php
-                if ( $section['callback'] ) {
-                    call_user_func( $section['callback'], $section );
-                }
+				<?php
+				if ( $section['callback'] ) {
+					call_user_func( $section['callback'], $section );
+				}
 				?>
-                <table class="form-table" role="presentation">
+				<table class="form-table" role="presentation">
 				<?php
 				do_settings_fields( $page, $section['id'] );
 				?>
@@ -389,7 +389,27 @@ class ISC_Admin extends ISC_Class {
 	 * Render option to display thumbnails in the full image source list
 	 */
 	public function renderfield_use_thumbnail() {
-		$options = $this->get_isc_options();
+		$options   = $this->get_isc_options();
+		$sizes = array();
+
+		// convert the sizes array to match key and value
+		foreach ( $this->thumbnail_size as $_size ) {
+			$sizes[ $_size ] = $_size;
+		}
+
+		// requires WP 5.3
+		if ( function_exists( 'wp_get_registered_image_subsizes' ) ) {
+			// go through sizes we consider for thumbnails and get their current sizes as set up in WordPress
+			$wp_image_sizes = wp_get_registered_image_subsizes();
+			if ( is_array( $wp_image_sizes ) ) {
+				foreach ( $wp_image_sizes as $_name => $_sizes ) {
+					if ( isset( $sizes[ $_name ] ) ) {
+						$sizes[ $_name ] = $_sizes;
+					}
+				}
+			}
+		}
+
 		require_once ISCPATH . '/admin/templates/settings/thumbnail-enable.php';
 	}
 
