@@ -5,7 +5,7 @@
  * @var array $options ISC options.
  */
 ?>
-<div id="isc-settings-position">
+<div id="isc-settings-highlighted">
 <input type="hidden" name="isc_options[display_type]" value=""/>
 <label>
 	<input type="checkbox" name="isc_options[display_type][]" id="display-types-list" value="list" <?php checked( in_array( 'list', $options['display_type'], true ), true ); ?> />
@@ -23,7 +23,7 @@
 </label>
 <p class="description">
 	<?php
-	esc_html_e( 'Display image source as a simple overlay', 'image-source-control-isc' );
+	esc_html_e( 'Display the image source as a simple overlay', 'image-source-control-isc' );
 	?>
 </p>
 </div>

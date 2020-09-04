@@ -210,6 +210,7 @@ CC BY-NC-ND 2.0 Generic|https://creativecommons.org/licenses/by-nc-nd/2.0/';
 			$default['source_pretext']            = __( 'Source:', 'image-source-control-isc' );
 			$default['enable_licences']           = false;
 			$default['licences']                  = apply_filters( 'isc-licences-list', $licences );
+			$default['list_included_images']      = '';
 			return $default;
 		}
 
@@ -267,5 +268,52 @@ CC BY-NC-ND 2.0 Generic|https://creativecommons.org/licenses/by-nc-nd/2.0/';
 			if ( in_array( $meta_key, array( 'isc_image_source_own', 'isc_image_source' ), true ) ) {
 				ISC_Model::update_missing_sources_transient();
 			}
+		}
+
+		/**
+		 * Get the options for included images
+		 */
+		public function get_list_included_images_options() {
+
+			$included_images_options = array(
+				'default'   => array(
+					'label'       => __( 'Images in the content', 'image-source-control-isc' ),
+					'description' => sprintf(
+						// translators: %1$s is "img" and %2$s stands for "the_content" wrapped in "code" tags
+						__( 'Technically: %1$s tags within %2$s.', 'image-source-control-isc' ),
+						'<code>img</code>',
+						'<code>the_content</code>'
+					),
+					'value'       => '',
+					'coming_soon' => false,
+				),
+				'body_img'  => array(
+					'label'       => __( 'Images on the whole page', 'image-source-control-isc' ),
+					'description' =>
+						__( 'Including header, sidebar, and footer.', 'image-source-control-isc' ) . ' ' .
+						sprintf(
+						// translators: %1$s is "img" and %2$s stands for "body" wrapped in "code" tags
+							__( 'Technically: %1$s tags within %2$s.', 'image-source-control-isc' ),
+							'<code>img</code>',
+							'<code>body</code>'
+						),
+					'value'       => 'body_img',
+					'is_pro'      => true,
+				),
+				'body_urls' => array(
+					'label'       => __( 'Any image', 'image-source-control-isc' ),
+					'description' =>
+						__( 'Including CSS background, JavaScript, or HTML attributes.', 'image-source-control-isc' ) . ' ' .
+						sprintf(
+						// translators: %s stands for "body" wrapped in "code" tags
+							__( 'Technically: any image URL found in %s.', 'image-source-control-isc' ),
+							'<code>body</code>'
+						),
+					'value'       => 'body_urls',
+					'is_pro'      => true,
+				),
+			);
+
+			return apply_filters( 'isc-list-included-images-options', $included_images_options );
 		}
 }

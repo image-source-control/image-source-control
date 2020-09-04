@@ -206,6 +206,7 @@ class ISC_Admin extends ISC_Class {
 		// settings for sources list below content
 		add_settings_section( 'isc_settings_section_list_below_content', __( 'List below content', 'image-source-control-isc' ), '__return_false', 'isc_settings_page' );
 		add_settings_field( 'image_list_headline', __( 'Image list headline', 'image-source-control-isc' ), array( $this, 'renderfield_list_headline' ), 'isc_settings_page', 'isc_settings_section_list_below_content' );
+		add_settings_field( 'below_content_included_images', __( 'Included images', 'image-source-control-isc' ), array( $this, 'renderfield_below_content_included_images' ), 'isc_settings_page', 'isc_settings_section_list_below_content' );
 
 		// source in caption
 		add_settings_section( 'isc_settings_section_caption', __( 'Overlay', 'image-source-control-isc' ), '__return_false', 'isc_settings_page' );
@@ -273,9 +274,7 @@ class ISC_Admin extends ISC_Class {
 	 * Image_control's page callback
 	 */
 	public function render_isc_settings_page() {
-
 		require_once ISCPATH . '/admin/templates/settings.php';
-
 	}
 
 	/**
@@ -369,6 +368,16 @@ class ISC_Admin extends ISC_Class {
 	}
 
 	/**
+	 * Render option to define which ads to show on the sources list of the current page
+	 */
+	public function renderfield_below_content_included_images() {
+		$options                 = $this->get_isc_options();
+		$included_images         = ! empty( $options['list_included_images'] ) ? $options['list_included_images'] : '';
+		$included_images_options = $this->get_list_included_images_options();
+		require_once ISCPATH . '/admin/templates/settings/below-content-included-images.php';
+	}
+
+	/**
 	 * Render option for the text preceding the source.
 	 */
 	public function renderfield_overlay_text() {
@@ -389,8 +398,8 @@ class ISC_Admin extends ISC_Class {
 	 * Render option to display thumbnails in the full image source list
 	 */
 	public function renderfield_use_thumbnail() {
-		$options   = $this->get_isc_options();
-		$sizes = array();
+		$options = $this->get_isc_options();
+		$sizes   = array();
 
 		// convert the sizes array to match key and value
 		foreach ( $this->thumbnail_size as $_size ) {
@@ -715,6 +724,7 @@ class ISC_Admin extends ISC_Class {
 		if ( isset( $input['source_pretext'] ) ) {
 			$output['source_pretext'] = esc_textarea( $input['source_pretext'] );
 		}
+		$output['list_included_images'] = isset( $input['list_included_images'] ) ? esc_attr( $input['list_included_images'] ) : '';
 		return $output;
 	}
 

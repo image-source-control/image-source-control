@@ -2,9 +2,10 @@
 SETTINGS
 */
 
-#isc-settings-position label { font-weight: bold; }
-#isc-settings-position .description { margin-left: 1.7em; margin-bottom: .5em; }
+#isc-settings-highlighted label { font-weight: bold; }
+#isc-settings-highlighted .description { margin-left: 1.7em; margin-bottom: .5em; }
 #isc-settings-licenses textarea { width: 40em; height: 7em; }
+.isc-settings-is-pro { font-weight: normal; font-style: italic; }
 
 /* meta field in media view */
 .compat-attachment-fields input[type="text"] { width: 100%; }
@@ -16,5 +17,4 @@ SETTINGS
 /*
 SOURCES PAGE
 */
-
 .isc-table-debug-list th { width: 50%; }

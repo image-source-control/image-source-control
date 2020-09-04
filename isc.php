@@ -32,7 +32,7 @@ if ( class_exists( 'ISC_Class', false ) ) {
 	exit;
 }
 
-define( 'ISCVERSION', '1.10.4' );
+define( 'ISCVERSION', '2.0 beta' );
 define( 'ISCNAME', 'Image Source Control' );
 define( 'ISCDIR', basename( dirname( __FILE__ ) ) );
 define( 'ISCPATH', plugin_dir_path( __FILE__ ) );
@@ -60,7 +60,6 @@ if ( is_admin() ) {
 	new ISC_Class();
 }
 
-if ( ! class_exists( 'ISC_Pro', false ) && file_exists( ISCPATH . 'pro/isc-pro.php' ) ) {
+if ( ! class_exists( 'ISC_Pro_Model', false ) && file_exists( ISCPATH . 'pro/isc-pro.php' ) ) {
 	require_once ISCPATH . 'pro/isc-pro.php';
-	new ISC_Pro();
 }

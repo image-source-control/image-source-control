@@ -5,7 +5,7 @@
  * @var array $options ISC options.
  */
 ?>
-<div id="isc-settings-position">
+<div id="isc-settings-highlighted">
 	<p class="description"><?php esc_html_e( 'The following options try to place image sources within post content on post list pages like your home page or category archives.', 'image-source-control-isc' ); ?></p>
 	<label>
 		<input type="checkbox" name="isc_options[list_on_archives]" id="list-on-archives" value="1" <?php checked( 1, $options['list_on_archives'], true ); ?> />
