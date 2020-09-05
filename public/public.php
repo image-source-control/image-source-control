@@ -50,11 +50,8 @@ class ISC_Public extends ISC_Class {
 	/**
 	 * Unregister our the_content filters
 	 * used in places where we want to prevent infinite loops
-	 *
-	 * @deprecated probably deprecated after ISC ist not using apply_filter( 'the_content' ) anymore.
 	 */
 	public static function remove_the_content_filters() {
-
 		remove_filter( 'the_content', array( self::get_instance(), 'add_sources_to_content' ), 20 );
 	}
 
