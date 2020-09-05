@@ -274,16 +274,12 @@ class ISC_Public extends ISC_Class {
 	 */
 	public function add_source_list_to_content( $content ) {
 
-		$options = $this->get_isc_options();
-
 		/**
 		 * Display the image source list below the content
 		 * on single pages if the following option is enabled: How to display source in Frontend > list below content
 		 * on archive pages and home pages with posts if the following option is enabled: Archive Pages > Display sources list below full posts
 		 */
-		if ( ( ( is_archive() || is_home() )
-			   && isset( $options['list_on_archives'] ) && $options['list_on_archives'] ) ||
-			 ( is_singular() && isset( $options['display_type'] ) && is_array( $options['display_type'] ) && in_array( 'list', $options['display_type'], true ) ) ) {
+		if ( $this->can_add_list_to_content() ) {
 			ISC_Log::log( 'start creating source list below content' );
 			$content = $content . $this->list_post_attachments_with_sources();
 		}
@@ -909,5 +905,23 @@ class ISC_Public extends ISC_Class {
 		}
 
 		return $source;
+	}
+
+	/**
+	 * Check if the source list can be added to the content automatically
+	 *
+	 * @return bool true if the source list can be added to the content
+	 */
+	public function can_add_list_to_content() {
+
+		$options = $this->get_isc_options();
+
+		if ( ( ( is_archive() || is_home() )
+			   && isset( $options['list_on_archives'] ) && $options['list_on_archives'] ) ||
+			 ( is_singular() && isset( $options['display_type'] ) && is_array( $options['display_type'] ) && in_array( 'list', $options['display_type'], true ) ) ) {
+			return true;
+		}
+
+		return false;
 	}
 }
