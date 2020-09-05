@@ -94,10 +94,6 @@ class ISC_Admin extends ISC_Class {
 	 * @param string $hook settings page hool.
 	 */
 	public function add_admin_scripts( $hook ) {
-		if ( 'post.php' === $hook ) {
-			// quick fix for post.php.js to avoid access conflicts caused by other plugins due to by inconsistent naming
-			wp_enqueue_script( 'isc_postphp_script', plugins_url( '/assets/js/post.js', __FILE__ ), array( 'jquery' ), ISCVERSION );
-		}
 		wp_enqueue_script( 'isc_script', plugins_url( '/assets/js/isc.js', __FILE__ ), false, ISCVERSION );
 		wp_enqueue_style( 'isc_image_settings_css', plugins_url( '/assets/css/isc.css', __FILE__ ), false, ISCVERSION );
 	}
@@ -209,9 +205,9 @@ class ISC_Admin extends ISC_Class {
 		add_settings_field( 'below_content_included_images', __( 'Included images', 'image-source-control-isc' ), array( $this, 'renderfield_below_content_included_images' ), 'isc_settings_page', 'isc_settings_section_list_below_content' );
 
 		// source in caption
-		add_settings_section( 'isc_settings_section_caption', '2. ' . __( 'Overlay', 'image-source-control-isc' ), '__return_false', 'isc_settings_page' );
-		add_settings_field( 'source_caption', __( 'Overlay pre-text', 'image-source-control-isc' ), array( $this, 'renderfield_overlay_text' ), 'isc_settings_page', 'isc_settings_section_caption' );
-		add_settings_field( 'caption_position', __( 'Overlay position', 'image-source-control-isc' ), array( $this, 'renderfield_overlay_position' ), 'isc_settings_page', 'isc_settings_section_caption' );
+		add_settings_section( 'isc_settings_section_overlay', '2. ' . __( 'Overlay', 'image-source-control-isc' ), '__return_false', 'isc_settings_page' );
+		add_settings_field( 'source_overlay', __( 'Overlay pre-text', 'image-source-control-isc' ), array( $this, 'renderfield_overlay_text' ), 'isc_settings_page', 'isc_settings_section_overlay' );
+		add_settings_field( 'overlay_position', __( 'Overlay position', 'image-source-control-isc' ), array( $this, 'renderfield_overlay_position' ), 'isc_settings_page', 'isc_settings_section_overlay' );
 
 		// full image sources list group
 		add_settings_section( 'isc_settings_section_complete_list', '3. ' . __( 'List with all sources', 'image-source-control-isc' ), '__return_false', 'isc_settings_page' );
@@ -297,7 +293,7 @@ class ISC_Admin extends ISC_Class {
 		foreach ( (array) $wp_settings_sections[ $page ] as $section ) {
 
 			?>
-			<div class="postbox ">
+			<div class="postbox <?php echo esc_attr( $section['id'] ); ?>">
 			<?php
 			if ( $section['title'] ) {
 				?>
