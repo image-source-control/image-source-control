@@ -257,7 +257,7 @@ class ISC_Public extends ISC_Class {
 				$old_content = $matches[3][ $i ];
 				$new_content = str_replace( 'wp-image-' . $id, 'wp-image-' . $id . ' with-source', $old_content );
 
-				$content = str_replace( $old_content, '<div id="isc_attachment_' . $id . '" class="isc-source ' . $alignment . '"> ' . $new_content . $source . '</div>', $content );
+				$content = str_replace( $old_content, '<span id="isc_attachment_' . $id . '" class="isc-source ' . $alignment . '"> ' . $new_content . $source . '</span>', $content );
 
 			}
 		}
