@@ -88,7 +88,7 @@ class ISC_Public extends ISC_Class {
 			/* ]]> */
 			</script>
 			<style>
-				.isc-source { position: relative; }
+				.isc-source { position: relative; display: inline-block; }
 			</style>
 			<?php
 	}
@@ -107,7 +107,7 @@ class ISC_Public extends ISC_Class {
 		// disabling the content filters while working in page builders or block editor
 		if ( wp_is_json_request() || defined( 'REST_REQUEST' ) ) {
 			ISC_Log::log( 'skipped adding sources while working in page builders' );
-			return;
+			return '';
 		}
 
 		global $post;
