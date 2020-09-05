@@ -2,7 +2,7 @@
 Contributors: webzunft
 Tags: image, images, picture, picture source, image source, mediathek, media, caption, copyright
 Requires at least: 5.3
-Tested up to: 5.3
+Tested up to: 5.5
 Stable tag: 1.10.4
 Requires PHP: 5.6
 License: GPLv3 or later
@@ -20,14 +20,14 @@ Image Source Control (ISC) helps to prevent this situation.
 
 You can choose between different image source list types:
 
+* source list below the content or manually placed
 * source as image caption/overlay (not compatible with all themes)
-* source list below the content
-* combined source list of all images
+* complete source list of all images
 
 **Frontend Features**
 
 * display sources for images in content, galleries, shortcodes and featured images
-* show image source directly in the image (not working with all images and themes)
+* show the image source directly in the image (not working with all images and themes)
 * include a list with all images and their sources of the current page/post
 * include a list with all images and their sources of the whole website
 * attach lists below the content automatically or using shortcodes or template functions
@@ -39,7 +39,7 @@ You can choose between different image source list types:
 * manage image source within media dashboard and in the settings of the Image and Cover Image blocks
 * mark an image to belong to the uploader
 * lists images with missing sources in the backend
-* warnings, if image source is missing
+* warns, if image source is missing
 * link sources to any url
 * manage, display and link licenses
 
@@ -59,9 +59,9 @@ You can choose to display image sources automatically below the post content or 
 
 **Manually included image sources on pages/posts**
 
-You can add the image source list manually to pages or post via the shortcode `[isc_list]` in your content editor. You can use `[isc_list id="123]` to show the list of any post or page.
+You can add the image source list manually to pages or post via the shortcode `[isc_list]` in your content editor or a text widget. You can use `[isc_list id="123]` to show the list of any post or page.
 
-You can also add the list with the function `isc_list()` within the loop in your template files. Use `isc_list( $post_id )` to show the image source list outside the loop.
+You can also add the list with the function `isc_list()` within your template files. Use `isc_list( $post_id )` to show the image source list outside the loop.
 
 You should also check first if the function exists before using it:
 `<?php if( function_exists('isc_list') ) { isc_list(); } ?>`
