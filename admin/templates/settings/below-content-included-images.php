@@ -7,7 +7,7 @@
  */
 ?>
 <p class="description"><?php esc_html_e( 'Choose which images and sources should be listed in the source list of the current page.', 'image-source-control-isc' ); ?></p>
-<div id="isc-settings-highlighted">
+<div class="isc-settings-highlighted">
 	<?php
 	foreach ( $included_images_options as $_key => $_options ) :
 		$value  = isset( $_options['value'] ) ? $_options['value'] : '';

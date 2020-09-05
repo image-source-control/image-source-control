@@ -6,16 +6,15 @@
  */
 ?>
 <p><?php esc_html_e( 'A list of sources for images on the current page.', 'image-source-control-isc' ); ?></p>
-<div id="isc-settings-highlighted">
+<div class="isc-settings-highlighted">
 <label>
 	<input type="checkbox" name="isc_options[display_type][]" value="list" <?php checked( in_array( 'list', $options['display_type'], true ), true ); ?> />
 	<?php
 	esc_html_e( 'Insert below the content', 'image-source-control-isc' );
 	?>
 </label>
-<p class="description"><?php esc_html_e( 'Displays a list of image sources below singular pages.', 'image-source-control-isc' ); ?></p>
-<label>
-	<input type="checkbox" value=""/>
+<p class="description"><?php esc_html_e( 'Automatically inserts the list of image sources below posts and pages.', 'image-source-control-isc' ); ?></p>
+<label class="isc-empty-label">
 	<?php
 	esc_html_e( 'Insert manually', 'image-source-control-isc' );
 	?>
