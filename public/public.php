@@ -61,7 +61,7 @@ class ISC_Public extends ISC_Class {
 	 * @return ISC_Public|null
 	 */
 	public static function get_instance() {
-		null === self::$instance and self::$instance = new self();
+		null === self::$instance && self::$instance = new self();
 		return self::$instance;
 	}
 
@@ -343,10 +343,17 @@ class ISC_Public extends ISC_Class {
 		// do not render an empty source list on non-post pages unless explicitly stated.
 		if ( empty( $post_id ) ) {
 			/**
-			 * Filter: isc_list_shortcode_empty_output
+			 * Filter: isc_source_list_empty_output
 			 * allow to return some output even if there is no post ID (e.g., on archive pages).
 			 */
-			return apply_filters( 'isc_list_shortcode_empty_output', '' );
+			return apply_filters( 'isc_source_list_empty_output', '' );
+		}
+
+		// allow developers to override the output of the sources list
+		$override = apply_filters( 'isc_sources_list_override_output', false, $post_id );
+		if ( $override ) {
+			ISC_Log::log( 'exit list_post_attachments_with_sources() because override was set' );
+			return $override;
 		}
 
 		$attachments = get_post_meta( $post_id, 'isc_post_images', true );
@@ -379,7 +386,8 @@ class ISC_Public extends ISC_Class {
 		} else {
 			// see description above
 			ISC_Log::log( 'exit list_post_attachments_with_sources() without any images found ' );
-			return apply_filters( 'isc_list_shortcode_empty_output', '' );
+			// allow to return result if the source list is empty.
+			return apply_filters( 'isc_source_list_empty_output', '' );
 		}
 	}
 
@@ -598,6 +606,7 @@ class ISC_Public extends ISC_Class {
 		/**
 		 * Added comment `isc_stop_overlay` as a class to the table to suppress overlays within it starting at that point
 		 * todo: allow overlays to start again after the table
+		 * todo: move to template file
 		 */
 		?>
 			<div class="isc_all_image_list_box isc_stop_overlay" style="overflow: scroll;">
