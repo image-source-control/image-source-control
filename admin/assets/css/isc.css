@@ -6,6 +6,7 @@ SETTINGS
 #isc-settings-highlighted .description { margin-left: 1.7em; margin-bottom: .5em; }
 #isc-settings-licenses textarea { width: 40em; height: 7em; }
 .isc-settings-is-pro { font-weight: normal; font-style: italic; }
+#image-settings-form .hndle { cursor: text; user-select: all; }
 
 /* meta field in media view */
 .compat-attachment-fields input[type="text"] { width: 100%; }

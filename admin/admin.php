@@ -197,25 +197,25 @@ class ISC_Admin extends ISC_Class {
 		$this->upgrade_management();
 		register_setting( 'isc_options_group', 'isc_options', array( $this, 'settings_validation' ) );
 
-		// decide where to display image sources
-		add_settings_section( 'isc_settings_section_position', __( 'Position of the image sources', 'image-source-control-isc' ), array( $this, 'render_section_position' ), 'isc_settings_page' );
-		add_settings_field( 'source_display_type', __( 'Single pages', 'image-source-control-isc' ), array( $this, 'renderfield_sources_position' ), 'isc_settings_page', 'isc_settings_section_position' );
-		add_settings_field( 'full_list_type', __( 'List with all sources', 'image-source-control-isc' ), array( $this, 'renderfield_complete_list' ), 'isc_settings_page', 'isc_settings_section_position' );
-		add_settings_field( 'list_on_archives', __( 'Archive Pages', 'image-source-control-isc' ), array( $this, 'renderfield_list_on_archives' ), 'isc_settings_page', 'isc_settings_section_position' );
+		// Position: How and where to display image sources
+		add_settings_section( 'isc_settings_section_source_type', __( 'Position of the image sources', 'image-source-control-isc' ), array( $this, 'render_section_position' ), 'isc_settings_page' );
+		add_settings_field( 'source_type_list', '1. ' . __( 'Image source list', 'image-source-control-isc' ), array( $this, 'renderfield_source_type_list' ), 'isc_settings_page', 'isc_settings_section_source_type' );
+		add_settings_field( 'source_type_overlay', '2. ' . __( 'Overlay', 'image-source-control-isc' ), array( $this, 'renderfield_source_type_overlay' ), 'isc_settings_page', 'isc_settings_section_source_type' );
+		add_settings_field( 'full_list_type', '3. ' . __( 'List with all sources', 'image-source-control-isc' ), array( $this, 'renderfield_source_type_complete_list' ), 'isc_settings_page', 'isc_settings_section_source_type' );
 
 		// settings for sources list below content
-		add_settings_section( 'isc_settings_section_list_below_content', __( 'List below content', 'image-source-control-isc' ), '__return_false', 'isc_settings_page' );
-		add_settings_field( 'image_list_headline', __( 'Image list headline', 'image-source-control-isc' ), array( $this, 'renderfield_list_headline' ), 'isc_settings_page', 'isc_settings_section_list_below_content' );
+		add_settings_section( 'isc_settings_section_list_below_content', '1. ' . __( 'Image source list', 'image-source-control-isc' ), '__return_false', 'isc_settings_page' );
+		add_settings_field( 'image_list_headline', __( 'Headline', 'image-source-control-isc' ), array( $this, 'renderfield_list_headline' ), 'isc_settings_page', 'isc_settings_section_list_below_content' );
 		add_settings_field( 'below_content_included_images', __( 'Included images', 'image-source-control-isc' ), array( $this, 'renderfield_below_content_included_images' ), 'isc_settings_page', 'isc_settings_section_list_below_content' );
 
 		// source in caption
-		add_settings_section( 'isc_settings_section_caption', __( 'Overlay', 'image-source-control-isc' ), '__return_false', 'isc_settings_page' );
+		add_settings_section( 'isc_settings_section_caption', '2. ' . __( 'Overlay', 'image-source-control-isc' ), '__return_false', 'isc_settings_page' );
 		add_settings_field( 'source_caption', __( 'Overlay pre-text', 'image-source-control-isc' ), array( $this, 'renderfield_overlay_text' ), 'isc_settings_page', 'isc_settings_section_caption' );
 		add_settings_field( 'caption_position', __( 'Overlay position', 'image-source-control-isc' ), array( $this, 'renderfield_overlay_position' ), 'isc_settings_page', 'isc_settings_section_caption' );
 
 		// full image sources list group
-		add_settings_section( 'isc_settings_section_complete_list', __( 'List with all sources', 'image-source-control-isc' ), '__return_false', 'isc_settings_page' );
-		add_settings_field( 'use_thumbnail', __( 'Use thumbnails in images list', 'image-source-control-isc' ), array( $this, 'renderfield_use_thumbnail' ), 'isc_settings_page', 'isc_settings_section_complete_list' );
+		add_settings_section( 'isc_settings_section_complete_list', '3. ' . __( 'List with all sources', 'image-source-control-isc' ), '__return_false', 'isc_settings_page' );
+		add_settings_field( 'use_thumbnail', __( 'Use thumbnails', 'image-source-control-isc' ), array( $this, 'renderfield_use_thumbnail' ), 'isc_settings_page', 'isc_settings_section_complete_list' );
 		add_settings_field( 'thumbnail_width', __( 'Thumbnails max-width', 'image-source-control-isc' ), array( $this, 'renderfield_thumbnail_width' ), 'isc_settings_page', 'isc_settings_section_complete_list' );
 		add_settings_field( 'thumbnail_height', __( 'Thumbnails max-height', 'image-source-control-isc' ), array( $this, 'renderfield_thumbnail_height' ), 'isc_settings_page', 'isc_settings_section_complete_list' );
 
@@ -337,26 +337,26 @@ class ISC_Admin extends ISC_Class {
 	}
 
 	/**
-	 * Choose where to display image sources in the frontend.
+	 * Position: option to enable Image source lists
 	 */
-	public function renderfield_sources_position() {
+	public function renderfield_source_type_list() {
 		$options = $this->get_isc_options();
-		require_once ISCPATH . '/admin/templates/settings/position.php';
+		require_once ISCPATH . '/admin/templates/settings/source-type-list.php';
 	}
 
 	/**
-	 * Instructions on how to insert the complete image list
+	 * Position: option to enable Overlays
 	 */
-	public function renderfield_complete_list() {
-		require_once ISCPATH . '/admin/templates/settings/complete-image-list.php';
+	public function renderfield_source_type_overlay() {
+		$options = $this->get_isc_options();
+		require_once ISCPATH . '/admin/templates/settings/source-type-overlay.php';
 	}
 
 	/**
-	 * Select if and when sources should show on archive pages
+	 * Position: information about how to use the complete source list
 	 */
-	public function renderfield_list_on_archives() {
-		$options = $this->get_isc_options();
-		require_once ISCPATH . '/admin/templates/settings/archives.php';
+	public function renderfield_source_type_complete_list() {
+		require_once ISCPATH . '/admin/templates/settings/source-type-all.php';
 	}
 
 	/**
