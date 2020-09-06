@@ -211,7 +211,7 @@ class ISC_Admin extends ISC_Class {
 
 		// full image sources list group
 		add_settings_section( 'isc_settings_section_complete_list', '3. ' . __( 'List with all sources', 'image-source-control-isc' ), '__return_false', 'isc_settings_page' );
-		add_settings_field( 'use_thumbnail', __( 'Use thumbnails', 'image-source-control-isc' ), array( $this, 'renderfield_use_thumbnail' ), 'isc_settings_page', 'isc_settings_section_complete_list' );
+		add_settings_field( 'thumbnail_in_list', __( 'Use thumbnails', 'image-source-control-isc' ), array( $this, 'renderfield_thumbnail_in_list' ), 'isc_settings_page', 'isc_settings_section_complete_list' );
 		add_settings_field( 'thumbnail_width', __( 'Thumbnails max-width', 'image-source-control-isc' ), array( $this, 'renderfield_thumbnail_width' ), 'isc_settings_page', 'isc_settings_section_complete_list' );
 		add_settings_field( 'thumbnail_height', __( 'Thumbnails max-height', 'image-source-control-isc' ), array( $this, 'renderfield_thumbnail_height' ), 'isc_settings_page', 'isc_settings_section_complete_list' );
 
@@ -393,7 +393,7 @@ class ISC_Admin extends ISC_Class {
 	/**
 	 * Render option to display thumbnails in the full image source list
 	 */
-	public function renderfield_use_thumbnail() {
+	public function renderfield_thumbnail_in_list() {
 		$options = $this->get_isc_options();
 		$sizes   = array();
 
@@ -658,7 +658,6 @@ class ISC_Admin extends ISC_Class {
 	 * Input validation function.
 	 *
 	 * @param array $input values from the admin panel.
-	 * @updated 1.3.5 added licenses fields
 	 */
 	public function settings_validation( $input ) {
 		$output = $this->get_isc_options();
@@ -667,31 +666,33 @@ class ISC_Admin extends ISC_Class {
 		} else {
 			$output['display_type'] = $input['display_type'];
 		}
-		$output['list_on_archives'] = isset( $input['list_on_archives'] );
-		$output['list_on_excerpts'] = isset( $input['list_on_excerpts'] );
+		$output['list_on_archives'] = ! empty( $input['list_on_archives'] );
+		$output['list_on_excerpts'] = ! empty( $input['list_on_excerpts'] );
 
-		$output['image_list_headline'] = isset( $input['image_list_headline_field'] ) ? esc_html( $input['image_list_headline_field'] ) : '';
-		if ( isset( $input['use_authorname_ckbox'] ) ) {
+		$output['image_list_headline'] = isset( $input['image_list_headline'] ) ? esc_html( $input['image_list_headline'] ) : '';
+		if ( ! empty( $input['use_authorname'] ) ) {
 			// Don't worry about the custom text if the author name is selected.
 			$output['use_authorname'] = true;
+			// keep the entry unchanged
+			$output['by_author_text'] = $output['by_author_text'];
 		} else {
 			$output['use_authorname'] = false;
-			$output['by_author_text'] = isset( $input['by_author_text_field'] ) ? esc_html( $input['by_author_text_field'] ) : '';
+			$output['by_author_text'] = isset( $input['by_author_text'] ) ? esc_html( $input['by_author_text'] ) : '';
 		}
-		$output['exclude_own_images'] = isset( $input['exclude_own_images'] );
-		$output['enable_licences']    = isset( $input['enable_licences'] );
+		$output['exclude_own_images'] = ! empty( $input['exclude_own_images'] );
+		$output['enable_licences']    = ! empty( $input['enable_licences'] );
 
 		if ( isset( $input['licences'] ) ) {
 			$output['licences'] = esc_textarea( $input['licences'] );
 		} else {
 			$output['licences'] = false;
 		}
-		if ( isset( $input['use_thumbnail'] ) ) {
+		if ( isset( $input['thumbnail_in_list'] ) ) {
 			$output['thumbnail_in_list'] = true;
-			if ( in_array( $input['size_select'], $this->thumbnail_size ) ) {
-				$output['thumbnail_size'] = $input['size_select'];
+			if ( in_array( $input['thumbnail_size'], $this->thumbnail_size ) ) {
+				$output['thumbnail_size'] = $input['thumbnail_size'];
 			}
-			if ( 'custom' === $input['size_select'] ) {
+			if ( 'custom' === $input['thumbnail_size'] ) {
 				if ( is_numeric( $input['thumbnail_width'] ) ) {
 					// Ensures that the value stored in database in a positive integer.
 					$output['thumbnail_width'] = absint( round( $input['thumbnail_width'] ) );
@@ -703,19 +704,19 @@ class ISC_Admin extends ISC_Class {
 		} else {
 			$output['thumbnail_in_list'] = false;
 		}
-		$output['warning_onesource_missing'] = isset( $input['warning_onesource_missing'] );
+		$output['warning_onesource_missing'] = ! empty( $input['warning_onesource_missing'] );
 
 		// remove the debug log file when it was disabled
 		if ( isset( $output['enable_log'] ) && ! isset( $input['enable_log'] ) ) {
 			ISC_Log::delete_log_file();
 		}
-		$output['enable_log'] = isset( $input['enable_log'] );
+		$output['enable_log'] = ! empty( $input['enable_log'] );
 
-		$output['remove_on_uninstall'] = isset( $input['remove_on_uninstall'] );
-		$output['hide_list']           = isset( $input['hide_list'] );
+		$output['remove_on_uninstall'] = ! empty( $input['remove_on_uninstall'] );
+		$output['hide_list']           = ! empty( $input['hide_list'] );
 
-		if ( isset( $input['cap_pos'] ) && in_array( $input['cap_pos'], $this->caption_position, true ) ) {
-			$output['caption_position'] = $input['cap_pos'];
+		if ( isset( $input['caption_position'] ) && in_array( $input['caption_position'], $this->caption_position, true ) ) {
+			$output['caption_position'] = $input['caption_position'];
 		}
 		if ( isset( $input['source_pretext'] ) ) {
 			$output['source_pretext'] = esc_textarea( $input['source_pretext'] );

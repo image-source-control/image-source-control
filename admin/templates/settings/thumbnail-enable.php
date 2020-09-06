@@ -6,8 +6,8 @@
  * @var array $sizes available sizes for images.
  */
 ?>
-<input type="checkbox" id="use-thumbnail" name="isc_options[use_thumbnail]" value="1" <?php checked( $options['thumbnail_in_list'] ); ?> />
-<select id="thumbnail-size-select" name="isc_options[size_select]" <?php disabled( ! $options['thumbnail_in_list'] ); ?>>
+<input type="checkbox" id="use-thumbnail" name="isc_options[thumbnail_in_list]" value="1" <?php checked( $options['thumbnail_in_list'] ); ?> />
+<select id="thumbnail-size-select" name="isc_options[thumbnail_size]" <?php disabled( ! $options['thumbnail_in_list'] ); ?>>
 	<?php foreach ( $sizes as $_name => $_sizes ) : ?>
 		<option value="<?php echo esc_html( $_name ); ?>" <?php selected( $_name, $options['thumbnail_size'] ); ?>>
 			<?php
