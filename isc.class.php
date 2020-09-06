@@ -280,7 +280,7 @@ CC BY-NC-ND 2.0 Generic|https://creativecommons.org/licenses/by-nc-nd/2.0/';
 					'label'       => __( 'Images in the content', 'image-source-control-isc' ),
 					'description' => sprintf(
 						// translators: %1$s is "img" and %2$s stands for "the_content" wrapped in "code" tags
-						__( 'Technically: %1$s tags within %2$s.', 'image-source-control-isc' ),
+						__( 'Technically: %1$s tags within %2$s and the featured image.', 'image-source-control-isc' ),
 						'<code>img</code>',
 						'<code>the_content</code>'
 					),
