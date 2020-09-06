@@ -472,29 +472,49 @@ class ISC_Model {
 		if ( empty( $url ) ) {
 			return 0;
 		}
-		$types = implode( '|', ISC_Class::get_instance()->allowed_extensions );
+
+		// get the file extension, e.g. "jpg"
+		$ext = pathinfo( $url, PATHINFO_EXTENSION );
+		if ( ! $ext ) {
+			ISC_Log::log( 'exit get_image_by_url() no extension found' );
+			return 0;
+		}
 		/**
 		 * Check for the format 'image-title-(e12452112-)300x200.jpg(?query…)' and removes
-		 *   the image size
-		 *   edit marks
-		 *   additional query vars
+		 * - the image size
+		 * - edit marks
+		 * - "scaled" or "rotated"
+		 * - additional query vars
 		 */
-		$newurl = esc_url( preg_replace( "/(-e\d+){0,1}(-\d+x\d+){0,1}\.({$types})(.*)/i", '.${3}', $url ) );
+		// this was my original approach without "scaled" and "rotated"
+		// $types = implode( '|', ISC_Class::get_instance()->allowed_extensions );
+		// $newurl = esc_url( preg_replace( "/(-e\d+){0,1}(-\d+x\d+){0,1}\.({$types})(.*)/i", '.${3}', $url ) );
+		// this is how WordPress core is detecting changed image URLs
+		$newurl = esc_url( preg_replace( "/-(?:\d+x\d+|scaled|rotated)\.{$ext}(.*)/i", '.' . $ext, $url ) );
 
 		// remove protocoll (http or https)
 		$url    = str_ireplace( array( 'http:', 'https:' ), '', $url );
 		$newurl = str_ireplace( array( 'http:', 'https:' ), '', $newurl );
 
-		// not escaped, because escaping already happened above
-		$raw_query = $wpdb->prepare(
-			"SELECT ID FROM `$wpdb->posts` WHERE post_type='attachment' AND guid = %s OR guid = %s OR guid = %s OR guid = %s LIMIT 1",
-			"http:$url",
-			"https:$url",
-			"http:$newurl",
-			"https:$newurl"
+		// gather different URLs formats
+		$urls = array(
+			'http:' . $url,
+			'https:' . $url,
+			'http:' . $newurl,
+			'https:' . $newurl,
 		);
 
-		ISC_Log::log( 'SQL: ' . $raw_query );
+		// remove duplicates
+		$urls = array_unique( $urls );
+
+		$url_queries = array();
+		foreach ( $urls as $_url ) {
+			$url_queries[] = 'guid = "' . esc_url( $_url ) . '"';
+		}
+		$url_query_string = implode( ' OR ', $url_queries );
+
+		// not escaped, because escaping already happened above
+		$raw_query = "SELECT ID FROM `$wpdb->posts` WHERE post_type='attachment' AND {$url_query_string} LIMIT 1";
 
 		$query = apply_filters( 'isc_get_image_by_url_query', $raw_query, $newurl );
 		$id    = $wpdb->get_var( $query );

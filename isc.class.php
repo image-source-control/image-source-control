@@ -301,13 +301,13 @@ CC BY-NC-ND 2.0 Generic|https://creativecommons.org/licenses/by-nc-nd/2.0/';
 					'is_pro'      => true,
 				),
 				'body_urls' => array(
-					'label'       => __( 'Any image', 'image-source-control-isc' ),
+					'label'       => __( 'Any image URL', 'image-source-control-isc' ),
 					'description' =>
 						__( 'Including CSS background, JavaScript, or HTML attributes.', 'image-source-control-isc' ) . ' ' .
 						sprintf(
 						// translators: %s stands for "body" wrapped in "code" tags
 							__( 'Technically: any image URL found in %s.', 'image-source-control-isc' ),
-							'<code>body</code>'
+							'<code>html</code>'
 						),
 					'value'       => 'body_urls',
 					'is_pro'      => true,
