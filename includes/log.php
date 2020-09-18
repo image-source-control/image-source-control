@@ -20,7 +20,8 @@ class ISC_Log {
 
 		$options = ISC_Class::get_instance()->get_isc_options();
 
-		if ( empty( $options['enable_log'] ) || null === $message ) {
+		// only log if the Debug Log option is enabled and the ?isc-log query parameter is set
+		if ( empty( $options['enable_log'] ) || null === $message || ! isset( $_GET['isc-log'] ) ) {
 			return;
 		}
 

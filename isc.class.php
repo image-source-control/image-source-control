@@ -211,6 +211,7 @@ CC BY-NC-ND 2.0 Generic|https://creativecommons.org/licenses/by-nc-nd/2.0/';
 			$default['enable_licences']           = false;
 			$default['licences']                  = apply_filters( 'isc-licences-list', $licences );
 			$default['list_included_images']      = '';
+			$default['enable_log']      = false;
 			return $default;
 		}
 

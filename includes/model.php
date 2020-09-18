@@ -512,6 +512,7 @@ class ISC_Model {
 			$url_queries[] = 'guid = "' . esc_url( $_url ) . '"';
 		}
 		$url_query_string = implode( ' OR ', $url_queries );
+		ISC_Log::log( sprintf( 'SQL query looking for anything with %s', implode( ', ', array_unique( array( $url, $newurl ) ) ) ) );
 
 		// not escaped, because escaping already happened above
 		$raw_query = "SELECT ID FROM `$wpdb->posts` WHERE post_type='attachment' AND {$url_query_string} LIMIT 1";
@@ -519,7 +520,7 @@ class ISC_Model {
 		$query = apply_filters( 'isc_get_image_by_url_query', $raw_query, $newurl );
 		$id    = $wpdb->get_var( $query );
 
-		$id ? ISC_Log::log( 'found image ID ' . $id ) : ISC_Log::log( 'found image ID –' );
+		$id ? ISC_Log::log( 'found image ID ' . $id ) : ISC_Log::log( 'no image ID found' );
 
 		return intval( $id );
 	}
