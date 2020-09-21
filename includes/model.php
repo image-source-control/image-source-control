@@ -106,7 +106,7 @@ class ISC_Model {
 				// if (!in_array($old_id, $image_ids)) {
 				if ( ! array_key_exists( $old_id, $image_ids ) ) {
 					array_push( $removed_images, $old_id );
-					ISC_Log::log( 'remove image: ' . $id );
+					ISC_Log::log( 'remove image: ' . $old_id );
 				} else {
 					if ( ! empty( $old_id ) ) {
 						$meta = get_post_meta( $old_id, 'isc_image_posts', true );
