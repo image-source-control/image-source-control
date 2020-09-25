@@ -141,7 +141,7 @@ class ISC_Admin extends ISC_Class {
 		$form_fields['isc_image_source_own']['input'] = 'html';
 		$form_fields['isc_image_source_own']['label'] = '';
 		$form_fields['isc_image_source_own']['helps'] =
-			__( 'Check this box if this is your own image and doesn\'t need a source.', 'image-source-control-isc' );
+			__( 'Check this box if this is your own image and doesn’t need a source.', 'image-source-control-isc' );
 		$form_fields['isc_image_source_own']['html']  =
 			"<input type='checkbox' value='1' name='attachments[{$post->ID}][isc_image_source_own]' id='attachments[{$post->ID}][isc_image_source_own]' "
 			. checked( get_post_meta( $post->ID, 'isc_image_source_own', true ), 1, false )
@@ -462,7 +462,9 @@ class ISC_Admin extends ISC_Class {
 	 * Render options for default image sources
 	 */
 	public function renderfield_default_source() {
-		$options = $this->get_isc_options();
+		$options             = $this->get_isc_options();
+		$default_source      = isset( $options['default_source'] ) ? $options['default_source'] : 'author_name';
+		$default_source_text = $this->get_default_source_text();
 		require_once ISCPATH . '/admin/templates/settings/default-source.php';
 	}
 
@@ -668,17 +670,7 @@ class ISC_Admin extends ISC_Class {
 		$output['list_on_excerpts'] = ! empty( $input['list_on_excerpts'] );
 
 		$output['image_list_headline'] = isset( $input['image_list_headline'] ) ? esc_html( $input['image_list_headline'] ) : '';
-		if ( ! empty( $input['use_authorname'] ) ) {
-			// Don't worry about the custom text if the author name is selected.
-			$output['use_authorname'] = true;
-			// keep the entry unchanged
-			$output['by_author_text'] = $output['by_author_text'];
-		} else {
-			$output['use_authorname'] = false;
-			$output['by_author_text'] = isset( $input['by_author_text'] ) ? esc_html( $input['by_author_text'] ) : '';
-		}
-		$output['exclude_own_images'] = ! empty( $input['exclude_own_images'] );
-		$output['enable_licences']    = ! empty( $input['enable_licences'] );
+		$output['enable_licences']     = ! empty( $input['enable_licences'] );
 
 		if ( isset( $input['licences'] ) ) {
 			$output['licences'] = esc_textarea( $input['licences'] );
@@ -720,6 +712,28 @@ class ISC_Admin extends ISC_Class {
 			$output['source_pretext'] = esc_textarea( $input['source_pretext'] );
 		}
 		$output['list_included_images'] = isset( $input['list_included_images'] ) ? esc_attr( $input['list_included_images'] ) : '';
+
+		/**
+		 * 2.0 moved the options to handle "own images" into "default sources" and only offers a single choice for one of the options now
+		 * this section maps old to new settings
+		 */
+		if ( ! empty( $input['exclude_own_images'] ) ) {
+			// don’t show sources for marked images
+			$output['default_source'] = 'exclude';
+		} elseif ( ! empty( $input['use_authorname'] ) ) {
+			// show author name
+			$output['default_source'] = 'author_name';
+		} else {
+		    $output['default_source']      = isset( $input['default_source'] ) ? esc_attr( $input['default_source'] ) : 'author_name';
+		}
+
+		// custom source text
+		if ( isset( $input['by_author_text'] ) ) {
+			$output['default_source_text'] = esc_html( $input['by_author_text'] );
+		} else {
+		    $output['default_source_text'] = isset( $input['default_source_text'] ) ? esc_attr( $input['default_source_text'] ) : $this->get_default_source_text();
+		}
+
 		return $output;
 	}
 

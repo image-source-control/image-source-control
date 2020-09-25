@@ -195,9 +195,6 @@ CC BY-NC-ND 2.0 Generic|https://creativecommons.org/licenses/by-nc-nd/2.0/';
 			$default['list_on_archives']          = false;
 			$default['list_on_excerpts']          = false;
 			$default['image_list_headline']       = __( 'image sources', 'image-source-control-isc' );
-			$default['exclude_own_images']        = false;
-			$default['use_authorname']            = true;
-			$default['by_author_text']            = __( 'Owned by the author', 'image-source-control-isc' );
 			$default['version']                   = ISCVERSION;
 			$default['thumbnail_in_list']         = false;
 			$default['thumbnail_size']            = 'thumbnail';
@@ -211,7 +208,10 @@ CC BY-NC-ND 2.0 Generic|https://creativecommons.org/licenses/by-nc-nd/2.0/';
 			$default['enable_licences']           = false;
 			$default['licences']                  = apply_filters( 'isc-licences-list', $licences );
 			$default['list_included_images']      = '';
-			$default['enable_log']      = false;
+			$default['enable_log']                = false;
+			$default['default_source']            = 'author_name';
+			$default['default_source_text']       = sprintf( '© %s', get_home_url() );
+
 			return $default;
 		}
 
@@ -316,5 +316,50 @@ CC BY-NC-ND 2.0 Generic|https://creativecommons.org/licenses/by-nc-nd/2.0/';
 			);
 
 			return apply_filters( 'isc-list-included-images-options', $included_images_options );
+		}
+
+		/**
+		 * Get the default source text as set up under Settings > Default Source > Custom text
+		 * if there was no input, yet
+		 *
+		 * @return string
+		 */
+		public function get_default_source_text() {
+
+			$options = $this->get_isc_options();
+			if( ! empty( $options['default_source_text'] ) ) {
+				return $options['default_source_text'];
+			} elseif( isset( $option['by_author_text'] ) ) {
+				return $option['by_author_text'];
+			} else {
+				return sprintf( '© %s', get_home_url() );
+			}
+		}
+
+		/**
+		 * Verify the default source option
+		 *
+		 * @param string $value value of the [default_source] option.
+		 * @return bool whether $value is identical to the default source option or not.
+		 */
+		public function is_default_source( $value ) {
+
+			$options = $this->get_isc_options();
+
+			if ( isset( $options['default_source'] ) ) {
+				return $options['default_source'] === $value;
+			}
+
+			/**
+			 * 2.0 moved the options to handle "own images" into "default sources" and only offers a single choice for one of the options now
+			 * this section maps old to new settings
+			 */
+			if ( ! empty( $options['exclude_own_images'] ) ) {
+				return 'exclude' === $value;
+			} elseif ( ! empty( $options['use_authorname'] ) ) {
+				return 'author_name' === $value;
+			}
+
+			return false;
 		}
 }

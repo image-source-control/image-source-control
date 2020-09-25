@@ -156,6 +156,7 @@ class ISC_Public extends ISC_Class {
 	public function add_source_captions_to_content( $content ) {
 
 		$options = $this->get_isc_options();
+		$exclude_default = $this->is_default_source( 'exclude' );
 
 		// display inline sources
 		if ( empty( $options['display_type'] ) || ! is_array( $options['display_type'] ) || ! in_array( 'overlay', $options['display_type'], true ) ) {
@@ -233,7 +234,7 @@ class ISC_Public extends ISC_Class {
 				}
 
 				// don’t show caption for own image if admin choose not to do so
-				if ( $options['exclude_own_images'] ) {
+				if ( $exclude_default ) {
 					if ( get_post_meta( $id, 'isc_image_source_own', true ) ) {
 						ISC_Log::log( sprintf( 'skipped "own" image for ID "%s"', $id ) );
 						continue;
@@ -357,6 +358,7 @@ class ISC_Public extends ISC_Class {
 		}
 
 		$attachments = get_post_meta( $post_id, 'isc_post_images', true );
+		$exclude_default = $this->is_default_source( 'exclude' );
 
 		if ( ! empty( $attachments ) ) {
 			ISC_Log::log( sprintf( 'going through %d attachments', count( $attachments ) ) );
@@ -367,8 +369,8 @@ class ISC_Public extends ISC_Class {
 				$source = get_post_meta( $attachment_id, 'isc_image_source', true );
 
 				// check if source of own images can be displayed
-				if ( ( $own == '' && $source == '' ) || ( $own != '' && $this->options['exclude_own_images'] ) ) {
-					if ( $own != '' && $this->options['exclude_own_images'] ) {
+				if ( ( $own == '' && $source == '' ) || ( $own != '' && $exclude_default ) ) {
+					if ( $own != '' && $exclude_default ) {
 						ISC_Log::log( sprintf( 'image %d: "own" sources are excluded', $attachment_id ) );
 					} else {
 						ISC_Log::log( sprintf( 'image %d: skipped because of empty source', $attachment_id ) );
@@ -509,22 +511,23 @@ class ISC_Public extends ISC_Class {
 			return '';
 		}
 
-		$options = $this->get_isc_options();
-
 		$connected_atts = array();
 
 		foreach ( $attachments as $_attachment ) {
 			$connected_atts[ $_attachment->ID ]['source'] = get_post_meta( $_attachment->ID, 'isc_image_source', true );
-			$connected_atts[ $_attachment->ID ]['own']    = get_post_meta( $_attachment->ID, 'isc_image_source_own', true );
-			// jump to next element if author images are not to be included in the list
-			if ( $options['exclude_own_images'] && '' != $connected_atts[ $_attachment->ID ]['own'] ) {
+			$connected_atts[ $_attachment->ID ]['default']    = get_post_meta( $_attachment->ID, 'isc_image_source_own', true );
+			// jump to next element if the default source is set to be excluded from the source list
+			if ( $this->is_default_source( 'exclude' ) && '' != $connected_atts[ $_attachment->ID ]['default'] ) {
 				unset( $connected_atts[ $_attachment->ID ] );
 				continue;
 			}
 
 			$connected_atts[ $_attachment->ID ]['title']       = $_attachment->post_title;
 			$connected_atts[ $_attachment->ID ]['author_name'] = '';
-			if ( '' != $connected_atts[ $_attachment->ID ]['own'] ) {
+			if ( $this->is_default_source( 'custom_text' ) && '' != $connected_atts[ $_attachment->ID ]['own'] ) {
+				$connected_atts[ $_attachment->ID ]['author_name'] = $this->get_default_source_text();
+			} else {
+			    // show author name
 				$connected_atts[ $_attachment->ID ]['author_name'] = get_the_author_meta( 'display_name', $_attachment->post_author );
 			}
 
@@ -802,7 +805,7 @@ class ISC_Public extends ISC_Class {
 			$thumb = get_post( $post_id );
 
 			// don’t show caption for own image if admin choose not to do so
-			if ( $options['exclude_own_images'] ) {
+			if ( $this->is_default_source( 'exclude' ) ) {
 				if ( get_post_meta( $id, 'isc_image_source_own', true ) ) {
 					return '';
 				}
@@ -877,12 +880,12 @@ class ISC_Public extends ISC_Class {
 		$att_post = get_post( $id );
 
 		if ( '' != $metadata['own'] ) {
-			if ( $this->options['use_authorname'] ) {
+			if ( $this->is_default_source( 'author_name' ) ) {
 				if ( ! empty( $att_post ) ) {
 					$source = get_the_author_meta( 'display_name', $att_post->post_author );
 				}
 			} else {
-				$source = $this->options['by_author_text'];
+				$source = $this->get_default_source_text();
 			}
 		} else {
 			if ( '' != $metadata['source'] ) {
