@@ -524,7 +524,7 @@ class ISC_Public extends ISC_Class {
 
 			$connected_atts[ $_attachment->ID ]['title']       = $_attachment->post_title;
 			$connected_atts[ $_attachment->ID ]['author_name'] = '';
-			if ( $this->is_default_source( 'custom_text' ) && '' != $connected_atts[ $_attachment->ID ]['own'] ) {
+			if ( $this->is_default_source( 'custom_text' ) && ! empty ( $connected_atts[ $_attachment->ID ]['own'] ) ) {
 				$connected_atts[ $_attachment->ID ]['author_name'] = $this->get_default_source_text();
 			} else {
 			    // show author name

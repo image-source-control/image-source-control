@@ -209,8 +209,8 @@ CC BY-NC-ND 2.0 Generic|https://creativecommons.org/licenses/by-nc-nd/2.0/';
 			$default['licences']                  = apply_filters( 'isc-licences-list', $licences );
 			$default['list_included_images']      = '';
 			$default['enable_log']                = false;
-			$default['default_source']            = 'author_name';
-			$default['default_source_text']       = sprintf( '© %s', get_home_url() );
+			$default['default_source']            = '';
+			$default['default_source_text']       = '';
 
 			return $default;
 		}
@@ -327,10 +327,10 @@ CC BY-NC-ND 2.0 Generic|https://creativecommons.org/licenses/by-nc-nd/2.0/';
 		public function get_default_source_text() {
 
 			$options = $this->get_isc_options();
-			if( ! empty( $options['default_source_text'] ) ) {
+			if ( ! empty( $options['default_source_text'] ) ) {
 				return $options['default_source_text'];
-			} elseif( isset( $option['by_author_text'] ) ) {
-				return $option['by_author_text'];
+			} elseif ( isset( $options['by_author_text'] ) ) {
+				return $options['by_author_text'];
 			} else {
 				return sprintf( '© %s', get_home_url() );
 			}
@@ -358,6 +358,63 @@ CC BY-NC-ND 2.0 Generic|https://creativecommons.org/licenses/by-nc-nd/2.0/';
 				return 'exclude' === $value;
 			} elseif ( ! empty( $options['use_authorname'] ) ) {
 				return 'author_name' === $value;
+			}
+
+			return false;
+		}
+
+
+		/**
+		 * Get the default source setting
+		 *
+		 * @return string
+		 */
+		public function get_default_source() {
+
+			$options = $this->get_isc_options();
+
+			// options since 2.0
+			if ( ! empty( $options['default_source'] ) ) {
+				return $options['default_source'];
+			}
+
+			/**
+			 * 2.0 moved the options to handle "own images" into "default sources" and only offers a single choice for one of the options now
+			 * this section maps old to new settings
+			 */
+			if ( ! empty( $options['exclude_own_images'] ) ) {
+				return 'exclude';
+			} elseif ( ! empty( $options['use_authorname'] ) ) {
+				return 'author_name';
+			} elseif ( ! empty( $options['by_author_text'] ) ) {
+				return 'custom_text';
+			}
+
+			return false;
+		}
+
+		/**
+		 * Get the label of the default source label
+		 *
+		 * @param string $value optional value, if missing, will use the stored value.
+		 * @return string
+		 */
+		public function get_default_source_label( $value = null ) {
+
+			$options = $this->get_isc_options();
+
+			$labels = array(
+				'exclude'     => __( 'Exclude from lists', 'image-source-control-isc' ),
+				'author_name' => __( 'Author name', 'image-source-control-isc' ),
+				'custom_text' => __( 'Custom text', 'image-source-control-isc' ),
+			);
+
+			if( ! $value ) {
+				$value = $this->get_default_source();
+			}
+
+			if( $value && isset( $labels[ $value ] ) ) {
+				return $labels[ $value ];
 			}
 
 			return false;

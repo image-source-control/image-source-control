@@ -139,14 +139,23 @@ class ISC_Admin extends ISC_Class {
 
 		// add checkbox to mark as your own image
 		$form_fields['isc_image_source_own']['input'] = 'html';
-		$form_fields['isc_image_source_own']['label'] = '';
+		$form_fields['isc_image_source_own']['label'] = __( 'Use default source', 'image-source-control-isc' );
 		$form_fields['isc_image_source_own']['helps'] =
-			__( 'Check this box if this is your own image and doesn’t need a source.', 'image-source-control-isc' );
-		$form_fields['isc_image_source_own']['html']  =
+			sprintf(
+					// translators: %%1$s is an opening link tag, %2$s is the closing one
+				__( 'Show a %1$sdefault source%2$s instead of the one entered above.', 'image-source-control-isc' ),
+				'<a href="' . admin_url( 'options-general.php?page=isc-settings#isc_settings_section_misc' ) . '" target="_blank">',
+				'</a>'
+			) . '<br/>' .
+            sprintf(
+			// translators: %s is the name of an option
+				__( 'Currently selected: %s', 'image-source-control-isc' ),
+				ISC_Class::get_instance()->get_default_source_label()
+			);
+		$form_fields['isc_image_source_own']['html'] =
 			"<input type='checkbox' value='1' name='attachments[{$post->ID}][isc_image_source_own]' id='attachments[{$post->ID}][isc_image_source_own]' "
 			. checked( get_post_meta( $post->ID, 'isc_image_source_own', true ), 1, false )
-			. ' style="width:14px"/> '
-			. __( 'This is my image', 'image-source-control-isc' );
+			. ' style="width:14px"/> ';
 
 		// add input field for source url
 		$form_fields['isc_image_source_url']['label'] = __( 'Image Source URL', 'image-source-control-isc' );
@@ -291,7 +300,7 @@ class ISC_Admin extends ISC_Class {
 		foreach ( (array) $wp_settings_sections[ $page ] as $section ) {
 
 			?>
-			<div class="postbox <?php echo esc_attr( $section['id'] ); ?>">
+			<div class="postbox <?php echo esc_attr( $section['id'] ); ?>" id="<?php echo esc_attr( $section['id'] ); ?>">
 			<?php
 			if ( $section['title'] ) {
 				?>
@@ -301,7 +310,7 @@ class ISC_Admin extends ISC_Class {
 
 			?>
 			<div class="inside">
-			<div class="submitbox" id="submitpost">
+			<div class="submitbox">
 				<?php
 				if ( $section['callback'] ) {
 					call_user_func( $section['callback'], $section );
@@ -463,7 +472,7 @@ class ISC_Admin extends ISC_Class {
 	 */
 	public function renderfield_default_source() {
 		$options             = $this->get_isc_options();
-		$default_source      = isset( $options['default_source'] ) ? $options['default_source'] : 'author_name';
+		$default_source      = ! empty( $options['default_source'] ) ? $options['default_source'] : $this->get_default_source();
 		$default_source_text = $this->get_default_source_text();
 		require_once ISCPATH . '/admin/templates/settings/default-source.php';
 	}
@@ -724,14 +733,14 @@ class ISC_Admin extends ISC_Class {
 			// show author name
 			$output['default_source'] = 'author_name';
 		} else {
-		    $output['default_source']      = isset( $input['default_source'] ) ? esc_attr( $input['default_source'] ) : 'author_name';
+			$output['default_source'] = isset( $input['default_source'] ) ? esc_attr( $input['default_source'] ) : 'author_name';
 		}
 
 		// custom source text
 		if ( isset( $input['by_author_text'] ) ) {
 			$output['default_source_text'] = esc_html( $input['by_author_text'] );
 		} else {
-		    $output['default_source_text'] = isset( $input['default_source_text'] ) ? esc_attr( $input['default_source_text'] ) : $this->get_default_source_text();
+			$output['default_source_text'] = isset( $input['default_source_text'] ) ? esc_attr( $input['default_source_text'] ) : $this->get_default_source_text();
 		}
 
 		return $output;
