@@ -123,7 +123,13 @@ class ISC_Public extends ISC_Class {
 			ISC_Log::log( 'index content for ' . $_SERVER['REQUEST_URI'] . ' and post ID ' . $post->ID );
 		}
 
-		// create index, if doesn’t exist, yet
+		// Skip any source output or indexing if this is a page with a full source list.
+		if ( has_shortcode( $content, '[isc_list_all]' )
+			|| false !== strpos( $content, 'isc_all_image_list_box' ) ) {
+			return $content;
+		}
+
+		// create index, if it doesn’t exist, yet
 		$attachments = get_post_meta( $post->ID, 'isc_post_images', true );
 
 		/**
@@ -155,7 +161,7 @@ class ISC_Public extends ISC_Class {
 	 */
 	public function add_source_captions_to_content( $content ) {
 
-		$options = $this->get_isc_options();
+		$options         = $this->get_isc_options();
 		$exclude_default = $this->is_default_source( 'exclude' );
 
 		// display inline sources
@@ -357,7 +363,7 @@ class ISC_Public extends ISC_Class {
 			return $override;
 		}
 
-		$attachments = get_post_meta( $post_id, 'isc_post_images', true );
+		$attachments     = get_post_meta( $post_id, 'isc_post_images', true );
 		$exclude_default = $this->is_default_source( 'exclude' );
 
 		if ( ! empty( $attachments ) ) {
@@ -514,8 +520,8 @@ class ISC_Public extends ISC_Class {
 		$connected_atts = array();
 
 		foreach ( $attachments as $_attachment ) {
-			$connected_atts[ $_attachment->ID ]['source'] = get_post_meta( $_attachment->ID, 'isc_image_source', true );
-			$connected_atts[ $_attachment->ID ]['default']    = get_post_meta( $_attachment->ID, 'isc_image_source_own', true );
+			$connected_atts[ $_attachment->ID ]['source']  = get_post_meta( $_attachment->ID, 'isc_image_source', true );
+			$connected_atts[ $_attachment->ID ]['default'] = get_post_meta( $_attachment->ID, 'isc_image_source_own', true );
 			// jump to next element if the default source is set to be excluded from the source list
 			if ( $this->is_default_source( 'exclude' ) && '' != $connected_atts[ $_attachment->ID ]['default'] ) {
 				unset( $connected_atts[ $_attachment->ID ] );
@@ -524,10 +530,10 @@ class ISC_Public extends ISC_Class {
 
 			$connected_atts[ $_attachment->ID ]['title']       = $_attachment->post_title;
 			$connected_atts[ $_attachment->ID ]['author_name'] = '';
-			if ( $this->is_default_source( 'custom_text' ) && ! empty ( $connected_atts[ $_attachment->ID ]['own'] ) ) {
+			if ( $this->is_default_source( 'custom_text' ) && ! empty( $connected_atts[ $_attachment->ID ]['own'] ) ) {
 				$connected_atts[ $_attachment->ID ]['author_name'] = $this->get_default_source_text();
 			} else {
-			    // show author name
+				// show author name
 				$connected_atts[ $_attachment->ID ]['author_name'] = get_the_author_meta( 'display_name', $_attachment->post_author );
 			}
 
@@ -928,9 +934,16 @@ class ISC_Public extends ISC_Class {
 
 		$options = $this->get_isc_options();
 
-		if ( ( ( is_archive() || is_home() )
-			   && isset( $options['list_on_archives'] ) && $options['list_on_archives'] ) ||
-			 ( is_singular() && isset( $options['display_type'] ) && is_array( $options['display_type'] ) && in_array( 'list', $options['display_type'], true ) ) ) {
+		/**
+		 * Tests:
+		 * - is list allowed on archive pages?
+		 * - automatic injection of the list is enabled
+		 */
+		if (
+				(
+				( is_archive() || is_home() )
+			   && isset( $options['list_on_archives'] ) && $options['list_on_archives'] )
+			|| ( is_singular() && isset( $options['display_type'] ) && is_array( $options['display_type'] ) && in_array( 'list', $options['display_type'], true ) ) ) {
 			return true;
 		}
 
