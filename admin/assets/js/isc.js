@@ -3,15 +3,7 @@ jQuery( document ).ready(
 		isc_thumbnail_input_checkstate();
 		isc_caption_checkstate();
 		$( '#isc-settings-overlay-enable' ).click( function(){isc_caption_checkstate()} );
-		$( '#use_authorname' ).click(
-			function(){
-				if ('disabled' == $( '#byauthor' ).attr( 'disabled' )) {
-					$( '#byauthor' ).removeAttr( 'disabled' );
-				} else {
-					$( '#byauthor' ).attr( 'disabled', 'disabled' );
-				}
-			}
-		);
+		$( '.isc-settings-default-source input' ).change( isc_toggle_default_source_text );
 		$( '#use-thumbnail' ).click(
 			function(){
 				if ('disabled' == $( '#thumbnail-size-select' ).attr( 'disabled' )) {
@@ -142,8 +134,19 @@ function isc_thumbnail_input_checkstate(){
  */
 function isc_caption_checkstate() {
 	if (false == jQuery( '#isc-settings-overlay-enable' ).prop( 'checked' )) {
-		jQuery( '.isc_settings_section_overlay' ).find( 'input, select').attr( 'disabled', 'disabled' );
+		jQuery( '.isc_settings_section_overlay' ).find( 'input, select' ).attr( 'disabled', 'disabled' );
 	} else {
-		jQuery( '.isc_settings_section_overlay' ).find( 'input, select').removeAttr( 'disabled' );
+		jQuery( '.isc_settings_section_overlay' ).find( 'input, select' ).removeAttr( 'disabled' );
+	}
+}
+
+/**
+ * Toggle the state of the Custom Text option in the Default Sources settings
+ */
+function isc_toggle_default_source_text() {
+	if ( jQuery( '#isc-custom-text-select' ).is( ':checked' ) ) {
+		jQuery( '#isc-custom-text' ).removeAttr( 'disabled' );
+	} else {
+		jQuery( '#isc-custom-text' ).attr( 'disabled', 'disabled' );
 	}
 }

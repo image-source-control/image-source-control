@@ -195,9 +195,6 @@ CC BY-NC-ND 2.0 Generic|https://creativecommons.org/licenses/by-nc-nd/2.0/';
 			$default['list_on_archives']          = false;
 			$default['list_on_excerpts']          = false;
 			$default['image_list_headline']       = __( 'image sources', 'image-source-control-isc' );
-			$default['exclude_own_images']        = false;
-			$default['use_authorname']            = true;
-			$default['by_author_text']            = __( 'Owned by the author', 'image-source-control-isc' );
 			$default['version']                   = ISCVERSION;
 			$default['thumbnail_in_list']         = false;
 			$default['thumbnail_size']            = 'thumbnail';
@@ -211,7 +208,10 @@ CC BY-NC-ND 2.0 Generic|https://creativecommons.org/licenses/by-nc-nd/2.0/';
 			$default['enable_licences']           = false;
 			$default['licences']                  = apply_filters( 'isc-licences-list', $licences );
 			$default['list_included_images']      = '';
-			$default['enable_log']      = false;
+			$default['enable_log']                = false;
+			$default['default_source']            = '';
+			$default['default_source_text']       = '';
+
 			return $default;
 		}
 
@@ -316,5 +316,107 @@ CC BY-NC-ND 2.0 Generic|https://creativecommons.org/licenses/by-nc-nd/2.0/';
 			);
 
 			return apply_filters( 'isc-list-included-images-options', $included_images_options );
+		}
+
+		/**
+		 * Get the default source text as set up under Settings > Default Source > Custom text
+		 * if there was no input, yet
+		 *
+		 * @return string
+		 */
+		public function get_default_source_text() {
+
+			$options = $this->get_isc_options();
+			if ( ! empty( $options['default_source_text'] ) ) {
+				return $options['default_source_text'];
+			} elseif ( isset( $options['by_author_text'] ) ) {
+				return $options['by_author_text'];
+			} else {
+				return sprintf( '© %s', get_home_url() );
+			}
+		}
+
+		/**
+		 * Verify the default source option
+		 *
+		 * @param string $value value of the [default_source] option.
+		 * @return bool whether $value is identical to the default source option or not.
+		 */
+		public function is_default_source( $value ) {
+
+			$options = $this->get_isc_options();
+
+			if ( isset( $options['default_source'] ) ) {
+				return $options['default_source'] === $value;
+			}
+
+			/**
+			 * 2.0 moved the options to handle "own images" into "default sources" and only offers a single choice for one of the options now
+			 * this section maps old to new settings
+			 */
+			if ( ! empty( $options['exclude_own_images'] ) ) {
+				return 'exclude' === $value;
+			} elseif ( ! empty( $options['use_authorname'] ) ) {
+				return 'author_name' === $value;
+			}
+
+			return false;
+		}
+
+
+		/**
+		 * Get the default source setting
+		 *
+		 * @return string
+		 */
+		public function get_default_source() {
+
+			$options = $this->get_isc_options();
+
+			// options since 2.0
+			if ( ! empty( $options['default_source'] ) ) {
+				return $options['default_source'];
+			}
+
+			/**
+			 * 2.0 moved the options to handle "own images" into "default sources" and only offers a single choice for one of the options now
+			 * this section maps old to new settings
+			 */
+			if ( ! empty( $options['exclude_own_images'] ) ) {
+				return 'exclude';
+			} elseif ( ! empty( $options['use_authorname'] ) ) {
+				return 'author_name';
+			} elseif ( ! empty( $options['by_author_text'] ) ) {
+				return 'custom_text';
+			}
+
+			return false;
+		}
+
+		/**
+		 * Get the label of the default source label
+		 *
+		 * @param string $value optional value, if missing, will use the stored value.
+		 * @return string
+		 */
+		public function get_default_source_label( $value = null ) {
+
+			$options = $this->get_isc_options();
+
+			$labels = array(
+				'exclude'     => __( 'Exclude from lists', 'image-source-control-isc' ),
+				'author_name' => __( 'Author name', 'image-source-control-isc' ),
+				'custom_text' => __( 'Custom text', 'image-source-control-isc' ),
+			);
+
+			if( ! $value ) {
+				$value = $this->get_default_source();
+			}
+
+			if( $value && isset( $labels[ $value ] ) ) {
+				return $labels[ $value ];
+			}
+
+			return false;
 		}
 }

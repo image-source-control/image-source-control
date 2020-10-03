@@ -139,14 +139,23 @@ class ISC_Admin extends ISC_Class {
 
 		// add checkbox to mark as your own image
 		$form_fields['isc_image_source_own']['input'] = 'html';
-		$form_fields['isc_image_source_own']['label'] = '';
+		$form_fields['isc_image_source_own']['label'] = __( 'Use default source', 'image-source-control-isc' );
 		$form_fields['isc_image_source_own']['helps'] =
-			__( 'Check this box if this is your own image and doesn\'t need a source.', 'image-source-control-isc' );
-		$form_fields['isc_image_source_own']['html']  =
+			sprintf(
+					// translators: %%1$s is an opening link tag, %2$s is the closing one
+				__( 'Show a %1$sdefault source%2$s instead of the one entered above.', 'image-source-control-isc' ),
+				'<a href="' . admin_url( 'options-general.php?page=isc-settings#isc_settings_section_misc' ) . '" target="_blank">',
+				'</a>'
+			) . '<br/>' .
+            sprintf(
+			// translators: %s is the name of an option
+				__( 'Currently selected: %s', 'image-source-control-isc' ),
+				ISC_Class::get_instance()->get_default_source_label()
+			);
+		$form_fields['isc_image_source_own']['html'] =
 			"<input type='checkbox' value='1' name='attachments[{$post->ID}][isc_image_source_own]' id='attachments[{$post->ID}][isc_image_source_own]' "
 			. checked( get_post_meta( $post->ID, 'isc_image_source_own', true ), 1, false )
-			. ' style="width:14px"/> '
-			. __( 'This is my image', 'image-source-control-isc' );
+			. ' style="width:14px"/> ';
 
 		// add input field for source url
 		$form_fields['isc_image_source_url']['label'] = __( 'Image Source URL', 'image-source-control-isc' );
@@ -216,15 +225,13 @@ class ISC_Admin extends ISC_Class {
 		add_settings_field( 'thumbnail_height', __( 'Thumbnails max-height', 'image-source-control-isc' ), array( $this, 'renderfield_thumbnail_height' ), 'isc_settings_page', 'isc_settings_section_complete_list' );
 
 		// Licence settings group
-		add_settings_section( 'isc_settings_section_licenses', __( 'Licenses settings', 'image-source-control-isc' ), '__return_false', 'isc_settings_page' );
+		add_settings_section( 'isc_settings_section_licenses', __( 'Image licenses', 'image-source-control-isc' ), '__return_false', 'isc_settings_page' );
 		add_settings_field( 'enable_licences', __( 'Enable licenses', 'image-source-control-isc' ), array( $this, 'renderfield_enable_licences' ), 'isc_settings_page', 'isc_settings_section_licenses' );
 		add_settings_field( 'licences', __( 'List of licenses', 'image-source-control-isc' ), array( $this, 'renderfield_licences' ), 'isc_settings_page', 'isc_settings_section_licenses' );
 
 		// Misc settings group
 		add_settings_section( 'isc_settings_section_misc', __( 'Miscellaneous settings', 'image-source-control-isc' ), '__return_false', 'isc_settings_page' );
-		add_settings_field( 'exclude_own_images', __( 'Exclude own images', 'image-source-control-isc' ), array( $this, 'renderfield_exclude_own_images' ), 'isc_settings_page', 'isc_settings_section_misc' );
-		add_settings_field( 'use_authorname', __( 'Use authors names', 'image-source-control-isc' ), array( $this, 'renderfield_use_authorname' ), 'isc_settings_page', 'isc_settings_section_misc' );
-		add_settings_field( 'by_author_text', __( 'Custom text for owned images', 'image-source-control-isc' ), array( $this, 'renderfield_by_author_text' ), 'isc_settings_page', 'isc_settings_section_misc' );
+		add_settings_field( 'default_source', __( 'Default source', 'image-source-control-isc' ), array( $this, 'renderfield_default_source' ), 'isc_settings_page', 'isc_settings_section_misc' );
 		add_settings_field( 'warning_one_source', __( 'Warn about missing sources', 'image-source-control-isc' ), array( $this, 'renderfield_warning_source_missing' ), 'isc_settings_page', 'isc_settings_section_misc' );
 		add_settings_field( 'enable_log', __( 'Debug log', 'image-source-control-isc' ), array( $this, 'renderfield_enable_log' ), 'isc_settings_page', 'isc_settings_section_misc' );
 		add_settings_field( 'remove_on_uninstall', __( 'Delete data on uninstall', 'image-source-control-isc' ), array( $this, 'renderfield_remove_on_uninstall' ), 'isc_settings_page', 'isc_settings_section_misc' );
@@ -293,7 +300,7 @@ class ISC_Admin extends ISC_Class {
 		foreach ( (array) $wp_settings_sections[ $page ] as $section ) {
 
 			?>
-			<div class="postbox <?php echo esc_attr( $section['id'] ); ?>">
+			<div class="postbox <?php echo esc_attr( $section['id'] ); ?>" id="<?php echo esc_attr( $section['id'] ); ?>">
 			<?php
 			if ( $section['title'] ) {
 				?>
@@ -303,7 +310,7 @@ class ISC_Admin extends ISC_Class {
 
 			?>
 			<div class="inside">
-			<div class="submitbox" id="submitpost">
+			<div class="submitbox">
 				<?php
 				if ( $section['callback'] ) {
 					call_user_func( $section['callback'], $section );
@@ -326,7 +333,7 @@ class ISC_Admin extends ISC_Class {
 	}
 
 	/**
-	 * Choose where to display image sources in the frontend.
+	 * Render the top of the Position settings section
 	 */
 	public function render_section_position() {
 		require_once ISCPATH . '/admin/templates/settings/section-position.php';
@@ -461,27 +468,29 @@ class ISC_Admin extends ISC_Class {
 	}
 
 	/**
-	 * Render option to exclude image from lists if it is makes as "by the author"
+	 * Render options for default image sources
 	 */
-	public function renderfield_exclude_own_images() {
-		$options = $this->get_isc_options();
-		require_once ISCPATH . '/admin/templates/settings/exclude-own-image.php';
+	public function renderfield_default_source() {
+		$options             = $this->get_isc_options();
+		$default_source      = ! empty( $options['default_source'] ) ? $options['default_source'] : $this->get_default_source();
+		$default_source_text = $this->get_default_source_text();
+		require_once ISCPATH . '/admin/templates/settings/default-source.php';
 	}
 
 	/**
-	 * Render option to choose if the author’s public name should be displayed for their images.
+	 * Render option to choose if the uploader’s public name should be displayed for their images.
 	 */
-	public function renderfield_use_authorname() {
+	public function renderfield_author_name() {
 		$options = $this->get_isc_options();
-		require_once ISCPATH . '/admin/templates/settings/use-authorname.php';
+		require_once ISCPATH . '/admin/templates/settings/default-author-name.php';
 	}
 
 	/**
 	 * Render option to enter a string that should show instead of the author name.
 	 */
-	public function renderfield_by_author_text() {
+	public function renderfield_custom_text() {
 		$options = $this->get_isc_options();
-		require_once ISCPATH . '/admin/templates/settings/by-author-text.php';
+		require_once ISCPATH . '/admin/templates/settings/default-custom-text.php';
 	}
 
 	/**
@@ -670,17 +679,7 @@ class ISC_Admin extends ISC_Class {
 		$output['list_on_excerpts'] = ! empty( $input['list_on_excerpts'] );
 
 		$output['image_list_headline'] = isset( $input['image_list_headline'] ) ? esc_html( $input['image_list_headline'] ) : '';
-		if ( ! empty( $input['use_authorname'] ) ) {
-			// Don't worry about the custom text if the author name is selected.
-			$output['use_authorname'] = true;
-			// keep the entry unchanged
-			$output['by_author_text'] = $output['by_author_text'];
-		} else {
-			$output['use_authorname'] = false;
-			$output['by_author_text'] = isset( $input['by_author_text'] ) ? esc_html( $input['by_author_text'] ) : '';
-		}
-		$output['exclude_own_images'] = ! empty( $input['exclude_own_images'] );
-		$output['enable_licences']    = ! empty( $input['enable_licences'] );
+		$output['enable_licences']     = ! empty( $input['enable_licences'] );
 
 		if ( isset( $input['licences'] ) ) {
 			$output['licences'] = esc_textarea( $input['licences'] );
@@ -722,6 +721,28 @@ class ISC_Admin extends ISC_Class {
 			$output['source_pretext'] = esc_textarea( $input['source_pretext'] );
 		}
 		$output['list_included_images'] = isset( $input['list_included_images'] ) ? esc_attr( $input['list_included_images'] ) : '';
+
+		/**
+		 * 2.0 moved the options to handle "own images" into "default sources" and only offers a single choice for one of the options now
+		 * this section maps old to new settings
+		 */
+		if ( ! empty( $input['exclude_own_images'] ) ) {
+			// don’t show sources for marked images
+			$output['default_source'] = 'exclude';
+		} elseif ( ! empty( $input['use_authorname'] ) ) {
+			// show author name
+			$output['default_source'] = 'author_name';
+		} else {
+			$output['default_source'] = isset( $input['default_source'] ) ? esc_attr( $input['default_source'] ) : 'author_name';
+		}
+
+		// custom source text
+		if ( isset( $input['by_author_text'] ) ) {
+			$output['default_source_text'] = esc_html( $input['by_author_text'] );
+		} else {
+			$output['default_source_text'] = isset( $input['default_source_text'] ) ? esc_attr( $input['default_source_text'] ) : $this->get_default_source_text();
+		}
+
 		return $output;
 	}
 

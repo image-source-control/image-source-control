@@ -6,6 +6,7 @@
  */
 ?>
 <p><?php esc_html_e( 'A list of sources for images on the current page.', 'image-source-control-isc' ); ?></p>
+<br/>
 <div class="isc-settings-highlighted">
 <label>
 	<input type="checkbox" name="isc_options[display_type][]" value="list" <?php checked( in_array( 'list', $options['display_type'], true ), true ); ?> />
