@@ -2,10 +2,10 @@
 /*
   Plugin Name: Image Source Control
   Version: 2.0 alpha
-  Plugin URI: https://webgilde.com/en/image-source-control/
+  Plugin URI: https://imagesourcecontrol.com/
   Description: The Image Source Control saves the source of an image, lists them and warns if it is missing.
   Author: Thomas Maier
-  Author URI: https://webgilde.com/
+  Author URI: https://imagesourcecontrol.com/
   Text Domain: image-source-control-isc
   License: GPL v3
 

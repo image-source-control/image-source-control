@@ -33,7 +33,7 @@
 			)
 		);
 		?>
-		 <a href="http://webgilde.com/en/image-source-control/image-sources-frontend/" target="_blank"><?php esc_html_e( 'Manual', 'image-source-control' ); ?></a>
+		 <a href="https://imagesourcecontrol.com/manual/" target="_blank"><?php esc_html_e( 'Manual', 'image-source-control' ); ?></a>
 	</p>
 	<h4><?php esc_html_e( 'Archive pages', 'image-source-control-isc' ); ?></h4>
 	<p class="description"><?php esc_html_e( 'The following options try to place image sources within post content on post list pages like your home page or category archives.', 'image-source-control-isc' ); ?></p>
