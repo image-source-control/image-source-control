@@ -12,36 +12,35 @@ The Image Source Control manages image sources, displays them and warns if they 
 
 == Description ==
 
-Did you ever forget to add the source to an image file in the frontend and the lawyer of the copyright holder knocked on your door?
+Did you ever forget to add the source to an image in the frontend, and the lawyer of the copyright holder knocked on your door?
 
 Image Source Control (ISC) helps to prevent this situation.
 
-**Image Sources Lists**
+Just add the image source in the backend and choose how to display it on your website.
 
-You can choose between different image source list types:
+**Image Source layouts**
 
-* source list below the content or manually placed
-* source as image caption/overlay (not compatible with all themes)
-* complete source list of all images
+Choose between different image source displays:
+
+* list all image sources below the content of a specific page or place the list manually
+* show the image source as a caption/overlay above the image
+* embed a complete source list of all images and photos on your website
 
 **Frontend Features**
 
-* display sources for images in content, galleries, shortcodes and featured images
-* show the image source directly in the image (not working with all images and themes)
-* include a list with all images and their sources of the current page/post
-* include a list with all images and their sources of the whole website
-* attach lists below the content automatically or using shortcodes or template functions
+* display sources for images in content, galleries, shortcodes, and featured images
+* define the layout and position of the image source
+* attach the image source list below the content automatically or using a shortcode or PHP function
 * display image sources on archive pages
-* works with the image, cover image and gallery blocks
+* block editor: detects image sources for the image, cover image, and gallery blocks
+* link to the copyright holder and include a link to the image license
 
 **Backend Features**
 
-* manage image source within media dashboard and in the settings of the Image and Cover Image blocks
-* mark an image to belong to the uploader
-* lists images with missing sources in the backend
-* warns, if image source is missing
-* link sources to any url
-* manage, display and link licenses
+* manage image source within the Media dashboard and in the settings of the Image and Cover Image blocks
+* quickly assign a centrally defined source to any image and choose three options: hide photo sources for these images, show a specific source (e.g., your name), or the uploaders name
+* warn about missing image sources
+* manage, display, and link available licenses
 
 **Localization**
 
@@ -49,9 +48,9 @@ English, German
 
 == Instructions ==
 
-Also have a look at the [image source control website](http://webgilde.com/en/image-source-control/image-source-control-manual/).
+Take a look at the [Image Source Control Manual](https://imagesourcecontrol.com/manual/).
 
-Find a list of images with missing sources under _Media > Missing sources_
+Find a list of missing images sources and other debug tools under _Media > Image sources_
 
 **Automatic image sources**
 
@@ -59,12 +58,11 @@ You can choose to display image sources automatically below the post content or 
 
 **Manually included image sources on pages/posts**
 
-You can add the image source list manually to pages or post via the shortcode `[isc_list]` in your content editor or a text widget. You can use `[isc_list id="123]` to show the list of any post or page.
+You can add the image source list manually to pages or posts via the shortcode `[isc_list]` in your content editor or a text widget.
 
-You can also add the list with the function `isc_list()` within your template files. Use `isc_list( $post_id )` to show the image source list outside the loop.
+Use `[isc_list id="123]` to show the list of any post or page.
 
-You should also check first if the function exists before using it:
-`<?php if( function_exists('isc_list') ) { isc_list(); } ?>`
+Use the PHP code `<?php if( function_exists('isc_list') ) { isc_list(); } ?>` within your template files.
 
 **List all image sources**
 
@@ -74,7 +72,7 @@ Use `[isc_list_all per_page="25"]` to show only a limited number of images per p
 
 Use `[isc_list_all included="all"]` to show all attachments in the list, including those not explicitly attached to a post.
 
-The plugin searches your post content and thumbnail for images (attachments) and lists them, if you included at least the image source or marked it as your own image.
+The plugin searches your post content and thumbnail for images (attachments) and lists them if you included at least the image source or marked it to use the default image source.
 
 == Legal Notice ==
 
@@ -97,7 +95,8 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 1. edit image source settings in the Image block
 1. display a list with all images of your site and their sources
 1. display image source within the image
-1. some of the settings to customize how to display image sources
+1. basic settings to customize how to display image sources
+1. settings to manage image source licenses
 
 == Changelog ==
 
