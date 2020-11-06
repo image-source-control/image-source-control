@@ -137,7 +137,7 @@
 							});
 						},
 					}), el(CheckboxControl, {
-						label: __('Use default source', 'image-source-control-isc'),
+						label: __('Use standard source', 'image-source-control-isc'),
 						checked: isc_image_source_own,
 						disabled: disabled,
 						onChange: function (newValue) {
