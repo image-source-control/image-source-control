@@ -107,7 +107,7 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 - introduced debug option
 - rewrite of the block options to make them more stable
 - improved settings page visually and for more clarity
-- the "own image" option is now "default source" to better represent its purpose and possibilities
+- the "own image" option is now "standard source" to better represent its purpose and possibilities
 - introduced option to reindex image-post relations again
 - introduced `isc_sources_list_override_output` filter to allow overriding the output of a source list
 - introduced `isc_source_list_empty_output` filter to allow output when a list of sources is empty

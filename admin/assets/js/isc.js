@@ -3,7 +3,7 @@ jQuery( document ).ready(
 		isc_thumbnail_input_checkstate();
 		isc_caption_checkstate();
 		$( '#isc-settings-overlay-enable' ).click( function(){isc_caption_checkstate()} );
-		$( '.isc-settings-default-source input' ).change( isc_toggle_default_source_text );
+		$( '.isc-settings-standard-source input' ).change( isc_toggle_standard_source_text );
 		$( '#use-thumbnail' ).click(
 			function(){
 				if ('disabled' == $( '#thumbnail-size-select' ).attr( 'disabled' )) {
@@ -141,9 +141,9 @@ function isc_caption_checkstate() {
 }
 
 /**
- * Toggle the state of the Custom Text option in the Default Sources settings
+ * Toggle the state of the Custom Text option in the Standard Sources settings
  */
-function isc_toggle_default_source_text() {
+function isc_toggle_standard_source_text() {
 	if ( jQuery( '#isc-custom-text-select' ).is( ':checked' ) ) {
 		jQuery( '#isc-custom-text' ).removeAttr( 'disabled' );
 	} else {

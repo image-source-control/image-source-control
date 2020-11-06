@@ -209,8 +209,8 @@ CC BY-NC-ND 2.0 Generic|https://creativecommons.org/licenses/by-nc-nd/2.0/';
 			$default['licences']                  = apply_filters( 'isc-licences-list', $licences );
 			$default['list_included_images']      = '';
 			$default['enable_log']                = false;
-			$default['default_source']            = '';
-			$default['default_source_text']       = '';
+			$default['standard_source']            = '';
+			$default['standard_source_text']       = '';
 
 			return $default;
 		}
@@ -319,16 +319,16 @@ CC BY-NC-ND 2.0 Generic|https://creativecommons.org/licenses/by-nc-nd/2.0/';
 		}
 
 		/**
-		 * Get the default source text as set up under Settings > Default Source > Custom text
+		 * Get the standard source text as set up under Settings > Standard Source > Custom text
 		 * if there was no input, yet
 		 *
 		 * @return string
 		 */
-		public function get_default_source_text() {
+		public function get_standard_source_text() {
 
 			$options = $this->get_isc_options();
-			if ( ! empty( $options['default_source_text'] ) ) {
-				return $options['default_source_text'];
+			if ( ! empty( $options['standard_source_text'] ) ) {
+				return $options['standard_source_text'];
 			} elseif ( isset( $options['by_author_text'] ) ) {
 				return $options['by_author_text'];
 			} else {
@@ -337,21 +337,21 @@ CC BY-NC-ND 2.0 Generic|https://creativecommons.org/licenses/by-nc-nd/2.0/';
 		}
 
 		/**
-		 * Verify the default source option
+		 * Verify the standard source option
 		 *
-		 * @param string $value value of the [default_source] option.
-		 * @return bool whether $value is identical to the default source option or not.
+		 * @param string $value value of the [standard_source] option.
+		 * @return bool whether $value is identical to the standard source option or not.
 		 */
-		public function is_default_source( $value ) {
+		public function is_standard_source( $value ) {
 
 			$options = $this->get_isc_options();
 
-			if ( isset( $options['default_source'] ) ) {
-				return $options['default_source'] === $value;
+			if ( isset( $options['standard_source'] ) ) {
+				return $options['standard_source'] === $value;
 			}
 
 			/**
-			 * 2.0 moved the options to handle "own images" into "default sources" and only offers a single choice for one of the options now
+			 * 2.0 moved the options to handle "own images" into "standard sources" and only offers a single choice for one of the options now
 			 * this section maps old to new settings
 			 */
 			if ( ! empty( $options['exclude_own_images'] ) ) {
@@ -365,21 +365,21 @@ CC BY-NC-ND 2.0 Generic|https://creativecommons.org/licenses/by-nc-nd/2.0/';
 
 
 		/**
-		 * Get the default source setting
+		 * Get the standard source setting
 		 *
 		 * @return string
 		 */
-		public function get_default_source() {
+		public function get_standard_source() {
 
 			$options = $this->get_isc_options();
 
 			// options since 2.0
-			if ( ! empty( $options['default_source'] ) ) {
-				return $options['default_source'];
+			if ( ! empty( $options['standard_source'] ) ) {
+				return $options['standard_source'];
 			}
 
 			/**
-			 * 2.0 moved the options to handle "own images" into "default sources" and only offers a single choice for one of the options now
+			 * 2.0 moved the options to handle "own images" into "standard sources" and only offers a single choice for one of the options now
 			 * this section maps old to new settings
 			 */
 			if ( ! empty( $options['exclude_own_images'] ) ) {
@@ -394,12 +394,12 @@ CC BY-NC-ND 2.0 Generic|https://creativecommons.org/licenses/by-nc-nd/2.0/';
 		}
 
 		/**
-		 * Get the label of the default source label
+		 * Get the label of the standard source label
 		 *
 		 * @param string $value optional value, if missing, will use the stored value.
 		 * @return string
 		 */
-		public function get_default_source_label( $value = null ) {
+		public function get_standard_source_label( $value = null ) {
 
 			$options = $this->get_isc_options();
 
@@ -410,7 +410,7 @@ CC BY-NC-ND 2.0 Generic|https://creativecommons.org/licenses/by-nc-nd/2.0/';
 			);
 
 			if( ! $value ) {
-				$value = $this->get_default_source();
+				$value = $this->get_standard_source();
 			}
 
 			if( $value && isset( $labels[ $value ] ) ) {
