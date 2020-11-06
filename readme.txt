@@ -1,6 +1,6 @@
 === Image Source Control ===
 Contributors: webzunft
-Tags: image, images, picture, picture source, image source, mediathek, media, caption, copyright
+Tags: image, images, picture, picture source, image source, bild, bilder, photo, photos, foto, media, caption, copyright
 Requires at least: 5.3
 Tested up to: 5.5
 Stable tag: 1.10.4
@@ -100,7 +100,7 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 
 == Changelog ==
 
-= untagged =
+= 2.0 alpha =
 
 - the full source list is now updated when a post is visited for the first time not after being saved
 - introducing a model class
