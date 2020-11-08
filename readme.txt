@@ -84,9 +84,9 @@ This section describes how to install the plugin and get it working.
 
 e.g.
 
-1. Upload `wg-image-source-control`-folder to the `/wp-content/plugins/` directory
-1. Activate ISC through the 'Plugins' menu in WordPress
-1. Visit _Settings > Image Control_ to set up the plugin
+1. Upload `image-source-control-isc.zip` through the 'Plugin' menu in your WordPress backend
+1. Activate the plugin
+1. Visit _Settings > Image Control_ for the main settings
 
 See the _Instructions_ section [here](https://wordpress.org/plugins/image-source-control-isc/#description).
 
