@@ -231,4 +231,20 @@
 		}
 	});
 
+	// Updates window.iscData.postmeta when sources are edited in the media lib modal frame before inserting an image.
+	$(document).on('change', '.media-modal-content .compat-item input[name*="isc_image_source"],.media-modal-content .compat-item select[name*="isc_image_licence"]', function () {
+		var id = $(this).attr('id').match(/\d+/);
+		if (id) {
+			id = parseInt(id);
+			if ('undefined' != typeof window.iscData && 'undefined' != typeof window.iscData.postmeta) {
+				window.iscData.postmeta[id] = {
+					isc_image_licence: $('select[name="attachments\[' + id + '\]\[isc_image_licence\]"]').val(),
+					isc_image_source: $('#attachments-' + id + '-isc_image_source').val(),
+					isc_image_source_own: $('input[name="attachments\[' + id + '\]\[isc_image_source_own\]"]').prop('checked'),
+					isc_image_source_url: $('#attachments-' + id + '-isc_image_source_url').val(),
+				};
+			}
+		}
+	});
+
 })(window.wp, window.jQuery)
