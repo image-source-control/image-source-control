@@ -73,6 +73,10 @@
 
 	addFilter('blocks.registerBlockType', 'image-source-control/attributes', addSourceControlAttribute);
 
+	function randomNumber(len) {
+		return Math.round(Math.random() * Math.pow(10, len));
+	}
+
 	var iscWithSourceControl = createHigherOrderComponent(function (BlockEdit) {
 			return function (props) {
 				// Do nothing if it's another block than our defined ones.
@@ -115,6 +119,7 @@
 						label: __('Image Source', 'image-source-control-isc'),
 						value: isc_image_source,
 						disabled: disabled,
+						key: randomNumber(9),
 						placeholder: __('Include the image source here.', 'image-source-control-isc'),
 						onChange: function onChange(newValue) {
 							if ('undefined' == typeof iscData.postmeta[id]) {
@@ -140,6 +145,7 @@
 						label: __('Use standard source', 'image-source-control-isc'),
 						checked: isc_image_source_own,
 						disabled: disabled,
+						key: randomNumber(9),
 						onChange: function (newValue) {
 							if ('undefined' == typeof iscData.postmeta[id]) {
 								iscData.postmeta[id] = {};
@@ -158,6 +164,7 @@
 						label: __('Image Source URL', 'image-source-control-isc'),
 						value: isc_image_source_url,
 						disabled: disabled,
+						key: randomNumber(9),
 						placeholder: __('URL to link the source text to.', 'image-source-control-isc'),
 						onChange: function onChange(newValue) {
 							if ('undefined' == typeof iscData.postmeta[id]) {
@@ -186,6 +193,7 @@
 							label: __('Image License', 'image-source-control-isc'),
 							value: isc_image_licence,
 							disabled: disabled,
+							key: randomNumber(9),
 							onChange: function onChange(newValue) {
 								if ('undefined' == typeof iscData.postmeta[id]) {
 									iscData.postmeta[id] = {};
