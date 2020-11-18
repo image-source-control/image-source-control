@@ -93,7 +93,7 @@
 					'isc_image_source': '',
 					'isc_image_source_url': '',
 					'isc_image_source_own': false,
-					'isc_image_source_license': '',
+					'isc_image_licence': '',
 				};
 
 				if ('undefined' != typeof iscData.postmeta[props.attributes.id]) {
@@ -101,7 +101,7 @@
 						'isc_image_source': iscData.postmeta[props.attributes.id]['isc_image_source'],
 						'isc_image_source_url': iscData.postmeta[props.attributes.id]['isc_image_source_url'],
 						'isc_image_source_own': iscData.postmeta[props.attributes.id]['isc_image_source_own'],
-						'isc_image_source_licence': iscData.postmeta[props.attributes.id]['isc_image_source_licence'],
+						'isc_image_licence': iscData.postmeta[props.attributes.id]['isc_image_licence'],
 					});
 				} else {
 					props.setAttributes(emptyMeta);
