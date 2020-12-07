@@ -577,9 +577,10 @@ class ISC_Public extends ISC_Class {
 
 		$up_limit = 1;
 
-		if ( $a['per_page'] < $total ) {
-			$rem      = $total % $a['per_page']; // The Remainder of $total/$per_page
-			$up_limit = ( $total - $rem ) / $a['per_page'];
+		$per_page = absint( $a['per_page'] );
+		if ( $per_page < $total ) {
+			$rem      = $total % $per_page; // The Remainder of $total / $per_page
+			$up_limit = ( $total - $rem ) / $per_page;
 			if ( 0 < $rem ) {
 				$up_limit++; // If rem is positive, add the last page that contains less than $per_page attachment;
 			}
@@ -589,8 +590,8 @@ class ISC_Public extends ISC_Class {
 		if ( 2 > $up_limit ) {
 			$this->display_all_attachment_list( $connected_atts );
 		} else {
-			$starting_atts = $a['per_page'] * ( $page - 1 ); // for page 2 and 3 $per_page start display on $connected_atts[3*(2-1) = 3]
-			$paged_atts    = array_slice( $connected_atts, $starting_atts, $a['per_page'], true );
+			$starting_atts = $per_page * ( $page - 1 ); // for page 2 and 3 $per_page start display on $connected_atts[3*(2-1) = 3]
+			$paged_atts    = array_slice( $connected_atts, $starting_atts, $per_page, true );
 			$this->display_all_attachment_list( $paged_atts );
 			$this->pagination_links( $up_limit, $a['before_links'], $a['after_links'], $prev_text, $next_text );
 		}
