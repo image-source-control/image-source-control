@@ -578,7 +578,7 @@ class ISC_Public extends ISC_Class {
 		$up_limit = 1;
 
 		$per_page = absint( $a['per_page'] );
-		if ( $per_page < $total ) {
+		if ( $per_page && $per_page < $total ) {
 			$rem      = $total % $per_page; // The Remainder of $total / $per_page
 			$up_limit = ( $total - $rem ) / $per_page;
 			if ( 0 < $rem ) {
