@@ -103,11 +103,12 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 = 2.0.0 =
 
 - the full source list is now updated when a post is visited for the first time not after being saved
+- the "own image" option is now "standard source" to better represent its purpose and possibilities
+- improved settings page visually and for more clarity
+- use span instead of div container for source overlays
+- rewrite of the block options to make them more stable
 - introducing a model class
 - introduced debug option
-- rewrite of the block options to make them more stable
-- improved settings page visually and for more clarity
-- the "own image" option is now "standard source" to better represent its purpose and possibilities
 - introduced option to reindex image-post relations again
 - introduced `isc_sources_list_override_output` filter to allow overriding the output of a source list
 - introduced `isc_source_list_empty_output` filter to allow output when a list of sources is empty
@@ -118,7 +119,6 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 - removed unneeded code to recognize the gallery shortcode in classic editor
 - removed broken PHP code causing an issue when using the `isc_images_in_posts_simple` filter
 - removed option to add a link to the ISC website in the frontend
-- use span instead of div container for source overlays
 
 = 1.10.4 =
 
