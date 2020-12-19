@@ -107,7 +107,13 @@ class ISC_Public extends ISC_Class {
 		// disabling the content filters while working in page builders or block editor
 		if ( wp_is_json_request() || defined( 'REST_REQUEST' ) ) {
 			ISC_Log::log( 'skipped adding sources while working in page builders' );
-			return '';
+			return $content;
+		}
+
+		// return if this is not the main query or within the loop
+		if ( ! in_the_loop() || ! is_main_query() ) {
+			ISC_Log::log( 'skipped adding sources because the content was loaded outside the main loop' );
+			return $content;
 		}
 
 		global $post;

@@ -100,6 +100,10 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 
 == Changelog ==
 
+= untagged =
+
+- only index the images of posts in the main loop to prevent getting it from filtered content
+
 = 2.0.0 =
 
 - the full source list is now updated when a post is visited for the first time not after being saved
