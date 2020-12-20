@@ -119,6 +119,8 @@ function isc_update_caption_position( el ) {
 
 /**
  * Polyfills to work on IE 8
+ *
+ * Note: there are a couple of holes, e.g., with missing addEventListener; I am not yet decided on adding full IE 8 support
  */
 // source: https://gist.github.com/abbotto/19a6680bf052e8c64f6e
 if ( ! window.getComputedStyle) {
