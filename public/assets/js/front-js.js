@@ -1,79 +1,78 @@
-jQuery( document ).ready( function(){
-	/**
-	* Move caption into image with a short delay to way for the images to load
-	*/
-	setTimeout( function(){
-			jQuery( '.isc-source' ).each( function(){
-				jQuery( this ).find( '.isc-source-text' ).css( {
-					position: 'absolute',
-					fontSize: '0.9em',
-					backgroundColor: "#333",
-					color: "#fff",
-					opacity: "0.70",
-					padding: '0 0.15em',
-					textShadow: 'none',
-					display: 'block',
-				} );
+if (document.readyState != 'loading') {
+	ISCready();
+} else {
+	document.addEventListener( 'DOMContentLoaded', ISCready );
+}
+
+/**
+ * Initialize ISC after the DOM was loaded
+ */
+function ISCready(){
+		/**
+		 * Move caption into image with a short delay to way for the images to load
+		 */
+		setTimeout( function(){
+			var captions = document.querySelectorAll( '.isc-source .isc-source-text' );
+			var l        = captions.length;
+			for ( var i = 0; i < l; i++ ) {
+				captions[i].setAttribute( "style", "position: absolute; font-size: 0.9em; background-color: #333; color: #fff; opacity: 0.70; padding: 0 0.15em; text-shadow: none; display: block" );
 				// Some themes handle the bottom padding of the attachment's div with the caption text (which is in between
 				// the image and the bottom border) not with the div itself. The following line set the padding on the bottom equal to the top.
-				jQuery( this ).css( 'padding-bottom', jQuery( this ).css( 'padding-top' ) );
-				isc_update_caption_position( jQuery( this ) );
-			} );
-	}, 100 );
+				captions[i].style.paddingBottom = window.getComputedStyle( captions[i] )['padding-top'];
+				// position the parent element (.isc-source)
+				isc_update_caption_position( captions[i].parentNode );
+			}
+		}, 100 );
 
-	/**
-	 * Register resize event to check caption positions
-	 */
-	window.addEventListener( 'resize', function() {
-		isc_update_captions_positions();
-	} );
-	/** Doesn’t seem needed anymore
-	jQuery('.isc-source img').on('load', function(){
-		isc_update_captions_positions();
-	});
-	*/
-} );
+		/**
+		 * Register resize event to check caption positions
+		 */
+		window.addEventListener( 'resize', function() {
+			isc_update_captions_positions();
+		} );
+};
 
 /**
  * Iterate through image source captions and set their position on the screen
  */
 function isc_update_captions_positions() {
-	jQuery( '.isc-source' ).each( function(){
-		isc_update_caption_position( jQuery( this ) );
-	} );
+	var captions = document.querySelectorAll( '.isc-source' );
+	var l        = captions.length;
+	for ( var i = 0; i < l; i++ ) {
+		isc_update_caption_position( captions[i] );
+	}
 }
 
 /**
  * Position a single image source caption
  *
- * @param jQ_Obj
+ * @param el image source caption that needs positioning
  */
-function isc_update_caption_position(jQ_Obj) {
-	var main_id    = jQ_Obj.attr( 'id' );
-	var att_number = main_id.split( '_' )[2];
-	// try to look for single image only in case this is a gallery
-	// var att = jQ_Obj.find('.wp-image-' + att_number);
-	var att = jQ_Obj.find( 'img' );
-	// console.log( att );
-	var attw = att.width();
-	var atth = att.height();
+function isc_update_caption_position( el ) {
+	var main_id = el.id;
+
+	// attachment ID. unused
+	var att_id = main_id.split( '_' )[2];
+
+	var att  = el.querySelector( 'img' );
+	var attw = att.width;
+	var atth = att.height;
 
 	// relative position
-	var l = att.position().left;
-	// relative position
-	var t = att.position().top;
+	var l = att.offsetLeft;
+	var t = att.offsetTop;
 
-	var caption = jQ_Obj.find( '.isc-source-text' );
+	var caption = el.querySelector( '.isc-source-text' );
 
 	// caption width + padding & margin (after moving onto image)
-	var tw = caption.outerWidth( true );
+	var tw = ISCouterWidth( caption );
 	// caption height + padding (idem)
-	var th = caption.outerHeight( true );
+	var th = ISCouterHeight( caption );
 
-	var attpl = parseInt( att.css( 'padding-left' ).substring( 0, att.css( 'padding-left' ).indexOf( 'px' ) ) );
-	var attml = parseInt( att.css( 'margin-left' ).substring( 0, att.css( 'margin-left' ).indexOf( 'px' ) ) );
-	var attpt = parseInt( att.css( 'padding-top' ).substring( 0, att.css( 'padding-top' ).indexOf( 'px' ) ) );
-	var attmt = parseInt( att.css( 'margin-top' ).substring( 0, att.css( 'margin-top' ).indexOf( 'px' ) ) );
+	var attpl = parseInt( window.getComputedStyle( att )[ 'padding-left' ].substring( 0, window.getComputedStyle( att )[ 'padding-left' ].indexOf( 'px' ) ) );
+	var attpt = parseInt( window.getComputedStyle( att )[ 'padding-top' ].substring( 0, window.getComputedStyle( att )[ 'padding-top' ].indexOf( 'px' ) ) );
+	var attml = parseInt( window.getComputedStyle( att )[ 'margin-left' ].substring( 0, window.getComputedStyle( att )[ 'margin-left' ].indexOf( 'px' ) ) );
+	var attmt = parseInt( window.getComputedStyle( att )[ 'margin-top' ].substring( 0, window.getComputedStyle( att )[ 'margin-top' ].indexOf( 'px' ) ) );
 
 	// caption horizontal margin
 	var tml = 5;
@@ -113,9 +112,48 @@ function isc_update_caption_position(jQ_Obj) {
 			post = t + attpt + attmt - tmt - th + atth;
 			break;
 	}
-	caption.css( {
-		left: posl + 'px',
-		top: post + 'px',
-		zIndex: 9999,
-	} );
+	caption.style.left   = posl + 'px';
+	caption.style.top    = post + 'px';
+	caption.style.zIndex = '9999';
+}
+
+/**
+ * Polyfills to work on IE 8
+ */
+// source: https://gist.github.com/abbotto/19a6680bf052e8c64f6e
+if ( ! window.getComputedStyle) {
+	/**
+	 * Implement getComputedStyle() for browsers that don’t support it, e.g., IE 8
+	 *
+	 * @param {(Element|null)} e
+	 * @param {(null|string)=} t
+	 * @return {(CSSStyleDeclaration|null)}
+	 */
+	window.getComputedStyle = function(e, t) {
+		return this.el = e, this.getPropertyValue = function(t) {
+			// @type {RegExp}
+			var n = /(\-([a-z]){1})/g;
+			return t == "float" && (t = "styleFloat"), n.test( t ) && (t = t.replace( n, function() {
+				return arguments[2].toUpperCase();
+			} )), e.currentStyle[t] ? e.currentStyle[t] : null;
+		}, this;
+	};
+}
+// mimics `outerWidth(true)` which includes margins
+// source http://youmightnotneedjquery.com/
+function ISCouterWidth(el) {
+	var width = el.offsetWidth;
+	var style = getComputedStyle( el );
+
+	width += parseInt( style.marginLeft ) + parseInt( style.marginRight );
+	return width;
+}
+// mimics `outerHeight(true)` which includes margins
+// source http://youmightnotneedjquery.com/
+function ISCouterHeight(el) {
+	var height = el.offsetHeight;
+	var style  = getComputedStyle( el );
+
+	height += parseInt( style.marginTop ) + parseInt( style.marginBottom );
+	return height;
 }
