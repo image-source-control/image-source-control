@@ -1,5 +1,3 @@
-var isc_nb = 0;
-
 jQuery( document ).ready( function(){
 	/**
 	* Move caption into image with a short delay to way for the images to load
@@ -23,6 +21,9 @@ jQuery( document ).ready( function(){
 			} );
 	}, 100 );
 
+	/**
+	 * Register resize event to check caption positions
+	 */
 	window.addEventListener( 'resize', function() {
 		isc_update_captions_positions();
 	} );
@@ -33,12 +34,20 @@ jQuery( document ).ready( function(){
 	*/
 } );
 
+/**
+ * Iterate through image source captions and set their position on the screen
+ */
 function isc_update_captions_positions() {
 	jQuery( '.isc-source' ).each( function(){
 		isc_update_caption_position( jQuery( this ) );
 	} );
 }
 
+/**
+ * Position a single image source caption
+ *
+ * @param jQ_Obj
+ */
 function isc_update_caption_position(jQ_Obj) {
 	var main_id    = jQ_Obj.attr( 'id' );
 	var att_number = main_id.split( '_' )[2];
