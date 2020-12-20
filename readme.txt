@@ -102,6 +102,7 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 
 = untagged =
 
+- rewritten jQuery to vanilla JavaScript in the frontend code
 - only index the images of posts in the main loop to prevent getting it from filtered content
 
 = 2.0.0 =

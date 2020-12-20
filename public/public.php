@@ -70,7 +70,7 @@ class ISC_Public extends ISC_Class {
 	 */
 	public function front_scripts() {
 		// inject in footer as we only do stuff after dom-ready
-		wp_enqueue_script( 'isc_front_js', plugins_url( '/assets/js/front-js.js', __FILE__ ), array( 'jquery' ), ISCVERSION, true );
+		wp_enqueue_script( 'isc_front_js', plugins_url( '/assets/js/front-js.js', __FILE__ ), null, ISCVERSION, true );
 	}
 
 			/**
