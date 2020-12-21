@@ -3,7 +3,7 @@ Contributors: webzunft
 Tags: image, images, picture, picture source, image source, bild, bilder, photo, photos, foto, media, caption, copyright
 Requires at least: 5.3
 Tested up to: 5.6
-Stable tag: 2.0.0
+Stable tag: 2.1.0
 Requires PHP: 5.6
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -100,7 +100,7 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 
 == Changelog ==
 
-= untagged =
+= 2.1.0 =
 
 - rewritten jQuery to vanilla JavaScript in the frontend code
 - only index the images of posts in the main loop to prevent getting it from filtered content
