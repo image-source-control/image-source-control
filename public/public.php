@@ -205,12 +205,12 @@ class ISC_Public extends ISC_Class {
 		 *
 		 * tested with:
 		 * * with and without [caption]
-		 * * with and without link attibute
+		 * * with and without link attribute
 		 *
 		 * potential issues:
 		 * * line breaks in the code
 		 */
-		$pattern = '#(<[^>]*class="[^"]*(alignleft|alignright|alignnone|aligncenter).*)?((<a [^>]*(rel="[^"]*[^"]*wp-att-(\d+)"[^>]*)>)? *(<img [^>]*[^>]*src="(.+)".*\/?>).*(</a>)??[^<]*).*(<\/figure.*>)?#isU';
+		$pattern = '#(<[^>]*class="[^"]*(alignleft|alignright|alignnone|aligncenter).*)?((<a [^>]*(rel="[^"]*[^"]*wp-att-(\d+)"[^>]*)*>)? *(<img [^>]*[^>]*src="(.+)".*\/?>).*(</a>)??[^<]*).*(<\/figure.*>)?#isU';
 		$count   = preg_match_all( $pattern, $content, $matches );
 
 		ISC_Log::log( 'embedded images found: ' . $count );
