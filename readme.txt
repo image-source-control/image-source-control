@@ -100,6 +100,10 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 
 == Changelog ==
 
+= 2.1.1 =
+
+- fix source overlays for images with links
+
 = 2.1.0 =
 
 - rewritten jQuery to vanilla JavaScript in the frontend code
