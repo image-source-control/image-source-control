@@ -86,7 +86,7 @@ class ISC_Admin extends ISC_Class {
 	}
 
 	/**
-	 * Add scripts to admin pages
+	 * Add scripts to ISC-related pages
 	 *
 	 * @since 1.0
 	 * @update 1.1.1
@@ -94,8 +94,11 @@ class ISC_Admin extends ISC_Class {
 	 * @param string $hook settings page hool.
 	 */
 	public function add_admin_scripts( $hook ) {
-		wp_enqueue_script( 'isc_script', plugins_url( '/assets/js/isc.js', __FILE__ ), false, ISCVERSION );
-		wp_enqueue_style( 'isc_image_settings_css', plugins_url( '/assets/css/isc.css', __FILE__ ), false, ISCVERSION );
+		$screen = get_current_screen();
+		if( isset( $screen->id ) && in_array( $screen->id, array( 'settings_page_isc-settings', 'media_page_isc-sources' ) ) ) {
+			wp_enqueue_script( 'isc_script', plugins_url( '/assets/js/isc.js', __FILE__ ), false, ISCVERSION );
+			wp_enqueue_style( 'isc_image_settings_css', plugins_url( '/assets/css/isc.css', __FILE__ ), false, ISCVERSION );
+		}
 	}
 
 	/**
