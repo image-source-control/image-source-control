@@ -103,11 +103,9 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 = untagged =
 
 - only load ISC-related scripts on the plugin’s admin pages
-- fix jQuery shorthand warnings in the backend
-
-= 2.1.1 =
-
-- fix source overlays for images with links
+- fixed overlay text showing up in automatically created excerpts
+- fixed jQuery shorthand warnings in the backend
+- fixed source overlays for images with links
 
 = 2.1.0 =
 
