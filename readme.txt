@@ -100,6 +100,11 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 
 == Changelog ==
 
+= untagged =
+
+- only load ISC-related scripts on the plugin’s admin pages
+- fix jQuery shorthand warnings in the backend
+
 = 2.1.1 =
 
 - fix source overlays for images with links
