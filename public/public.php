@@ -100,9 +100,14 @@ class ISC_Public extends ISC_Class {
 	 * @return string $content
 	 */
 	public function add_sources_to_content( $content ) {
-
 		// create a new line in the log to separate different posts
 		ISC_Log::log( '---' );
+
+		// bail early if the content is used to create the excerpt
+		if ( doing_filter( 'get_the_excerpt' ) ) {
+			ISC_Log::log( 'skipped adding sources to the excerpt' );
+			return $content;
+		}
 
 		// disabling the content filters while working in page builders or block editor
 		if ( wp_is_json_request() || defined( 'REST_REQUEST' ) ) {
