@@ -104,6 +104,7 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 
 - only load ISC-related scripts on the plugin’s admin pages
 - compatibility with line breaks between link and image tags when placing the overlay
+- prevent adding the overlay multiple times to images that appear more than once on a page
 - fixed overlay text showing up in automatically created excerpts
 - fixed jQuery shorthand warnings in the backend
 - fixed source overlays for images with links

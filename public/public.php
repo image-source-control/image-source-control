@@ -216,20 +216,33 @@ class ISC_Public extends ISC_Class {
 		 * * line breaks in the code – use \s* where potential line breaks could appear
 		 */
 		$pattern = '#(<[^>]*class="[^"]*(alignleft|alignright|alignnone|aligncenter).*)?((<a [^>]*(rel="[^"]*[^"]*wp-att-(\d+)"[^>]*)*>)?\s*(<img [^>]*[^>]*src="(.+)".*\/?>).*(\s*</a>)??[^<]*).*(<\/figure.*>)?#isU';
-		$count   = preg_match_all( $pattern, $content, $matches );
+
+		// PREG_SET_ORDER keeps all entries together under one key
+		$count   = preg_match_all( $pattern, $content, $matches, PREG_SET_ORDER );
 
 		ISC_Log::log( 'embedded images found: ' . $count );
 
+		// gather elements already replaced to prevent duplicate sources, see github #105
+		$replaced = array();
+
 		if ( false !== $count ) {
-			for ( $i = 0; $i < $count; $i++ ) {
+			foreach ( $matches as $key => $_match ) {
+				$hash = md5( $_match[3] );
+
+				if ( in_array( $hash, $replaced, true ) ) {
+					ISC_Log::log( 'skipped one image because it appears multiple times' );
+					continue;
+				} else {
+					$replaced[] = $hash;
+				}
 
 				/**
 				 * Interpret the image tag
 				 * we only need the ID if we don’t have it yet
 				 * it can be retrieved from "wp-image-" class (single) or "aria-describedby="gallery-1-34" in gallery
 				 */
-				$id      = $matches[6][ $i ];
-				$img_tag = $matches[7][ $i ];
+				$id      = $_match[6];
+				$img_tag = $_match[7];
 
 				ISC_Log::log( sprintf( 'found ID "%s" and img tag "%s"', $id, $img_tag ) );
 
@@ -245,7 +258,7 @@ class ISC_Public extends ISC_Class {
 
 				// if ID is still missing get image by URL
 				if ( ! $id ) {
-					$src = $matches[8][ $i ];
+					$src = $_match[8];
 					$id  = ISC_Model::get_image_by_url( $src );
 					ISC_Log::log( sprintf( 'ID for source "%s": "%s"', $src, $id ) );
 				}
@@ -265,16 +278,17 @@ class ISC_Public extends ISC_Class {
 				}
 
 				// get any alignment from the original code
-				preg_match( '#alignleft|alignright|alignnone|aligncenter#is', $matches[0][ $i ], $matches_align );
+				preg_match( '#alignleft|alignright|alignnone|aligncenter#is', $_match[0], $matches_align );
 				$alignment = isset( $matches_align[0] ) ? $matches_align[0] : '';
 
 				$source      = '<span class="isc-source-text">' . $options['source_pretext'] . ' ' . $source_string . '</span>';
-				$old_content = $matches[3][ $i ];
+				$old_content = $_match[3];
 				$new_content = str_replace( 'wp-image-' . $id, 'wp-image-' . $id . ' with-source', $old_content );
 
 				$content = str_replace( $old_content, '<span id="isc_attachment_' . $id . '" class="isc-source ' . $alignment . '"> ' . $new_content . $source . '</span>', $content );
 
 			}
+			ISC_Log::log( 'number of unique images found: ' . count( $replaced ) );
 		}
 		/**
 		 * Attach follow content back
