@@ -3,7 +3,7 @@ Contributors: webzunft
 Tags: image, images, picture, picture source, image source, bild, bilder, photo, photos, foto, media, caption, copyright
 Requires at least: 5.3
 Tested up to: 5.6
-Stable tag: 2.1.0
+Stable tag: 2.1.1
 Requires PHP: 5.6
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -12,7 +12,7 @@ The Image Source Control manages image sources, displays them and warns if they 
 
 == Description ==
 
-Did you ever forget to add the source to an image in the frontend, and the lawyer of the copyright holder knocked on your door?
+Did you ever forget to add the source to an image in the frontend, and the lawyer of the copyright holder knocked on your door due to missing credits?
 
 Image Source Control (ISC) helps to prevent this situation.
 
@@ -20,15 +20,15 @@ Just add the image source in the backend and choose how to display it on your we
 
 **Image Source layouts**
 
-Choose between different image source displays:
+Choose between different credit displays:
 
 * list all image sources below the content of a specific page or place the list manually
-* show the image source as a caption/overlay above the image
-* embed a complete source list of all images and photos on your website
+* credit as a caption above the image
+* embed a complete credit list of all images and photos on your website
 
 **Frontend Features**
 
-* display sources for images in content, galleries, shortcodes, and featured images
+* display credits for images in the content, galleries, shortcodes, and featured images
 * define the layout and position of the image source
 * attach the image source list below the content automatically or using a shortcode or PHP function
 * display image sources on archive pages
@@ -54,7 +54,7 @@ Find a list of missing images sources and other debug tools under _Media > Image
 
 **Automatic image sources**
 
-You can choose to display image sources automatically below the post content or as a small overlay above your images. Just visit the settings page of the plugin to enable those options.
+You can choose to display image sources automatically below the post content or as a small caption overlay above your images. Just visit the settings page of the plugin to enable those options.
 
 **Manually included image sources on pages/posts**
 
@@ -100,7 +100,7 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 
 == Changelog ==
 
-= untagged =
+= 2.1.1 =
 
 - only load ISC-related scripts on the plugin’s admin pages
 - compatibility with line breaks between link and image tags when placing the overlay
