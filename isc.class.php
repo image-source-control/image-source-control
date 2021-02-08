@@ -212,7 +212,10 @@ CC BY-NC-ND 2.0 Generic|https://creativecommons.org/licenses/by-nc-nd/2.0/';
 			$default['standard_source']            = '';
 			$default['standard_source_text']       = '';
 
-			return $default;
+			/**
+			 * Allow manipulating defaults for plugin settings
+			 */
+			return apply_filters( 'isc_default_settings', $default );
 		}
 
 		/**
