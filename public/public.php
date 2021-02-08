@@ -265,7 +265,7 @@ class ISC_Public extends ISC_Class {
 
 				// don’t show caption for own image if admin choose not to do so
 				if ( $exclude_standard ) {
-					if ( get_post_meta( $id, 'isc_image_source_own', true ) ) {
+					if ( $this->use_standard_source( $id ) ) {
 						ISC_Log::log( sprintf( 'skipped "own" image for ID "%s"', $id ) );
 						continue;
 					}
@@ -396,12 +396,12 @@ class ISC_Public extends ISC_Class {
 			$atts = array();
 			foreach ( $attachments as $attachment_id => $attachment_array ) {
 
-				$own    = get_post_meta( $attachment_id, 'isc_image_source_own', true );
-				$source = get_post_meta( $attachment_id, 'isc_image_source', true );
+				$use_standard_source = $this->use_standard_source( $attachment_id );
+				$source = $this->get_image_source_text( $attachment_id );
 
 				// check if source of own images can be displayed
-				if ( ( $own == '' && $source == '' ) || ( $own != '' && $exclude_standard ) ) {
-					if ( $own != '' && $exclude_standard ) {
+				if ( ( $use_standard_source == '' && $source == '' ) || ( $use_standard_source != '' && $exclude_standard ) ) {
+					if ( $use_standard_source != '' && $exclude_standard ) {
 						ISC_Log::log( sprintf( 'image %d: "own" sources are excluded', $attachment_id ) );
 					} else {
 						ISC_Log::log( sprintf( 'image %d: skipped because of empty source', $attachment_id ) );
@@ -545,8 +545,8 @@ class ISC_Public extends ISC_Class {
 		$connected_atts = array();
 
 		foreach ( $attachments as $_attachment ) {
-			$connected_atts[ $_attachment->ID ]['source']  = get_post_meta( $_attachment->ID, 'isc_image_source', true );
-			$connected_atts[ $_attachment->ID ]['standard'] = get_post_meta( $_attachment->ID, 'isc_image_source_own', true );
+			$connected_atts[ $_attachment->ID ]['source']  = $this->get_image_source_text( $_attachment->ID );
+			$connected_atts[ $_attachment->ID ]['standard'] = $this->use_standard_source( $_attachment->ID );
 			// jump to next element if the standard source is set to be excluded from the source list
 			if ( $this->is_standard_source( 'exclude' ) && '' != $connected_atts[ $_attachment->ID ]['standard'] ) {
 				unset( $connected_atts[ $_attachment->ID ] );
@@ -838,7 +838,7 @@ class ISC_Public extends ISC_Class {
 
 			// don’t show caption for own image if admin choose not to do so
 			if ( $this->is_standard_source( 'exclude' ) ) {
-				if ( get_post_meta( $id, 'isc_image_source_own', true ) ) {
+				if ( $this->use_standard_source( $id ) ) {
 					return '';
 				}
 			}
@@ -902,9 +902,9 @@ class ISC_Public extends ISC_Class {
 
 		$options = $this->get_isc_options();
 
-		$metadata['source']     = get_post_meta( $id, 'isc_image_source', true );
+		$metadata['source']     = $this->get_image_source_text( $id );
 		$metadata['source_url'] = get_post_meta( $id, 'isc_image_source_url', true );
-		$metadata['own']        = get_post_meta( $id, 'isc_image_source_own', true );
+		$metadata['own']        = $this->use_standard_source( $id );
 		$metadata['licence']    = get_post_meta( $id, 'isc_image_licence', true );
 
 		$source = '';
@@ -975,4 +975,34 @@ class ISC_Public extends ISC_Class {
 
 		return false;
 	}
+
+	/**
+	 * Check if the given attachment ought to use the standard source
+	 *
+	 * @param int $attachment_id attachment ID
+	 * @return bool true if standard source is used
+	 */
+	private function use_standard_source( $attachment_id ) {
+		return (bool) apply_filters(
+			'isc_public_attachment_use_standard_source',
+			get_post_meta( $attachment_id, 'isc_image_source_own', true ),
+			$attachment_id
+		);
+	}
+
+	/**
+	 * Get image source string for public usage
+	 *
+	 * @param int $attachment_id attachment ID
+	 * @return string
+	 */
+	public function get_image_source_text( $attachment_id ) {
+		return apply_filters(
+			'isc_public_attachment_get_source',
+			trim(
+				get_post_meta( $attachment_id, 'isc_image_source', true )
+			)
+		);
+	}
+
 }
