@@ -991,7 +991,7 @@ class ISC_Public extends ISC_Class {
 	}
 
 	/**
-	 * Get image source string for public usage
+	 * Get image source string for public output
 	 *
 	 * @param int $attachment_id attachment ID
 	 * @return string

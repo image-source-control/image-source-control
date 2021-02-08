@@ -162,7 +162,6 @@ class ISC_Class {
 		 *   Returns default options
 		 */
 		public function default_options() {
-
 				$licences = 'All Rights Reserved
 Public Domain Mark 1.0|https://creativecommons.org/publicdomain/mark/1.0/
 CC0 1.0 Universal|https://creativecommons.org/publicdomain/zero/1.0/
@@ -209,8 +208,8 @@ CC BY-NC-ND 2.0 Generic|https://creativecommons.org/licenses/by-nc-nd/2.0/';
 			$default['licences']                  = apply_filters( 'isc-licences-list', $licences );
 			$default['list_included_images']      = '';
 			$default['enable_log']                = false;
-			$default['standard_source']            = '';
-			$default['standard_source_text']       = '';
+			$default['standard_source']           = '';
+			$default['standard_source_text']      = '';
 
 			/**
 			 * Allow manipulating defaults for plugin settings
@@ -278,7 +277,6 @@ CC BY-NC-ND 2.0 Generic|https://creativecommons.org/licenses/by-nc-nd/2.0/';
 		 * Get the options for included images
 		 */
 		public function get_list_included_images_options() {
-
 			$included_images_options = array(
 				'default'   => array(
 					'label'       => __( 'Images in the content', 'image-source-control-isc' ),
@@ -328,7 +326,6 @@ CC BY-NC-ND 2.0 Generic|https://creativecommons.org/licenses/by-nc-nd/2.0/';
 		 * @return string
 		 */
 		public function get_standard_source_text() {
-
 			$options = $this->get_isc_options();
 			if ( ! empty( $options['standard_source_text'] ) ) {
 				return $options['standard_source_text'];
@@ -346,7 +343,6 @@ CC BY-NC-ND 2.0 Generic|https://creativecommons.org/licenses/by-nc-nd/2.0/';
 		 * @return bool whether $value is identical to the standard source option or not.
 		 */
 		public function is_standard_source( $value ) {
-
 			$options = $this->get_isc_options();
 
 			if ( isset( $options['standard_source'] ) ) {
@@ -373,7 +369,6 @@ CC BY-NC-ND 2.0 Generic|https://creativecommons.org/licenses/by-nc-nd/2.0/';
 		 * @return string
 		 */
 		public function get_standard_source() {
-
 			$options = $this->get_isc_options();
 
 			// options since 2.0
@@ -403,7 +398,6 @@ CC BY-NC-ND 2.0 Generic|https://creativecommons.org/licenses/by-nc-nd/2.0/';
 		 * @return string
 		 */
 		public function get_standard_source_label( $value = null ) {
-
 			$options = $this->get_isc_options();
 
 			$labels = array(
@@ -412,14 +406,67 @@ CC BY-NC-ND 2.0 Generic|https://creativecommons.org/licenses/by-nc-nd/2.0/';
 				'custom_text' => __( 'Custom text', 'image-source-control-isc' ),
 			);
 
-			if( ! $value ) {
+			if ( ! $value ) {
 				$value = $this->get_standard_source();
 			}
 
-			if( $value && isset( $labels[ $value ] ) ) {
+			if ( $value && isset( $labels[ $value ] ) ) {
 				return $labels[ $value ];
 			}
 
 			return false;
 		}
+
+		/**
+		 * Check if the given attachment ought to use the standard source
+		 *
+		 * @param int $attachment_id attachment ID
+		 * @return bool true if standard source is used
+		 */
+		public static function use_standard_source( $attachment_id ) {
+			return (bool) apply_filters(
+				'isc_raw_attachment_use_standard_source',
+				get_post_meta( $attachment_id, 'isc_image_source_own', true ),
+				$attachment_id
+			);
+		}
+
+		/**
+		 * Get image source string before it was filtered for output
+		 *
+		 * @param int $attachment_id attachment ID
+		 * @return string
+		 */
+		public static function get_image_source_text( $attachment_id ) {
+			return apply_filters(
+				'isc_raw_attachment_get_source',
+				get_post_meta( $attachment_id, 'isc_image_source', true )
+			);
+		}
+
+	/**
+	 * Get image source URL before it was filtered for output
+	 *
+	 * @param int $attachment_id attachment ID
+	 * @return string
+	 */
+	public static function get_image_source_url( $attachment_id ) {
+		return apply_filters(
+			'isc_raw_attachment_get_source_url',
+			get_post_meta( $attachment_id, 'isc_image_source_url', true )
+		);
+	}
+
+	/**
+	 * Get image license value before it was filtered for output
+	 *
+	 * @param int $attachment_id attachment ID
+	 * @return string
+	 */
+	public static function get_image_license( $attachment_id ) {
+		return apply_filters(
+			'isc_raw_attachment_get_license',
+			get_post_meta( $attachment_id, 'isc_image_licence', true )
+		);
+	}
 }

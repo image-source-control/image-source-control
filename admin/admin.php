@@ -137,7 +137,7 @@ class ISC_Admin extends ISC_Class {
 	public function add_isc_fields( $form_fields, $post ) {
 		// add input field for source
 		$form_fields['isc_image_source']['label'] = __( 'Image Source', 'image-source-control-isc' );
-		$form_fields['isc_image_source']['value'] = get_post_meta( $post->ID, 'isc_image_source', true );
+		$form_fields['isc_image_source']['value'] = ISC_Class::get_image_source_text( $post->ID );
 		$form_fields['isc_image_source']['helps'] = __( 'Include the image source here.', 'image-source-control-isc' );
 
 		// add checkbox to mark as your own image
@@ -162,10 +162,10 @@ class ISC_Admin extends ISC_Class {
 
 		// add input field for source url
 		$form_fields['isc_image_source_url']['label'] = __( 'Image Source URL', 'image-source-control-isc' );
-		$form_fields['isc_image_source_url']['value'] = get_post_meta( $post->ID, 'isc_image_source_url', true );
+		$form_fields['isc_image_source_url']['value'] = ISC_Class::get_image_source_url( $post->ID );
 		$form_fields['isc_image_source_url']['helps'] = __( 'URL to link the source text to.', 'image-source-control-isc' );
 
-		// add input field for source
+		// add input field for license, if enabled
 		$options  = $this->get_isc_options();
 		$licences = $this->licences_text_to_array( $options['licences'] );
 		if ( $options['enable_licences'] && $licences ) {
@@ -175,7 +175,7 @@ class ISC_Admin extends ISC_Class {
 			$html                                      = '<select name="attachments[' . $post->ID . '][isc_image_licence]" id="attachments[' . $post->ID . '][isc_image_licence]">';
 				$html                                 .= '<option value="">--</option>';
 			foreach ( $licences as $_licence_name => $_licence_data ) {
-				$html .= '<option value="' . $_licence_name . '" ' . selected( get_post_meta( $post->ID, 'isc_image_licence', true ), $_licence_name, false ) . '>' . $_licence_name . '</option>';
+				$html .= '<option value="' . $_licence_name . '" ' . selected( ISC_Class::get_image_license( $post->ID ), $_licence_name, false ) . '>' . $_licence_name . '</option>';
 			}
 			$html                                    .= '</select>';
 			$form_fields['isc_image_licence']['html'] = $html;

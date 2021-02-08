@@ -1,7 +1,6 @@
-/*
-SETTINGS
-*/
-
+/**
+ * SETTINGS
+ */
 .isc-settings-highlighted label { font-weight: bold; }
 .isc-settings-highlighted .isc-empty-label { margin-left: 1.7em;  }
 .isc-settings-highlighted .description { margin-left: 1.7em; margin-bottom: .5em; }
@@ -9,14 +8,18 @@ SETTINGS
 .isc-settings-is-pro { font-weight: normal; font-style: italic; }
 #image-settings-form .hndle { cursor: text; user-select: all; }
 
-/* meta field in media view */
+/**
+ * Meta field in media view
+ */
 .compat-attachment-fields input[type="text"] { width: 100%; }
 .compat-attachment-fields th { vertical-align: top; }
 
-/* tables */
+/**
+ * Tables
+ */
 .isc-table tr:hover { background-color: #ddd;}
 
-/*
-SOURCES PAGE
-*/
+/**
+ * SOURCES PAGE
+ */
 .isc-table-debug-list th { width: 50%; }

@@ -244,6 +244,7 @@ class ISC_Model {
 
 	/**
 	 * Save image source to post_meta
+	 * Used as a filter function. See save_field() it you are looking for a direct method to store post meta values
 	 *
 	 * @updated 1.5 added field for url
 	 *
@@ -253,19 +254,35 @@ class ISC_Model {
 	 */
 	public function isc_fields_save( $post, $attachment ) {
 		if ( isset( $attachment['isc_image_source'] ) ) {
-			update_post_meta( $post['ID'], 'isc_image_source', trim( $attachment['isc_image_source'] ) );
+			self::save_field( $post['ID'], 'isc_image_source', $attachment['isc_image_source'] );
 		}
 		if ( isset( $attachment['isc_image_source_url'] ) ) {
-			$url = esc_url_raw( $attachment['isc_image_source_url'] );
-			update_post_meta( $post['ID'], 'isc_image_source_url', $url );
+			self::save_field( $post['ID'], 'isc_image_source_url', esc_url_raw( $attachment['isc_image_source_url'] ) );
 		}
 		$own = ( isset( $attachment['isc_image_source_own'] ) ) ? $attachment['isc_image_source_own'] : '';
-		update_post_meta( $post['ID'], 'isc_image_source_own', $own );
+		self::save_field( $post['ID'], 'isc_image_source_own', $own );
+
 		if ( isset( $attachment['isc_image_licence'] ) ) {
-			update_post_meta( $post['ID'], 'isc_image_licence', $attachment['isc_image_licence'] );
+			self::save_field( $post['ID'], 'isc_image_licence', $attachment['isc_image_licence'] );
 		}
 
 		return $post;
+	}
+
+	/**
+	 * Store attachment-related post meta values
+	 *
+	 * @param int $att_id WP_Post ID of the attachment
+	 * @param string $key post meta key
+	 * @param mixed $value post meta value
+	 */
+	public static function save_field( $att_id, $key, $value ) {
+
+		if( is_string( $value ) ) {
+			$value = trim( $value );
+		}
+
+		update_post_meta( $att_id, $key, $value );
 	}
 
 	/**
