@@ -245,12 +245,13 @@ class ISC_Admin extends ISC_Class {
 	 */
 	public function upgrade_management() {
 
+		$default_options = $this->default_options();
+
 		/**
 		 * This function checks options in database
 		 * during the admin_init hook to handle plugin's upgrade.
 		 */
-
-		$options = get_option( 'isc_options', $this->default_options() );
+		$options = get_option( 'isc_options', $default_options );
 
 		if ( is_array( $options ) ) {
 			// version 1.7 and higher
@@ -265,11 +266,12 @@ class ISC_Admin extends ISC_Class {
 			}
 		} else {
 			// create options from default just in case the isc_option is stored with something other than an array in it.
-			update_option( 'isc_options', $this->default_options() );
+			update_option( 'isc_options', $default_options );
+			$options = $default_options;
 		}
 
 		if ( ISCVERSION !== $options['version'] ) {
-			$options            = $options + $this->default_options();
+			$options            = $options + $default_options;
 			$options['version'] = ISCVERSION;
 			update_option( 'isc_options', $options );
 		}
@@ -478,6 +480,8 @@ class ISC_Admin extends ISC_Class {
 		$standard_source      = ! empty( $options['standard_source'] ) ? $options['standard_source'] : $this->get_standard_source();
 		$standard_source_text = $this->get_standard_source_text();
 		require_once ISCPATH . '/admin/templates/settings/standard-source.php';
+
+		do_action( 'isc_admin_settings_template_after_standard_source' );
 	}
 
 	/**
@@ -730,7 +734,10 @@ class ISC_Admin extends ISC_Class {
 			$output['standard_source_text'] = isset( $input['standard_source_text'] ) ? esc_attr( $input['standard_source_text'] ) : $this->get_standard_source_text();
 		}
 
-		return $output;
+		/**
+		 * Allow other developers to manipulate settings on save
+		 */
+		return apply_filters( 'isc_settings_on_save_after_validation', $output, $input );
 	}
 
 }
