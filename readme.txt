@@ -2,7 +2,7 @@
 Contributors: webzunft
 Tags: image, images, picture, picture source, image source, bild, bilder, photo, photos, foto, media, caption, copyright
 Requires at least: 5.3
-Tested up to: 5.6
+Tested up to: 5.7
 Stable tag: 2.1.1
 Requires PHP: 5.6
 License: GPLv3 or later
