@@ -509,6 +509,17 @@ class ISC_Model {
 		// this is how WordPress core is detecting changed image URLs
 		$newurl = esc_url( preg_replace( "/-(?:\d+x\d+|scaled|rotated)\.{$ext}(.*)/i", '.' . $ext, $url ) );
 
+		/**
+		 * attachment_url_to_postid needs the URL including protocol, but cannot handle sizes, so it needs to be at exactly this position
+		 * this function finds images based on the _wp_attached_file post meta value that includes the image path followed after the upload dir
+		 * it therefore also works when the domain changed
+		 */
+		$id = attachment_url_to_postid( $newurl );
+		if( $id ) {
+			ISC_Log::log( '_attachment_url_to_postid found image ID ' . $id );
+			return $id;
+		}
+
 		// remove protocoll (http or https)
 		$url    = str_ireplace( array( 'http:', 'https:' ), '', $url );
 		$newurl = str_ireplace( array( 'http:', 'https:' ), '', $newurl );

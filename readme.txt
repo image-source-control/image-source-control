@@ -100,6 +100,10 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 
 == Changelog ==
 
+= untagged =
+
+- find sources for images after moving the site from another URL
+
 = 2.1.1 =
 
 - only load ISC-related scripts on the plugin’s admin pages
