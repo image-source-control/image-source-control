@@ -220,6 +220,7 @@ class ISC_Admin extends ISC_Class {
 		add_settings_section( 'isc_settings_section_overlay', '2. ' . __( 'Overlay', 'image-source-control-isc' ), '__return_false', 'isc_settings_page' );
 		add_settings_field( 'source_overlay', __( 'Overlay pre-text', 'image-source-control-isc' ), array( $this, 'renderfield_overlay_text' ), 'isc_settings_page', 'isc_settings_section_overlay' );
 		add_settings_field( 'overlay_position', __( 'Overlay position', 'image-source-control-isc' ), array( $this, 'renderfield_overlay_position' ), 'isc_settings_page', 'isc_settings_section_overlay' );
+		add_settings_field( 'overlay_included_images', __( 'Included images', 'image-source-control-isc' ), array( $this, 'renderfield_overlay_included_images' ), 'isc_settings_page', 'isc_settings_section_overlay' );
 
 		// full image sources list group
 		add_settings_section( 'isc_settings_section_complete_list', '3. ' . __( 'List with all sources', 'image-source-control-isc' ), '__return_false', 'isc_settings_page' );
@@ -376,7 +377,7 @@ class ISC_Admin extends ISC_Class {
 	}
 
 	/**
-	 * Render option to define which ads to show on the sources list of the current page
+	 * Render option to define which images to show on the sources list of the current page
 	 */
 	public function renderfield_below_content_included_images() {
 		$options                 = $this->get_isc_options();
@@ -393,14 +394,23 @@ class ISC_Admin extends ISC_Class {
 		require_once ISCPATH . '/admin/templates/settings/overlay-text.php';
 	}
 
-			/**
-			 * Render option for the position of the overlay on images
-			 */
+	/**
+	 * Render option for the position of the overlay on images
+	 */
 	public function renderfield_overlay_position() {
 		$options = $this->get_isc_options();
 		require_once ISCPATH . '/admin/templates/settings/overlay-position.php';
 	}
 
+	/**
+	 * Render option to define which images should show the overlay
+	 */
+	public function renderfield_overlay_included_images() {
+		$options                 = $this->get_isc_options();
+		$included_images         = ! empty( $options['overlay_included_images'] ) ? $options['overlay_included_images'] : '';
+		$included_images_options = $this->get_overlay_included_images_options();
+		require_once ISCPATH . '/admin/templates/settings/overlay-included-images.php';
+	}
 
 	/**
 	 * Render option to display thumbnails in the full image source list
@@ -712,6 +722,7 @@ class ISC_Admin extends ISC_Class {
 			$output['source_pretext'] = esc_textarea( $input['source_pretext'] );
 		}
 		$output['list_included_images'] = isset( $input['list_included_images'] ) ? esc_attr( $input['list_included_images'] ) : '';
+		$output['overlay_included_images'] = isset( $input['overlay_included_images'] ) ? esc_attr( $input['overlay_included_images'] ) : '';
 
 		/**
 		 * 2.0 moved the options to handle "own images" into "standard sources" and only offers a single choice for one of the options now

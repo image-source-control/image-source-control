@@ -157,7 +157,13 @@ class ISC_Public extends ISC_Class {
 		}
 
 		// maybe add source captions
-		$content = self::add_source_captions_to_content( $content );
+		$options         = $this->get_isc_options();
+		if ( ! empty( $options['display_type'] ) && is_array( $options['display_type'] ) && in_array( 'overlay', $options['display_type'], true )
+			&& apply_filters( 'isc_public_add_source_captions_to_content', true ) ) {
+			$content = self::add_source_captions_to_content( $content );
+		} else {
+			ISC_Log::log( 'not creating image overlays because the option is disabled' );
+		}
 		// maybe add source list
 		$content = self::add_source_list_to_content( $content );
 
@@ -174,12 +180,6 @@ class ISC_Public extends ISC_Class {
 
 		$options         = $this->get_isc_options();
 		$exclude_standard = $this->is_standard_source( 'exclude' );
-
-		// display inline sources
-		if ( empty( $options['display_type'] ) || ! is_array( $options['display_type'] ) || ! in_array( 'overlay', $options['display_type'], true ) ) {
-			ISC_Log::log( 'not creating image overlays because the option is disabled' );
-			return $content;
-		}
 
 		ISC_Log::log( 'start creating source overlays' );
 
@@ -217,8 +217,10 @@ class ISC_Public extends ISC_Class {
 		 */
 		$pattern = '#(<[^>]*class="[^"]*(alignleft|alignright|alignnone|aligncenter).*)?((<a [^>]*(rel="[^"]*[^"]*wp-att-(\d+)"[^>]*)*>)?\s*(<img [^>]*[^>]*src="(.+)".*\/?>).*(\s*</a>)??[^<]*).*(<\/figure.*>)?#isU';
 
+		$match_content = apply_filters( 'isc_public_caption_regex_content', $content );
+
 		// PREG_SET_ORDER keeps all entries together under one key
-		$count   = preg_match_all( $pattern, $content, $matches, PREG_SET_ORDER );
+		$count   = preg_match_all( $pattern, $match_content, $matches, PREG_SET_ORDER );
 
 		ISC_Log::log( 'embedded images found: ' . $count );
 

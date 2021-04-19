@@ -207,6 +207,7 @@ CC BY-NC-ND 2.0 Generic|https://creativecommons.org/licenses/by-nc-nd/2.0/';
 			$default['enable_licences']           = false;
 			$default['licences']                  = apply_filters( 'isc-licences-list', $licences );
 			$default['list_included_images']      = '';
+			$default['overlay_included_images']   = '';
 			$default['enable_log']                = false;
 			$default['standard_source']           = '';
 			$default['standard_source_text']      = '';
@@ -274,7 +275,7 @@ CC BY-NC-ND 2.0 Generic|https://creativecommons.org/licenses/by-nc-nd/2.0/';
 		}
 
 		/**
-		 * Get the options for included images
+		 * Get the options for included images in the sources list
 		 */
 		public function get_list_included_images_options() {
 			$included_images_options = array(
@@ -317,6 +318,40 @@ CC BY-NC-ND 2.0 Generic|https://creativecommons.org/licenses/by-nc-nd/2.0/';
 			);
 
 			return apply_filters( 'isc-list-included-images-options', $included_images_options );
+		}
+
+		/**
+		 * Get the options for images that get an overlay with the source
+		 */
+		public function get_overlay_included_images_options() {
+			$included_images_options = array(
+				'default'  => array(
+					'label'       => __( 'Images in the content', 'image-source-control-isc' ),
+					'description' => sprintf(
+					// translators: %1$s is "img" and %2$s stands for "the_content" wrapped in "code" tags
+						__( 'Technically: %1$s tags within %2$s.', 'image-source-control-isc' ),
+						'<code>img</code>',
+						'<code>the_content</code>'
+					),
+					'value'       => '',
+					'coming_soon' => false,
+				),
+				'body_img' => array(
+					'label'       => __( 'Images on the whole page', 'image-source-control-isc' ),
+					'description' =>
+						__( 'Including header, sidebar, and footer.', 'image-source-control-isc' ) . ' ' .
+						sprintf(
+						// translators: %1$s is "img" and %2$s stands for "body" wrapped in "code" tags
+							__( 'Technically: %1$s tags within %2$s.', 'image-source-control-isc' ),
+							'<code>img</code>',
+							'<code>body</code>'
+						),
+					'value'       => 'body_img',
+					'is_pro'      => true,
+				),
+			);
+
+			return apply_filters( 'isc-overlay-included-images-options', $included_images_options );
 		}
 
 		/**
@@ -444,29 +479,29 @@ CC BY-NC-ND 2.0 Generic|https://creativecommons.org/licenses/by-nc-nd/2.0/';
 			);
 		}
 
-	/**
-	 * Get image source URL before it was filtered for output
-	 *
-	 * @param int $attachment_id attachment ID
-	 * @return string
-	 */
-	public static function get_image_source_url( $attachment_id ) {
-		return apply_filters(
-			'isc_raw_attachment_get_source_url',
-			get_post_meta( $attachment_id, 'isc_image_source_url', true )
-		);
-	}
+		/**
+		 * Get image source URL before it was filtered for output
+		 *
+		 * @param int $attachment_id attachment ID
+		 * @return string
+		 */
+		public static function get_image_source_url( $attachment_id ) {
+			return apply_filters(
+				'isc_raw_attachment_get_source_url',
+				get_post_meta( $attachment_id, 'isc_image_source_url', true )
+			);
+		}
 
-	/**
-	 * Get image license value before it was filtered for output
-	 *
-	 * @param int $attachment_id attachment ID
-	 * @return string
-	 */
-	public static function get_image_license( $attachment_id ) {
-		return apply_filters(
-			'isc_raw_attachment_get_license',
-			get_post_meta( $attachment_id, 'isc_image_licence', true )
-		);
-	}
+		/**
+		 * Get image license value before it was filtered for output
+		 *
+		 * @param int $attachment_id attachment ID
+		 * @return string
+		 */
+		public static function get_image_license( $attachment_id ) {
+			return apply_filters(
+				'isc_raw_attachment_get_license',
+				get_post_meta( $attachment_id, 'isc_image_licence', true )
+			);
+		}
 }
