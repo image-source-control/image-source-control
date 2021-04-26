@@ -102,6 +102,9 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 
 = untagged =
 
+- added compatibility with the [upcoming Pro version](https://imagesourcecontrol.com/pro/)
+- Pro: show an overlay for images outside of the main content (e.g., feature images and some page builder)
+- add option to strip overlay output from any markup and use hooks to define own styles
 - find sources for images after moving the site from another URL
 
 = 2.1.1 =
