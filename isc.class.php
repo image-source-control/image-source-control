@@ -203,6 +203,7 @@ CC BY-NC-ND 2.0 Generic|https://creativecommons.org/licenses/by-nc-nd/2.0/';
 			$default['remove_on_uninstall']       = false;
 			$default['hide_list']                 = false;
 			$default['caption_position']          = 'top-left';
+			$default['caption_style']             = null;
 			$default['source_pretext']            = __( 'Source:', 'image-source-control-isc' );
 			$default['enable_licences']           = false;
 			$default['licences']                  = apply_filters( 'isc-licences-list', $licences );
