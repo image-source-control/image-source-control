@@ -26,8 +26,13 @@ class ISC_Public extends ISC_Class {
 	 * Load after plugins are loaded
 	 */
 	public function plugins_loaded() {
-		add_action( 'wp_enqueue_scripts', array( $this, 'front_scripts' ) );
-		add_action( 'wp_head', array( $this, 'front_head' ) );
+
+		$options = $this->get_isc_options();
+		// load caption layout scripts and styles. The default layout loads scripts
+		if ( empty( $options['caption_style'] ) ) {
+			add_action( 'wp_enqueue_scripts', array( $this, 'front_scripts' ) );
+			add_action( 'wp_head', array( $this, 'front_head' ) );
+		}
 
 		// Content filters need to be above 10 in order to interpret also gallery shortcode
 		self::register_the_content_filters();
@@ -69,8 +74,8 @@ class ISC_Public extends ISC_Class {
 	 * Enqueue scripts for the front-end.
 	 */
 	public function front_scripts() {
-		// inject in footer as we only do stuff after dom-ready
-		wp_enqueue_script( 'isc_front_js', plugins_url( '/assets/js/front-js.js', __FILE__ ), null, ISCVERSION, true );
+		// inject in footer as we can only reliably position captions when the DOM is fully loaded
+		wp_enqueue_script( 'isc_caption', plugins_url( '/assets/js/captions.js', __FILE__ ), null, ISCVERSION, true );
 	}
 
 			/**
@@ -157,7 +162,7 @@ class ISC_Public extends ISC_Class {
 		}
 
 		// maybe add source captions
-		$options         = $this->get_isc_options();
+		$options = $this->get_isc_options();
 		if ( ! empty( $options['display_type'] ) && is_array( $options['display_type'] ) && in_array( 'overlay', $options['display_type'], true )
 			&& apply_filters( 'isc_public_add_source_captions_to_content', true ) ) {
 			$content = self::add_source_captions_to_content( $content );
@@ -168,7 +173,6 @@ class ISC_Public extends ISC_Class {
 		$content = self::add_source_list_to_content( $content );
 
 		return $content;
-
 	}
 	/**
 	 * Add captions to post content and include source into caption, if this setting is enabled
@@ -177,8 +181,7 @@ class ISC_Public extends ISC_Class {
 	 * @return string $content
 	 */
 	public function add_source_captions_to_content( $content ) {
-
-		$options         = $this->get_isc_options();
+		$options          = $this->get_isc_options();
 		$exclude_standard = $this->is_standard_source( 'exclude' );
 
 		ISC_Log::log( 'start creating source overlays' );
@@ -220,7 +223,7 @@ class ISC_Public extends ISC_Class {
 		$match_content = apply_filters( 'isc_public_caption_regex_content', $content );
 
 		// PREG_SET_ORDER keeps all entries together under one key
-		$count   = preg_match_all( $pattern, $match_content, $matches, PREG_SET_ORDER );
+		$count = preg_match_all( $pattern, $match_content, $matches, PREG_SET_ORDER );
 
 		ISC_Log::log( 'embedded images found: ' . $count );
 
@@ -274,7 +277,8 @@ class ISC_Public extends ISC_Class {
 				}
 
 				// don’t display empty sources
-				if ( ! $source_string = $this->render_image_source_string( $id ) ) {
+				$source_string = $this->render_image_source_string( $id );
+				if ( ! $source_string ) {
 					ISC_Log::log( sprintf( 'skipped empty sources string for ID "%s"', $id ) );
 					continue;
 				}
@@ -283,12 +287,32 @@ class ISC_Public extends ISC_Class {
 				preg_match( '#alignleft|alignright|alignnone|aligncenter#is', $_match[0], $matches_align );
 				$alignment = isset( $matches_align[0] ) ? $matches_align[0] : '';
 
-				$source      = '<span class="isc-source-text">' . $options['source_pretext'] . ' ' . $source_string . '</span>';
 				$old_content = $_match[3];
 				$new_content = str_replace( 'wp-image-' . $id, 'wp-image-' . $id . ' with-source', $old_content );
 
-				$content = str_replace( $old_content, '<span id="isc_attachment_' . $id . '" class="isc-source ' . $alignment . '"> ' . $new_content . $source . '</span>', $content );
+				// default style
+				if ( empty( $options['caption_style'] ) ) {
+					$source        = '<span class="isc-source-text">' . $options['source_pretext'] . ' ' . $source_string . '</span>';
+					$markup_before = apply_filters( 'isc-overlay-markup-before', '<span id="isc_attachment_' . $id . '" class="isc-source ' . $alignment . '">', $id );
+					$markup_after  = apply_filters( 'isc-overlay-markup-before', '</span>', $id );
+				} else {
+					// no style
+					$source        = $options['source_pretext'] . ' ' . $source_string;
+					$markup_before = '';
+					$markup_after  = '';
+				}
 
+				$content = str_replace(
+					$old_content,
+					sprintf(
+						'%s%s%s%s',
+						apply_filters( 'isc-overlay-html-markup-before', $markup_before, $id ),
+						$new_content,
+						apply_filters( 'isc-overlay-html-source', $source, $id ),
+						apply_filters( 'isc-overlay-html-markup-before', '</span>', $id )
+					),
+					$content
+				);
 			}
 			ISC_Log::log( 'number of unique images found: ' . count( $replaced ) );
 		}
@@ -390,16 +414,15 @@ class ISC_Public extends ISC_Class {
 			return $override;
 		}
 
-		$attachments     = get_post_meta( $post_id, 'isc_post_images', true );
+		$attachments      = get_post_meta( $post_id, 'isc_post_images', true );
 		$exclude_standard = $this->is_standard_source( 'exclude' );
 
 		if ( ! empty( $attachments ) ) {
 			ISC_Log::log( sprintf( 'going through %d attachments', count( $attachments ) ) );
 			$atts = array();
 			foreach ( $attachments as $attachment_id => $attachment_array ) {
-
 				$use_standard_source = self::use_standard_source( $attachment_id );
-				$source = self::get_image_source_text( $attachment_id );
+				$source              = self::get_image_source_text( $attachment_id );
 
 				// check if source of own images can be displayed
 				if ( ( $use_standard_source == '' && $source == '' ) || ( $use_standard_source != '' && $exclude_standard ) ) {
@@ -435,7 +458,6 @@ class ISC_Public extends ISC_Class {
 	 * @return string
 	 */
 	public function render_attachments( $attachments ) {
-
 		ISC_Log::log( 'start to render attachments list' );
 
 		// don't display anything, if no image sources displayed
@@ -547,7 +569,7 @@ class ISC_Public extends ISC_Class {
 		$connected_atts = array();
 
 		foreach ( $attachments as $_attachment ) {
-			$connected_atts[ $_attachment->ID ]['source']  = self::get_image_source_text( $_attachment->ID );
+			$connected_atts[ $_attachment->ID ]['source']   = self::get_image_source_text( $_attachment->ID );
 			$connected_atts[ $_attachment->ID ]['standard'] = self::use_standard_source( $_attachment->ID );
 			// jump to next element if the standard source is set to be excluded from the source list
 			if ( $this->is_standard_source( 'exclude' ) && '' != $connected_atts[ $_attachment->ID ]['standard'] ) {
@@ -758,7 +780,6 @@ class ISC_Public extends ISC_Class {
 			}
 
 			if ( 5 < $max_page ) {
-
 				if ( 3 < $backward_distance ) {
 					?>
 						<a href="<?php echo $page_link . $query_string . $isc_query_tag; ?>1" class="page-numbers">1</a>
@@ -827,7 +848,6 @@ class ISC_Public extends ISC_Class {
 	 * @return string source
 	 */
 	public function get_thumbnail_source_string( $post_id = 0 ) {
-
 		if ( empty( $post_id ) ) {
 			return '';
 		}
@@ -870,7 +890,6 @@ class ISC_Public extends ISC_Class {
 		$id = ISC_Model::get_image_by_url( $url );
 
 		return $this->render_image_source_string( $id );
-
 	}
 
 	/**
@@ -959,7 +978,6 @@ class ISC_Public extends ISC_Class {
 	 * @return bool true if the source list can be added to the content
 	 */
 	public function can_add_list_to_content() {
-
 		$options = $this->get_isc_options();
 
 		/**

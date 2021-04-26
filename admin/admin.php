@@ -12,7 +12,6 @@ class ISC_Admin extends ISC_Class {
 	 * Initiate admin functions
 	 */
 	public function __construct() {
-
 		parent::__construct();
 
 		// register attachment fields
@@ -95,7 +94,7 @@ class ISC_Admin extends ISC_Class {
 	 */
 	public function add_admin_scripts( $hook ) {
 		$screen = get_current_screen();
-		if( isset( $screen->id ) && in_array( $screen->id, array( 'settings_page_isc-settings', 'media_page_isc-sources' ) ) ) {
+		if ( isset( $screen->id ) && in_array( $screen->id, array( 'settings_page_isc-settings', 'media_page_isc-sources' ) ) ) {
 			wp_enqueue_script( 'isc_script', plugins_url( '/assets/js/isc.js', __FILE__ ), false, ISCVERSION );
 			wp_enqueue_style( 'isc_image_settings_css', plugins_url( '/assets/css/isc.css', __FILE__ ), false, ISCVERSION );
 		}
@@ -150,7 +149,7 @@ class ISC_Admin extends ISC_Class {
 				'<a href="' . admin_url( 'options-general.php?page=isc-settings#isc_settings_section_misc' ) . '" target="_blank">',
 				'</a>'
 			) . '<br/>' .
-            sprintf(
+			sprintf(
 			// translators: %s is the name of an option
 				__( 'Currently selected: %s', 'image-source-control-isc' ),
 				ISC_Class::get_instance()->get_standard_source_label()
@@ -219,6 +218,7 @@ class ISC_Admin extends ISC_Class {
 		// source in caption
 		add_settings_section( 'isc_settings_section_overlay', '2. ' . __( 'Overlay', 'image-source-control-isc' ), '__return_false', 'isc_settings_page' );
 		add_settings_field( 'source_overlay', __( 'Overlay pre-text', 'image-source-control-isc' ), array( $this, 'renderfield_overlay_text' ), 'isc_settings_page', 'isc_settings_section_overlay' );
+		add_settings_field( 'overlay_style', __( 'Layout', 'image-source-control-isc' ), array( $this, 'renderfield_overlay_style' ), 'isc_settings_page', 'isc_settings_section_overlay' );
 		add_settings_field( 'overlay_position', __( 'Overlay position', 'image-source-control-isc' ), array( $this, 'renderfield_overlay_position' ), 'isc_settings_page', 'isc_settings_section_overlay' );
 		add_settings_field( 'overlay_included_images', __( 'Included images', 'image-source-control-isc' ), array( $this, 'renderfield_overlay_included_images' ), 'isc_settings_page', 'isc_settings_section_overlay' );
 
@@ -245,7 +245,6 @@ class ISC_Admin extends ISC_Class {
 	 * Manage data structure upgrading of outdated versions
 	 */
 	public function upgrade_management() {
-
 		$default_options = $this->default_options();
 
 		/**
@@ -276,7 +275,6 @@ class ISC_Admin extends ISC_Class {
 			$options['version'] = ISCVERSION;
 			update_option( 'isc_options', $options );
 		}
-
 	}
 
 	/**
@@ -395,6 +393,15 @@ class ISC_Admin extends ISC_Class {
 	}
 
 	/**
+	 * Render option for the style of the overlay
+	 */
+	public function renderfield_overlay_style() {
+		$options       = $this->get_isc_options();
+		$caption_style = ! empty( $options['caption_style'] ) ? $options['caption_style'] : null;
+		require_once ISCPATH . '/admin/templates/settings/overlay-style.php';
+	}
+
+	/**
 	 * Render option for the position of the overlay on images
 	 */
 	public function renderfield_overlay_position() {
@@ -486,7 +493,7 @@ class ISC_Admin extends ISC_Class {
 	 * Render options for standard image sources
 	 */
 	public function renderfield_standard_source() {
-		$options             = $this->get_isc_options();
+		$options              = $this->get_isc_options();
 		$standard_source      = ! empty( $options['standard_source'] ) ? $options['standard_source'] : $this->get_standard_source();
 		$standard_source_text = $this->get_standard_source_text();
 		require_once ISCPATH . '/admin/templates/settings/standard-source.php';
@@ -617,7 +624,6 @@ class ISC_Admin extends ISC_Class {
 	 * @since 1.6.1
 	 */
 	public function list_image_post_relations() {
-
 		check_ajax_referer( 'isc-admin-ajax-nonce', 'nonce' );
 
 		if ( ! current_user_can( 'manage_options' ) ) {
@@ -652,7 +658,6 @@ class ISC_Admin extends ISC_Class {
 	 * Callback to clear all image-post relations
 	 */
 	public function clear_index() {
-
 		check_ajax_referer( 'isc-admin-ajax-nonce', 'nonce' );
 
 		if ( ! current_user_can( 'manage_options' ) ) {
@@ -718,10 +723,11 @@ class ISC_Admin extends ISC_Class {
 		if ( isset( $input['caption_position'] ) && in_array( $input['caption_position'], $this->caption_position, true ) ) {
 			$output['caption_position'] = $input['caption_position'];
 		}
+		$output['caption_style'] = ! empty( $input['caption_style'] ) ? $input['caption_style'] : null;
 		if ( isset( $input['source_pretext'] ) ) {
 			$output['source_pretext'] = esc_textarea( $input['source_pretext'] );
 		}
-		$output['list_included_images'] = isset( $input['list_included_images'] ) ? esc_attr( $input['list_included_images'] ) : '';
+		$output['list_included_images']    = isset( $input['list_included_images'] ) ? esc_attr( $input['list_included_images'] ) : '';
 		$output['overlay_included_images'] = isset( $input['overlay_included_images'] ) ? esc_attr( $input['overlay_included_images'] ) : '';
 
 		/**
