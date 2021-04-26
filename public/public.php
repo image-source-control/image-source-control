@@ -293,8 +293,8 @@ class ISC_Public extends ISC_Class {
 				// default style
 				if ( empty( $options['caption_style'] ) ) {
 					$source        = '<span class="isc-source-text">' . $options['source_pretext'] . ' ' . $source_string . '</span>';
-					$markup_before = apply_filters( 'isc-overlay-markup-before', '<span id="isc_attachment_' . $id . '" class="isc-source ' . $alignment . '">', $id );
-					$markup_after  = apply_filters( 'isc-overlay-markup-before', '</span>', $id );
+					$markup_before = '<span id="isc_attachment_' . $id . '" class="isc-source ' . $alignment . '">';
+					$markup_after  = '</span>';
 				} else {
 					// no style
 					$source        = $options['source_pretext'] . ' ' . $source_string;
@@ -309,7 +309,7 @@ class ISC_Public extends ISC_Class {
 						apply_filters( 'isc-overlay-html-markup-before', $markup_before, $id ),
 						$new_content,
 						apply_filters( 'isc-overlay-html-source', $source, $id ),
-						apply_filters( 'isc-overlay-html-markup-before', '</span>', $id )
+						apply_filters( 'isc-overlay-html-markup-after', $markup_after, $id )
 					),
 					$content
 				);
