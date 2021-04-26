@@ -61,5 +61,5 @@ if ( is_admin() ) {
 }
 
 if ( ! class_exists( 'ISC_Pro_Model', false ) && file_exists( ISCPATH . 'pro/isc-pro.php' ) ) {
-	// require_once ISCPATH . 'pro/isc-pro.php';
+	require_once ISCPATH . 'pro/isc-pro.php';
 }
