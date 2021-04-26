@@ -306,10 +306,10 @@ class ISC_Public extends ISC_Class {
 					$old_content,
 					sprintf(
 						'%s%s%s%s',
-						apply_filters( 'isc-overlay-html-markup-before', $markup_before, $id ),
+						apply_filters( 'isc_overlay_html_markup_before', $markup_before, $id ),
 						$new_content,
-						apply_filters( 'isc-overlay-html-source', $source, $id ),
-						apply_filters( 'isc-overlay-html-markup-after', $markup_after, $id )
+						apply_filters( 'isc_overlay_html_source', $source, $id ),
+						apply_filters( 'isc_overlay_html_markup_after', $markup_after, $id )
 					),
 					$content
 				);

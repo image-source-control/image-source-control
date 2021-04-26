@@ -318,7 +318,7 @@ CC BY-NC-ND 2.0 Generic|https://creativecommons.org/licenses/by-nc-nd/2.0/';
 				),
 			);
 
-			return apply_filters( 'isc-list-included-images-options', $included_images_options );
+			return apply_filters( 'isc_list_included_images_options', $included_images_options );
 		}
 
 		/**
@@ -352,7 +352,7 @@ CC BY-NC-ND 2.0 Generic|https://creativecommons.org/licenses/by-nc-nd/2.0/';
 				),
 			);
 
-			return apply_filters( 'isc-overlay-included-images-options', $included_images_options );
+			return apply_filters( 'isc_overlay_included_images_options', $included_images_options );
 		}
 
 		/**
