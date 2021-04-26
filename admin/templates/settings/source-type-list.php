@@ -24,7 +24,7 @@
 		<?php
 		printf(
 		// translators: %s is a shortcode.
-			esc_html__( 'Place the shortcode %s anywhere in your content or widget to show the image source list.', 'image-source-control' ),
+			esc_html__( 'Place the shortcode %s anywhere in your content or widget to show the image source list.', 'image-source-control-isc' ),
 			wp_kses(
 				'<code>[isc_list]</code>',
 				array(
@@ -33,7 +33,7 @@
 			)
 		);
 		?>
-		 <a href="https://imagesourcecontrol.com/manual/" target="_blank"><?php esc_html_e( 'Manual', 'image-source-control' ); ?></a>
+		 <a href="https://imagesourcecontrol.com/manual/" target="_blank"><?php esc_html_e( 'Manual', 'image-source-control-isc' ); ?></a>
 	</p>
 	<h4><?php esc_html_e( 'Archive pages', 'image-source-control-isc' ); ?></h4>
 	<p class="description"><?php esc_html_e( 'The following options try to place image sources within post content on post list pages like your home page or category archives.', 'image-source-control-isc' ); ?></p>

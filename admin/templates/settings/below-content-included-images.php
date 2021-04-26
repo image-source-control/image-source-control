@@ -19,7 +19,7 @@
 				<?php echo $is_pro ? 'disabled="disabled"' : ''; ?>
 			/>
 			<?php if ( $is_pro ) : ?>
-				<span class="isc-settings-is-pro"><?php esc_html_e( 'Coming soon', 'image-source-control' ); ?></span>
+				<span class="isc-settings-is-pro"><?php esc_html_e( 'Coming soon', 'image-source-control-isc' ); ?></span>
 			<?php endif; ?>
 			<?php echo isset( $_options['label'] ) ? esc_html( $_options['label'] ) : ''; ?>
 		</label>
