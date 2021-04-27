@@ -3,7 +3,7 @@ Contributors: webzunft
 Tags: image, images, picture, picture source, image source, bild, bilder, photo, photos, foto, media, caption, copyright
 Requires at least: 5.3
 Tested up to: 5.7
-Stable tag: 2.1.1
+Stable tag: 2.2.0
 Requires PHP: 5.6
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -100,12 +100,12 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 
 == Changelog ==
 
-= untagged =
+= 2.2.0 =
 
 - added compatibility with the [upcoming Pro version](https://imagesourcecontrol.com/pro/)
 - Pro: show an overlay for images outside of the main content (e.g., feature images and some page builder)
 - add option to strip overlay output from any markup and use hooks to define own styles
-- find sources for images after moving the site from another URL
+- find sources for images after moving the site to another URL
 
 = 2.1.1 =
 
