@@ -94,8 +94,17 @@ class ISC_Admin extends ISC_Class {
 	 */
 	public function add_admin_scripts( $hook ) {
 		$screen = get_current_screen();
-		if ( isset( $screen->id ) && in_array( $screen->id, array( 'settings_page_isc-settings', 'media_page_isc-sources' ) ) ) {
-			wp_enqueue_script( 'isc_script', plugins_url( '/assets/js/isc.js', __FILE__ ), false, ISCVERSION );
+		if ( isset( $screen->id ) && $screen->id === 'settings_page_isc-settings' ) {
+			wp_enqueue_script( 'isc_settings_script', plugins_url( '/assets/js/settings.js', __FILE__ ), array(), ISCVERSION, true );
+		}
+
+		if ( isset( $screen->id ) && $screen->id === 'media_page_isc-sources' ) {
+			wp_enqueue_script( 'isc_sources_script', plugins_url( '/assets/js/sources.js', __FILE__ ), array(), ISCVERSION, true );
+		}
+
+		// load CSS
+		// todo: split CSS file to load only the relevant parts
+		if ( isset( $screen->id ) && in_array( $screen->id, array( 'settings_page_isc-settings', 'media_page_isc-sources' ), true ) ) {
 			wp_enqueue_style( 'isc_image_settings_css', plugins_url( '/assets/css/isc.css', __FILE__ ), false, ISCVERSION );
 		}
 	}
