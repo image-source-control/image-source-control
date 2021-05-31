@@ -3,7 +3,7 @@ Contributors: webzunft
 Tags: image, images, picture, picture source, image source, bild, bilder, photo, photos, foto, media, caption, copyright
 Requires at least: 5.3
 Tested up to: 5.7
-Stable tag: 2.2.0
+Stable tag: 2.2.1
 Requires PHP: 5.6
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -99,6 +99,11 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 1. settings to manage image source licenses
 
 == Changelog ==
+
+= 2.2.1 =
+
+- split admin scripts to load only those that are relevant for a given page
+- fixed script issue on Image Sources debug page
 
 = 2.2.0 =
 
