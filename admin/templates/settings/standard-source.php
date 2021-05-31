@@ -24,6 +24,7 @@
 	<?php esc_html_e( 'Custom text', 'image-source-control-isc' ); ?>
 </label>
 <input type="text" id="isc-custom-text" name="isc_options[standard_source_text]" value="<?php echo esc_attr( $standard_source_text ); ?>" <?php disabled( $standard_source != 'custom_text' ); ?> class="regular-text" placeholder="<?php echo esc_attr( $this->get_standard_source_text() ); ?>"/>
+	<?php do_action( 'isc_admin_settings_standard_source_options', $standard_source ); ?>
 </div>
 <br/>
 	<?php if ( ! class_exists( 'ISC_Pro_Admin', false ) ) : ?>
