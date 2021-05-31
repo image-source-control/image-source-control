@@ -116,7 +116,7 @@
 						value: isc_image_source,
 						disabled: disabled,
 						key: 'advadsTextImageSource',
-						placeholder: __('Include the image source here.', 'image-source-control-isc'),
+						help: __('Include the image source here.', 'image-source-control-isc'),
 						onChange: function onChange(newValue) {
 							if ('undefined' == typeof iscData.postmeta[id]) {
 								iscData.postmeta[id] = {};
@@ -161,7 +161,7 @@
 						value: isc_image_source_url,
 						disabled: disabled,
 						key: 'advadsTextSourceUrl',
-						placeholder: __('URL to link the source text to.', 'image-source-control-isc'),
+						help: __('URL to link the source text to.', 'image-source-control-isc'),
 						onChange: function onChange(newValue) {
 							if ('undefined' == typeof iscData.postmeta[id]) {
 								iscData.postmeta[id] = {};
