@@ -100,6 +100,10 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 
 == Changelog ==
 
+= untagged =
+
+- allow source injection into content outside the loop when using Oxygen page builder
+
 = 2.2.1 =
 
 - split admin scripts to load only those that are relevant for a given page
