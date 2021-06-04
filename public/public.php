@@ -26,7 +26,6 @@ class ISC_Public extends ISC_Class {
 	 * Load after plugins are loaded
 	 */
 	public function plugins_loaded() {
-
 		$options = $this->get_isc_options();
 		// load caption layout scripts and styles. The default layout loads scripts
 		if ( empty( $options['caption_style'] ) ) {
@@ -121,7 +120,7 @@ class ISC_Public extends ISC_Class {
 		}
 
 		// return if this is not the main query or within the loop
-		if ( ! in_the_loop() || ! is_main_query() ) {
+		if ( ! self::is_main_loop() ) {
 			ISC_Log::log( 'skipped adding sources because the content was loaded outside the main loop' );
 			return $content;
 		}
@@ -174,6 +173,24 @@ class ISC_Public extends ISC_Class {
 
 		return $content;
 	}
+
+	/**
+	 * Check main loop
+	 *
+	 * @return bool true if we are currently on something that could be called the "main loop"
+	 */
+	private static function is_main_loop() {
+
+		// Exception: Oxygen builder, where `is_the_loop()` is false
+		if ( defined( 'CT_VERSION' ) && defined( 'CT_FW_PATH' ) ) {
+			return true;
+		} elseif ( in_the_loop() && is_main_query() ) {
+			return true;
+		}
+
+		return false;
+	}
+
 	/**
 	 * Add captions to post content and include source into caption, if this setting is enabled
 	 *
