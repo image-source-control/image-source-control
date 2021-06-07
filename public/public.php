@@ -977,7 +977,12 @@ class ISC_Public extends ISC_Class {
 
 		// wrap link around source, if given
 		if ( '' != $metadata['source_url'] ) {
-			$source = sprintf( '<a href="%2$s" target="_blank" rel="nofollow">%1$s</a>', $source, $metadata['source_url'] );
+			$source = apply_filters(
+				'isc_public_source_url_html',
+				sprintf( '<a href="%2$s" target="_blank" rel="nofollow">%1$s</a>', $source, $metadata['source_url'] ),
+				$id,
+				$metadata
+			);
 		}
 
 		// add license if enabled
