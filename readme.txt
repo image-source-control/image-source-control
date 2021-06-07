@@ -103,6 +103,7 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 = 2.3.0 =
 
 - added `isc_source_list_line` and `isc_source_list` filter hooks to allow developers to manipulate the source list output
+- added `isc_public_source_url_html` filter to manipulate the source link HTML
 - allow source injection into content outside the loop when using Oxygen page builder
 
 = 2.2.1 =
