@@ -102,6 +102,7 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 
 = untagged =
 
+- added `isc_source_list_line` and `isc_source_list` filter hooks to allow developers to manipulate the source list output
 - allow source injection into content outside the loop when using Oxygen page builder
 
 = 2.2.1 =
