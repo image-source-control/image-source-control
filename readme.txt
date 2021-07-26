@@ -2,8 +2,8 @@
 Contributors: webzunft
 Tags: image, images, picture, picture source, image source, bild, bilder, photo, photos, foto, media, caption, copyright
 Requires at least: 5.3
-Tested up to: 5.7
-Stable tag: 2.2.1
+Tested up to: 5.8
+Stable tag: 2.3.0
 Requires PHP: 5.6
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -100,7 +100,7 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 
 == Changelog ==
 
-= untagged =
+= 2.3.0 =
 
 - added `isc_source_list_line` and `isc_source_list` filter hooks to allow developers to manipulate the source list output
 - allow source injection into content outside the loop when using Oxygen page builder
