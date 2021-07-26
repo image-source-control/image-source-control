@@ -500,12 +500,20 @@ class ISC_Public extends ISC_Class {
 				ISC_Log::log( sprintf( 'skip image %d because of empty source', $atts_id ) );
 				continue;
 			}
-			printf( '<li>%1$s: %2$s</li>', $atts_array['title'], $atts_array['source'] );
+			echo apply_filters(
+				'isc_source_list_line',
+				sprintf( '<li>%1$s: %2$s</li>', $atts_array['title'], $atts_array['source'] ),
+				$atts_id,
+				$atts_array,
+				$attachments
+			);
 		}
 		?>
 		</ul>
 		<?php
-		return $this->render_image_source_box( ob_get_clean() );
+		$output = apply_filters( 'isc_source_list', ob_get_clean() );
+
+		return $this->render_image_source_box( $output );
 	}
 
 	/**
