@@ -73,6 +73,10 @@ class ISC_Public extends ISC_Class {
 	 * Enqueue scripts for the front-end.
 	 */
 	public function front_scripts() {
+		// don’t add the script on AMP pages
+		if ( self::is_amp() ) {
+			return;
+		}
 		// inject in footer as we can only reliably position captions when the DOM is fully loaded
 		wp_enqueue_script( 'isc_caption', plugins_url( '/assets/js/captions.js', __FILE__ ), null, ISCVERSION, true );
 	}
@@ -81,6 +85,11 @@ class ISC_Public extends ISC_Class {
 			 * Front-end scripts in <head /> section.
 			 */
 	public function front_head() {
+		// don’t add the script on AMP pages
+		if ( self::is_amp() ) {
+			return;
+		}
+
 		$options = $this->get_isc_options();
 		?>
 			<script type="text/javascript">
@@ -1053,6 +1062,34 @@ class ISC_Public extends ISC_Class {
 				get_post_meta( $attachment_id, 'isc_image_source', true )
 			)
 		);
+	}
+
+	/**
+	 * Are we currently on an AMP URL?
+	 *
+	 * @return bool true if AMP url, false otherwise
+	 */
+	public static function is_amp() {
+		global $pagenow;
+		if ( is_admin()
+			 || is_embed()
+			 || is_feed()
+			 || ( isset( $pagenow ) && in_array( $pagenow, array( 'wp-login.php', 'wp-signup.php', 'wp-activate.php' ), true ) )
+			 || ( defined( 'REST_REQUEST' ) && REST_REQUEST )
+			 || ( defined( 'XMLRPC_REQUEST' ) && XMLRPC_REQUEST )
+		) {
+			return false;
+		}
+
+		if ( ! did_action( 'wp' ) ) {
+			return false;
+		}
+
+		return ( function_exists( 'is_amp_endpoint' ) && is_amp_endpoint() )
+			   || ( function_exists( 'is_wp_amp' ) && is_wp_amp() )
+			   || ( function_exists( 'ampforwp_is_amp_endpoint' ) && ampforwp_is_amp_endpoint() )
+			   || ( function_exists( 'is_penci_amp' ) && is_penci_amp() )
+			   || isset( $_GET [ 'wpamp' ] );
 	}
 
 }

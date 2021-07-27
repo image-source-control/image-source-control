@@ -100,6 +100,10 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 
 == Changelog ==
 
+= untagged =
+
+- fixed AMP validation errors
+
 = 2.3.0 =
 
 - added `isc_source_list_line` and `isc_source_list` filter hooks to allow developers to manipulate the source list output
