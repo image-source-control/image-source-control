@@ -103,6 +103,7 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 = untagged =
 
 - fixed AMP validation errors
+- additional checks when updating post meta via AJAX.
 
 = 2.3.0 =
 
@@ -207,7 +208,7 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 = 1.9.1 =
 
 * delayed displaying source overlay by 100 ms to give images a chance to load their height
-* fixed wrong height of the overlay being used 
+* fixed wrong height of the overlay being used
 * fixed missing textdomain code to allow translations added through wordpress.org
 
 = 1.9 =
