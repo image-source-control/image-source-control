@@ -20,9 +20,16 @@ class Isc_Gutenberg {
 	 * Save meta data
 	 */
 	public function save_meta() {
-		$_post = wp_unslash( $_POST );
+		$_post      = wp_unslash( $_POST );
+		$isc_fields = array(
+			'isc_image_source',
+			'isc_image_source_url',
+			'isc_image_source_own',
+			'isc_image_licence',
+		);
 		if ( isset( $_post['nonce'] ) && false !== wp_verify_nonce( $_post['nonce'], 'isc-gutenberg-nonce' ) ) {
-			if ( current_user_can( 'edit_posts' ) ) {
+			// Check if the user can edit the image and that the `key` is actually an ISC postmeta key.
+			if ( current_user_can( 'edit_post', $_post['id'] ) && in_array( $_post['key'], $isc_fields ) ) {
 				update_post_meta( absint( $_post['id'] ), $_post['key'], $_post['value'] );
 				wp_send_json( $_post );
 			}
@@ -64,15 +71,19 @@ class Isc_Gutenberg {
 
 		$plugin_options = ISC_Class::get_instance()->get_isc_options();
 
-		$isc_data = array(
-			'option'   => $plugin_options,
-			'postmeta' => $metas,
-			'nonce'    => wp_create_nonce( 'isc-gutenberg-nonce' ),
-		);
+		global $post;
 
-		// Add all our data as a variable in an inline script.
-		wp_add_inline_script( 'isc/image-block', 'var iscData = ' . wp_json_encode( $isc_data ) . ';', 'before' );
+		if ( ! empty( $post ) && current_user_can( 'edit_post', $post->ID ) ) {
+			// The current user can edit the current post.
+			$isc_data = array(
+				'option'   => $plugin_options,
+				'postmeta' => $metas,
+				'nonce'    => wp_create_nonce( 'isc-gutenberg-nonce' ),
+			);
 
+			// Add all our data as a variable in an inline script.
+			wp_add_inline_script( 'isc/image-block', 'var iscData = ' . wp_json_encode( $isc_data ) . ';', 'before' );
+		}
 		wp_enqueue_script( 'isc/image-block' );
 	}
 
