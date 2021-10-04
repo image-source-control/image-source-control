@@ -193,8 +193,8 @@ class ISC_Public extends ISC_Class {
 		// Exception: Oxygen builder, where `is_the_loop()` is false
 		if ( defined( 'CT_VERSION' ) && defined( 'CT_FW_PATH' ) ) {
 			return true;
-		} elseif ( ( function_exists( 'ampforwp_is_amp_endpoint' ) && ampforwp_is_amp_endpoint() ) && is_single() ) {
-			// Exception: AMPforWP plugin breaks `is_main_loop`
+		} elseif ( self::is_amp_reader_mode() && is_single() ) {
+			// Exception: AMP reader mode and the AMPforWP plugin need this extra check
 			return true;
 		} elseif ( in_the_loop() && is_main_query() ) {
 			return true;
@@ -1094,5 +1094,36 @@ class ISC_Public extends ISC_Class {
 			   || ( function_exists( 'is_penci_amp' ) && is_penci_amp() )
 			   || isset( $_GET [ 'wpamp' ] );
 	}
+
+	/**
+	 * Are we currently on a URL using AMP reader mode?
+	 * This mode is optional in the official AMP plugin and the only choice in the AMPforWP plugin
+	 * in reader mode, the classic WordPress filters are not working
+	 *
+	 * @return bool true if AMP url, false otherwise
+	 */
+	public static function is_amp_reader_mode() {
+		// stop if we are not even on an AMP page
+		if ( ! self::is_amp() ) {
+			return false;
+		}
+
+		// official AMP plugin in reader mode
+		if (
+			class_exists( 'AMP_Options_Manager', false )
+			&& AMP_Options_Manager::get_option( 'theme_support' ) === 'reader'
+		) {
+			return true;
+		}
+
+		// the AMPforWP plugin only uses reader mode since they base on an old version of the AMP plugin where only that one was available
+		if ( function_exists( 'ampforwp_is_amp_endpoint' ) && ampforwp_is_amp_endpoint() ) {
+			return true;
+		}
+
+		return false;
+	}
+
+
 
 }
