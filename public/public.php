@@ -193,6 +193,9 @@ class ISC_Public extends ISC_Class {
 		// Exception: Oxygen builder, where `is_the_loop()` is false
 		if ( defined( 'CT_VERSION' ) && defined( 'CT_FW_PATH' ) ) {
 			return true;
+		} elseif ( ( function_exists( 'ampforwp_is_amp_endpoint' ) && ampforwp_is_amp_endpoint() ) && is_single() ) {
+			// Exception: AMPforWP plugin breaks `is_main_loop`
+			return true;
 		} elseif ( in_the_loop() && is_main_query() ) {
 			return true;
 		}
