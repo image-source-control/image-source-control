@@ -442,11 +442,31 @@ class ISC_Model {
 		// Prevents from sending E_WARNINGs notice (Outputs are forbidden during activation)
 		libxml_clear_errors();
 
-		foreach ( $dom->getElementsByTagName( 'img' ) as $node ) {
+		/**
+		 * Handle multiple tags at once
+		 * the original use case is checking AMP pages generated in reader mode in the AMP plugin and in AMPforWP
+		 * for IMG and AMP-IMG tags
+		 */
+		$tags = apply_filters( 'isc_filter_image_ids_tags', array( 'img' ) );
+
+		if ( ! is_array( $tags ) ) {
+			return array();
+		}
+
+		// I am keeping the original $dom->getElementsByTagName as well as the new DOMXpath solution for multiple elements for now
+		// since I am not 100% sure about the implications of the latter on existing features
+		if ( count( $tags ) === 1 ) {
+			$nodes = $dom->getElementsByTagName( 'img' );
+		} else {
+			$xpath = new DOMXpath( $dom );
+			$tags_string = '//' . implode( '|//', $tags );
+			$nodes = $xpath->query( $tags_string );
+		}
+
+		foreach ( $nodes as $node ) {
 			if ( isset( $node->attributes ) ) {
 				$matched = false;
 				if ( null !== $node->attributes->getNamedItem( 'class' ) ) {
-
 					ISC_Log::log( sprintf( 'found class attribute "%s"', $node->attributes->getNamedItem( 'class' )->textContent ) );
 
 					if ( preg_match( '#.*wp-image-(\d+?).*#U', $node->attributes->getNamedItem( 'class' )->textContent, $matches ) ) {
