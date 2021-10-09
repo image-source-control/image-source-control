@@ -65,7 +65,6 @@ class ISC_Model {
 	 * @param array   $image_ids IDs of the attachments in the content.
 	 */
 	public static function update_image_posts_meta( $post_id, $image_ids ) {
-
 		ISC_Log::log( 'enter update_image_posts_meta()' );
 
 		$added_images   = array();
@@ -158,7 +157,6 @@ class ISC_Model {
 	 * @todo check for more post types that maybe should not be parsed here
 	 */
 	public static function update_post_images_meta( $post_id, $image_ids ) {
-
 		ISC_Log::log( 'enter update_post_images_meta()' );
 
 		// add thumbnail information
@@ -232,7 +230,6 @@ class ISC_Model {
 	 * @param integer $att_id attachment post ID.
 	 */
 	public function attachment_added( $att_id ) {
-
 		if ( ! isset( $this->fields ) ) {
 			return;
 		}
@@ -272,13 +269,12 @@ class ISC_Model {
 	/**
 	 * Store attachment-related post meta values
 	 *
-	 * @param int $att_id WP_Post ID of the attachment
+	 * @param int    $att_id WP_Post ID of the attachment
 	 * @param string $key post meta key
-	 * @param mixed $value post meta value
+	 * @param mixed  $value post meta value
 	 */
 	public static function save_field( $att_id, $key, $value ) {
-
-		if( is_string( $value ) ) {
+		if ( is_string( $value ) ) {
 			$value = trim( $value );
 		}
 
@@ -458,9 +454,9 @@ class ISC_Model {
 		if ( count( $tags ) === 1 ) {
 			$nodes = $dom->getElementsByTagName( 'img' );
 		} else {
-			$xpath = new DOMXpath( $dom );
+			$xpath       = new DOMXpath( $dom );
 			$tags_string = '//' . implode( '|//', $tags );
-			$nodes = $xpath->query( $tags_string );
+			$nodes       = $xpath->query( $tags_string );
 		}
 
 		foreach ( $nodes as $node ) {
@@ -529,13 +525,24 @@ class ISC_Model {
 		// this is how WordPress core is detecting changed image URLs
 		$newurl = esc_url( preg_replace( "/-(?:\d+x\d+|scaled|rotated)\.{$ext}(.*)/i", '.' . $ext, $url ) );
 
+		$cache = new ISC_Cache_Model();
+
+		// check if the URL is already in cache and if so, take it from there
+		if ( $cache->is_image_url_cached( $newurl ) ) {
+			$id_from_cache = absint( $cache->get_image_id_from_cache( $newurl ) );
+			ISC_Log::log( "found $newurl in cache with attachment ID $id_from_cache" );
+			return $id_from_cache;
+		}
+
 		/**
-		 * attachment_url_to_postid needs the URL including protocol, but cannot handle sizes, so it needs to be at exactly this position
+		 * Attachment_url_to_postid needs the URL including protocol, but cannot handle sizes, so it needs to be at exactly this position
 		 * this function finds images based on the _wp_attached_file post meta value that includes the image path followed after the upload dir
 		 * it therefore also works when the domain changed
 		 */
 		$id = attachment_url_to_postid( $newurl );
-		if( $id ) {
+		if ( $id ) {
+			// store attachment ID in cache
+			$cache->update( $newurl, $id );
 			ISC_Log::log( '_attachment_url_to_postid found image ID ' . $id );
 			return $id;
 		}
@@ -557,19 +564,34 @@ class ISC_Model {
 
 		$url_queries = array();
 		foreach ( $urls as $_url ) {
+			// return if any of the URLs is already in cache
+			if ( $cache->is_image_url_cached( $_url ) ) {
+				$id_from_cache = absint( $cache->get_image_id_from_cache( $_url ) );
+				ISC_Log::log( "found $newurl in cache with attachment ID $id_from_cache" );
+				return $id_from_cache;
+			}
+
 			$url_queries[] = 'guid = "' . esc_url( $_url ) . '"';
 		}
 		$url_query_string = implode( ' OR ', $url_queries );
 		ISC_Log::log( sprintf( 'SQL query looking for anything with %s', implode( ', ', array_unique( array( $url, $newurl ) ) ) ) );
 
 		// not escaped, because escaping already happened above
-		$raw_query = "SELECT ID FROM `$wpdb->posts` WHERE post_type='attachment' AND {$url_query_string} LIMIT 1";
+		$raw_query = "SELECT ID, guid FROM `$wpdb->posts` WHERE post_type='attachment' AND {$url_query_string} LIMIT 1";
 
-		$query = apply_filters( 'isc_get_image_by_url_query', $raw_query, $newurl );
-		$id    = $wpdb->get_var( $query );
+		$query   = apply_filters( 'isc_get_image_by_url_query', $raw_query, $newurl );
+		$results = $wpdb->get_results( $query );
 
-		$id ? ISC_Log::log( 'found image ID ' . $id ) : ISC_Log::log( 'no image ID found' );
+		$id   = isset( $results[0]->ID ) ? absint( $results[0]->ID ) : null;
+		$guid = isset( $results[0]->guid ) ? $results[0]->guid : null;
 
-		return intval( $id );
+		if ( $id ) {
+			$cache->update( $guid, $id );
+			ISC_Log::log( 'found image ID ' . $id );
+		} else {
+			ISC_Log::log( 'no image ID found' );
+		}
+
+		return $id;
 	}
 }
