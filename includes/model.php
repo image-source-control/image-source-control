@@ -542,7 +542,7 @@ class ISC_Model {
 		$id = attachment_url_to_postid( $newurl );
 		if ( $id ) {
 			// store attachment ID in cache
-			$cache->update( $newurl, $id );
+			$cache->update_post_id( $newurl, $id );
 			ISC_Log::log( '_attachment_url_to_postid found image ID ' . $id );
 			return $id;
 		}
@@ -586,7 +586,7 @@ class ISC_Model {
 		$guid = isset( $results[0]->guid ) ? $results[0]->guid : null;
 
 		if ( $id ) {
-			$cache->update( $guid, $id );
+			$cache->update_post_id( $guid, $id );
 			ISC_Log::log( 'found image ID ' . $id );
 		} else {
 			ISC_Log::log( 'no image ID found' );
