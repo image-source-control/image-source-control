@@ -665,6 +665,7 @@ class ISC_Admin extends ISC_Class {
 
 	/**
 	 * Callback to clear all image-post relations
+	 * also clears `isc_cache` option
 	 */
 	public function clear_index() {
 		check_ajax_referer( 'isc-admin-ajax-nonce', 'nonce' );
@@ -674,8 +675,9 @@ class ISC_Admin extends ISC_Class {
 		}
 
 		$removed_rows = ISC_Model::clear_index();
+		ISC_Cache_Model::clear_cache();
 
-		die( esc_html( "$removed_rows entries deleted" ) );
+		die( esc_html__( "$removed_rows entries and cache deleted", 'image-source-control-isc' ) );
 	}
 
 	/**

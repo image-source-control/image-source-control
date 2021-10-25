@@ -114,4 +114,13 @@ class ISC_Cache_Model {
 		$this->cache = $cache;
 		update_option( $this->option_slug, $cache, true );
 	}
+
+	/**
+	 * Clear cache by removing the isc_cache option
+	 *
+	 * @return bool true if the option was removed
+	 */
+	public static function clear_cache() {
+		return delete_option( 'isc_cache' );
+	}
 }
