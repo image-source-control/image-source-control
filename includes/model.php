@@ -524,6 +524,7 @@ class ISC_Model {
 		// $newurl = esc_url( preg_replace( "/(-e\d+){0,1}(-\d+x\d+){0,1}\.({$types})(.*)/i", '.${3}', $url ) );
 		// this is how WordPress core is detecting changed image URLs
 		$newurl = esc_url( preg_replace( "/-(?:\d+x\d+|scaled|rotated)\.{$ext}(.*)/i", '.' . $ext, $url ) );
+		$orig_url = $url;
 
 		$cache = new ISC_Cache_Model();
 
@@ -589,6 +590,10 @@ class ISC_Model {
 			$cache->update_post_id( $guid, $id );
 			ISC_Log::log( 'found image ID ' . $id );
 		} else {
+			// this should ideally only apply to image URLs that are not in the media library
+			// ISC also caches the URL to prevent too many database requests
+			// using $newurl, because it is already stripped by potential parameters and stuff
+			$cache->update( $newurl, array( 'post_id' => null ) );
 			ISC_Log::log( 'no image ID found' );
 		}
 
