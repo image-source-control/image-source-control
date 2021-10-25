@@ -5,7 +5,8 @@
  *
  * The cache in detail:
  * key: the image URL
- * value: attachment ID or null if there is none
+ * value: array with data:
+ * - post_id – Post ID of the attachment or null if there is none
  */
 class ISC_Cache_Model {
 
@@ -53,7 +54,7 @@ class ISC_Cache_Model {
 	}
 
 	/**
-	 * Check if the attachment ID is known to the cache
+	 * Check if the image URL is known to the cache
 	 *
 	 * @param string $url part of the image URL string.
 	 * @return bool
@@ -77,19 +78,38 @@ class ISC_Cache_Model {
 
 		$cache = $this->get_cache();
 
-		// return attachment ID or null if element exists
-		return ( $cache[ $url ] ) ? absint( $cache[ $url ] ) : null;
+		// return post ID or null if element exists
+		return ( isset( $cache[ $url ][ 'post_id' ] ) ) ? absint( $cache[ $url ][ 'post_id' ] ) : null;
+	}
+
+	/**
+	 * Updates or adds image URL with the post ID to the cache
+	 *
+	 * @param string  $url image URL.
+	 * @param integer $post_id WP_Post ID.
+	 */
+	public function update_post_id( $url, $post_id ) {
+
+		if ( absint( $post_id ) ) {
+			$this->update( $url, array( 'post_id' => absint( $post_id ) ) );
+		}
 	}
 
 	/**
 	 * Updates or adds element to cache
 	 *
 	 * @param string $url image URL.
-	 * @param int    $id attachment ID.
+	 * @param array  $data cache data.
 	 */
-	public function update( $url, $id ) {
-		$cache         = $this->get_cache();
-		$cache[ $url ] = $id;
+	public function update( $url, array $data ) {
+		$cache = $this->get_cache();
+
+		// merge existing data with new data
+		if ( isset( $cache[ $url ] ) ) {
+			$cache[ $url ] = array_merge( $cache[ $url ], $data );
+		} else {
+			$cache[ $url ] = $data;
+		}
 
 		$this->cache = $cache;
 		update_option( $this->option_slug, $cache, true );
