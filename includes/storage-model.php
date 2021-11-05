@@ -85,6 +85,25 @@ class ISC_Storage_Model {
 	}
 
 	/**
+	 * Return any data for a given image URL
+	 *
+	 * @param string $url part of the image URL string.
+	 * @param string $key key in the image data.
+	 *
+	 * @return int|false|null attachment ID if found in the storage, false if not found, null if the image URL does not have an image ID.
+	 */
+	public function get_data_by_image_url( $url, $key ) {
+		if ( ! $this->is_image_url_in_storage( $url ) ) {
+			return false;
+		}
+
+		$storage = $this->get_storage();
+
+		// return post ID or null if element exists
+		return ( isset( $storage[ $url ][ $key ] ) ) ? absint( $storage[ $url ][ $key ] ) : null;
+	}
+
+	/**
 	 * Updates or adds image URL with the post ID to the storage
 	 *
 	 * @param string  $url image URL.
