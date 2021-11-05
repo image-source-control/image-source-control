@@ -39,7 +39,7 @@ define( 'ISCBASEURL', plugin_dir_url( __FILE__ ) ); // URL to the plugin directo
 
 require_once ISCPATH . 'isc.class.php';
 require_once ISCPATH . 'includes/model.php';
-require_once ISCPATH . 'includes/cache-model.php';
+require_once ISCPATH . 'includes/storage-model.php';
 require_once ISCPATH . 'includes/log.php';
 require_once ISCPATH . 'includes/gutenberg/gutenberg.php';
 
