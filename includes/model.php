@@ -526,13 +526,13 @@ class ISC_Model {
 		$newurl = esc_url( preg_replace( "/-(?:\d+x\d+|scaled|rotated)\.{$ext}(.*)/i", '.' . $ext, $url ) );
 		$orig_url = $url;
 
-		$cache = new ISC_Cache_Model();
+		$storage = new ISC_Storage_Model();
 
-		// check if the URL is already in cache and if so, take it from there
-		if ( $cache->is_image_url_cached( $newurl ) ) {
-			$id_from_cache = absint( $cache->get_image_id_from_cache( $newurl ) );
-			ISC_Log::log( "found $newurl in cache with attachment ID $id_from_cache" );
-			return $id_from_cache;
+		// check if the URL is already in storage and if so, take it from there
+		if ( $storage->is_image_url_in_storage( $newurl ) ) {
+			$id_from_storage = absint( $storage->get_image_id_from_storage( $newurl ) );
+			ISC_Log::log( "found $newurl in storage with attachment ID $id_from_storage" );
+			return $id_from_storage;
 		}
 
 		/**
@@ -542,8 +542,8 @@ class ISC_Model {
 		 */
 		$id = attachment_url_to_postid( $newurl );
 		if ( $id ) {
-			// store attachment ID in cache
-			$cache->update_post_id( $newurl, $id );
+			// store attachment ID in storage
+			$storage->update_post_id( $newurl, $id );
 			ISC_Log::log( '_attachment_url_to_postid found image ID ' . $id );
 			return $id;
 		}
@@ -565,11 +565,11 @@ class ISC_Model {
 
 		$url_queries = array();
 		foreach ( $urls as $_url ) {
-			// return if any of the URLs is already in cache
-			if ( $cache->is_image_url_cached( $_url ) ) {
-				$id_from_cache = absint( $cache->get_image_id_from_cache( $_url ) );
-				ISC_Log::log( "found $newurl in cache with attachment ID $id_from_cache" );
-				return $id_from_cache;
+			// return if any of the URLs is already in storage
+			if ( $storage->is_image_url_in_storage( $_url ) ) {
+				$id_from_storage = absint( $storage->get_image_id_from_storage( $_url ) );
+				ISC_Log::log( "found $newurl in storage with attachment ID $id_from_storage" );
+				return $id_from_storage;
 			}
 
 			$url_queries[] = 'guid = "' . esc_url( $_url ) . '"';
@@ -587,13 +587,13 @@ class ISC_Model {
 		$guid = isset( $results[0]->guid ) ? $results[0]->guid : null;
 
 		if ( $id ) {
-			$cache->update_post_id( $guid, $id );
+			$storage->update_post_id( $guid, $id );
 			ISC_Log::log( 'found image ID ' . $id );
 		} else {
 			// this should ideally only apply to image URLs that are not in the media library
-			// ISC also caches the URL to prevent too many database requests
+			// ISC also stores the URL to prevent too many database requests
 			// using $newurl, because it is already stripped by potential parameters and stuff
-			$cache->update( $newurl, array( 'post_id' => null ) );
+			$storage->update( $newurl, array( 'post_id' => null ) );
 			ISC_Log::log( 'no image ID found' );
 		}
 
