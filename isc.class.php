@@ -470,39 +470,42 @@ CC BY-NC-ND 2.0 Generic|https://creativecommons.org/licenses/by-nc-nd/2.0/';
 		/**
 		 * Get image source string before it was filtered for output
 		 *
-		 * @param int $attachment_id attachment ID
+		 * @param int $attachment_id attachment ID.
 		 * @return string
 		 */
 		public static function get_image_source_text( $attachment_id ) {
 			return apply_filters(
 				'isc_raw_attachment_get_source',
-				get_post_meta( $attachment_id, 'isc_image_source', true )
+				get_post_meta( $attachment_id, 'isc_image_source', true ),
+				$attachment_id
 			);
 		}
 
 		/**
 		 * Get image source URL before it was filtered for output
 		 *
-		 * @param int $attachment_id attachment ID
+		 * @param int $attachment_id attachment ID.
 		 * @return string
 		 */
 		public static function get_image_source_url( $attachment_id ) {
 			return apply_filters(
 				'isc_raw_attachment_get_source_url',
-				get_post_meta( $attachment_id, 'isc_image_source_url', true )
+				get_post_meta( $attachment_id, 'isc_image_source_url', true ),
+				$attachment_id
 			);
 		}
 
 		/**
 		 * Get image license value before it was filtered for output
 		 *
-		 * @param int $attachment_id attachment ID
+		 * @param int $attachment_id attachment ID.
 		 * @return string
 		 */
 		public static function get_image_license( $attachment_id ) {
 			return apply_filters(
 				'isc_raw_attachment_get_license',
-				get_post_meta( $attachment_id, 'isc_image_licence', true )
+				get_post_meta( $attachment_id, 'isc_image_licence', true ),
+				$attachment_id
 			);
 		}
 }
