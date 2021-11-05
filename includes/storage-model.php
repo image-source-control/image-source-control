@@ -126,4 +126,23 @@ class ISC_Storage_Model {
 	public static function clear_storage() {
 		return delete_option( 'isc_storage' );
 	}
+
+	/**
+	 * Return storage without images that have an attachment ID
+	 *
+	 * @return array
+	 */
+	public function get_storage_without_wp_images() {
+		$storage = $this->get_storage();
+
+		$storage_filtered = array();
+		// remove any entry with a post_ID, since they are hosted in WP Media
+		foreach ( $storage as $url => $data ) {
+			if ( ! isset( $data['post_id'] ) ) {
+				$storage_filtered[ $url ] = $data;
+			}
+		}
+
+		return $storage_filtered;
+	}
 }
