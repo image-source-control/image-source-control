@@ -68,6 +68,39 @@ if ( ! empty( $attachments ) ) :
 	</tbody></table>
 	<?php
 endif;
+
+/**
+ * Render ISC_Storage data for images that are hosted outside of the WP media library.
+ */
+$storage_model = new ISC_Storage_Model();
+$stored_images = $storage_model->get_storage_without_wp_images();
+if ( ! empty( $stored_images ) ) :
+	?>
+	<h2><?php esc_html_e( 'Additional images', 'image-source-control-isc' ); ?></h2>
+	<p><?php esc_html_e( 'ISC found image URL that are not part of the media library.', 'image-source-control-isc' ); ?></p>
+	<table class="widefat isc-table" style="width: 80%;" >
+		<thead>
+		<tr>
+			<th><?php esc_html_e( 'Image URL', 'image-source-control-isc' ); ?></th>
+			<th><?php esc_html_e( 'Image Source', 'image-source-control-isc' ); ?></th>
+		</tr>
+		</thead><tbody>
+		<?php
+		foreach ( $stored_images as $_image_url => $_stored_image ) :
+			?>
+			<tr>
+				<td><?php echo esc_url( $_image_url ); ?></td>
+				<td>
+					<?php
+					esc_html_e( 'Coming soon', 'image-source-control-isc' );
+					do_action( 'isc_admin_sources_storage_table_source_row', $_image_url );
+					?>
+				</td>
+			</tr>
+		<?php endforeach; ?>
+		</tbody></table>
+	<?php
+endif;
 ?>
 <h2><?php esc_html_e( 'Debug', 'image-source-control-isc' ); ?></h2>
 <p><?php esc_html_e( 'The following options allow you to see if ISC was able to detect all images.', 'image-source-control-isc' ); ?>
