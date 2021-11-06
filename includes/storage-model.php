@@ -100,7 +100,7 @@ class ISC_Storage_Model {
 		$storage = $this->get_storage();
 
 		// return post ID or null if element exists
-		return ( isset( $storage[ $url ][ $key ] ) ) ? absint( $storage[ $url ][ $key ] ) : null;
+		return ( isset( $storage[ $url ][ $key ] ) ) ? $storage[ $url ][ $key ] : null;
 	}
 
 	/**
@@ -113,6 +113,28 @@ class ISC_Storage_Model {
 		if ( absint( $post_id ) ) {
 			$this->update( $url, array( 'post_id' => absint( $post_id ) ) );
 		}
+	}
+
+	/**
+	 * Updates or adds image URL with the post ID to the storage
+	 *
+	 * @param string $url image URL.
+	 * @param string $key key in the image data.
+	 * @param string $value new value.
+	 */
+	public function update_data_by_image_url( $url, $key, $value ) {
+		$key = esc_attr( $key );
+
+		$storage = $this->get_storage();
+		if ( isset( $storage[ $url ] ) ) {
+			$data = $storage[ $url ];
+		} else {
+			$data = array();
+		}
+
+		$data[ $key ] = $value;
+
+		$this->update( $url, $data );
 	}
 
 	/**
