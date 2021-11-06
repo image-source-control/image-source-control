@@ -78,10 +78,10 @@ if ( ! empty( $stored_images ) ) :
 	?>
 	<h2><?php esc_html_e( 'Additional images', 'image-source-control-isc' ); ?></h2>
 	<p><?php esc_html_e( 'ISC found image URL that are not part of the media library.', 'image-source-control-isc' ); ?></p>
-	<table class="widefat isc-table" style="width: 80%;" >
+	<table class="widefat isc-table isc-table-storage" style="width: 80%;">
 		<thead>
 		<tr>
-			<th><?php esc_html_e( 'Image URL', 'image-source-control-isc' ); ?></th>
+			<th style="width: 30%;"><?php esc_html_e( 'Image URL', 'image-source-control-isc' ); ?></th>
 			<th><?php esc_html_e( 'Image Source', 'image-source-control-isc' ); ?></th>
 		</tr>
 		</thead><tbody>
@@ -92,7 +92,9 @@ if ( ! empty( $stored_images ) ) :
 				<td><?php echo esc_url( $_image_url ); ?></td>
 				<td>
 					<?php
-					esc_html_e( 'Coming soon', 'image-source-control-isc' );
+					if ( ! class_exists( 'ISC_Pro_Admin', false ) ) :
+						esc_html_e( 'Coming soon', 'image-source-control-isc' );
+					endif;
 					do_action( 'isc_admin_sources_storage_table_source_row', $_image_url );
 					?>
 				</td>
