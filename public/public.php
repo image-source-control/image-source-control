@@ -951,19 +951,21 @@ class ISC_Public extends ISC_Class {
 	 *  (e.g. image source list where title is prepended)
 	 *
 	 * @updated 1.5 wrapped source into source url
+	 * @updated 2.4 accept metadata as an argument
 	 *
-	 * @param int $id id of the image.
+	 * @param int $id   id of the image.
+	 * @param int $data metadata.
 	 * @return bool|string false if no source was given, else string with source
 	 */
-	public function render_image_source_string( $id ) {
-		$id = absint( $id );
+	public function render_image_source_string( $id, $data = array() ) {
+		$id = esc_attr( $id );
 
 		$options = $this->get_isc_options();
 
-		$metadata['source']     = self::get_image_source_text( $id );
-		$metadata['source_url'] = get_post_meta( $id, 'isc_image_source_url', true );
-		$metadata['own']        = self::use_standard_source( $id );
-		$metadata['licence']    = get_post_meta( $id, 'isc_image_licence', true );
+		$metadata['source']     = isset( $data['source'] ) ? $data['source'] : self::get_image_source_text( $id );
+		$metadata['source_url'] = isset( $data['source_url'] ) ? $data['source_url'] : get_post_meta( $id, 'isc_image_source_url', true );
+		$metadata['own']        = isset( $data['own'] ) ? $data['own'] : self::use_standard_source( $id );
+		$metadata['licence']    = isset( $data['licence'] ) ? $data['licence'] : get_post_meta( $id, 'isc_image_licence', true );
 
 		$source = '';
 
