@@ -56,6 +56,19 @@ class ISC_Storage_Model {
 	}
 
 	/**
+	 * Sanitize the image URL to serve as a key
+	 * - remove protocols and www
+	 * - sanitize using esc_url
+	 *
+	 * @param string $url raw URL input.
+	 * @return string sanitized URL string
+	 */
+	public static function sanitize_url_key( $url ) {
+		$limit = 2;
+		return str_replace( array( 'http://', 'https://', 'www.', '//' ), '', esc_url( $url ), $limit );
+	}
+
+	/**
 	 * Check if the image URL is known to the storage
 	 *
 	 * @param string $url part of the image URL string.
@@ -63,6 +76,7 @@ class ISC_Storage_Model {
 	 */
 	public function is_image_url_in_storage( $url ) {
 		$storage = $this->get_storage();
+		$url = self::sanitize_url_key( $url );
 
 		return isset( $storage[ $url ] );
 	}
@@ -74,6 +88,8 @@ class ISC_Storage_Model {
 	 * @return int|false|null attachment ID if found in the storage, false if not found, null if the image URL does not have an image ID.
 	 */
 	public function get_image_id_from_storage( $url ) {
+		$url = self::sanitize_url_key( $url );
+
 		if ( ! $this->is_image_url_in_storage( $url ) ) {
 			return false;
 		}
@@ -93,6 +109,8 @@ class ISC_Storage_Model {
 	 * @return int|false|null attachment ID if found in the storage, false if not found, null if the image URL does not have an image ID.
 	 */
 	public function get_data_by_image_url( $url, $key ) {
+		$url = self::sanitize_url_key( $url );
+
 		if ( ! $this->is_image_url_in_storage( $url ) ) {
 			return false;
 		}
@@ -110,6 +128,8 @@ class ISC_Storage_Model {
 	 * @param integer $post_id WP_Post ID.
 	 */
 	public function update_post_id( $url, $post_id ) {
+		$url = self::sanitize_url_key( $url );
+
 		if ( absint( $post_id ) ) {
 			$this->update( $url, array( 'post_id' => absint( $post_id ) ) );
 		}
@@ -124,6 +144,7 @@ class ISC_Storage_Model {
 	 */
 	public function update_data_by_image_url( $url, $key, $value ) {
 		$key = esc_attr( $key );
+		$url = self::sanitize_url_key( $url );
 
 		$storage = $this->get_storage();
 		if ( isset( $storage[ $url ] ) ) {
@@ -144,6 +165,7 @@ class ISC_Storage_Model {
 	 * @param array  $data storage data.
 	 */
 	public function update( $url, array $data ) {
+		$url = self::sanitize_url_key( $url );
 		$storage = $this->get_storage();
 
 		// merge existing data with new data
