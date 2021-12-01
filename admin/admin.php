@@ -35,6 +35,9 @@ class ISC_Admin extends ISC_Class {
 
 		// add links to setting and source list to plugin page
 		add_action( 'plugin_action_links_' . ISCBASE, array( $this, 'add_links_to_plugin_page' ) );
+
+		// fire when an attachment is removed
+		add_action( 'delete_attachment', array( $this, 'delete_attachment' ) );
 	}
 
 	/**
@@ -764,6 +767,17 @@ class ISC_Admin extends ISC_Class {
 		 * Allow other developers to manipulate settings on save
 		 */
 		return apply_filters( 'isc_settings_on_save_after_validation', $output, $input );
+	}
+
+	/**
+	 * Actions to perform when an attachment is removed
+	 * - delete it from the ISC storage
+	 *
+	 * @param int $post_id WP_Post ID.
+	 */
+	public function delete_attachment( $post_id ) {
+		$storage_model = new ISC_Storage_Model();
+		$storage_model->remove_image_by_id( $post_id );
 	}
 
 }

@@ -57,15 +57,17 @@ class ISC_Storage_Model {
 
 	/**
 	 * Sanitize the image URL to serve as a key
-	 * - remove protocols and www
+	 * - remove protocols
 	 * - sanitize using esc_url
+	 *
+	 * We intentionally keep www. since this could prevent images from being found or the URLs to work later, when used in the frontend.
 	 *
 	 * @param string $url raw URL input.
 	 * @return string sanitized URL string
 	 */
 	public static function sanitize_url_key( $url ) {
 		$limit = 2;
-		return str_replace( array( 'http://', 'https://', 'www.', '//' ), '', esc_url( $url ), $limit );
+		return str_replace( array( 'http://', 'https://', '//' ), '', esc_url( $url ), $limit );
 	}
 
 	/**
@@ -177,6 +179,40 @@ class ISC_Storage_Model {
 
 		$this->storage = $storage;
 		update_option( $this->option_slug, $storage, true );
+	}
+
+	/**
+	 * Remove an element from the storage
+	 *
+	 * @param string $url image URL.
+	 */
+	public function remove_image( $url ) {
+		$url = self::sanitize_url_key( $url );
+
+		$storage = $this->get_storage();
+		if ( ! isset( $storage[ $url ] ) ) {
+			return;
+		}
+
+		unset( $storage[ $url ] );
+		$this->storage = $storage;
+		update_option( $this->option_slug, $storage, true );
+	}
+
+	/**
+	 * Remove an element from the storage based on the post ID
+	 *
+	 * @param int $post_id WP_Post ID.
+	 */
+	public function remove_image_by_id( $post_id ) {
+		$storage = $this->get_storage();
+
+		// search for the post ID
+		$image_key = array_search( $post_id, array_combine( array_keys( $storage ), array_column( $storage, 'post_id' ) ) );
+
+		if ( $image_key ) {
+			$this->remove_image( $image_key );
+		}
 	}
 
 	/**

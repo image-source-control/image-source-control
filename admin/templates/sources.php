@@ -77,11 +77,11 @@ $stored_images = $storage_model->get_storage_without_wp_images();
 if ( ! empty( $stored_images ) ) :
 	?>
 	<h2><?php esc_html_e( 'Additional images', 'image-source-control-isc' ); ?></h2>
-	<p><?php esc_html_e( 'ISC found image URL that are not part of the media library.', 'image-source-control-isc' ); ?></p>
+	<p><?php esc_html_e( 'ISC found image URLs that are not part of the media library.', 'image-source-control-isc' ); ?></p>
 	<table class="widefat isc-table isc-table-storage" style="width: 80%;">
 		<thead>
 		<tr>
-			<th style="width: 30%;"><?php esc_html_e( 'Image URL', 'image-source-control-isc' ); ?></th>
+			<th><?php esc_html_e( 'Image URL', 'image-source-control-isc' ); ?></th>
 			<th><?php esc_html_e( 'Image Source', 'image-source-control-isc' ); ?></th>
 		</tr>
 		</thead><tbody>
@@ -89,7 +89,7 @@ if ( ! empty( $stored_images ) ) :
 		foreach ( $stored_images as $_image_url => $_stored_image ) :
 			?>
 			<tr>
-				<td><?php echo esc_url( $_image_url ); ?></td>
+				<td style="width: 60%;"><?php echo esc_url( $_image_url ); ?></td>
 				<td>
 					<?php
 					if ( ! class_exists( 'ISC_Pro_Admin', false ) ) :
