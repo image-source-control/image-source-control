@@ -456,7 +456,7 @@ CC BY-NC-ND 2.0 Generic|https://creativecommons.org/licenses/by-nc-nd/2.0/';
 		/**
 		 * Check if the given attachment ought to use the standard source
 		 *
-		 * @param int $attachment_id attachment ID
+		 * @param int $attachment_id attachment ID.
 		 * @return bool true if standard source is used
 		 */
 		public static function use_standard_source( $attachment_id ) {
@@ -505,6 +505,20 @@ CC BY-NC-ND 2.0 Generic|https://creativecommons.org/licenses/by-nc-nd/2.0/';
 			return apply_filters(
 				'isc_raw_attachment_get_license',
 				get_post_meta( $attachment_id, 'isc_image_licence', true ),
+				$attachment_id
+			);
+		}
+
+		/**
+		 * Get image title
+		 *
+		 * @param integer|string $attachment_id attachment ID.
+		 * @return string
+		 */
+		public static function get_image_title( $attachment_id ) {
+			return apply_filters(
+				'isc_raw_attachment_title',
+				get_the_title( $attachment_id ),
 				$attachment_id
 			);
 		}
