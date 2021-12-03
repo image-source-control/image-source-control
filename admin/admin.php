@@ -32,6 +32,7 @@ class ISC_Admin extends ISC_Class {
 		add_action( 'wp_ajax_isc-post-image-relations', array( $this, 'list_post_image_relations' ) );
 		add_action( 'wp_ajax_isc-image-post-relations', array( $this, 'list_image_post_relations' ) );
 		add_action( 'wp_ajax_isc-clear-index', array( $this, 'clear_index' ) );
+		add_action( 'wp_ajax_isc-clear-storage', array( $this, 'clear_storage' ) );
 
 		// add links to setting and source list to plugin page
 		add_action( 'plugin_action_links_' . ISCBASE, array( $this, 'add_links_to_plugin_page' ) );
@@ -345,6 +346,10 @@ class ISC_Admin extends ISC_Class {
 	 * Missing sources page callback
 	 */
 	public function render_sources_page() {
+
+		$storage_model = new ISC_Storage_Model();
+		$storage_size  = count( $storage_model->get_storage() );
+
 		require_once ISCPATH . '/admin/templates/sources.php';
 	}
 
@@ -679,6 +684,21 @@ class ISC_Admin extends ISC_Class {
 		$removed_rows = ISC_Model::clear_index();
 
 		die( esc_html__( "$removed_rows entries deleted", 'image-source-control-isc' ) );
+	}
+
+	/**
+	 * Callback to clear all image-post relations
+	 */
+	public function clear_storage() {
+		check_ajax_referer( 'isc-admin-ajax-nonce', 'nonce' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			die( 'Wrong capabilities' );
+		}
+
+		ISC_Storage_Model::clear_storage();
+
+		die( esc_html__( "Storage deleted", 'image-source-control-isc' ) );
 	}
 
 	/**

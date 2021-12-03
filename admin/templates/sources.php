@@ -1,6 +1,8 @@
 <?php
 /**
  * Renders the ISC debugging page which shows image sources and allows debugging of existing entries.
+ *
+ * @var int $storage_size amount of elements in the ISC storage.
  */
 ?>
 <h1><?php esc_html_e( 'Image Sources', 'image-source-control-isc' ); ?></h1>
@@ -119,3 +121,11 @@ endif;
 <p class="description"><?php esc_html_e( 'Click the button to remove the connections between images and posts as listed above.', 'image-source-control-isc' ); ?>
 <br/><?php esc_html_e( 'The index is rebuilt automatically when a page with images on it is visited in the frontend.', 'image-source-control-isc' ); ?></p>
 <div id="isc-clear-index-feedback"></div>
+<hr/>
+<p><?php printf( esc_html__( '%d images in storage', 'image-source-control-isc'), $storage_size ); ?></p>
+<button id="isc-clear-storage" class="button button-secondary"><?php esc_html_e( 'clear storage', 'image-source-control-isc' ); ?></button>
+<p class="description"><?php esc_html_e( 'ISC keeps an internal index of image URLs and IDs from the media library to limit the number of database requests in the frontend.', 'image-source-control-isc' ); ?>
+	<br/><?php esc_html_e( 'Click the button above to clear that index.', 'image-source-control-isc' ); ?>
+	<a href="https://imagesourcecontrol.com/technical-information/#Image_URL_Storage" target="_blank" rel="noopener"><?php esc_html_e( 'Manual', 'image-source-control-isc' ); ?></a>
+</p>
+<div id="isc-clear-storage-feedback"></div>
