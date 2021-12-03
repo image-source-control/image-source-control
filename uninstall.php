@@ -17,4 +17,6 @@ if ( ! empty( $options['remove_on_uninstall'] ) ) {
 
 	// delete main plugin options
 	delete_option( 'isc_options' );
+	// delete storage
+	delete_option( 'isc_storage' );
 }
