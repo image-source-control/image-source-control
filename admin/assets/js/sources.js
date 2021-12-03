@@ -101,5 +101,34 @@ jQuery( document ).ready(
 				);
 			}
 		);
+		// clear frontend storage
+		$( '#isc-clear-storage' ).on(
+			'click',
+			function(){
+				// disable the button
+				var button      = this;
+				button.disabled = true;
+
+				$.ajax(
+					{
+						type: 'POST',
+						url: ajaxurl,
+						data: {
+							action: 'isc-clear-storage',
+							nonce: isc.ajaxNonce,
+						},
+						success:function(data, textStatus, XMLHttpRequest){
+							// display return messages
+							$( '#isc-clear-storage-feedback' ).html( data );
+							button.disabled = false;
+						},
+						error: function(MLHttpRequest, textStatus, errorThrown){
+							$( '#isc-clear-storage-feedback' ).html( errorThrown );
+							button.disabled = false;
+						}
+					}
+				);
+			}
+		);
 	}
 );
