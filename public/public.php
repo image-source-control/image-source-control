@@ -246,6 +246,8 @@ class ISC_Public extends ISC_Class {
 		 *
 		 * potential issues:
 		 * * line breaks in the code – use \s* where potential line breaks could appear
+		 *
+		 * Use (\x20|\x9|\xD|\xA)+ to match whitespace following HTML starting tag name according to W3C REC 3.1. See issue PR #136
 		 */
 		$pattern = '#(<[^>]*class="[^"]*(alignleft|alignright|alignnone|aligncenter).*)?((<a[\x20|\x9|\xD|\xA]+[^>]*(rel="[^"]*[^"]*wp-att-(\d+)"[^>]*)*>)?\s*(<img[\x20|\x9|\xD|\xA]+[^>]*[^>]*src="(.+)".*\/?>).*(\s*</a>)??[^<]*).*(<\/figure.*>)?#isU';
 
