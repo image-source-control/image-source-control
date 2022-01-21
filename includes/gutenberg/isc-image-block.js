@@ -6,12 +6,6 @@
 	var __ = wp.i18n.__;
 	var createHigherOrderComponent = wp.compose.createHigherOrderComponent;
 	var Fragment = wp.element.Fragment;
-	var InspectorControls = wp.blockEditor.InspectorControls;
-	var PanelBody = wp.components.PanelBody;
-	var SelectControl = wp.components.SelectControl;
-	var TextControl = wp.components.TextControl;
-	var CheckboxControl = wp.components.CheckboxControl;
-
 	var el = wp.element.createElement;
 
 	var enableSourceControlOnBlocks = ['core/image', 'core/cover'];
@@ -111,7 +105,7 @@
 
 				var id = props.attributes.id;
 
-				var panelFields = [el(TextControl, {
+				var panelFields = [el(wp.components.TextControl, {
 						label: __('Image Source', 'image-source-control-isc'),
 						value: isc_image_source,
 						disabled: disabled,
@@ -137,7 +131,7 @@
 								isc_doing_ajax: true,
 							});
 						},
-					}), el(CheckboxControl, {
+					}), el(wp.components.CheckboxControl, {
 						label: __('Use standard source', 'image-source-control-isc'),
 						checked: isc_image_source_own,
 						disabled: disabled,
@@ -156,7 +150,7 @@
 								isc_doing_ajax: true,
 							});
 						}
-					}), el(TextControl, {
+					}), el(wp.components.TextControl, {
 						label: __('Image Source URL', 'image-source-control-isc'),
 						value: isc_image_source_url,
 						disabled: disabled,
@@ -185,7 +179,7 @@
 					})];
 
 				if (iscData.option['enable_licences']) {
-					panelFields.push(el(SelectControl, {
+					panelFields.push(el(wp.components.SelectControl, {
 							label: __('Image License', 'image-source-control-isc'),
 							value: isc_image_licence,
 							disabled: disabled,
@@ -206,7 +200,7 @@
 				}
 
 				// Extends the block by adding the source control fields.
-				return el(Fragment, null, el(BlockEdit, props), el(InspectorControls, null, el(PanelBody, {
+				return el(Fragment, null, el(BlockEdit, props), el(wp.blockEditor.InspectorControls, null, el(wp.components.PanelBody, {
 							title: __('Image Source Control', 'image-source-control-isc'),
 							initialOpen: true,
 						}, panelFields)));
