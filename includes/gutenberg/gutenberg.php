@@ -41,11 +41,15 @@ class Isc_Gutenberg {
 	 * Enqueue JS file and print all needed JS variables
 	 */
 	public function editor_assets() {
-
+		$dependencies = array( 'jquery', 'wp-api', 'lodash', 'wp-blocks', 'wp-element', 'wp-i18n' );
+		$screen = get_current_screen();
+		if ( $screen && isset( $screen->base ) && $screen->base !== 'widgets' ) {
+			$dependencies[] = 'wp-editor';
+		}
 		wp_register_script(
 			'isc/image-block',
 			plugin_dir_url( __FILE__ ) . 'isc-image-block.js',
-			array( 'jquery', 'wp-api', 'lodash', 'wp-blocks', 'wp-editor', 'wp-element', 'wp-i18n' ),
+			$dependencies,
 			true
 		);
 
@@ -71,10 +75,10 @@ class Isc_Gutenberg {
 
 		$plugin_options = ISC_Class::get_instance()->get_isc_options();
 
-		global $post;
+		global $post, $pagenow;
 
-		if ( ! empty( $post ) && current_user_can( 'edit_post', $post->ID ) ) {
-			// The current user can edit the current post.
+		if ( ( ! empty( $post ) && current_user_can( 'edit_post', $post->ID ) ) || in_array( $pagenow, array( 'widgets.php', 'customize.php' ) ) ) {
+			// The current user can edit the current post, or on widgets page or customizer.
 			$isc_data = array(
 				'option'   => $plugin_options,
 				'postmeta' => $metas,
