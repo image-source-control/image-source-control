@@ -1,29 +1,29 @@
 <?php
-/*
-  Plugin Name: Image Source Control
-  Version: 2.4.0
-  Plugin URI: https://imagesourcecontrol.com/
-  Description: Image Source Control saves the source of an image, lists them and warns if it is missing.
-  Author: Thomas Maier
-  Author URI: https://imagesourcecontrol.com/
-  Text Domain: image-source-control-isc
-  License: GPL v3
-
-  Image Source Control Plugin for WordPress
-  Copyright (C) 2012-2021, Thomas Maier
-
-  This program is free software: you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation, either version 3 of the License, or
-  (at your option) any later version.
-
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+/**
+ * Plugin Name: Image Source Control
+ * Version: 2.4.0
+ * Plugin URI: https://imagesourcecontrol.com/
+ * Description: Image Source Control saves the source of an image, lists them and warns if it is missing.
+ * Author: Thomas Maier
+ * Author URI: https://imagesourcecontrol.com/
+ * Text Domain: image-source-control-isc
+ * License: GPL v3
+ *
+ * Image Source Control Plugin for WordPress
+ * Copyright (C) 2012-2022, Thomas Maier
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 if ( class_exists( 'ISC_Class', false ) ) {
