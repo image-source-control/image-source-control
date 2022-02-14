@@ -6,7 +6,6 @@
  * Description: Image Source Control saves the source of an image, lists them and warns if it is missing.
  * Author: Thomas Maier
  * Author URI: https://imagesourcecontrol.com/
- * Text Domain: image-source-control-isc
  * License: GPL v3
  *
  * Image Source Control Plugin for WordPress
@@ -27,7 +26,7 @@
  */
 
 if ( class_exists( 'ISC_Class', false ) ) {
-	exit;
+	die( 'You can only activate Image Source Control once. Please disable the other version first.' );
 }
 
 define( 'ISCVERSION', '2.4.0' );

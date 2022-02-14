@@ -100,6 +100,10 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 
 == Changelog ==
 
+= untagged =
+
+- Improvement: Warn if one tries to enable multiple versions of ISC at the same time
+
 = 2.4.0 =
 
 - Feature: ISC Storage to prevent SQL queries in the frontend, [#131](https://github.com/image-source-control/image-source-control/issues/131), [#132](https://github.com/image-source-control/image-source-control/issues/133),
