@@ -206,8 +206,8 @@ class ISC_Admin extends ISC_Class {
 		global $isc_setting;
 
 		// These pages should be available only for editors and higher
-		$isc_page    = add_submenu_page( 'upload.php', 'Manage image sources with the Image Source Control Plugin', __( 'Image Sources', 'image-source-control-isc' ), 'edit_others_posts', 'isc-sources', array( $this, 'render_sources_page' ) );
-		$isc_setting = add_options_page( __( 'Image control - ISC plugin', 'image-source-control-isc' ), __( 'Image Sources', 'image-source-control-isc' ), 'edit_others_posts', 'isc-settings', array( $this, 'render_isc_settings_page' ) );
+		$isc_page    = add_submenu_page( 'upload.php', esc_html__( 'Image Source Control', 'image-source-control-isc' ), __( 'Image Sources', 'image-source-control-isc' ), 'edit_others_posts', 'isc-sources', array( $this, 'render_sources_page' ) );
+		$isc_setting = add_options_page( __( 'Image Source Control Settings', 'image-source-control-isc' ), __( 'Image Sources', 'image-source-control-isc' ), 'edit_others_posts', 'isc-settings', array( $this, 'render_isc_settings_page' ) );
 	}
 
 	/**
