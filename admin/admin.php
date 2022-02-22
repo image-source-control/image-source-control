@@ -219,12 +219,12 @@ class ISC_Admin extends ISC_Class {
 
 		// Position: How and where to display image sources
 		add_settings_section( 'isc_settings_section_source_type', __( 'Position of the image sources', 'image-source-control-isc' ), array( $this, 'render_section_position' ), 'isc_settings_page' );
-		add_settings_field( 'source_type_list', '1. ' . __( 'Image source list', 'image-source-control-isc' ), array( $this, 'renderfield_source_type_list' ), 'isc_settings_page', 'isc_settings_section_source_type' );
+		add_settings_field( 'source_type_list', '1. ' . __( 'Per-page list', 'image-source-control-isc' ), array( $this, 'renderfield_source_type_list' ), 'isc_settings_page', 'isc_settings_section_source_type' );
 		add_settings_field( 'source_type_overlay', '2. ' . __( 'Overlay', 'image-source-control-isc' ), array( $this, 'renderfield_source_type_overlay' ), 'isc_settings_page', 'isc_settings_section_source_type' );
-		add_settings_field( 'full_list_type', '3. ' . __( 'List with all sources', 'image-source-control-isc' ), array( $this, 'renderfield_source_type_complete_list' ), 'isc_settings_page', 'isc_settings_section_source_type' );
+		add_settings_field( 'full_list_type', '3. ' . __( 'Global list', 'image-source-control-isc' ), array( $this, 'renderfield_source_type_complete_list' ), 'isc_settings_page', 'isc_settings_section_source_type' );
 
 		// settings for sources list below content
-		add_settings_section( 'isc_settings_section_list_below_content', '1. ' . __( 'Image source list', 'image-source-control-isc' ), '__return_false', 'isc_settings_page' );
+		add_settings_section( 'isc_settings_section_list_below_content', '1. ' . __( 'Per-page list', 'image-source-control-isc' ), '__return_false', 'isc_settings_page' );
 		add_settings_field( 'image_list_headline', __( 'Headline', 'image-source-control-isc' ), array( $this, 'renderfield_list_headline' ), 'isc_settings_page', 'isc_settings_section_list_below_content' );
 		add_settings_field( 'below_content_included_images', __( 'Included images', 'image-source-control-isc' ), array( $this, 'renderfield_below_content_included_images' ), 'isc_settings_page', 'isc_settings_section_list_below_content' );
 
@@ -235,8 +235,8 @@ class ISC_Admin extends ISC_Class {
 		add_settings_field( 'overlay_position', __( 'Overlay position', 'image-source-control-isc' ), array( $this, 'renderfield_overlay_position' ), 'isc_settings_page', 'isc_settings_section_overlay' );
 		add_settings_field( 'overlay_included_images', __( 'Included images', 'image-source-control-isc' ), array( $this, 'renderfield_overlay_included_images' ), 'isc_settings_page', 'isc_settings_section_overlay' );
 
-		// full image sources list group
-		add_settings_section( 'isc_settings_section_complete_list', '3. ' . __( 'List with all sources', 'image-source-control-isc' ), '__return_false', 'isc_settings_page' );
+		// Global list group
+		add_settings_section( 'isc_settings_section_complete_list', '3. ' . __( 'Global list', 'image-source-control-isc' ), '__return_false', 'isc_settings_page' );
 		add_settings_field( 'thumbnail_in_list', __( 'Use thumbnails', 'image-source-control-isc' ), array( $this, 'renderfield_thumbnail_in_list' ), 'isc_settings_page', 'isc_settings_section_complete_list' );
 		add_settings_field( 'thumbnail_width', __( 'Thumbnails max-width', 'image-source-control-isc' ), array( $this, 'renderfield_thumbnail_width' ), 'isc_settings_page', 'isc_settings_section_complete_list' );
 		add_settings_field( 'thumbnail_height', __( 'Thumbnails max-height', 'image-source-control-isc' ), array( $this, 'renderfield_thumbnail_height' ), 'isc_settings_page', 'isc_settings_section_complete_list' );
@@ -361,7 +361,7 @@ class ISC_Admin extends ISC_Class {
 	}
 
 	/**
-	 * Position: option to enable Image source lists
+	 * Position: option to enable the Per-page list
 	 */
 	public function renderfield_source_type_list() {
 		$options = $this->get_isc_options();
@@ -437,7 +437,7 @@ class ISC_Admin extends ISC_Class {
 	}
 
 	/**
-	 * Render option to display thumbnails in the full image source list
+	 * Render option to display thumbnails in the Global list
 	 */
 	public function renderfield_thumbnail_in_list() {
 		$options = $this->get_isc_options();
@@ -465,7 +465,7 @@ class ISC_Admin extends ISC_Class {
 	}
 
 	/**
-	 * Render option to define the width of the thumbnails displayed in the full image source list.
+	 * Render option to define the width of the thumbnails displayed in the Global list.
 	 */
 	public function renderfield_thumbnail_width() {
 		$options = $this->get_isc_options();
@@ -473,7 +473,7 @@ class ISC_Admin extends ISC_Class {
 	}
 
 	/**
-	 * Render option to define the height of the thumbnails displayed in the full image source list.
+	 * Render option to define the height of the thumbnails displayed in the Global list.
 	 */
 	public function renderfield_thumbnail_height() {
 		$options = $this->get_isc_options();
