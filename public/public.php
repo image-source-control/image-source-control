@@ -356,7 +356,7 @@ class ISC_Public extends ISC_Class {
 	}
 
 	/**
-	 * Add the image source list ot the content if the option is enabled
+	 * Add the Per-page list if the option is enabled
 	 *
 	 * @param string $content post content.
 	 * @return string $content
@@ -364,7 +364,7 @@ class ISC_Public extends ISC_Class {
 	public function add_source_list_to_content( $content ) {
 
 		/**
-		 * Display the image source list below the content
+		 * Display the Per-page list
 		 * on single pages if the following option is enabled: How to display source in Frontend > list below content
 		 * on archive pages and home pages with posts if the following option is enabled: Archive Pages > Display sources list below full posts
 		 */

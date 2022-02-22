@@ -30,7 +30,7 @@ Choose between different credit displays:
 
 * display credits for images in the content, galleries, shortcodes, and featured images
 * define the layout and position of the image source
-* attach the image source list below the content automatically or using a shortcode or PHP function
+* attach the Per-page list automatically or using a shortcode or PHP function
 * display image sources on archive pages
 * block editor: detects image sources for the image, cover image, and gallery blocks
 * link to the copyright holder and include a link to the image license
@@ -58,7 +58,7 @@ You can choose to display image sources automatically below the post content or 
 
 **Manually included image sources on pages/posts**
 
-You can add the image source list manually to pages or posts via the shortcode `[isc_list]` in your content editor or a text widget.
+You can add the Per-page list manually to pages or posts via the shortcode `[isc_list]` in your content editor or a text widget.
 
 Use `[isc_list id="123]` to show the list of any post or page.
 

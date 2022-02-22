@@ -1,6 +1,6 @@
 <?php
 /**
- * Render settings to enable Image source lists in the content
+ * Render settings to enable Per-page lists in the content
  *
  * @var array $options ISC options.
  */
