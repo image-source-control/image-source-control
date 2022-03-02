@@ -17,7 +17,8 @@ class ISC_Admin extends ISC_Class {
 		// register attachment fields
 		add_filter( 'attachment_fields_to_edit', array( $this, 'add_isc_fields' ), 10, 2 );
 
-		// admin notices
+		// admin notices and ISC page header
+		add_action( 'admin_notices', array( $this, 'branded_admin_header' ) );
 		add_action( 'admin_notices', array( $this, 'admin_notices' ) );
 
 		// settings page
@@ -208,6 +209,28 @@ class ISC_Admin extends ISC_Class {
 		// These pages should be available only for editors and higher
 		$isc_page    = add_submenu_page( 'upload.php', esc_html__( 'Image Source Control', 'image-source-control-isc' ), __( 'Image Sources', 'image-source-control-isc' ), 'edit_others_posts', 'isc-sources', array( $this, 'render_sources_page' ) );
 		$isc_setting = add_options_page( __( 'Image Source Control Settings', 'image-source-control-isc' ), __( 'Image Sources', 'image-source-control-isc' ), 'edit_others_posts', 'isc-settings', array( $this, 'render_isc_settings_page' ) );
+	}
+
+	/**
+	 * Add an ISC branded header to plugin pages
+	 */
+	public static function branded_admin_header() {
+		$screen    = get_current_screen();
+		$screen_id = isset( $screen->id ) ? $screen->id : null;
+		if ( empty ( $screen->id ) || ! in_array( $screen_id, array( 'settings_page_isc-settings', 'media_page_isc-sources' ), true ) ) {
+			return;
+		}
+		switch ( $screen_id ) {
+			case 'settings_page_isc-settings' :
+				$title = __( 'Settings', 'image-source-control-isc' );
+				break;
+			case 'media_page_isc-sources' :
+				$title = __( 'Tools', 'image-source-control-isc' );
+				break;
+			default :
+				$title = get_admin_page_title();
+		}
+		include ISCPATH . 'admin/templates/header.php';
 	}
 
 	/**

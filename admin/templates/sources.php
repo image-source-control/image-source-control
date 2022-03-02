@@ -5,8 +5,6 @@
  * @var int $storage_size amount of elements in the ISC storage.
  */
 ?>
-<h1><?php esc_html_e( 'Image Sources', 'image-source-control-isc' ); ?></h1>
-
 <?php
 $attachments = ISC_Admin::get_attachments_with_empty_sources();
 if ( ! empty( $attachments ) ) :
