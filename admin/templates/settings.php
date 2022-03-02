@@ -23,8 +23,7 @@
 		settings_fields( 'isc_options_group' );
 		?>
 		<p class="submit">
-			<input type="submit" name="submit" id="submit" class="button button-primary" value="Save Changes">
+			<input type="submit" name="submit" id="submit" class="button button-primary" value="<?php esc_html_e( 'Save Changes' ); ?>">
 		</p>
-
 	</form>
 </div>
