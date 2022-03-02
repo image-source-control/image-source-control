@@ -1,4 +1,72 @@
 /**
+ * PAGE HEADER
+ */
+/**
+ * Branded Page Header
+ */
+#isc-header {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #c3c4c7;
+    padding: 22px 0px;
+    margin-left: -20px;
+    background: #fff;
+}
+
+#isc-header-wrapper {
+    display: flex;
+    justify-content: space-between;
+}
+
+#isc-header img {
+    display: inline;
+    margin: 0;
+    margin-left: 20px;
+}
+
+#isc-header h1 {
+    display: inline;
+    margin: 0 20px 0 0;
+    font-weight: 300;
+    margin-left: 10px;
+    line-height: 30px;
+    vertical-align: top;
+}
+
+#isc-header .header-action {
+    margin-left: 10px;
+    border: 1px solid #1B183A;
+    font-weight: 400;
+    color: #1B183A;
+    background: #fff;
+}
+
+#isc-header .header-action .dashicons {
+    line-height: 30px;
+    margin-left: -5px;
+    padding-right: 5px;
+}
+
+#isc-header #isc-header-links {
+    margin-right: 20px;
+}
+
+#isc-header-links a {
+    display: inline-block;
+    padding: .5em .75em;
+    border-radius: .5em;
+    color: #FFF;
+    background-color: #0080FF;
+    margin-left: 1em;
+    text-decoration: none;
+}
+
+#isc-header-links a.isc-header-links-pro {
+    background-color: #F70;
+    font-weight: bold;
+}
+
+/**
  * SETTINGS
  */
 .isc-settings-highlighted label { font-weight: bold; }
