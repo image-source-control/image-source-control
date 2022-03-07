@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: Image Source Control
+ * Plugin Name: Image Source Control Lite
  * Version: 2.4.0
  * Plugin URI: https://imagesourcecontrol.com/
  * Description: Image Source Control saves the source of an image, lists them and warns if it is missing.

@@ -1,10 +1,10 @@
-=== Image Source Control ===
+=== Image Source Control Lite ===
 Contributors: webzunft
 Tags: image, images, picture, image source, bild, bilder, photo, photos, foto, media, caption, copyright
 Requires at least: 5.3
 Tested up to: 5.9
 Stable tag: 2.4.0
-Requires PHP: 5.6
+Requires PHP: 7.0
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -29,7 +29,7 @@ Choose between different credit displays:
 **Frontend Features**
 
 * display credits for images in the content, galleries, shortcodes, and featured images
-* define the layout and position of the image source
+* define the layout and position of the image credits
 * attach the Per-page list automatically or using a shortcode or PHP function
 * display image sources on archive pages
 * block editor: detects image sources for the image, cover image, and gallery blocks
@@ -41,10 +41,6 @@ Choose between different credit displays:
 * quickly assign a centrally defined source to any image and choose three options: hide photo sources for these images, show a specific source (e.g., your name), or the uploaders name
 * warn about missing image sources
 * manage, display, and link available licenses
-
-**Localization**
-
-English, German
 
 == Instructions ==
 
@@ -102,7 +98,11 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 
 = untagged =
 
+- Improvement: Require at least PHP 7.0
+- Improvement: Added branded header with relevant links
+- Improvement: Rename some methods for more clarity
 - Improvement: Warn if one tries to enable multiple versions of ISC at the same time
+- Fix: Make some strings translatable
 
 = 2.4.0 =
 
