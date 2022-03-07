@@ -122,6 +122,6 @@ endif;
 <button id="isc-clear-storage" class="button button-secondary"><?php esc_html_e( 'clear storage', 'image-source-control-isc' ); ?></button>
 <p class="description"><?php esc_html_e( 'ISC keeps an internal index of image URLs and IDs from the media library to limit the number of database requests in the frontend.', 'image-source-control-isc' ); ?>
 	<br/><?php esc_html_e( 'Click the button above to clear that index.', 'image-source-control-isc' ); ?>
-	<a href="https://imagesourcecontrol.com/technical-information/#Image_URL_Storage" target="_blank" rel="noopener"><?php esc_html_e( 'Manual', 'image-source-control-isc' ); ?></a>
+	<a href="<?php echo ISC_Admin::get_manual_url( 'tools-clear-index' ); ?>" target="_blank" rel="noopener"><?php esc_html_e( 'Manual', 'image-source-control-isc' ); ?></a>
 </p>
 <div id="isc-clear-storage-feedback"></div>

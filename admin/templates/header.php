@@ -12,9 +12,9 @@
 		<h1><?php echo esc_html( $title ); ?></h1>
 	</div>
 	<div id="isc-header-links">
-		<?php if ( ! class_exists( 'ISC_Pro_Admin', false ) ) : ?>
-			<a class="isc-header-links-pro" href="https://imagesourcecontrol.com/pricing/?utm_source=isc-plugin&utm_medium=link&utm_campaign=header-pro" target="_blank"><?php esc_html_e( 'Get ISC Pro', 'image-source-control-isc' ); ?></a>
-		<?php endif; ?>
+		<?php if ( ! class_exists( 'ISC_Pro_Admin', false ) ) :
+			echo ISC_Admin::get_pro_link( 'header-pro' );
+		endif; ?>
 		<?php switch ( $screen_id ) :
 			case 'settings_page_isc-settings' : ?>
 				<a href="<?php echo esc_url( admin_url( 'upload.php?page=isc-sources' ) ); ?>"><?php esc_html_e( 'Tools', 'image-source-control-isc' ); ?></a>
@@ -23,7 +23,7 @@
 				<a href="<?php echo esc_url( admin_url( 'options-general.php?page=isc-settings' ) ); ?>"><?php esc_html_e( 'Settings', 'image-source-control-isc' ); ?></a>
 		<?php break; ?>
 		<?php endswitch; ?>
-		<a href="https://imagesourcecontrol.com/manual/?utm_source=isc-plugin&utm_medium=link&utm_campaign=header-manual" target="_blank"><?php esc_html_e( 'Manual', 'image-source-control-isc' ); ?></a>
+		<a href="<?php echo ISC_Admin::get_manual_url( 'header-manual' ); ?>" target="_blank"><?php esc_html_e( 'Manual', 'image-source-control-isc' ); ?></a>
 	</div>
 </div>
 <div class="wrap">
