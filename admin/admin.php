@@ -824,11 +824,46 @@ class ISC_Admin extends ISC_Class {
 	}
 
 	/**
+	 * Get URL to the ISC website by site language
+	 *
+	 * @return string website URL
+	 */
+	public static function get_isc_website_url( ) {
+		// check if the locale starts with "de_"
+		if ( strpos( determine_locale(), 'de_' ) === 0 ) {
+			return 'https://imagesourcecontrol.de/';
+		} else {
+			return 'https://imagesourcecontrol.com/';
+		}
+	}
+
+	/**
 	 * Get link to ISC Pro
 	 *
-	 * @param string $utm_campaign Position of the upsell for the campaign link
+	 * @param string $utm_campaign Position of the link for the campaign link
 	 */
 	public static function get_pro_link( $utm_campaign = 'upsell-link' ) {
-		return '<a href="https://imagesourcecontrol.com/pricing/?utm_source=isc-plugin&utm_medium=link&utm_campaign=' . $utm_campaign . '" class="isc-get-pro" target="_blank">' . esc_html__( 'Get ISC Pro', 'image-source-control-isc' ) . '</a>';
+		// check if the locale starts with "de_"
+		if ( strpos( determine_locale(), 'de_' ) === 0 ) {
+			$base_url = 'https://imagesourcecontrol.de/preise/';
+		} else {
+			$base_url = 'https://imagesourcecontrol.com/pricing/';
+		}
+		return '<a href="' . $base_url . '?utm_source=isc-plugin&utm_medium=link&utm_campaign=' . $utm_campaign . '" class="isc-get-pro" target="_blank">' . esc_html__( 'Get ISC Pro', 'image-source-control-isc' ) . '</a>';
+	}
+
+	/**
+	 * Get link to the ISC manual
+	 *
+	 * @param string $utm_campaign Position of the link for the campaign link
+	 */
+	public static function get_manual_url( $utm_campaign = 'manual' ) {
+		// check if the locale starts with "de_"
+		if ( strpos( determine_locale(), 'de_' ) === 0 ) {
+			$base_url = 'https://imagesourcecontrol.de/anleitung/';
+		} else {
+			$base_url = 'https://imagesourcecontrol.com/manual/';
+		}
+		return $base_url . '?utm_source=isc-plugin&utm_medium=link&utm_campaign=' . $utm_campaign;
 	}
 }
