@@ -8,7 +8,7 @@
 ?>
 <div id="isc-header">
 	<div id="isc-header-wrapper">
-		<img src="<?php echo ISCBASEURL . 'admin/assets/images/image_source_control_logo_positive.png'; ?>" width="256" height="28" alt="<?php esc_html_e( 'Image Source Control', 'image-source-control-isc' ); ?>"/>
+		<img src="<?php echo ISCBASEURL . 'admin/assets/images/image_source_control_logo_positive_512px.png'; ?>" width="256" height="28" alt="<?php esc_html_e( 'Image Source Control', 'image-source-control-isc' ); ?>"/>
 		<h1><?php echo esc_html( $title ); ?></h1>
 	</div>
 	<div id="isc-header-links">
