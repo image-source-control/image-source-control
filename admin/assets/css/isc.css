@@ -73,7 +73,6 @@
 .isc-settings-highlighted .isc-empty-label { margin-left: 1.7em;  }
 .isc-settings-highlighted .description { margin-left: 1.7em; margin-bottom: .5em; }
 #isc-settings-licenses textarea { width: 40em; height: 7em; }
-.isc-settings-is-pro { font-weight: normal; font-style: italic; }
 #image-settings-form .hndle { cursor: text; user-select: all; }
 
 /**
@@ -91,3 +90,8 @@
  * SOURCES PAGE
  */
 .isc-table-debug-list th { width: 50%; }
+
+/**
+ + Miscellaneous
+ */
+.isc-get-pro { font-weight: bold; color: #F70; }

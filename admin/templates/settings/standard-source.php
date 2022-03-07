@@ -30,7 +30,7 @@
 	<?php if ( ! class_exists( 'ISC_Pro_Admin', false ) ) : ?>
 <label>
 	<input type="checkbox" disabled="disabled">
-		<span class="isc-settings-is-pro"><?php esc_html_e( 'Coming soon', 'image-source-control-isc' ); ?></span>
+		<?php echo ISC_Admin::get_pro_link( 'standard-source' ); ?>
 		<?php esc_html_e( 'Show the standard source for all images that don’t have a source.', 'image-source-control-isc' ); ?>
 </label>
 	<?php endif; ?>

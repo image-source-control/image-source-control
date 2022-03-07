@@ -92,9 +92,7 @@ if ( ! empty( $stored_images ) ) :
 				<td style="width: 60%;"><?php echo esc_url( $_image_url ); ?></td>
 				<td>
 					<?php
-					if ( ! class_exists( 'ISC_Pro_Admin', false ) ) :
-						esc_html_e( 'Coming soon', 'image-source-control-isc' );
-					endif;
+					if ( ! class_exists( 'ISC_Pro_Admin', false ) ) : echo ISC_Admin::get_pro_link( 'external-sources' ); endif;
 					do_action( 'isc_admin_sources_storage_table_source_row', $_image_url );
 					?>
 				</td>

@@ -823,4 +823,12 @@ class ISC_Admin extends ISC_Class {
 		$storage_model->remove_image_by_id( $post_id );
 	}
 
+	/**
+	 * Get link to ISC Pro
+	 *
+	 * @param string $utm_campaign Position of the upsell for the campaign link
+	 */
+	public static function get_pro_link( $utm_campaign = 'upsell-link' ) {
+		return '<a href="https://imagesourcecontrol.com/pricing/?utm_source=isc-plugin&utm_medium=link&utm_campaign=' . $utm_campaign . '" class="isc-get-pro" target="_blank">' . esc_html__( 'Get ISC Pro', 'image-source-control-isc' ) . '</a>';
+	}
 }
