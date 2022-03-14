@@ -27,7 +27,7 @@ class ISC_Admin extends ISC_Class {
 
 		// scripts and styles
 		add_action( 'admin_enqueue_scripts', array( $this, 'add_admin_scripts' ) );
-		add_action( 'admin_print_scripts', array( $this, 'admin_headjs' ) );
+		add_action( 'admin_print_scripts', array( $this, 'admin_head_scripts' ) );
 
 		// ajax calls
 		add_action( 'wp_ajax_isc-post-image-relations', array( $this, 'list_post_image_relations' ) );
@@ -117,8 +117,9 @@ class ISC_Admin extends ISC_Class {
 	/**
 	 * Display scripts in <head></head> section of admin page. Useful for creating js variables in the js global namespace.
 	 */
-	public function admin_headjs() {
+	public function admin_head_scripts() {
 		global $pagenow;
+		$screen = get_current_screen();
 		// texts in JavaScript on sources page
 		if ( 'upload.php' === $pagenow && isset( $_GET['page'] ) && 'isc-sources' === $_GET['page'] ) {
 			?>
@@ -127,6 +128,15 @@ class ISC_Admin extends ISC_Class {
 					confirm_message : '<?php esc_html_e( 'Are you sure?', 'image-source-control-isc' ); ?>'
 				}
 			</script>
+			<?php
+		}
+		// add style to media edit pages
+		if ( isset( $screen->id ) && $screen->id === 'attachment' ) {
+			// Meta field in media view
+			?><style>
+				.compat-attachment-fields input[type="text"] { width: 100%; }
+				.compat-attachment-fields th { vertical-align: top; }
+			</style>
 			<?php
 		}
 		// add nonce to all pages
