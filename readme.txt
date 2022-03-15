@@ -42,6 +42,17 @@ Choose between different credit displays:
 * warn about missing image sources
 * manage, display, and link available licenses
 
+**Premium-Features**
+
+[Check out all features of Image Source Control](https://imagesourcecontrol.com/?utm_source=wporg&utm_medium=link&utm_campaign=all-features).
+
+* list image credits for images outside of the content
+* manage image credits for images hosted outside of the media library
+* bulk-edit image copyright information in the media library
+* show the standard photo credit for all images without a selected source
+
+[See Pricing](https://imagesourcecontrol.com/pricing/?utm_source=wporg&utm_medium=link&utm_campaign=pricing).
+
 == Instructions ==
 
 Take a look at the [Image Source Control Manual](https://imagesourcecontrol.com/manual/).
@@ -97,6 +108,8 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 == Changelog ==
 
 = untagged =
+
+[Check out the new Premium Features](https://imagesourcecontrol.com/?utm_source=wporg&utm_medium=link&utm_campaign=changelog-2-5-0)
 
 - Improvement: Require at least PHP 7.0
 - Improvement: Added branded header with relevant links
