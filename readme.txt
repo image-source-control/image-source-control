@@ -3,7 +3,7 @@ Contributors: webzunft
 Tags: image, images, picture, image source, bild, bilder, photo, photos, foto, media, caption, copyright
 Requires at least: 5.3
 Tested up to: 5.9
-Stable tag: 2.4.0
+Stable tag: 2.5.0
 Requires PHP: 7.0
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -107,7 +107,7 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 
 == Changelog ==
 
-= untagged =
+= 2.5.0 =
 
 [Check out the new Premium Features](https://imagesourcecontrol.com/?utm_source=wporg&utm_medium=link&utm_campaign=changelog-2-5-0)
 

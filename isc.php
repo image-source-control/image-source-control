@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: Image Source Control Lite
- * Version: 2.4.0
+ * Version: 2.5.0
  * Plugin URI: https://imagesourcecontrol.com/
  * Description: Image Source Control saves the source of an image, lists them and warns if it is missing.
  * Author: Thomas Maier
@@ -29,7 +29,7 @@ if ( class_exists( 'ISC_Class', false ) ) {
 	die( 'You can only activate Image Source Control once. Please disable the other version first.' );
 }
 
-define( 'ISCVERSION', '2.4.0' );
+define( 'ISCVERSION', '2.5.0' );
 define( 'ISCNAME', 'Image Source Control' );
 define( 'ISCDIR', basename( dirname( __FILE__ ) ) );
 define( 'ISCPATH', plugin_dir_path( __FILE__ ) );
