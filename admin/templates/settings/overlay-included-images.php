@@ -16,7 +16,7 @@
 		<label>
 			<input type="radio" name="isc_options[overlay_included_images]" value="<?php echo esc_attr( $value ); ?>"
 				<?php checked( $included_images, $value ); ?>
-				<?php echo $is_pro ? 'disabled="disabled"' : ''; ?>
+				<?php echo $is_pro ? 'disabled="disabled" class="is-pro"' : ''; ?>
 			/>
 			<?php if ( $is_pro ) : echo ISC_Admin::get_pro_link( 'overlay-' . sanitize_title( $_options['label'] ) ); endif; ?>
 			<?php echo isset( $_options['label'] ) ? esc_html( $_options['label'] ) : ''; ?>

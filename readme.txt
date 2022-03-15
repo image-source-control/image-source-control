@@ -107,6 +107,10 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 
 == Changelog ==
 
+= untagged =
+
+- Fix: Prevent disabled premium feature from accidentally becoming selectable
+
 = 2.5.0 =
 
 [Check out the new Premium Features](https://imagesourcecontrol.com/?utm_source=wporg&utm_medium=link&utm_campaign=changelog-2-5-0)

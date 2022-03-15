@@ -42,7 +42,8 @@ function isc_caption_checkstate() {
 	if ( ! overlay_option ) {
 		return;
 	}
-	var elements = document.querySelectorAll( '.isc_settings_section_overlay input, .isc_settings_section_overlay input, .isc_settings_section_overlay select' );
+	// Exclude disabled premium features from toggling their state
+	var elements = document.querySelectorAll( '.isc_settings_section_overlay input:not(.is-pro), .isc_settings_section_overlay select' );
 	if ( overlay_option.checked ) {
 		Array.prototype.forEach.call( elements, function(el, i) {
 			el.removeAttribute( 'disabled' );
