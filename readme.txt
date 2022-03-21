@@ -109,6 +109,7 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 
 = untagged =
 
+- Improvement: add FAL and GFDL to available licenses (clear the option to reset the list)
 - Improvement: rewrite WP Admin check for ISC-related pages
 - Fix: Prevent disabled premium feature from accidentally becoming selectable
 
