@@ -49,6 +49,10 @@ class ISC_Admin extends ISC_Class {
 	 * @return array
 	 */
 	public function add_links_to_plugin_page( $links ) {
+		// add link to premium.
+		if ( ! class_exists( 'ISC_Pro_Admin', false ) ) {
+			array_unshift( $links, self::get_pro_link( 'plugin-overview' ) );
+		}
 		// settings link
 		$links[] = sprintf(
 			'<a href="%s">%s</a>',
@@ -139,6 +143,17 @@ class ISC_Admin extends ISC_Class {
 			</style>
 			<?php
 		}
+		// add style to plugin overview page
+		if ( isset( $screen->id ) && $screen->id === 'plugins' ) {
+			// Meta field in media view
+			?><style>
+				.row-actions .isc-get-pro { font-weight: bold; color: #F70; }
+			</style><?php
+		}
+		?><style>
+			.compat-attachment-fields .isc-get-pro{ font-weight: bold; color: #F70; }
+		</style>
+		<?php
 		// add nonce to all pages
 		$params = array(
 			'ajaxNonce' => wp_create_nonce( 'isc-admin-ajax-nonce' ),
@@ -158,6 +173,11 @@ class ISC_Admin extends ISC_Class {
 	 * @return array with form fields
 	 */
 	public function add_isc_fields( $form_fields, $post ) {
+
+		$form_fields['isc_image_source_pro']['label'] = '';
+		$form_fields['isc_image_source_pro']['input'] = 'html';
+		$form_fields['isc_image_source_pro']['html'] = self::get_pro_link( 'attachment-edit');
+
 		// add input field for source
 		$form_fields['isc_image_source']['label'] = __( 'Image Source', 'image-source-control-isc' );
 		$form_fields['isc_image_source']['value'] = ISC_Class::get_image_source_text( $post->ID );
