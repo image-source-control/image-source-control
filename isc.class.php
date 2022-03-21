@@ -188,7 +188,10 @@ CC BY-SA 2.0 Generic|https://creativecommons.org/licenses/by-sa/2.0/
 CC BY-ND 2.0 Generic|https://creativecommons.org/licenses/by-nd/2.0/
 CC BY-NC 2.0 Generic|https://creativecommons.org/licenses/by-nc/2.0/
 CC BY-NC-SA 2.0 Generic|https://creativecommons.org/licenses/by-nc-sa/2.0/
-CC BY-NC-ND 2.0 Generic|https://creativecommons.org/licenses/by-nc-nd/2.0/';
+CC BY-NC-ND 2.0 Generic|https://creativecommons.org/licenses/by-nc-nd/2.0/
+FAL Free Art License 1.3 |http://artlibre.org/licence/lal/en/
+GFDL GNU Free Documentation License 1.2|https://www.gnu.org/licenses/fdl-1.2.html
+GFDL GNU Free Documentation License 1.3|https://www.gnu.org/licenses/fdl-1.3.html';
 
 			$default['display_type']              = array( 'list' );
 			$default['list_on_archives']          = false;
