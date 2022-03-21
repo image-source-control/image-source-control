@@ -43,6 +43,16 @@ class ISC_Admin extends ISC_Class {
 	}
 
 	/**
+	 * Check if the current WP Admin page belongs to ISC
+	 *
+	 * @return bool true if this is an ISC-related page
+	 */
+	private static function is_isc_page() {
+		$screen = get_current_screen();
+		return isset( $screen->id ) && in_array( $screen->id, array( 'settings_page_isc-settings', 'media_page_isc-sources' ), true );
+	}
+
+	/**
 	 * Add links to setting and source list pages from plugins.php
 	 *
 	 * @param array $links existing plugin links.
@@ -112,8 +122,7 @@ class ISC_Admin extends ISC_Class {
 		}
 
 		// load CSS
-		// todo: split CSS file to load only the relevant parts
-		if ( isset( $screen->id ) && in_array( $screen->id, array( 'settings_page_isc-settings', 'media_page_isc-sources' ), true ) ) {
+		if ( self::is_isc_page() ) {
 			wp_enqueue_style( 'isc_image_settings_css', plugins_url( '/assets/css/isc.css', __FILE__ ), false, ISCVERSION );
 		}
 	}
@@ -247,7 +256,7 @@ class ISC_Admin extends ISC_Class {
 	public static function branded_admin_header() {
 		$screen    = get_current_screen();
 		$screen_id = isset( $screen->id ) ? $screen->id : null;
-		if ( empty ( $screen->id ) || ! in_array( $screen_id, array( 'settings_page_isc-settings', 'media_page_isc-sources' ), true ) ) {
+		if ( ! self::is_isc_page() ) {
 			return;
 		}
 		switch ( $screen_id ) {

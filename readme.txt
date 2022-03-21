@@ -109,6 +109,7 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 
 = untagged =
 
+- Improvement: rewrite WP Admin check for ISC-related pages
 - Fix: Prevent disabled premium feature from accidentally becoming selectable
 
 = 2.5.0 =
