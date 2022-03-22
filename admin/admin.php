@@ -22,7 +22,7 @@ class ISC_Admin extends ISC_Class {
 		add_action( 'admin_notices', array( $this, 'admin_notices' ) );
 
 		// settings page
-		add_action( 'admin_menu', array( $this, 'create_menu' ) );
+		add_action( 'admin_menu', array( $this, 'add_menu_items' ) );
 		add_action( 'admin_init', array( $this, 'settings_init' ) );
 
 		// scripts and styles
@@ -241,17 +241,33 @@ class ISC_Admin extends ISC_Class {
 	}
 
 	/**
-	 * Create the menu pages for isc
-	 *
-	 * @since 1.0
+	 * Create the menu pages for ISC with access for editors and higher roles
 	 */
-	public function create_menu() {
-		global $isc_page;
-		global $isc_setting;
+	public function add_menu_items() {
 
-		// These pages should be available only for editors and higher
-		$isc_page    = add_submenu_page( 'upload.php', esc_html__( 'Image Source Control', 'image-source-control-isc' ), __( 'Image Sources', 'image-source-control-isc' ), 'edit_others_posts', 'isc-sources', array( $this, 'render_sources_page' ) );
-		$isc_setting = add_options_page( __( 'Image Source Control Settings', 'image-source-control-isc' ), __( 'Image Sources', 'image-source-control-isc' ), 'edit_others_posts', 'isc-settings', array( $this, 'render_isc_settings_page' ) );
+		$options = $this->get_isc_options();
+		if ( empty( $options['warning_onesource_missing'] ) ) {
+			$notice_alert = '';
+		} else {
+			$missing_images = get_transient( 'isc-show-missing-sources-warning' );
+			$notice_alert = '&nbsp;<span class="update-plugins count-' . $missing_images . '"><span class="update-count">' . $missing_images . '</span></span>';
+		}
+
+		add_submenu_page(
+			'upload.php',
+			esc_html__( 'Image Source Control', 'image-source-control-isc' ),
+			__( 'Image Sources', 'image-source-control-isc' ) . $notice_alert,
+			'edit_others_posts',
+			'isc-sources',
+			array( $this, 'render_sources_page' ) );
+
+		add_options_page(
+			__( 'Image Source Control Settings', 'image-source-control-isc' ),
+			__( 'Image Sources', 'image-source-control-isc' ),
+			'edit_others_posts',
+			'isc-settings',
+			array( $this, 'render_isc_settings_page' )
+		);
 	}
 
 	/**
