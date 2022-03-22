@@ -350,20 +350,39 @@ class ISC_Model {
 	 * Checks if there are image with missing sources
 	 * this includes attachments that were not indexed yet (don’t have the appropriate meta values)
 	 *
-	 * @return bool true if sources are missing.
+	 * @return int number of images with missing sources
 	 */
-	public static function has_missing_sources() {
+	public static function count_missing_sources() {
+
+		// get known and used attachments without sources
+		$count = count( self::get_attachments_with_empty_sources() );
+
+		// look for unindexed attachments
+		$count += count( self::get_unused_attachments() );
+
+		return $count;
+	}
+
+
+	/**
+	 * Get all attachments with empty sources options.
+	 *
+	 * @return array with attachments.
+	 */
+	public static function get_attachments_with_empty_sources() {
 		$args = array(
 			'post_type'   => 'attachment',
-			'numberposts' => 1,
+			'numberposts' => -1,
 			'post_status' => null,
 			'post_parent' => null,
 			'meta_query'  => array(
+				// image source is empty
 				array(
 					'key'     => 'isc_image_source',
 					'value'   => '',
 					'compare' => '=',
 				),
+				// and does not belong to an author
 				array(
 					'key'     => 'isc_image_source_own',
 					'value'   => '1',
@@ -372,42 +391,46 @@ class ISC_Model {
 			),
 		);
 
-		if ( ! empty( get_posts( $args ) ) ) {
-			return true;
-		}
+		return get_posts( $args );
+	}
 
-		// look for unindexed attachments
+	/**
+	 * Get all attachments that are not used
+	 * read: they don’t have the proper meta values set up, yet.
+	 *
+	 * @since 1.6
+	 * @return array with attachments.
+	 */
+	public static function get_unused_attachments() {
 		$args = array(
 			'post_type'   => 'attachment',
-			'numberposts' => 1,
+			'numberposts' => -1,
 			'post_status' => null,
 			'post_parent' => null,
 			'meta_query'  => array(
+				// image source is empty
 				array(
 					'key'     => 'isc_image_source',
-					'value'   => 'any',
+					'value'   => 'any', /* any string; needed prior to WP 3.9 */
 					'compare' => 'NOT EXISTS',
 				),
 			),
 		);
 
-		return ! empty( get_posts( $args ) );
+		// is per function definition always returning an array, even if empty.
+		return get_posts( $args );
 	}
 
 	/**
 	 * Update the transient we set for missing sources to not check them for another hour
 	 * running each time we are writing the `isc_image_source` post meta key
 	 *
-	 * @return string value of the transient.
+	 * @return int number of missing sources.
 	 */
 	public static function update_missing_sources_transient() {
-		if ( self::has_missing_sources() ) {
-			set_transient( 'isc-show-missing-sources-warning', true, DAY_IN_SECONDS );
-			return true;
-		} else {
-			set_transient( 'isc-show-missing-sources-warning', 'no', DAY_IN_SECONDS );
-			return 'no';
-		}
+		$missing_sources = self::count_missing_sources();
+		set_transient( 'isc-show-missing-sources-warning', $missing_sources, DAY_IN_SECONDS );
+		return $missing_sources;
 	}
 
 	/**

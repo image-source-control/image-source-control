@@ -6,7 +6,7 @@
  */
 ?>
 <?php
-$attachments = ISC_Admin::get_attachments_with_empty_sources();
+$attachments = ISC_Model::get_attachments_with_empty_sources();
 if ( ! empty( $attachments ) ) :
 	?>
 	<h2><?php esc_html_e( 'Images with empty sources', 'image-source-control-isc' ); ?></h2>
@@ -44,7 +44,7 @@ else :
 	<?php
 endif;
 
-$attachments = ISC_Admin::get_unused_attachments();
+$attachments = ISC_Model::get_unused_attachments();
 if ( ! empty( $attachments ) ) :
 	?>
 	<h2><?php esc_html_e( 'Images with unknown position', 'image-source-control-isc' ); ?></h2>

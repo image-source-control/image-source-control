@@ -90,15 +90,15 @@ class ISC_Admin extends ISC_Class {
 				return;
 		};
 
-		$show_warning = get_transient( 'isc-show-missing-sources-warning' );
+		$missing_sources = (int) get_transient( 'isc-show-missing-sources-warning' );
 
 		// check for missing sources if the transient is empty and store that value
-		if ( ! $show_warning ) {
-			$show_warning = ISC_Model::update_missing_sources_transient();
+		if ( ! $missing_sources ) {
+			$missing_sources = ISC_Model::update_missing_sources_transient();
 		}
 
 		// attachments without sources
-		if ( $show_warning && 'no' !== $show_warning ) {
+		if ( $missing_sources ) {
 			require_once ISCPATH . '/admin/templates/notice-missing.php';
 		}
 	}
@@ -606,65 +606,6 @@ class ISC_Admin extends ISC_Class {
 		$checked = ! empty( $options['remove_on_uninstall'] );
 		require_once ISCPATH . '/admin/templates/settings/remove-on-uninstall.php';
 	}
-
-	/**
-	 * Get all attachments with empty sources options.
-	 *
-	 * @return array with attachments.
-	 */
-	public static function get_attachments_with_empty_sources() {
-		$args = array(
-			'post_type'   => 'attachment',
-			'numberposts' => -1,
-			'post_status' => null,
-			'post_parent' => null,
-			'meta_query'  => array(
-				// image source is empty
-				array(
-					'key'     => 'isc_image_source',
-					'value'   => '',
-					'compare' => '=',
-				),
-				// and does not belong to an author
-				array(
-					'key'     => 'isc_image_source_own',
-					'value'   => '1',
-					'compare' => '!=',
-				),
-			),
-		);
-
-		// is per function definition always returning an array, even if empty.
-		return get_posts( $args );
-	}
-
-	/**
-	 * Get all attachments that are not used
-	 * read: they don’t have the proper meta values set up, yet.
-	 *
-	 * @since 1.6
-	 * @return array with attachments.
-	 */
-	public static function get_unused_attachments() {
-		$args = array(
-			'post_type'   => 'attachment',
-			'numberposts' => -1,
-			'post_status' => null,
-			'post_parent' => null,
-			'meta_query'  => array(
-				// image source is empty
-				array(
-					'key'     => 'isc_image_source',
-					'value'   => 'any', /* any string; needed prior to WP 3.9 */
-					'compare' => 'NOT EXISTS',
-				),
-			),
-		);
-
-		// is per function definition always returning an array, even if empty.
-		return get_posts( $args );
-	}
-
 
 	/**
 	 * List image post relations (called with ajax)
