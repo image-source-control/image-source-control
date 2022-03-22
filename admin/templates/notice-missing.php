@@ -13,7 +13,7 @@
 		printf(
 			wp_kses(
 			// translators: %1$s is an opening link tag, %2$s is a closing tag.
-				__( 'See the %1$smissing sources%2$s list', 'image-source-control-isc' ),
+				__( 'See the %1$smissing sources%2$s list.', 'image-source-control-isc' ),
 				array(
 					'a' => array(
 						'href' => array(),
