@@ -6,7 +6,7 @@
  */
 ?>
 <div class="wrap">
-	<div class="error"><p>
+	<div class="error isc-notice"><p>
 		<?php
 		printf( _n( '%s image has no credits.', '%s images have no credits.', $missing_sources, 'image-source-control-isc' ), $missing_sources );
 		echo ' ';

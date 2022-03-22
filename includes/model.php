@@ -422,7 +422,7 @@ class ISC_Model {
 	}
 
 	/**
-	 * Update the transient we set for missing sources to not check them for another hour
+	 * Update the transient we set for missing sources to not check them for another day
 	 * running each time we are writing the `isc_image_source` post meta key
 	 *
 	 * @return int number of missing sources.

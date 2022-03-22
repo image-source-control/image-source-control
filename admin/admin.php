@@ -163,8 +163,10 @@ class ISC_Admin extends ISC_Class {
 				.row-actions .isc-get-pro { font-weight: bold; color: #F70; }
 			</style><?php
 		}
+		// add to any backend pages
 		?><style>
 			.compat-attachment-fields .isc-get-pro{ font-weight: bold; color: #F70; }
+			div.error.isc-notice { border-left-color: #F70; }
 		</style>
 		<?php
 		// add nonce to all pages
