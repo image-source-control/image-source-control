@@ -86,7 +86,11 @@ class ISC_Admin extends ISC_Class {
 
 		// only check, if check-option was enabled
 		$options = $this->get_isc_options();
-		if ( empty( $options['warning_onesource_missing'] ) ) {
+		// skip the warning on the image sources screen since the list shows up there
+		$screen = get_current_screen();
+		if ( empty( $options['warning_onesource_missing'] )
+			 || empty( $screen->id )
+			 || $screen->id === 'media_page_isc-sources' ) {
 				return;
 		};
 
