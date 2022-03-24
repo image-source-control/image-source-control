@@ -1,6 +1,6 @@
-=== Image Source Control Lite ===
+=== Image Source Control Lite – Show Image Credits and Captions ===
 Contributors: webzunft
-Tags: image, images, picture, image source, bild, bilder, photo, photos, foto, media, caption, copyright
+Tags: images, credits, captions, copyrights, media, photos, pictures, sources, bildquellen, bilder, fotos, bildunterschriften
 Requires at least: 5.3
 Tested up to: 5.9
 Stable tag: 2.5.0
@@ -8,54 +8,65 @@ Requires PHP: 7.0
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
-The Image Source Control manages image sources, displays them and warns if they are missing.
+Show image credits, image captions, and copyrights. Manage image sources and warn if they are missing. The original plugin since 2012.
 
 == Description ==
 
-Did you ever forget to add the source to an image in the frontend, and the lawyer of the copyright holder knocked on your door due to missing credits?
+Are you concerned about being held liable for violating copyright law and would like to start crediting owners properly?
 
-Image Source Control (ISC) helps to prevent this situation.
+Do you want to give back to photographers and illustrators by adding image credits, so they are rightfully attributed?
 
-Just add the image source in the backend and choose how to display it on your website.
+Or are you a creator yourself and want to show information on the picture licenses for your image gallery under which publishers can use or purchase your work?
 
-**Image Source layouts**
+Image Source Control is your go-to solution when it comes to handling copyright-protected photos and illustrations.
+
+**Image Credit layouts**
 
 Choose between different credit displays:
 
-* list all image sources below the content of a specific page or place the list manually
-* credit as a caption above the image
-* embed a complete credit list of all images and photos on your website
+* List all image sources below the content of a specific page or place the list manually
+* Show an image caption overlay above the image
+* Embed a complete image credit list with thumbnails on your website
 
 **Frontend Features**
 
-* display credits for images in the content, galleries, shortcodes, and featured images
-* define the layout and position of the image credits
-* attach the Per-page list automatically or using a shortcode or PHP function
-* display image sources on archive pages
-* block editor: detects image sources for the image, cover image, and gallery blocks
-* link to the copyright holder and include a link to the image license
+* Display image credits in the content, for image galleries, images added by shortcodes, and featured images
+* Define the layout and position of the image credits
+* Attach the Per-page list automatically, by using a shortcode, or with a PHP function
+* Display image sources on archive pages
+* Block editor: detects image sources for the image, cover image, and gallery blocks
+* Link to the copyright holder and include a link to the image license
 
 **Backend Features**
 
-* manage image source within the Media dashboard and in the settings of the Image and Cover Image blocks
-* quickly assign a centrally defined source to any image and choose three options: hide photo sources for these images, show a specific source (e.g., your name), or the uploaders name
-* warn about missing image sources
-* manage, display, and link available licenses
+* Add credits for any image file uploaded to the Media library or as an Image or Cover Image block
+* Quickly assign a centrally defined source to any image and choose three options: hide image sources for these images, show a specific source (e.g., your name), or the uploader’s name
+* Warn about missing image sources
+* Manage, display, and link available licenses
+
+**Featured Image Caption**
+
+ISC Lite works for Featured Images. By default, you will see the image credits options in the media library and the featured image options in the block editor.
+
+The featured image caption shows in the Per-page list with all other image sources on the page.
+
+Check out the premium features to display the image caption overlay for featured images.
 
 **Premium-Features**
 
 [Check out all features of Image Source Control](https://imagesourcecontrol.com/?utm_source=wporg&utm_medium=link&utm_campaign=all-features).
 
-* list image credits for images outside of the content
-* manage image credits for images hosted outside of the media library
-* bulk-edit image copyright information in the media library
-* show the standard photo credit for all images without a selected source
+* List credits for images outside of the content
+* Manage image credits for images hosted outside of the media library
+* Bulk-edit image copyright information in the media library
+* Show the standard picture credit for all images without a selected source
+* Personal email support
 
 [See Pricing](https://imagesourcecontrol.com/pricing/?utm_source=wporg&utm_medium=link&utm_campaign=pricing).
 
 == Instructions ==
 
-Take a look at the [Image Source Control Manual](https://imagesourcecontrol.com/manual/).
+Take a look at the [Image Source Control Documentation](https://imagesourcecontrol.com/documentation/?utm_source=wporg&utm_medium=link&utm_campaign=documentation).
 
 Find a list of missing images sources and other debug tools under _Media > Image sources_
 
@@ -73,7 +84,7 @@ Use the PHP code `<?php if( function_exists('isc_list') ) { isc_list(); } ?>` wi
 
 **List all image sources**
 
-You can add a paginated list with ALL attachments and sources attached to posts and pages using the shortcode `[isc_list_all]`.
+You can add a paginated list with ALL attachments and sources attached to posts and pages—the Global list—using the shortcode `[isc_list_all]`.
 
 Use `[isc_list_all per_page="25"]` to show only a limited number of images per page.
 
@@ -81,9 +92,9 @@ Use `[isc_list_all included="all"]` to show all attachments in the list, includi
 
 The plugin searches your post content and thumbnail for images (attachments) and lists them if you included at least the image source or marked it to use the default image source.
 
-== Legal Notice ==
+**Remove “nofollow” from all source links**
 
-This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+In order to remove “nofollow” from source links, follow the [instructions in our documentation](https://imagesourcecontrol.com/documentation/#remove-nofollow-from-all-source-links).
 
 == Installation ==
 
