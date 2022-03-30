@@ -14,6 +14,67 @@ class Isc_Gutenberg {
 		}
 		add_action( 'enqueue_block_editor_assets', array( $this, 'editor_assets' ) );
 		add_action( 'wp_ajax_isc_save_meta', array( $this, 'save_meta' ) );
+		add_action( 'rest_api_init', array( $this, 'register_route' ) );
+	}
+
+	/**
+	 * Register a custom WP REST API route for loading ISC fields
+	 *
+	 * @return void
+	 */
+	public function register_route() {
+		register_rest_route( 'image-source-control/v1', '/load-fields/', array(
+			'method'              => 'GET',
+			'callback'            => array( $this, 'load_isc_fields' ),
+			'permission_callback' => function() {
+				return current_user_can( 'edit_posts' );
+			},
+		) );
+	}
+
+	/**
+	 * Load ISC metadata for one or more images
+	 *
+	 * @param WP_REST_Request $request the entire request data.
+	 *
+	 * @return array|WP_Error
+	 */
+	public function load_isc_fields( WP_REST_Request $request ) {
+		$args = $request->get_query_params();
+
+		if ( empty ( $args['ids'] ) ) {
+			return array( 'status' => true );
+		}
+
+		// Images ID-s is a single string, individual ID separated by hyphen.
+		$ids = explode( '-', $args['ids'] );
+
+		$meta_data = array();
+
+		foreach ( $ids as $id ) {
+			$meta_data[ $id ] = $this->get_isc_meta( get_post_meta( $id ) );
+		}
+
+		return array(
+			'status' => true,
+			'data'   => $meta_data,
+		);
+	}
+
+	/**
+	 * Extract and format ISC fields from raw postmeta data.
+	 *
+	 * @param array $data all post meta (including non-ISC) for a given image.
+	 *
+	 * @return array
+	 */
+	private function get_isc_meta( $data ) {
+		return array(
+			'isc_image_source'     => isset( $data['isc_image_source'], $data['isc_image_source'][0] ) ? $data['isc_image_source'][0] : '',
+			'isc_image_source_url' => isset( $data['isc_image_source_url'], $data['isc_image_source_url'][0] ) ? $data['isc_image_source_url'][0] : '',
+			'isc_image_source_own' => isset( $data['isc_image_source_own'], $data['isc_image_source_own'][0] ) && $data['isc_image_source_own'][0] === '1',
+			'isc_image_licence'    => isset( $data['isc_image_licence'], $data['isc_image_licence'][0] ) ? $data['isc_image_licence'][0] : '',
+		);
 	}
 
 	/**
@@ -53,26 +114,6 @@ class Isc_Gutenberg {
 			true
 		);
 
-		// Gather all info about images with any of the source data.
-		global $wpdb;
-		$table = $wpdb->prefix . 'postmeta';
-		$query = "SELECT * FROM $table WHERE `meta_key` LIKE %s";
-
-		$results = $wpdb->get_results( $wpdb->prepare( $query, '%isc_image%' ), 'ARRAY_A' );
-
-		$metas = array();
-
-		// Group all the results in an associative array with the image ID as array keys.
-		foreach ( $results as $meta ) {
-			if ( 'isc_image_posts' === $meta['meta_key'] ) {
-				continue;
-			}
-			if ( ! isset( $metas[ $meta['post_id'] ] ) ) {
-				$metas[ $meta['post_id'] ] = array();
-			}
-			$metas[ $meta['post_id'] ][ $meta['meta_key'] ] = ( 'isc_image_source_own' !== $meta['meta_key'] ) ? $meta['meta_value'] : (bool) $meta['meta_value'];
-		}
-
 		$plugin_options = ISC_Class::get_instance()->get_isc_options();
 
 		global $post, $pagenow;
@@ -81,8 +122,10 @@ class Isc_Gutenberg {
 			// The current user can edit the current post, or on widgets page or customizer.
 			$isc_data = array(
 				'option'   => $plugin_options,
-				'postmeta' => $metas,
+				'postmeta' => new stdClass(),
 				'nonce'    => wp_create_nonce( 'isc-gutenberg-nonce' ),
+				'route' => site_url( '/wp-json/image-source-control/v1/load-fields/' ),
+				'rest_nonce' => wp_create_nonce( 'wp_rest' ),
 			);
 
 			// Add all our data as a variable in an inline script.

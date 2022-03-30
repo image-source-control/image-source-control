@@ -23,13 +23,123 @@
 				nonce: iscData.nonce,
 				action: 'isc_save_meta',
 			},
-			complete: function (jqXHR, textStatus) {
+			complete: function () {
 				setAttributes({
-					isc_doing_ajax: false
+					saving_meta: false
 				});
 			}
 		});
 	};
+
+	var emptyMeta = {
+		'isc_image_source': '',
+		'isc_image_source_url': '',
+		'isc_image_source_own': false,
+		'isc_image_licence': '',
+	};
+
+	var currentMetaLoading = {},
+		batchTimeout   = null,
+		useBatch           = true,
+		batchWaitTime      = 1250,
+		batchCallbacks = {};
+
+	/**
+	 * Queue an image ID and "setAttribute" function, to be called in batch in one single AJAX call.
+	 *
+	 * @param id
+	 * @param setAttributes
+	 */
+	var batchLoad = function ( id, setAttributes ) {
+		if ( useBatch === false ) {
+			// Batch call already started, load data individually for this image.
+			loadImageMeta( id, setAttributes );
+			return;
+		}
+
+		if ( typeof batchTimeout === 'number' ) {
+			// Re-set the timeout.
+			clearTimeout( batchTimeout );
+			batchTimeout = null;
+		}
+
+		// Add the setAttributes callback.
+		batchCallbacks[id] = setAttributes;
+
+		batchTimeout = setTimeout(
+			function () {
+				useBatch = false;
+				$.ajax( {
+					url:     iscData.route,
+					type:    'get',
+					data:    {
+						_wpnonce: iscData.rest_nonce,
+						ids:      Object.keys( batchCallbacks ).join( '-' )
+					},
+					success: function ( response ) {
+						if ( typeof response.data !== 'undefined' ) {
+							for ( var i in response.data ) {
+								iscData.postmeta[i] = response.data[i];
+								batchCallbacks[i]( formatAttributesFromAjax( response.data[i] ) );
+							}
+						}
+					}
+				} );
+			},
+			batchWaitTime
+		);
+	}
+
+	/**
+	 * Load ISC postmeta for an individual image.
+	 *
+	 * @param id image ID.
+	 * @param setAttributes callback function to call when the AJAX call is completed.
+	 */
+	var loadImageMeta = function ( id, setAttributes ) {
+		if ( typeof currentMetaLoading[id] !== 'undefined' ) {
+			return;
+		}
+
+		if ( useBatch ) {
+			// The batch call is still cooking. Queue the current image.
+			batchLoad( id, setAttributes );
+			return;
+		}
+
+		currentMetaLoading[id] = true;
+
+		$.ajax( {
+			url:     iscData.route,
+			type:    'get',
+			data:    {
+				ids:      id,
+				_wpnonce: iscData.rest_nonce
+			},
+			success: function ( response ) {
+				if ( typeof response.data !== 'undefined' && typeof response.data[id] !== 'undefined' ) {
+					delete ( currentMetaLoading[id] );
+					iscData.postmeta[id] = response.data[id];
+					setAttributes( formatAttributesFromAjax( response.data[id] ) );
+				}
+			}
+		} );
+	};
+
+	/**
+	 * Format ISC fields from AJAX to be used in "setAttributes".
+	 *
+	 * @param data raw postmeta data.
+	 * @returns {{isc_image_source_own: (boolean|*), isc_image_licence: (string|*), isc_image_source: (string|*), isc_image_source_url: (string|*)}}
+	 */
+	function formatAttributesFromAjax( data ) {
+		return {
+			isc_image_source:     data.isc_image_source,
+			isc_image_source_url: data.isc_image_source_url,
+			isc_image_source_own: data.isc_image_source_own,
+			isc_image_licence:    data.isc_image_licence
+		};
+	}
 
 	var addSourceControlAttribute = function (settings, name) {
 		if (!enableSourceControlOnBlocks.includes(name)) {
@@ -50,7 +160,7 @@
 				isc_image_licence: {
 					type: 'string'
 				},
-				isc_doing_ajax: {
+				saving_meta: {
 					type: 'boolean',
 				default:
 					false,
@@ -79,13 +189,6 @@
 					return el(BlockEdit, props);
 				}
 
-				var emptyMeta = {
-					'isc_image_source': '',
-					'isc_image_source_url': '',
-					'isc_image_source_own': false,
-					'isc_image_licence': '',
-				};
-
 				if ('undefined' != typeof iscData.postmeta[props.attributes.id]) {
 					props.setAttributes({
 						'isc_image_source': iscData.postmeta[props.attributes.id]['isc_image_source'],
@@ -94,14 +197,18 @@
 						'isc_image_licence': iscData.postmeta[props.attributes.id]['isc_image_licence'],
 					});
 				} else {
+					// ISC fields not yet queried. Queue it.
 					props.setAttributes(emptyMeta);
+					if ( typeof currentMetaLoading[props.attributes.id] === 'undefined' ) {
+						loadImageMeta(props.attributes.id, props.setAttributes);
+					}
 				}
 
 				var isc_image_source = props.attributes.isc_image_source;
 				var isc_image_source_own = props.attributes.isc_image_source_own;
 				var isc_image_source_url = props.attributes.isc_image_source_url;
 				var isc_image_licence = props.attributes.isc_image_licence;
-				var disabled = props.attributes.isc_doing_ajax;
+				var disabled = props.attributes.saving_meta;
 
 				var id = props.attributes.id;
 
@@ -128,7 +235,7 @@
 							isc_update_meta_field(id, 'isc_image_source', ev.target.value, props.setAttributes);
 							props.setAttributes({
 								isc_need_ajax: false,
-								isc_doing_ajax: true,
+								saving_meta: true,
 							});
 						},
 					}), el(wp.components.CheckboxControl, {
@@ -147,7 +254,7 @@
 							var metaValue = newValue ? '1' : '';
 							isc_update_meta_field(id, 'isc_image_source_own', metaValue, props.setAttributes);
 							props.setAttributes({
-								isc_doing_ajax: true,
+								saving_meta: true,
 							});
 						}
 					}), el(wp.components.TextControl, {
@@ -173,7 +280,7 @@
 							isc_update_meta_field(id, 'isc_image_source_url', ev.target.value, props.setAttributes);
 							props.setAttributes({
 								isc_need_ajax: false,
-								isc_doing_ajax: true,
+								saving_meta: true,
 							});
 						},
 					})];
@@ -191,7 +298,7 @@
 								iscData.postmeta[id]['isc_image_licence'] = newValue;
 								props.setAttributes({
 									isc_image_licence: newValue,
-									isc_doing_ajax: true,
+									saving_meta: true,
 								});
 								isc_update_meta_field(id, 'isc_image_licence', newValue, props.setAttributes);
 							},
