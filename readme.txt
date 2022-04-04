@@ -3,7 +3,7 @@ Contributors: webzunft
 Tags: images, credits, captions, copyrights, media, photos, pictures, sources, bildquellen, bilder, fotos, bildunterschriften
 Requires at least: 5.3
 Tested up to: 5.9
-Stable tag: 2.5.0
+Stable tag: 2.6.0
 Requires PHP: 7.0
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -118,11 +118,11 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 
 == Changelog ==
 
-= untagged =
+= 2.6.0 =
 
 - Improvement: add FAL and GFDL to available licenses (clear the option to reset the list)
-- Improvement: rewrite WP Admin check for ISC-related pages
-- Fix: Prevent disabled premium feature from accidentally becoming selectable
+- Fix: Prevent premium options from becoming selectable when the [Premium version](https://imagesourcecontrol.com/?utm_source=wporg&utm_medium=link&utm_campaign=changelog-2-6-0) is missing
+- Dev: rewrite WP Admin check for ISC-related pages
 
 = 2.5.0 =
 
