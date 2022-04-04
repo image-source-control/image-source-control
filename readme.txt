@@ -143,3 +143,222 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 - Improvement: add $attachment_id as parameter to filters: `isc_raw_attachment_get_license`, `isc_raw_attachment_get_source`, `isc_raw_attachment_get_source_url`
 - Improvement: accept line breaks in img and a tags when positioning the overlay
 - Fix: PHP error in the widget block editor and Customizer
+
+= 2.3.1 =
+
+- fixed AMP validation errors
+- prevent contributors from updating unrelated post meta, props to wpscan
+
+= 2.3.0 =
+
+- added `isc_source_list_line` and `isc_source_list` filter hooks to allow developers to manipulate the source list output
+- added `isc_public_source_url_html` filter to manipulate the source link HTML
+- allow source injection into content outside the loop when using Oxygen page builder
+
+= 2.2.1 =
+
+- split admin scripts to load only those that are relevant for a given page
+- fixed script issue on Image Sources debug page
+
+= 2.2.0 =
+
+- added compatibility with the [upcoming Pro version](https://imagesourcecontrol.com/pro/)
+- Pro: show an overlay for images outside of the main content (e.g., feature images and some page builder)
+- add option to strip overlay output from any markup and use hooks to define own styles
+- find sources for images after moving the site to another URL
+
+= 2.1.1 =
+
+- only load ISC-related scripts on the plugin’s admin pages
+- compatibility with line breaks between link and image tags when placing the overlay
+- prevent adding the overlay multiple times to images that appear more than once on a page
+- fixed overlay text showing up in automatically created excerpts
+- fixed jQuery shorthand warnings in the backend
+- fixed source overlays for images with links
+
+= 2.1.0 =
+
+- rewritten jQuery to vanilla JavaScript in the frontend code
+- only index the images of posts in the main loop to prevent getting it from filtered content
+
+= 2.0.0 =
+
+- the full source list is now updated when a post is visited for the first time not after being saved
+- the "own image" option is now "standard source" to better represent its purpose and possibilities
+- improved settings page visually and for more clarity
+- use span instead of div container for source overlays
+- rewrite of the block options to make them more stable
+- introducing a model class
+- introduced debug option
+- introduced option to reindex image-post relations again
+- introduced `isc_sources_list_override_output` filter to allow overriding the output of a source list
+- introduced `isc_source_list_empty_output` filter to allow output when a list of sources is empty
+- fixed showing the sources list on single pages when the "list below content" was disabled while the same option for archive pages was
+- fixed indexing post content for images when the post is saved in the block editor
+- fixed infinite loops breaking autosave feature in the block editor
+- various fixes to debug tables
+- removed unneeded code to recognize the gallery shortcode in classic editor
+- removed broken PHP code causing an issue when using the `isc_images_in_posts_simple` filter
+- removed option to add a link to the ISC website in the frontend
+
+= 1.10.4 =
+
+* fixed block editor files being loaded in the frontend
+
+= 1.10.3 =
+
+* fixed JavaScript bug in block editor with WordPress 5.3
+
+= 1.10.2 =
+
+* removed CSS class which was set automatically in the image block
+
+= 1.10.1 =
+
+* fix for block translations
+
+= 1.10 =
+
+* added image source settings to Image block
+
+= 1.9.7 =
+
+* changed `licence` string to `license` to match en_US language base
+* extended list of copyright licenses
+
+= 1.9.6 =
+
+* fixed issue using [isc_list] without overlays
+
+= 1.9.5 =
+
+* removed additional output introduced in 1.9.3
+
+= 1.9.4 =
+
+* fixed index error
+
+= 1.9.3 =
+
+* prevent image source overlay on full image source list and below
+* optimized query of missing-sources check
+* only check for missing sources when an image was uploaded or once every 24 hours
+
+= 1.9.2 =
+
+* prevent infinite loop for posts with automatic image source lists where images are not index yet
+* moved German translation to wordpress.org
+
+= 1.9.1 =
+
+* delayed displaying source overlay by 100 ms to give images a chance to load their height
+* fixed wrong height of the overlay being used
+* fixed missing textdomain code to allow translations added through wordpress.org
+
+= 1.9 =
+
+THIS UPDATE CONTAINS SOME BASIC CHANGES ON HOW IMAGES ARE DETECTED IN THE CONTENT. PLEASE TEST IT.
+
+Please [reach out](https://wordpress.org/support/plugin/image-source-control-isc) in case you are suddenly missing any image sources.
+
+* rewritten the way how images are detected in the content of the post or page
+* replaced use of image url with attachment ID where possible to lift some heavy loads
+* fix for image names including dimensions (e.g., 300x250)
+* works with version 2.4.0 of Gutenberg plugin
+* place overlay correctly even when page continues to shift after being loaded
+* load public JavaScript in footer by default
+* prevent saving ISC post meta information on non-public post types
+
+= 1.8.11.2 =
+
+* fixed align value not being understood correctly
+
+= 1.8.11.1 =
+
+* fixed missing index issue
+* call parent class in admin class constructor
+
+= 1.8.11 =
+
+* cleanup
+* removed log spam introduced with 1.8.10
+* prevent SQL injection through crafted img src attributes
+
+= 1.8.10.1 =
+
+* hotfix for php below 5.3
+
+= 1.8.10 =
+
+* don’t list images attached to non-public posts in the full image list, when only visible images should be displayed, thanks to heiglandreas
+* added fallback to read images from galleries
+* added `isc_get_image_by_url_query` filter
+* fixed image list being empty due to autosave
+* read src from attribute according to dom documentation, thanks to heiglandreas
+* tested with WordPress 4.4 beta 4
+
+= 1.8.9 =
+
+* rather use than error-log query
+
+= 1.8.8 =
+
+* search for image urls regardless of their used protocol (http or https)
+
+= 1.8.6 | 1.8.7 =
+
+* removed duplicate post links on full source list
+
+= 1.8.5 =
+
+* fixed deprecated sanitize_url()
+
+= 1.8.4 =
+
+* [feature] added option to display all images in the full list, not just those visible in posts
+* [fixed] default author text not showing up
+
+= 1.8.3 =
+
+* [fixed] saving pre text for source overlay, thanks to maler.whick
+
+= 1.8.2 =
+
+* [feature] show image sources for changed images
+* [feature] show image sources for images with query parameters
+
+= 1.8.1 =
+
+* [fixed] set default value for new option to prevent error message
+
+= 1.8 =
+
+* [feature] display image sources on archive pages (see settings)
+* [feature] use `isc_thumbnail_source()` to display thumbnail source in templates
+* [feature] added image sources for galleries and other shortcodes
+* updated German translation
+
+= 1.7.3 =
+
+* [fixed] bug on ajax calls preventing the source fields to show up on ajax called pages in the dashboard
+* [fixed] bug on multisite update
+* [optimized] don’t hide setting boxes
+* [optimized] finished moving all publically needed function to its own class
+
+= 1.7.2 =
+
+* [fixed] error message shown when list type settings was empty or unsaved
+* [fixed] source overlay showing if no image source was set for it
+* [optimized] trim source input
+
+= 1.7.1 =
+
+* [fixed] source list function referring to the wrong plugin class
+
+= 1.7.0 =
+
+* [optimized] manage different source display types on top of settings page
+* [optimized] renamed settings page to "Image Sources"
+* [removed] hiding source list elements in the frontend is no longer possible
+* [fixed] show source list not only below posts, but every other post type
+* [fixed] removed screenshots from main plugin files
