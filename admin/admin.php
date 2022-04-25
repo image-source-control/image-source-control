@@ -189,9 +189,11 @@ class ISC_Admin extends ISC_Class {
 	 */
 	public function add_isc_fields( $form_fields, $post ) {
 
-		$form_fields['isc_image_source_pro']['label'] = '';
-		$form_fields['isc_image_source_pro']['input'] = 'html';
-		$form_fields['isc_image_source_pro']['html'] = self::get_pro_link( 'attachment-edit');
+		if ( ! class_exists( 'ISC_Pro_Admin', false ) ) {
+			$form_fields['isc_image_source_pro']['label'] = '';
+			$form_fields['isc_image_source_pro']['input'] = 'html';
+			$form_fields['isc_image_source_pro']['html'] = self::get_pro_link( 'attachment-edit');
+		}
 
 		// add input field for source
 		$form_fields['isc_image_source']['label'] = __( 'Image Source', 'image-source-control-isc' );
