@@ -394,11 +394,7 @@ class ISC_Public extends ISC_Class {
 			return $excerpt;
 		}
 
-		$source_string = $this->get_thumbnail_source_string( $post->ID );
-
-		$excerpt = $excerpt . $source_string;
-
-		return $excerpt;
+		return $excerpt . $this->get_thumbnail_source_string( $post->ID );
 	}
 
 	/**
@@ -891,8 +887,6 @@ class ISC_Public extends ISC_Class {
 			return '';
 		}
 
-		$options = $this->get_isc_options();
-
 		if ( has_post_thumbnail( $post_id ) ) {
 			$id    = get_post_thumbnail_id( $post_id );
 			$thumb = get_post( $post_id );
@@ -910,7 +904,7 @@ class ISC_Public extends ISC_Class {
 				return '';
 			}
 
-			return '<p class="isc-source-text">' . $options['source_pretext'] . ' ' . $source_string . '</p>';
+			return '<p class="isc-source-text">' . apply_filters( 'isc_featured_image_source_pre_text', _x( 'Featured image: ', 'label of the featured image source, when displayed below post excerpts', 'image-source-control-isc' ) ) . ' ' . $source_string . '</p>';
 		}
 
 		return '';
