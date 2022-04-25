@@ -118,6 +118,10 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 
 == Changelog ==
 
+= untagged =
+
+- Improvement: when the source of the featured image is displayed below post excerpts, it does no longer use the pre-text defined in the Overlay options. It now says "Featured image" by default and can be changed using the `isc_featured_image_source_pre_text` filter
+
 = 2.6.0 =
 
 - Improvement: add FAL and GFDL to available licenses (clear the option to reset the list)
