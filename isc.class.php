@@ -343,7 +343,7 @@ GFDL GNU Free Documentation License 1.3|https://www.gnu.org/licenses/fdl-1.3.htm
 				'body_img' => array(
 					'label'       => __( 'Images on the whole page', 'image-source-control-isc' ),
 					'description' =>
-						__( 'Including header, sidebar, and footer.', 'image-source-control-isc' ) . ' ' .
+						__( 'Including featured image, header, sidebar, and footer.', 'image-source-control-isc' ) . ' ' .
 						sprintf(
 						// translators: %1$s is "img" and %2$s stands for "body" wrapped in "code" tags
 							__( 'Technically: %1$s tags within %2$s.', 'image-source-control-isc' ),
