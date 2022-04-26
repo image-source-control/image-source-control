@@ -2,18 +2,42 @@
 /**
  * Render the Overlay Style setting
  *
- * @var array $caption_style Caption style
+ * @var array $caption_style Caption style.
+ * @var array $caption_style_options Information about the available options.
  */
 ?>
-<label><input type="checkbox" name="isc_options[caption_style]" value="none" <?php checked( $caption_style, 'none' ); ?>/>
-	<?php esc_html_e( 'Remove markup and style', 'image-source-control-isc' ); ?>
-</label>
-<p class="description"><?php esc_html_e( 'Deliver the overlay content without any markup and style.', 'image-source-control-isc' ); ?>
+<div class="isc-settings-highlighted">
 	<?php
-	echo sprintf(
-	// translators: $s is replaced with the name of the script file no longer enqueued when the option with this label is selected
-		esc_html__( 'Removes also %s.', 'image-source-control-isc' ),
-		'<code>captions.js</code>'
-	);
-	?>
-  </p>
+	foreach ( $caption_style_options as $_key => $_options ) :
+		$value  = isset( $_options['value'] ) ? $_options['value'] : '';
+		$is_pro = ! empty( $_options['is_pro'] );
+		?>
+		<label>
+			<input type="radio" name="isc_options[caption_style]" value="<?php echo esc_attr( $value ); ?>"
+				<?php checked( $caption_style, $value ); ?>
+				<?php echo $is_pro ? 'disabled="disabled" class="is-pro"' : ''; ?>
+			/>
+			<?php if ( $is_pro ) : echo ISC_Admin::get_pro_link( 'overlay-' . sanitize_title( $_options['label'] ) ); endif; ?>
+			<?php echo isset( $_options['label'] ) ? esc_html( $_options['label'] ) : ''; ?>
+		</label>
+		<?php
+		if ( isset( $_options['description'] ) ) :
+			?>
+			<p class="description">
+				<?php
+				echo wp_kses(
+					$_options['description'],
+					array(
+						'code' => array(),
+					)
+				);
+				?>
+			</p>
+		<?php
+		endif;
+		?><div id="isc-settings-overlay-caption-style-options-<?php echo $_key; ?>" class="isc-settings-overlay-caption-style-options"><?php
+		// add style based options
+		do_action( 'isc_overlay_caption_style_options_' . $_key );
+		?></div>
+	<?php endforeach; ?>
+</div>
