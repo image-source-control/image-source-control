@@ -126,6 +126,7 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 - Improvement: set color for source link in overlay to be better visible by default
 - Improvement: prevent line breaks for source links in overlays for the Featured Image block since WordPress 6.0
 - Improvement: place overlay correctly on the Cover block
+- Improvement: show link to disable the warning about missing images
 - Fix: plugin options could miss default values on new installations
 
 = 2.6.0 =
