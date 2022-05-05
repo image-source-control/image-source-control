@@ -124,7 +124,11 @@ class Isc_Gutenberg {
 				'option'   => $plugin_options,
 				'postmeta' => new stdClass(),
 				'nonce'    => wp_create_nonce( 'isc-gutenberg-nonce' ),
-				'route' => site_url( '/wp-json/image-source-control/v1/load-fields/' ),
+				'route'      => ( get_option( 'permalink_structure', '' ) === '' )
+					?
+					site_url( 'index.php?rest_route=' . urlencode( '/image-source-control/v1/load-fields/' ) )
+					:
+					site_url( '/wp-json/image-source-control/v1/load-fields/' ),
 				'rest_nonce' => wp_create_nonce( 'wp_rest' ),
 			);
 
