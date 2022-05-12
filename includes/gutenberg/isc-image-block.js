@@ -8,7 +8,7 @@
 	var Fragment = wp.element.Fragment;
 	var el = wp.element.createElement;
 
-	var enableSourceControlOnBlocks = ['core/image', 'core/cover'];
+	var enableSourceControlOnBlocks = ['core/image', 'core/cover', 'core/media-text'];
 
 	var licenceList = [''];
 
@@ -184,23 +184,25 @@
 					return el(BlockEdit, props);
 				}
 
+				var id = props.attributes.id || props.attributes.mediaId;
+
 				// If an image has not been selected yet, do not display the source control fields.
-				if (isNaN(props.attributes.id)) {
+				if (isNaN(id)) {
 					return el(BlockEdit, props);
 				}
 
-				if ('undefined' != typeof iscData.postmeta[props.attributes.id]) {
+				if ('undefined' != typeof iscData.postmeta[id]) {
 					props.setAttributes({
-						'isc_image_source': iscData.postmeta[props.attributes.id]['isc_image_source'],
-						'isc_image_source_url': iscData.postmeta[props.attributes.id]['isc_image_source_url'],
-						'isc_image_source_own': iscData.postmeta[props.attributes.id]['isc_image_source_own'],
-						'isc_image_licence': iscData.postmeta[props.attributes.id]['isc_image_licence'],
+						'isc_image_source': iscData.postmeta[id]['isc_image_source'],
+						'isc_image_source_url': iscData.postmeta[id]['isc_image_source_url'],
+						'isc_image_source_own': iscData.postmeta[id]['isc_image_source_own'],
+						'isc_image_licence': iscData.postmeta[id]['isc_image_licence'],
 					});
 				} else {
 					// ISC fields not yet queried. Queue it.
 					props.setAttributes(emptyMeta);
-					if ( typeof currentMetaLoading[props.attributes.id] === 'undefined' ) {
-						loadImageMeta(props.attributes.id, props.setAttributes);
+					if ( typeof currentMetaLoading[id] === 'undefined' ) {
+						loadImageMeta(id, props.setAttributes);
 					}
 				}
 
@@ -209,8 +211,6 @@
 				var isc_image_source_url = props.attributes.isc_image_source_url;
 				var isc_image_licence = props.attributes.isc_image_licence;
 				var disabled = props.attributes.saving_meta;
-
-				var id = props.attributes.id;
 
 				var panelFields = [el(wp.components.TextControl, {
 						label: __('Image Source', 'image-source-control-isc'),
