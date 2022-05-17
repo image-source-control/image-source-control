@@ -101,7 +101,7 @@ class ISC_Class {
 		 */
 		public function __construct() {
 			// load all plugin options
-			$this->options  = get_option( 'isc_options' );
+			$this->options  = $this->get_isc_options();
 			self::$instance = $this;
 			$this->model    = new ISC_Model();
 
