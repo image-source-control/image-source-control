@@ -494,7 +494,7 @@ class ISC_Public extends ISC_Class {
 		}
 
 		$options  = $this->get_isc_options();
-		$headline = $this->options['image_list_headline'];
+		$headline = $options['image_list_headline'];
 
 		ob_start();
 

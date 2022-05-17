@@ -122,6 +122,7 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 
 - Improvement: load ISC fields only for images present in the currently edited page
 - Improvement: when the source of the featured image is displayed below post excerpts, it does no longer use the pre-text defined in the Overlay options. It now says "Featured image" by default and can be changed using the `isc_featured_image_source_pre_text` filter
+- Fix: plugin options could miss default values on new installations
 
 = 2.6.0 =
 
