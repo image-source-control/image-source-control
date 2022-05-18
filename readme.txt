@@ -123,7 +123,11 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 - Improvement: load ISC fields only for images present in the currently edited page
 - Improvement: when the source of the featured image is displayed below post excerpts, it does no longer use the pre-text defined in the Overlay options. It now says "Featured image" by default and can be changed using the `isc_featured_image_source_pre_text` filter
 - Improvement: prevent line breaks for source links in overlays for the Featured Image block since WordPress 6.0
+<<<<<<< HEAD
 - Fix: plugin options could miss default values on new installations
+=======
+- Improvement: place overlay correctly on the Cover block
+>>>>>>> cff8055 (fix overlay on cover block)
 
 = 2.6.0 =
 
