@@ -8,7 +8,7 @@
 	var Fragment = wp.element.Fragment;
 	var el = wp.element.createElement;
 
-	var enableSourceControlOnBlocks = ['core/image', 'core/cover', 'core/media-text'];
+	var enableSourceControlOnBlocks = ['core/image', 'core/cover', 'core/media-text', 'core/post-featured-image'];
 
 	var licenceList = [''];
 
@@ -186,8 +186,12 @@
 
 				var id = props.attributes.id || props.attributes.mediaId;
 
+				if ( props.name === 'core/post-featured-image' ) {
+					id = wp.data.select('core/editor').getEditedPostAttribute('featured_media');
+				}
+
 				// If an image has not been selected yet, do not display the source control fields.
-				if (isNaN(id)) {
+				if (isNaN(id) || id === 0) {
 					return el(BlockEdit, props);
 				}
 
