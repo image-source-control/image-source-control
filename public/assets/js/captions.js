@@ -75,41 +75,41 @@ function isc_update_caption_position( el ) {
 	var attmt = parseInt( window.getComputedStyle( att )[ 'margin-top' ].substring( 0, window.getComputedStyle( att )[ 'margin-top' ].indexOf( 'px' ) ) );
 
 	// caption horizontal margin
-	var tml = 5;
+	var tml = 0;
 	// caption vertical margin
-	var tmt = 5;
+	var tmt = 0;
 
 	var pos  = isc_front_data.caption_position;
 	var posl = 0;
 	var post = 0;
 	switch (pos) {
 		case 'top-left':
-			posl = l + attpl + attml + tml;
-			post = t + attpt + attmt + tmt;
+			posl = l + attpl + attml;
+			post = t + attpt + attmt;
 			break;
 		case 'top-center':
 			posl = l + (Math.round( attw / 2 ) - (Math.round( tw / 2 ))) + attpl + attml;
-			post = t + attpt + attmt + tmt;
+			post = t + attpt + attmt;
 			break;
 		case 'top-right':
-			posl = l - attpl + attml - tml + attw - tw;
-			post = t + attpt + attmt + tmt;
+			posl = l - attpl + attml + attw - tw;
+			post = t + attpt + attmt;
 			break;
 		case 'center':
 			posl = l + (Math.round( attw / 2 ) - (Math.round( tw / 2 ))) + attpl + attml;
 			post = t + (Math.round( atth / 2 ) - (Math.round( th / 2 ))) + attpt + attmt;
 			break;
 		case 'bottom-left':
-			posl = l + attpl + attml + tml;
-			post = t - attpt + attmt - tmt - th + atth;
+			posl = l + attpl + attml;
+			post = t - attpt + attmt - th + atth;
 			break;
 		case 'bottom-center':
 			posl = l + (Math.round( attw / 2 ) - (Math.round( tw / 2 ))) + attpl + attml;
-			post = t + attpt + attmt - tmt - th + atth;
+			post = t + attpt + attmt - th + atth;
 			break;
 		case 'bottom-right':
-			posl = l - attpl + attml - tml + attw - tw;
-			post = t + attpt + attmt - tmt - th + atth;
+			posl = l - attpl + attml + attw - tw;
+			post = t + attpt + attmt - th + atth;
 			break;
 	}
 	caption.style.left   = posl + 'px';
