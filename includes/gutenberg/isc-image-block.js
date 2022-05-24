@@ -322,7 +322,7 @@
 	addFilter('editor.BlockEdit', 'image-source-control/editor', iscWithSourceControl);
 
 	$(function () {
-		var allLicences = iscData.option.licences.split("\n");
+		var allLicences = iscData.option.licences.replace(/[\r]/g, '').split("\n");
 		for (var i in allLicences) {
 			var label = allLicences[i].split('|');
 			licenceList.push({
