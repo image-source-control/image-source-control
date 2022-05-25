@@ -359,6 +359,38 @@ GFDL GNU Free Documentation License 1.3|https://www.gnu.org/licenses/fdl-1.3.htm
 		}
 
 		/**
+		 * Get the options for overlay styles
+		 */
+		public function get_overlay_caption_style_options() {
+			return apply_filters( 'isc_overlay_caption_style_options', array(
+					'default'  => array(
+						'label'       => __( 'Choose top, center, and bottom positions', 'image-source-control-isc' ),
+						'description' => __( 'Uses JavaScript to place the source after the page loaded.', 'image-source-control-isc' ),
+						'value'       => '',
+					),
+					'none' => array(
+						'label'       => __( 'Remove markup and style', 'image-source-control-isc' ),
+						'description' =>
+							__( 'Deliver the overlay content without any markup and style.', 'image-source-control-isc' ) . ' ' .
+							sprintf(
+							// translators: $s is replaced with the name of the script file no longer enqueued when the option with this label is selected
+								esc_html__( 'Removes also %s.', 'image-source-control-isc' ),
+								'<code>captions.js</code>'
+							),
+						'value'       => 'none',
+						'is_pro'      => false,
+					),
+					'css' => array(
+						'label'       => __( 'Custom style', 'image-source-control-isc' ),
+						'description' => __( 'Uses inline CSS to place the source during page load.', 'image-source-control-isc' ),
+						'value'       => 'css',
+						'is_pro'      => true,
+					)
+				)
+			);
+		}
+
+		/**
 		 * Get the standard source text as set up under Settings > Standard Source > Custom text
 		 * if there was no input, yet
 		 *

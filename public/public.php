@@ -342,7 +342,7 @@ class ISC_Public extends ISC_Class {
 					$old_content,
 					sprintf(
 						'%s%s%s%s',
-						apply_filters( 'isc_overlay_html_markup_before', $markup_before, $id ),
+						apply_filters( 'isc_overlay_html_markup_before', $markup_before, $id, $alignment ),
 						$new_content,
 						apply_filters( 'isc_overlay_html_source', $source, $id ),
 						apply_filters( 'isc_overlay_html_markup_after', $markup_after, $id )

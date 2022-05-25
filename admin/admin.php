@@ -24,6 +24,7 @@ class ISC_Admin extends ISC_Class {
 		// settings page
 		add_action( 'admin_menu', array( $this, 'add_menu_items' ) );
 		add_action( 'admin_init', array( $this, 'settings_init' ) );
+		add_action( 'isc_overlay_caption_style_options_default', array( $this, 'renderfield_overlay_position' ) );
 
 		// scripts and styles
 		add_action( 'admin_enqueue_scripts', array( $this, 'add_admin_scripts' ) );
@@ -150,7 +151,8 @@ class ISC_Admin extends ISC_Class {
 		// add style to media edit pages
 		if ( isset( $screen->id ) && $screen->id === 'attachment' ) {
 			// Meta field in media view
-			?><style>
+			?>
+			<style>
 				.compat-attachment-fields input[type="text"] { width: 100%; }
 				.compat-attachment-fields th { vertical-align: top; }
 			</style>
@@ -159,12 +161,15 @@ class ISC_Admin extends ISC_Class {
 		// add style to plugin overview page
 		if ( isset( $screen->id ) && $screen->id === 'plugins' ) {
 			// Meta field in media view
-			?><style>
+			?>
+			<style>
 				.row-actions .isc-get-pro { font-weight: bold; color: #F70; }
-			</style><?php
+			</style>
+			<?php
 		}
 		// add to any backend pages
-		?><style>
+		?>
+		<style>
 			.compat-attachment-fields .isc-get-pro{ font-weight: bold; color: #F70; }
 			div.error.isc-notice { border-left-color: #F70; }
 		</style>
@@ -188,11 +193,10 @@ class ISC_Admin extends ISC_Class {
 	 * @return array with form fields
 	 */
 	public function add_isc_fields( $form_fields, $post ) {
-
 		if ( ! class_exists( 'ISC_Pro_Admin', false ) ) {
 			$form_fields['isc_image_source_pro']['label'] = '';
 			$form_fields['isc_image_source_pro']['input'] = 'html';
-			$form_fields['isc_image_source_pro']['html'] = self::get_pro_link( 'attachment-edit');
+			$form_fields['isc_image_source_pro']['html']  = self::get_pro_link( 'attachment-edit' );
 		}
 
 		// add input field for source
@@ -248,13 +252,12 @@ class ISC_Admin extends ISC_Class {
 	 * Create the menu pages for ISC with access for editors and higher roles
 	 */
 	public function add_menu_items() {
-
 		$options = $this->get_isc_options();
 		if ( empty( $options['warning_onesource_missing'] ) ) {
 			$notice_alert = '';
 		} else {
 			$missing_images = get_transient( 'isc-show-missing-sources-warning' );
-			$notice_alert = '&nbsp;<span class="update-plugins count-' . $missing_images . '"><span class="update-count">' . $missing_images . '</span></span>';
+			$notice_alert   = '&nbsp;<span class="update-plugins count-' . $missing_images . '"><span class="update-count">' . $missing_images . '</span></span>';
 		}
 
 		add_submenu_page(
@@ -263,7 +266,8 @@ class ISC_Admin extends ISC_Class {
 			__( 'Image Sources', 'image-source-control-isc' ) . $notice_alert,
 			'edit_others_posts',
 			'isc-sources',
-			array( $this, 'render_sources_page' ) );
+			array( $this, 'render_sources_page' )
+		);
 
 		add_options_page(
 			__( 'Image Source Control Settings', 'image-source-control-isc' ),
@@ -284,13 +288,13 @@ class ISC_Admin extends ISC_Class {
 			return;
 		}
 		switch ( $screen_id ) {
-			case 'settings_page_isc-settings' :
+			case 'settings_page_isc-settings':
 				$title = __( 'Settings', 'image-source-control-isc' );
 				break;
-			case 'media_page_isc-sources' :
+			case 'media_page_isc-sources':
 				$title = __( 'Tools', 'image-source-control-isc' );
 				break;
-			default :
+			default:
 				$title = get_admin_page_title();
 		}
 		include ISCPATH . 'admin/templates/header.php';
@@ -318,7 +322,7 @@ class ISC_Admin extends ISC_Class {
 		add_settings_section( 'isc_settings_section_overlay', '2. ' . __( 'Overlay', 'image-source-control-isc' ), '__return_false', 'isc_settings_page' );
 		add_settings_field( 'source_overlay', __( 'Overlay pre-text', 'image-source-control-isc' ), array( $this, 'renderfield_overlay_text' ), 'isc_settings_page', 'isc_settings_section_overlay' );
 		add_settings_field( 'overlay_style', __( 'Layout', 'image-source-control-isc' ), array( $this, 'renderfield_overlay_style' ), 'isc_settings_page', 'isc_settings_section_overlay' );
-		add_settings_field( 'overlay_position', __( 'Overlay position', 'image-source-control-isc' ), array( $this, 'renderfield_overlay_position' ), 'isc_settings_page', 'isc_settings_section_overlay' );
+		//add_settings_field( 'overlay_position', __( 'Overlay position', 'image-source-control-isc' ), array( $this, 'renderfield_overlay_position' ), 'isc_settings_page', 'isc_settings_section_overlay' );
 		add_settings_field( 'overlay_included_images', __( 'Included images', 'image-source-control-isc' ), array( $this, 'renderfield_overlay_included_images' ), 'isc_settings_page', 'isc_settings_section_overlay' );
 
 		// Global list group
@@ -432,7 +436,6 @@ class ISC_Admin extends ISC_Class {
 	 * Missing sources page callback
 	 */
 	public function render_sources_page() {
-
 		$storage_model = new ISC_Storage_Model();
 		$storage_size  = count( $storage_model->get_storage() );
 
@@ -499,13 +502,15 @@ class ISC_Admin extends ISC_Class {
 	 * Render option for the style of the overlay
 	 */
 	public function renderfield_overlay_style() {
-		$options       = $this->get_isc_options();
-		$caption_style = ! empty( $options['caption_style'] ) ? $options['caption_style'] : null;
+		$options               = $this->get_isc_options();
+		$caption_style         = ! empty( $options['caption_style'] ) ? $options['caption_style'] : null;
+		$caption_style_options = $this->get_overlay_caption_style_options();
 		require_once ISCPATH . '/admin/templates/settings/overlay-style.php';
 	}
 
 	/**
 	 * Render option for the position of the overlay on images
+	 * Since 2.7, this is no longer a standalone option, but added to the "default" Overlay Style option
 	 */
 	public function renderfield_overlay_position() {
 		$options = $this->get_isc_options();
@@ -725,7 +730,7 @@ class ISC_Admin extends ISC_Class {
 
 		ISC_Storage_Model::clear_storage();
 
-		die( esc_html__( "Storage deleted", 'image-source-control-isc' ) );
+		die( esc_html__( 'Storage deleted', 'image-source-control-isc' ) );
 	}
 
 	/**
@@ -832,7 +837,7 @@ class ISC_Admin extends ISC_Class {
 	 *
 	 * @return string website URL
 	 */
-	public static function get_isc_website_url( ) {
+	public static function get_isc_website_url() {
 		// check if the locale starts with "de_"
 		if ( strpos( determine_locale(), 'de_' ) === 0 ) {
 			return 'https://imagesourcecontrol.de/';
