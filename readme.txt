@@ -39,7 +39,8 @@ Choose between different credit displays:
 
 **Backend Features**
 
-* Add credits for any image file uploaded to the Media library or as an Image or Cover Image block
+* Add credits for any image file uploaded to the Media library
+* Dedicated image source fields for the following blocks: Image, Cover Image, Featured Image, Media & Text
 * Quickly assign a centrally defined source to any image and choose three options: hide image sources for these images, show a specific source (e.g., your name), or the uploader’s name
 * Warn about missing image sources
 * Manage, display, and link available licenses
