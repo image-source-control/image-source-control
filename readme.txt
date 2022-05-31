@@ -2,8 +2,8 @@
 Contributors: webzunft
 Tags: images, credits, captions, copyrights, attributions, photos, pictures, sources, bildquellen, bilder, fotos, bildunterschriften
 Requires at least: 5.3
-Tested up to: 5.9
-Stable tag: 2.6.0
+Tested up to: 6.0
+Stable tag: 2.7.0
 Requires PHP: 7.0
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -118,16 +118,16 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 
 == Changelog ==
 
-= untagged =
+= 2.7.0 =
 
 - Feature: added ISC fields to Media & Text block
-- Feature: added ISC fields to post featured image block
-- Improvement: load ISC fields only for images present in the currently edited page
+- Feature: added ISC fields to the post’s Featured Image block
+- Improvement: load ISC field data in the block editor only for images in the currently edited page
 - Improvement: when the source of the featured image is displayed below post excerpts, it does no longer use the pre-text defined in the Overlay options. It now says "Featured image" by default and can be changed using the `isc_featured_image_source_pre_text` filter
-- Improvement: set color for source link in overlay to be better visible by default
+- Improvement: set the color for the source link in overlays to white (#fff) to be better visible by default
 - Improvement: prevent line breaks for source links in overlays for the Featured Image block since WordPress 6.0
-- Improvement: place overlay correctly on the Cover block
-- Improvement: show link to disable the warning about missing images
+- Improvement: place the overlay correctly on the Cover block
+- Improvement: show a link to disable the warning about missing images
 - Fix: plugin options could miss default values on new installations
 
 = 2.6.0 =
