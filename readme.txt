@@ -31,7 +31,7 @@ Choose between different credit displays:
 **Frontend Features**
 
 * Display image credits in the content, for image galleries, images added by shortcodes, and featured images
-* Define the layout and position of the image credits
+* Define the layout and position of those attributions
 * Attach the Per-page list automatically, by using a shortcode, or with a PHP function
 * Display image sources on archive pages
 * Block editor: detects image sources for the image, cover image, and gallery blocks
