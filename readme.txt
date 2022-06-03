@@ -118,6 +118,10 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 
 == Changelog ==
 
+= untagged =
+
+- Feature: added ISC fields to Cover blocks using featured image.
+
 = 2.7.0 =
 
 - Feature: added ISC fields to Media & Text block
