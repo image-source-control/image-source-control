@@ -47,7 +47,7 @@
 
 				var id = props.attributes.id || props.attributes.mediaId;
 
-				if ( props.name === 'core/post-featured-image' ) {
+				if ( ( props.name === 'core/cover' && props.attributes.useFeaturedImage === true ) ||  props.name === 'core/post-featured-image' ) {
 					id = wp.data.select('core/editor').getEditedPostAttribute('featured_media');
 				}
 
