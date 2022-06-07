@@ -1,6 +1,7 @@
 if (document.readyState != 'loading') {
 	ISCready();
 } else {
+	// DOMContentLoaded fires after the content is loaded, but before scripts and images.
 	document.addEventListener( 'DOMContentLoaded', ISCready );
 }
 
@@ -24,6 +25,16 @@ function ISCready(){
 			}
 		}, 100 );
 
+		/**
+		 * Load image source positions after the page – including images – loaded completely
+		 * this resolves occasionally misplaced sources
+		 */
+		window.addEventListener( 'load', function() {
+			// the additional timeout seems needed to make it work reliably on Firefox
+			setTimeout( function(){
+				isc_update_captions_positions();
+			}, 100 );
+		} );
 		/**
 		 * Register resize event to check caption positions
 		 */
