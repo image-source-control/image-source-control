@@ -122,6 +122,7 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 = untagged =
 
 - Feature: added ISC fields to Cover blocks using featured image.
+- Fix: specified style for overlay links to not also style other isc related links
 
 = 2.7.0 =
 
