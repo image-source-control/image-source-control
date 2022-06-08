@@ -36,6 +36,7 @@ class ISC_Public extends ISC_Class {
 		// Content filters need to be above 10 in order to interpret also gallery shortcode
 		self::register_the_content_filters();
 		add_filter( 'the_excerpt', array( $this, 'excerpt_filter' ), 20 );
+		add_filter( 'render_block', array( $this, 'add_featured_image_source_to_excerpt_block' ), 10, 2 );
 
 		add_shortcode( 'isc_list', array( $this, 'list_post_attachments_with_sources_shortcode' ) );
 		add_shortcode( 'isc_list_all', array( $this, 'list_all_post_attachments_sources_shortcode' ) );
@@ -400,6 +401,32 @@ class ISC_Public extends ISC_Class {
 		}
 
 		return $excerpt . $this->get_thumbnail_source_string( $post->ID );
+	}
+
+	/**
+	 * Add image source of featured image to the post excerpt block in the frontend
+	 *
+	 * @param string $block_content rendered content of the block.
+	 * @param array $block full block details.
+	 * @return string $excerpt
+	 */
+	public function add_featured_image_source_to_excerpt_block( $block_content, $block ) {
+
+		if ( isset( $block['blockName'] ) && $block['blockName'] !== 'core/post-excerpt' ) {
+			return $block_content;
+		}
+
+		$options = $this->get_isc_options();
+		if ( empty( $options['list_on_excerpts'] ) ) {
+			return $block_content;
+		}
+
+		$post = get_post();
+		return str_replace(
+			'</p></div>',
+			$this->get_thumbnail_source_string( $post->ID ) . '</p></div>',
+			$block_content
+		);
 	}
 
 	/**
