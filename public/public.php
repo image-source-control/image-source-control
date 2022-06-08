@@ -106,7 +106,7 @@ class ISC_Public extends ISC_Class {
 				<?php
 				// The 2022 theme adds display:block to the featured image block, which creates additional line breaks. `display: inline` fixes that.
 				?>
-				.isc-source-text a { display: inline; color: #fff; }
+				span.isc-source-text a { display: inline; color: #fff; }
 			</style>
 			<?php
 	}

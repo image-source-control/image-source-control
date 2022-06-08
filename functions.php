@@ -28,7 +28,6 @@ function isc_image_source( $attachment_id = 0 ) {
 /**
  * Return the source html of the featured image
  *
- * @since 1.8
  * @global object $my_isc isc class
  * @global object $post current post
  * @param integer $post_id id of the post; will use current post if empty.
