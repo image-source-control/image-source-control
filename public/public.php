@@ -716,7 +716,7 @@ class ISC_Public extends ISC_Class {
 	}
 
 	/**
-	 * Performs rendering of all attachments list
+	 * Render the global list
 	 *
 	 * @param array $atts attachments.
 	 */
@@ -727,6 +727,28 @@ class ISC_Public extends ISC_Class {
 		$options = $this->get_isc_options();
 
 		require ISCPATH . 'public/views/global-list.php';
+	}
+
+	/**
+	 * Render global list thumbnails
+	 *
+	 * @param int $attachment_id attachment ID.
+	 */
+	public function render_global_list_thumbnail( $attachment_id ) {
+		$options = $this->get_isc_options();
+
+		if ( 'custom' !== $options['thumbnail_size'] ) {
+			$thumbnail = wp_get_attachment_image( $attachment_id, $options['thumbnail_size'] );
+		} else {
+			$thumbnail = wp_get_attachment_image( $attachment_id, array( $options['thumbnail_width'], $options['thumbnail_height'] ) );
+		}
+
+		// a thumbnail might be missing for images that are not hosted within WordPress
+		if ( ! $thumbnail  ) {
+			?><img src="<?php echo ISCBASEURL . '/public/assets/images/isc-icon-gray.svg' ?>"/><?php
+		}
+
+		echo $thumbnail;
 	}
 
 	/**
