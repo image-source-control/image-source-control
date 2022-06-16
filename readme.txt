@@ -124,6 +124,8 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 - Feature: added ISC fields to Cover blocks using featured image.
 - Feature: show feature image source string in the post excerpt block when the Insert below excerpts option is enabled
 - Improvement: check overlay positions after the site is fully loaded to correct misplaced overlays
+- Improvement: show a default thumbnail image in the global list, when WordPress didn’t create a thumbnail
+- Improvement: show a default thumbnail in WP Admin for [external images](https://imagesourcecontrol.com/documentation/#4-4-2-additional-images)
 - Fix: specified style for overlay links to not also style other isc related links
 
 = 2.7.0 =

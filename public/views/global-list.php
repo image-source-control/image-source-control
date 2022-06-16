@@ -29,13 +29,8 @@
 				$v_align = '';
 				if ( $options['thumbnail_in_list'] ) :
 					$v_align = 'style="vertical-align: top;"';
-					?>
-					<?php if ( 'custom' !== $options['thumbnail_size'] ) : ?>
-					<td><?php echo wp_get_attachment_image( $id, $options['thumbnail_size'] ); ?></td>
-				<?php else : ?>
-					<td><?php echo wp_get_attachment_image( $id, array( $options['thumbnail_width'], $options['thumbnail_height'] ) ); ?></td>
-				<?php endif; ?>
-				<?php endif; ?>
+					?><td><?php $this->render_global_list_thumbnail( $id ); ?></td><?php
+				endif; ?>
 				<td <?php echo $v_align; ?>><?php echo $id; ?></td>
 				<td <?php echo $v_align; ?>><?php echo $data['title']; ?></td>
 				<td <?php echo $v_align; ?>><?php echo $data['posts']; ?></td>
