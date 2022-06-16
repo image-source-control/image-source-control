@@ -718,9 +718,6 @@ class ISC_Public extends ISC_Class {
 	/**
 	 * Performs rendering of all attachments list
 	 *
-	 * @since 1.1.3
-	 * @update 1.5 added new method to get source
-	 *
 	 * @param array $atts attachments.
 	 */
 	public function display_all_attachment_list( $atts ) {
@@ -729,49 +726,7 @@ class ISC_Public extends ISC_Class {
 		}
 		$options = $this->get_isc_options();
 
-		/**
-		 * Added comment `isc_stop_overlay` as a class to the table to suppress overlays within it starting at that point
-		 * todo: allow overlays to start again after the table
-		 * todo: move to template file
-		 */
-		?>
-			<div class="isc_all_image_list_box isc_stop_overlay" style="overflow: scroll;">
-			<table>
-				<thead>
-				<?php if ( $options['thumbnail_in_list'] ) : ?>
-						<th><?php esc_html_e( 'Thumbnail', 'image-source-control-isc' ); ?></th>
-					<?php endif; ?>
-					<th><?php esc_html_e( 'Attachment’s ID', 'image-source-control-isc' ); ?></th>
-					<th><?php esc_html_e( 'Title', 'image-source-control-isc' ); ?></th>
-					<th><?php esc_html_e( 'Attached to', 'image-source-control-isc' ); ?></th>
-					<th><?php esc_html_e( 'Source', 'image-source-control-isc' ); ?></th>
-				</thead>
-				<tbody>
-			<?php foreach ( $atts as $id => $data ) : ?>
-					<?php
-						$source = $this->render_image_source_string( $id );
-					?>
-					<tr>
-						<?php
-							$v_align = '';
-						if ( $options['thumbnail_in_list'] ) :
-							$v_align = 'style="vertical-align: top;"';
-							?>
-							<?php if ( 'custom' !== $options['thumbnail_size'] ) : ?>
-								<td><?php echo wp_get_attachment_image( $id, $options['thumbnail_size'] ); ?></td>
-							<?php else : ?>
-								<td><?php echo wp_get_attachment_image( $id, array( $options['thumbnail_width'], $options['thumbnail_height'] ) ); ?></td>
-							<?php endif; ?>
-						<?php endif; ?>
-						<td <?php echo $v_align; ?>><?php echo $id; ?></td>
-						<td <?php echo $v_align; ?>><?php echo $data['title']; ?></td>
-						<td <?php echo $v_align; ?>><?php echo $data['posts']; ?></td>
-						<td <?php echo $v_align; ?>><?php echo $source; ?></td>
-					</tr>
-				<?php endforeach; ?>
-				</tbody>
-			</table></div>
-			<?php
+		require ISCPATH . 'public/views/global-list.php';
 	}
 
 	/**
