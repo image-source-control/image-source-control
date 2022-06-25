@@ -114,7 +114,9 @@ class Isc_Gutenberg {
 	 */
 	public function editor_assets() {
 		$dependencies = array( 'jquery', 'wp-api', 'lodash', 'wp-blocks', 'wp-element', 'wp-i18n' );
-		$screen = get_current_screen();
+		$screen       = get_current_screen();
+		wp_enqueue_script( 'isc_attachment_compat', trailingslashit( ISCBASEURL ) . 'admin/assets/js/wp.media.view.AttachmentCompat.js', array( 'media-upload' ), ISCVERSION, true );
+
 		if ( $screen && isset( $screen->base ) && $screen->base !== 'widgets' ) {
 			$dependencies[] = 'wp-editor';
 		}
