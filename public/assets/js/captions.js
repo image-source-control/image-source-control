@@ -16,7 +16,7 @@ function ISCready(){
 			var captions = document.querySelectorAll( '.isc-source .isc-source-text' );
 			var l        = captions.length;
 			for ( var i = 0; i < l; i++ ) {
-				captions[i].setAttribute( "style", "position: absolute; font-size: 0.9em; background-color: #333; color: #fff; opacity: 0.70; padding: 0 0.15em; text-shadow: none; display: block; line-height: initial; " );
+				captions[i].setAttribute( "style", "position: absolute; font-size: 0.9em; background-color: #333; color: #fff; opacity: 0.70; padding: 0 0.15em; text-shadow: none; display: block; " );
 				// Some themes handle the bottom padding of the attachment's div with the caption text (which is in between
 				// the image and the bottom border) not with the div itself. The following line set the padding on the bottom equal to the top.
 				captions[i].style.paddingBottom = window.getComputedStyle( captions[i] )['padding-top'];
