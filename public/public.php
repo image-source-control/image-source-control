@@ -102,7 +102,7 @@ class ISC_Public extends ISC_Class {
 			/* ]]> */
 			</script>
 			<style>
-				.isc-source { position: relative; display: inline-block; }
+				.isc-source { position: relative; display: inline-block; line-height: initial; }
                 .wp-block-cover .isc-source { position: static; }
 				<?php
 				// The 2022 theme adds display:block to the featured image block, which creates additional line breaks. `display: inline` fixes that.
