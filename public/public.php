@@ -726,7 +726,7 @@ class ISC_Public extends ISC_Class {
 		}
 		$options = $this->get_isc_options();
 
-		require ISCPATH . 'public/views/global-list.php';
+		require apply_filters( 'isc_public_global_list_view_path', ISCPATH . 'public/views/global-list.php' );
 	}
 
 	/**
