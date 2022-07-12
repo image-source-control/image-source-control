@@ -141,6 +141,8 @@ class Isc_Gutenberg {
 			wp_add_inline_script( 'isc/image-block', 'var iscData = ' . wp_json_encode( $isc_data ) . ';', 'before' );
 		}
 		wp_enqueue_script( 'isc/image-block' );
+
+		wp_enqueue_script( 'isc/media-upload', trailingslashit( ISCBASEURL ) . 'admin/assets/js/media-upload.js', array( 'media-upload' ), ISCVERSION, true );
 	}
 
 }
