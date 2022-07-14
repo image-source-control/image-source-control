@@ -533,7 +533,11 @@ class ISC_Model {
 		$ext = pathinfo( $url, PATHINFO_EXTENSION );
 		if ( ! $ext ) {
 			ISC_Log::log( 'exit get_image_by_url() no extension found' );
-			return 0;
+			if ( apply_filters( 'isc_allow_empty_file_extension', __return_false() ) ) {
+				ISC_Log::log( "get_image_by_url() didn’t find an extension for $url but continues." );
+			} else {
+				return 0;
+			}
 		}
 		/**
 		 * Check for the format 'image-title-(e12452112-)300x200.jpg(?query…)' and removes

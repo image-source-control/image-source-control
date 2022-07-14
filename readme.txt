@@ -127,6 +127,7 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 - Improvement: show a default thumbnail image in the global list, when WordPress didn’t create a thumbnail
 - Improvement: show a default thumbnail in WP Admin for [external images](https://imagesourcecontrol.com/documentation/#4-4-2-additional-images)
 - Improvement: added CSS rule to Overlay for better compatibility with Divi theme
+- Improvement: (Pro) Find images without a file extension
 - Fix: specified style for overlay links to not also style other isc related links
 
 = 2.7.0 =
