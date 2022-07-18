@@ -150,7 +150,8 @@ class ISC_Admin extends ISC_Class {
 		// add style to media edit pages
 		if ( isset( $screen->id ) && $screen->id === 'attachment' ) {
 			// Meta field in media view
-			?><style>
+			?>
+			<style>
 				.compat-attachment-fields input[type="text"] { width: 100%; }
 				.compat-attachment-fields th { vertical-align: top; }
 			</style>
@@ -159,12 +160,15 @@ class ISC_Admin extends ISC_Class {
 		// add style to plugin overview page
 		if ( isset( $screen->id ) && $screen->id === 'plugins' ) {
 			// Meta field in media view
-			?><style>
+			?>
+			<style>
 				.row-actions .isc-get-pro { font-weight: bold; color: #F70; }
-			</style><?php
+			</style>
+			<?php
 		}
 		// add to any backend pages
-		?><style>
+		?>
+		<style>
 			.compat-attachment-fields .isc-get-pro{ font-weight: bold; color: #F70; }
 			div.error.isc-notice { border-left-color: #F70; }
 		</style>
@@ -188,11 +192,10 @@ class ISC_Admin extends ISC_Class {
 	 * @return array with form fields
 	 */
 	public function add_isc_fields( $form_fields, $post ) {
-
 		if ( ! class_exists( 'ISC_Pro_Admin', false ) ) {
 			$form_fields['isc_image_source_pro']['label'] = '';
 			$form_fields['isc_image_source_pro']['input'] = 'html';
-			$form_fields['isc_image_source_pro']['html'] = self::get_pro_link( 'attachment-edit');
+			$form_fields['isc_image_source_pro']['html']  = self::get_pro_link( 'attachment-edit' );
 		}
 
 		// add input field for source
@@ -248,13 +251,12 @@ class ISC_Admin extends ISC_Class {
 	 * Create the menu pages for ISC with access for editors and higher roles
 	 */
 	public function add_menu_items() {
-
 		$options = $this->get_isc_options();
 		if ( empty( $options['warning_onesource_missing'] ) ) {
 			$notice_alert = '';
 		} else {
 			$missing_images = get_transient( 'isc-show-missing-sources-warning' );
-			$notice_alert = '&nbsp;<span class="update-plugins count-' . $missing_images . '"><span class="update-count">' . $missing_images . '</span></span>';
+			$notice_alert   = '&nbsp;<span class="update-plugins count-' . $missing_images . '"><span class="update-count">' . $missing_images . '</span></span>';
 		}
 
 		add_submenu_page(
@@ -263,7 +265,8 @@ class ISC_Admin extends ISC_Class {
 			__( 'Image Sources', 'image-source-control-isc' ) . $notice_alert,
 			'edit_others_posts',
 			'isc-sources',
-			array( $this, 'render_sources_page' ) );
+			array( $this, 'render_sources_page' )
+		);
 
 		add_options_page(
 			__( 'Image Source Control Settings', 'image-source-control-isc' ),
@@ -284,13 +287,13 @@ class ISC_Admin extends ISC_Class {
 			return;
 		}
 		switch ( $screen_id ) {
-			case 'settings_page_isc-settings' :
+			case 'settings_page_isc-settings':
 				$title = __( 'Settings', 'image-source-control-isc' );
 				break;
-			case 'media_page_isc-sources' :
+			case 'media_page_isc-sources':
 				$title = __( 'Tools', 'image-source-control-isc' );
 				break;
-			default :
+			default:
 				$title = get_admin_page_title();
 		}
 		include ISCPATH . 'admin/templates/header.php';
@@ -323,6 +326,8 @@ class ISC_Admin extends ISC_Class {
 
 		// Global list group
 		add_settings_section( 'isc_settings_section_complete_list', '3. ' . __( 'Global list', 'image-source-control-isc' ), '__return_false', 'isc_settings_page' );
+		add_settings_field( 'global_list_included_images', __( 'Included images', 'image-source-control-isc' ), array( $this, 'renderfield_global_list_included_images' ), 'isc_settings_page', 'isc_settings_section_complete_list' );
+		add_settings_field( 'images_per_page_in_list', __( 'Images per page', 'image-source-control-isc' ), array( $this, 'renderfield_images_per_page_in_list' ), 'isc_settings_page', 'isc_settings_section_complete_list' );
 		add_settings_field( 'thumbnail_in_list', __( 'Use thumbnails', 'image-source-control-isc' ), array( $this, 'renderfield_thumbnail_in_list' ), 'isc_settings_page', 'isc_settings_section_complete_list' );
 		add_settings_field( 'thumbnail_width', __( 'Thumbnails max-width', 'image-source-control-isc' ), array( $this, 'renderfield_thumbnail_width' ), 'isc_settings_page', 'isc_settings_section_complete_list' );
 		add_settings_field( 'thumbnail_height', __( 'Thumbnails max-height', 'image-source-control-isc' ), array( $this, 'renderfield_thumbnail_height' ), 'isc_settings_page', 'isc_settings_section_complete_list' );
@@ -432,7 +437,6 @@ class ISC_Admin extends ISC_Class {
 	 * Missing sources page callback
 	 */
 	public function render_sources_page() {
-
 		$storage_model = new ISC_Storage_Model();
 		$storage_size  = count( $storage_model->get_storage() );
 
@@ -520,6 +524,25 @@ class ISC_Admin extends ISC_Class {
 		$included_images         = ! empty( $options['overlay_included_images'] ) ? $options['overlay_included_images'] : '';
 		$included_images_options = $this->get_overlay_included_images_options();
 		require_once ISCPATH . '/admin/templates/settings/overlay-included-images.php';
+	}
+
+	/**
+	 * Render option to define which images should show in the global list
+	 */
+	public function renderfield_global_list_included_images() {
+		$options                 = $this->get_isc_options();
+		$included_images         = ! empty( $options['global_list_included_images'] ) ? $options['global_list_included_images'] : '';
+		$included_images_options = $this->get_global_list_included_images_options();
+		require_once ISCPATH . '/admin/templates/settings/global-list-included-images.php';
+	}
+
+	/**
+	 * Render option for the number of images per page in the Global list
+	 */
+	public function renderfield_images_per_page_in_list() {
+		$options         = $this->get_isc_options();
+		$images_per_page = isset( $options['images_per_page'] ) ? absint( $options['images_per_page'] ) : 99999;
+		require_once ISCPATH . '/admin/templates/settings/images-per-page.php';
 	}
 
 	/**
@@ -725,7 +748,7 @@ class ISC_Admin extends ISC_Class {
 
 		ISC_Storage_Model::clear_storage();
 
-		die( esc_html__( "Storage deleted", 'image-source-control-isc' ) );
+		die( esc_html__( 'Storage deleted', 'image-source-control-isc' ) );
 	}
 
 	/**
@@ -751,6 +774,7 @@ class ISC_Admin extends ISC_Class {
 		} else {
 			$output['licences'] = false;
 		}
+		$output['images_per_page']     = absint ( $input['images_per_page'] );
 		if ( isset( $input['thumbnail_in_list'] ) ) {
 			$output['thumbnail_in_list'] = true;
 			if ( in_array( $input['thumbnail_size'], $this->thumbnail_size ) ) {
@@ -788,6 +812,7 @@ class ISC_Admin extends ISC_Class {
 		}
 		$output['list_included_images']    = isset( $input['list_included_images'] ) ? esc_attr( $input['list_included_images'] ) : '';
 		$output['overlay_included_images'] = isset( $input['overlay_included_images'] ) ? esc_attr( $input['overlay_included_images'] ) : '';
+		$output['global_list_included_images'] = isset( $input['global_list_included_images'] ) ? esc_attr( $input['global_list_included_images'] ) : '';
 
 		/**
 		 * 2.0 moved the options to handle "own images" into "standard sources" and only offers a single choice for one of the options now
@@ -832,7 +857,7 @@ class ISC_Admin extends ISC_Class {
 	 *
 	 * @return string website URL
 	 */
-	public static function get_isc_website_url( ) {
+	public static function get_isc_website_url() {
 		// check if the locale starts with "de_"
 		if ( strpos( determine_locale(), 'de_' ) === 0 ) {
 			return 'https://imagesourcecontrol.de/';
