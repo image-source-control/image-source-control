@@ -198,6 +198,7 @@ GFDL GNU Free Documentation License 1.3|https://www.gnu.org/licenses/fdl-1.3.htm
 			$default['list_on_excerpts']          = false;
 			$default['image_list_headline']       = __( 'image sources', 'image-source-control-isc' );
 			$default['version']                   = ISCVERSION;
+			$default['images_per_page']			  = 99999;
 			$default['thumbnail_in_list']         = false;
 			$default['thumbnail_size']            = 'thumbnail';
 			$default['thumbnail_width']           = 150;
@@ -356,6 +357,33 @@ GFDL GNU Free Documentation License 1.3|https://www.gnu.org/licenses/fdl-1.3.htm
 			);
 
 			return apply_filters( 'isc_overlay_included_images_options', $included_images_options );
+		}
+
+		/**
+		 * Get the options for images that appear in the global list
+		 */
+		public function get_global_list_included_images_options() {
+			$included_images_options = array(
+				'in_posts'  => array(
+					'label'       => __( 'Images in the content', 'image-source-control-isc' ),
+					'description' => __( 'Only images that are actively used within the post and page content.', 'image-source-control-isc' ),
+					'value'       => '',
+				),
+				'all' => array(
+					'label'       => __( 'All images', 'image-source-control-isc' ),
+					'description' => __( 'All images in the Media library, regardless of whether they are placed within post content or not.', 'image-source-control-isc' ),
+					'value'       => 'all',
+					'is_pro'      => false,
+				),
+				'with_sources' => array(
+					'label'       => __( 'Images with sources', 'image-source-control-isc' ),
+					'description' => __( 'All images in the Media library that have an individual source or use the standard source.', 'image-source-control-isc' ),
+					'value'       => 'with_sources',
+					'is_pro'      => true,
+				),
+			);
+
+			return apply_filters( 'isc_global_list_included_images_options', $included_images_options );
 		}
 
 		/**
