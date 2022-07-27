@@ -371,7 +371,7 @@ GFDL GNU Free Documentation License 1.3|https://www.gnu.org/licenses/fdl-1.3.htm
 				),
 				'all' => array(
 					'label'       => __( 'All images', 'image-source-control-isc' ),
-					'description' => __( 'All images in the Media library, regardless of whether they are placed within post content or not.', 'image-source-control-isc' ),
+					'description' => __( 'All images in the Media library, regardless of whether they are actively used within the post and page content or not', 'image-source-control-isc' ),
 					'value'       => 'all',
 					'is_pro'      => false,
 				),
