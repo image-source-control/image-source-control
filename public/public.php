@@ -102,7 +102,7 @@ class ISC_Public extends ISC_Class {
 			/* ]]> */
 			</script>
 			<style>
-				.isc-source { position: relative; display: inline-block; }
+				.isc-source { position: relative; display: inline-block; line-height: initial; }
                 .wp-block-cover .isc-source { position: static; }
 				<?php
 				// The 2022 theme adds display:block to the featured image block, which creates additional line breaks. `display: inline` fixes that.
@@ -592,32 +592,41 @@ class ISC_Public extends ISC_Class {
 	 * @return string
 	 */
 	public function list_all_post_attachments_sources_shortcode( $atts = array() ) {
+		$options = $this->get_isc_options();
+
 		$a = shortcode_atts(
 			array(
-				'per_page'     => 99999,
+				'per_page'     => null,
 				'before_links' => '',
 				'after_links'  => '',
 				'prev_text'    => '&#171; Previous',
 				'next_text'    => 'Next &#187;',
-				'included'     => 'displayed',
+				'included'     => null,
 			),
 			$atts
 		);
+
+		// How many entries per page. Use plugin options or default, if the shortcode attribute is missing.
+		if ( $a['per_page'] === null ) {
+			$per_page = isset( $options['images_per_page'] ) ? absint( $options['images_per_page'] ) : 99999;
+		} else {
+			$per_page = absint( $a['per_page'] );
+		}
+
+		// Which types of images are included? Use plugin options or default, if the shortcode attribute is missing.
+		if ( $a['included'] === null ) {
+			$included = isset( $options['global_list_included_images'] ) ? $options['global_list_included_images'] : '';
+		} else {
+			$included = $a['included'];
+		}
 
 		// use proper translation if attribute is not given
 		$prev_text = '&#171; Previous' === $a['prev_text'] ? __( '&#171; Previous', 'image-source-control-isc' ) : $a['prev_text'];
 		$next_text = 'Next &#187;' === $a['next_text'] ? __( 'Next &#187;', 'image-source-control-isc' ) : $a['next_text'];
 
-		// retrieve all attachments
-		$args = array(
-			'post_type'   => 'attachment',
-			'numberposts' => -1,
-			'post_status' => null,
-			'post_parent' => null,
-		);
-
-		// check mode
-		if ( 'all' !== $a['included'] ) {
+		// check which images are included
+		$args = array();
+		if ( 'all' !== $included ) {
 			// only load images attached to posts
 			$args['meta_query'] = array(
 				array(
@@ -628,7 +637,8 @@ class ISC_Public extends ISC_Class {
 			);
 		}
 
-		$attachments = get_posts( $args );
+		$attachments = ISC_Model::get_attachments( apply_filters( 'isc_global_list_get_attachment_arguments', $args ) );
+
 		if ( empty( $attachments ) ) {
 			return '';
 		}
@@ -671,7 +681,7 @@ class ISC_Public extends ISC_Class {
 						);
 					}
 				}
-				if ( 'all' !== $a['included'] && $usage_data_array === array() ) {
+				if ( 'all' !== $included && $usage_data_array === array() ) {
 					unset( $connected_atts[ $_attachment->ID ] );
 					continue;
 				}
@@ -693,7 +703,6 @@ class ISC_Public extends ISC_Class {
 
 		$up_limit = 1;
 
-		$per_page = absint( $a['per_page'] );
 		if ( $per_page && $per_page < $total ) {
 			$rem      = $total % $per_page; // The Remainder of $total / $per_page
 			$up_limit = ( $total - $rem ) / $per_page;
@@ -726,7 +735,7 @@ class ISC_Public extends ISC_Class {
 		}
 		$options = $this->get_isc_options();
 
-		require ISCPATH . 'public/views/global-list.php';
+		require apply_filters( 'isc_public_global_list_view_path', ISCPATH . 'public/views/global-list.php' );
 	}
 
 	/**

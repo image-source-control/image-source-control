@@ -363,6 +363,23 @@ class ISC_Model {
 		return $count;
 	}
 
+	/**
+	 * Get attachments.
+	 * Allows to be called with custom arguments.
+	 *
+	 * @param array $args arguments for the query.
+	 * @return array with attachments. Returns all attachments in the Media Library if called without additional arguments.
+	 */
+	public static function get_attachments( $args ) {
+		$args = wp_parse_args( $args, array(
+			'post_type'   => 'attachment',
+			'numberposts' => -1,
+			'post_status' => null,
+			'post_parent' => null,
+		) );
+
+		return get_posts( $args );
+	}
 
 	/**
 	 * Get all attachments with empty sources options.
@@ -533,7 +550,11 @@ class ISC_Model {
 		$ext = pathinfo( $url, PATHINFO_EXTENSION );
 		if ( ! $ext ) {
 			ISC_Log::log( 'exit get_image_by_url() no extension found' );
-			return 0;
+			if ( apply_filters( 'isc_allow_empty_file_extension', __return_false() ) ) {
+				ISC_Log::log( "get_image_by_url() didn’t find an extension for $url but continues." );
+			} else {
+				return 0;
+			}
 		}
 		/**
 		 * Check for the format 'image-title-(e12452112-)300x200.jpg(?query…)' and removes
@@ -546,7 +567,7 @@ class ISC_Model {
 		// $types = implode( '|', ISC_Class::get_instance()->allowed_extensions );
 		// $newurl = esc_url( preg_replace( "/(-e\d+){0,1}(-\d+x\d+){0,1}\.({$types})(.*)/i", '.${3}', $url ) );
 		// this is how WordPress core is detecting changed image URLs
-		$newurl = esc_url( preg_replace( "/-(?:\d+x\d+|scaled|rotated)\.{$ext}(.*)/i", '.' . $ext, $url ) );
+		$newurl   = esc_url( preg_replace( "/-(?:\d+x\d+|scaled|rotated)\.{$ext}(.*)/i", '.' . $ext, $url ) );
 		$orig_url = $url;
 
 		$storage = new ISC_Storage_Model();
