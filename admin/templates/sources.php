@@ -87,9 +87,11 @@ if ( ! empty( $stored_images ) ) :
 		</thead><tbody>
 		<?php
 		foreach ( $stored_images as $_image_url => $_stored_image ) :
+			// we add HTTPS by default, assuming, that this is a standard now, even though the image might not use HTTPS
+			$image_url = 'https://' . $_image_url;
 			?>
 			<tr>
-				<td style="width: 60%;"><?php echo esc_url( $_image_url ); ?></td>
+				<td style="width: 60%;"><a href="<?php echo esc_url( $image_url ); ?>" rel="noopener noreferrer"><?php echo esc_url( $image_url ); ?></a></td>
 				<td>
 					<?php
 					if ( ! class_exists( 'ISC_Pro_Admin', false ) ) : echo ISC_Admin::get_pro_link( 'external-sources' ); endif;
