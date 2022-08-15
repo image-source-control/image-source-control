@@ -542,7 +542,7 @@ class ISC_Model {
 
 		ISC_Log::log( 'enter get_image_by_url() to look for URL ' . $url );
 
-		if ( empty( $url ) ) {
+		if ( empty( $url ) || ! filter_var( $url, FILTER_VALIDATE_URL ) ) {
 			return 0;
 		}
 
