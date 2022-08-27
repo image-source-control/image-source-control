@@ -90,7 +90,7 @@ class Isc_Gutenberg {
 
 			foreach ( array( 'isc_image_source', 'isc_image_source_url', 'isc_image_source_own', 'isc_image_licence' ) as $field ) {
 				if ( $field === 'isc_image_source_own' ) {
-					update_post_meta( $image_id, $field, $attributes[ $field ] === true ? '1' : '' );
+					update_post_meta( $image_id, $field, isset( $attributes[ $field ] ) && $attributes[ $field ] === true ? '1' : '' );
 					continue;
 				}
 				update_post_meta( $image_id, $field, isset( $attributes[ $field ] ) ? $attributes[ $field ] : '' );
