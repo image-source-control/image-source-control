@@ -129,6 +129,7 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 - Improvement: show a default thumbnail in WP Admin for [external images](https://imagesourcecontrol.com/documentation/#4-4-2-additional-images)
 - Improvement: added CSS rule to Overlay for better compatibility with Divi theme
 - Improvement: (Pro) Find images without a file extension
+- Improvement: use the `isc_public_excluded_post_ids` filter to exclude posts from running ISC in the frontend
 - Fix: specified style for overlay links to not also style other isc related links
 
 = 2.7.0 =
