@@ -19,13 +19,18 @@ class ISC_Public extends ISC_Class {
 	public function __construct() {
 		parent::__construct();
 
-		add_action( 'plugins_loaded', array( $this, 'plugins_loaded' ) );
+		add_action( 'wp', array( $this, 'register_hooks' ) );
 	}
 
 	/**
-	 * Load after plugins are loaded
+	 * Register hooks after the page is set up so that we have access to the post ID.
 	 */
-	public function plugins_loaded() {
+	public function register_hooks() {
+
+		if ( ! self::can_load_isc() ) {
+			return;
+		}
+
 		$options = $this->get_isc_options();
 		// load caption layout scripts and styles. The default layout loads scripts
 		if ( empty( $options['caption_style'] ) ) {
@@ -40,6 +45,29 @@ class ISC_Public extends ISC_Class {
 
 		add_shortcode( 'isc_list', array( $this, 'list_post_attachments_with_sources_shortcode' ) );
 		add_shortcode( 'isc_list_all', array( $this, 'list_all_post_attachments_sources_shortcode' ) );
+	}
+
+	/**
+	 * Check if the current frontend page can run ISC properly
+	 *
+	 * @return bool
+	 */
+	public static function can_load_isc() {
+
+		$post_id = get_the_ID();
+
+		if ( $post_id
+			 && is_singular()
+			/**
+			 * Filter posts that should not output ISC information by their ID
+			 *
+			 * @param int[] void WP_Post IDs.
+			 */
+			 && in_array( $post_id, apply_filters( 'isc_public_excluded_post_ids', array() ) ) ) {
+			return false;
+		}
+
+		return true;
 	}
 
 	/**
