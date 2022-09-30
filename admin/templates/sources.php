@@ -9,8 +9,7 @@
 $attachments = ISC_Model::get_attachments_with_empty_sources();
 if ( ! empty( $attachments ) ) :
 	?>
-	<h2><?php esc_html_e( 'Images with empty sources', 'image-source-control-isc' ); ?></h2>
-	<p><?php esc_html_e( 'Images with empty sources and not belonging to an author.', 'image-source-control-isc' ); ?></p>
+	<h2><?php esc_html_e( 'Images without sources', 'image-source-control-isc' ); ?></h2>
 	<table class="widefat isc-table" style="width: 80%;" >
 		<thead>
 			<tr>
