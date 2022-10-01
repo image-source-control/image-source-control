@@ -119,20 +119,21 @@ class ISC_Admin extends ISC_Class {
 		$screen = get_current_screen();
 
 		if ( isset( $screen->id ) ) {
-			if ( $screen->id === 'settings_page_isc-settings' ) {
-				wp_enqueue_script( 'isc_settings_script', plugins_url( '/assets/js/settings.js', __FILE__ ), array(), ISCVERSION, true );
-			}
-
-			if ( $screen->id === 'media_page_isc-sources' ) {
-				wp_enqueue_script( 'isc_sources_script', plugins_url( '/assets/js/sources.js', __FILE__ ), array(), ISCVERSION, true );
-			}
-
-			if ( in_array( $screen->id, array( 'upload', 'widgets', 'customize' ) ) ) {
-				wp_enqueue_script( 'isc_attachment_compat', plugins_url( '/assets/js/wp.media.view.AttachmentCompat.js', __FILE__ ), array( 'media-upload' ), ISCVERSION, true );
-			}
+			return;
+		}
+		if ( $screen->id === 'settings_page_isc-settings' ) {
+			wp_enqueue_script( 'isc_settings_script', plugins_url( '/assets/js/settings.js', __FILE__ ), array(), ISCVERSION, true );
 		}
 
-		// load CSS
+		if ( $screen->id === 'media_page_isc-sources' ) {
+			wp_enqueue_script( 'isc_sources_script', plugins_url( '/assets/js/sources.js', __FILE__ ), array(), ISCVERSION, true );
+		}
+
+		if ( in_array( $screen->id, array( 'upload', 'widgets', 'customize' ) ) ) {
+			wp_enqueue_script( 'isc_attachment_compat', plugins_url( '/assets/js/wp.media.view.AttachmentCompat.js', __FILE__ ), array( 'media-upload' ), ISCVERSION, true );
+		}
+
+		// Load CSS
 		if ( self::is_isc_page() ) {
 			wp_enqueue_style( 'isc_image_settings_css', plugins_url( '/assets/css/isc.css', __FILE__ ), false, ISCVERSION );
 		}
