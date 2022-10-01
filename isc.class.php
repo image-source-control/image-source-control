@@ -366,12 +366,12 @@ GFDL GNU Free Documentation License 1.3|https://www.gnu.org/licenses/fdl-1.3.htm
 			$included_images_options = array(
 				'in_posts'  => array(
 					'label'       => __( 'Images in the content', 'image-source-control-isc' ),
-					'description' => __( 'Only images that are actively used within the post and page content.', 'image-source-control-isc' ),
+					'description' => __( 'Only images that are used within the post and page content.', 'image-source-control-isc' ),
 					'value'       => '',
 				),
 				'all' => array(
 					'label'       => __( 'All images', 'image-source-control-isc' ),
-					'description' => __( 'All images in the Media library, regardless of whether they are actively used within the post and page content or not', 'image-source-control-isc' ),
+					'description' => __( 'All images in the Media library, regardless of whether they are used within the post and page content or not', 'image-source-control-isc' ),
 					'value'       => 'all',
 					'is_pro'      => false,
 				),

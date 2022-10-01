@@ -121,16 +121,20 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 
 = untagged =
 
+- Feature: (Pro) manage images without a file extension
+- Feature: (Pro) an option to list only images with a proper source in the Global List
 - Feature: added ISC fields to Cover blocks using featured image.
 - Feature: show feature image source string in the post excerpt block when the Insert below excerpts option is enabled
+- Feature: the Global List settings show options for which images are included and how many per page. The appropriate shortcode attributes override them, if set.
 - Improvement: prevent losing focus on attachment fields in the media modal when saving data
 - Improvement: the Global List settings show options for which images are included and how many per page. The appropriate shortcode attributes override them, if set.
 - Improvement: check overlay positions after the site is fully loaded to correct misplaced overlays
 - Improvement: show a default thumbnail image in the global list, when WordPress didn’t create a thumbnail
 - Improvement: show a default thumbnail in WP Admin for [external images](https://imagesourcecontrol.com/documentation/#4-4-2-additional-images)
-- Improvement: added CSS rule to Overlay for better compatibility with Divi theme
-- Improvement: (Pro) Find images without a file extension
-- Fix: specified style for overlay links to not also style other isc related links
+- Improvement: added CSS rule to the Overlay for better compatibility with Divi theme
+- Improvement: the new `isc_public_excluded_post_ids` filter excludes posts from running ISC in the frontend
+- Improvement: the new `isc_public_global_list_view_path` filter allows custom views for the Global List
+- Fix: specified style for overlay links to not also style other ISC related links
 
 = 2.7.0 =
 
