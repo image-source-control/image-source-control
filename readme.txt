@@ -3,8 +3,8 @@ Contributors: webzunft
 Tags: images, credits, captions, copyrights, attributions, photos, pictures, sources, bildquellen, bilder, fotos, bildunterschriften
 Requires at least: 5.3
 Tested up to: 6.0
-Stable tag: 2.7.0
-Requires PHP: 7.0
+Stable tag: 2.8.0
+Requires PHP: 7.2
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -59,8 +59,10 @@ Check out the premium features to display the image caption overlay for featured
 
 * List credits for images outside of the content
 * Manage image credits for images hosted outside of the media library
+* Handle images without file extensions
 * Bulk-edit image copyright information in the media library
 * Show the standard picture credit for all images without a selected source
+* List only images with a proper source in the Global List
 * Personal email support
 
 [See Pricing](https://imagesourcecontrol.com/pricing/?utm_source=wporg&utm_medium=link&utm_campaign=pricing).
@@ -119,7 +121,7 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 
 == Changelog ==
 
-= untagged =
+= 2.8.0 =
 
 - Feature: (Pro) manage images without a file extension
 - Feature: (Pro) an option to list only images with a proper source in the Global List
