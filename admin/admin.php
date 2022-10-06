@@ -118,7 +118,7 @@ class ISC_Admin extends ISC_Class {
 	public function add_admin_scripts( $hook ) {
 		$screen = get_current_screen();
 
-		if ( isset( $screen->id ) ) {
+		if ( ! isset( $screen->id ) ) {
 			return;
 		}
 		if ( $screen->id === 'settings_page_isc-settings' ) {
