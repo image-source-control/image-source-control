@@ -129,7 +129,6 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 - Feature: show feature image source string in the post excerpt block when the Insert below excerpts option is enabled
 - Feature: the Global List settings show options for which images are included and how many per page. The appropriate shortcode attributes override them, if set.
 - Improvement: prevent losing focus on attachment fields in the media modal when saving data
-- Improvement: the Global List settings show options for which images are included and how many per page. The appropriate shortcode attributes override them, if set.
 - Improvement: check overlay positions after the site is fully loaded to correct misplaced overlays
 - Improvement: show a default thumbnail image in the global list, when WordPress didn’t create a thumbnail
 - Improvement: show a default thumbnail in WP Admin for [external images](https://imagesourcecontrol.com/documentation/#4-4-2-additional-images)
