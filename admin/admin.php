@@ -117,15 +117,23 @@ class ISC_Admin extends ISC_Class {
 	 */
 	public function add_admin_scripts( $hook ) {
 		$screen = get_current_screen();
-		if ( isset( $screen->id ) && $screen->id === 'settings_page_isc-settings' ) {
+
+		if ( ! isset( $screen->id ) ) {
+			return;
+		}
+		if ( $screen->id === 'settings_page_isc-settings' ) {
 			wp_enqueue_script( 'isc_settings_script', plugins_url( '/assets/js/settings.js', __FILE__ ), array(), ISCVERSION, true );
 		}
 
-		if ( isset( $screen->id ) && $screen->id === 'media_page_isc-sources' ) {
+		if ( $screen->id === 'media_page_isc-sources' ) {
 			wp_enqueue_script( 'isc_sources_script', plugins_url( '/assets/js/sources.js', __FILE__ ), array(), ISCVERSION, true );
 		}
 
-		// load CSS
+		if ( in_array( $screen->id, array( 'upload', 'widgets', 'customize' ) ) ) {
+			wp_enqueue_script( 'isc_attachment_compat', plugins_url( '/assets/js/wp.media.view.AttachmentCompat.js', __FILE__ ), array( 'media-upload' ), ISCVERSION, true );
+		}
+
+		// Load CSS
 		if ( self::is_isc_page() ) {
 			wp_enqueue_style( 'isc_image_settings_css', plugins_url( '/assets/css/isc.css', __FILE__ ), false, ISCVERSION );
 		}
