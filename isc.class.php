@@ -117,6 +117,11 @@ class ISC_Class {
 			 * this could force reindexing the post after adding or removing image sources
 			 */
 			add_action( 'wp_insert_post', array( 'ISC_Model', 'clear_post_images_index' ) );
+
+			/**
+			 * Fire when a post or page was updated
+			 */
+			add_action( 'post_updated', array( 'ISC_Model', 'update_image_post_meta' ), 10, 3 );
 		}
 
 		/**
