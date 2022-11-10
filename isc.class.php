@@ -391,6 +391,32 @@ GFDL GNU Free Documentation License 1.3|https://www.gnu.org/licenses/fdl-1.3.htm
 			return apply_filters( 'isc_global_list_included_images_options', $included_images_options );
 		}
 
+	/**
+	 * Get the options for which columns appear in the global list
+	 */
+	public function get_global_list_included_columns_options() {
+		$included_columns_options = array(
+			'attachment_id' => array(
+				'label'       => __( 'Attachment’s ID', 'image-source-control-isc' ),
+				'is_pro'      => true,
+			),
+			'title' => array(
+				'label'       => __( 'Title', 'image-source-control-isc' ),
+				'is_pro'      => true,
+			),
+			'posts' => array(
+				'label'       => __( 'Attached to', 'image-source-control-isc' ),
+				'is_pro'      => true,
+			),
+			'source' => array(
+				'label'       => __( 'Source', 'image-source-control-isc' ),
+				'is_pro'      => true,
+			)
+		);
+
+		return apply_filters( 'isc_global_list_included_columns_options', $included_columns_options );
+	}
+
 		/**
 		 * Get the standard source text as set up under Settings > Standard Source > Custom text
 		 * if there was no input, yet

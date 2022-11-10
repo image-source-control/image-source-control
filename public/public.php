@@ -741,12 +741,11 @@ class ISC_Public extends ISC_Class {
 
 		ob_start();
 		if ( 2 > $up_limit ) {
-			$this->display_all_attachment_list( $connected_atts );
+			$this->display_all_attachment_list( $connected_atts, $up_limit );
 		} else {
 			$starting_atts = $per_page * ( $page - 1 ); // for page 2 and 3 $per_page start display on $connected_atts[3*(2-1) = 3]
 			$paged_atts    = array_slice( $connected_atts, $starting_atts, $per_page, true );
-			$this->display_all_attachment_list( $paged_atts );
-			$this->pagination_links( $up_limit, $a['before_links'], $a['after_links'], $prev_text, $next_text );
+			$this->display_all_attachment_list( $paged_atts, $up_limit, $a['before_links'], $a['after_links'], $prev_text, $next_text );
 		}
 
 		return ob_get_clean();
@@ -755,15 +754,26 @@ class ISC_Public extends ISC_Class {
 	/**
 	 * Render the global list
 	 *
-	 * @param array $atts attachments.
+	 * @param array[] $atts attachments.
+	 * @param int     $max_page total page count.
+	 * @param string  $before_links optional html to display before pagination links.
+	 * @param string  $after_links optional html to display after pagination links.
+	 * @param string  $prev_text text for the previous page link.
+	 * @param string  $next_text text for the next page link.
 	 */
-	public function display_all_attachment_list( $atts ) {
+	public function display_all_attachment_list( $atts, $up_limit, $before_links = '', $after_links = '', $prev_text = '', $next_text = '' ) {
 		if ( ! is_array( $atts ) || $atts === array() ) {
 			return;
 		}
 		$options = $this->get_isc_options();
 
-		require apply_filters( 'isc_public_global_list_view_path', ISCPATH . 'public/views/global-list.php' );
+		$global_list_path = apply_filters( 'isc_public_global_list_view_path', ISCPATH . 'public/views/global-list.php' );
+		if ( file_exists( $global_list_path ) ) {
+			require $global_list_path;
+			$this->pagination_links( $up_limit, $before_links, $after_links, $prev_text, $next_text );
+		}
+
+		do_action( 'isc_public_global_list_after', $atts, $up_limit, $before_links, $after_links, $prev_text, $next_text );
 	}
 
 	/**
@@ -799,7 +809,7 @@ class ISC_Public extends ISC_Class {
 	 * @since 1.1.3
 	 */
 	public function pagination_links( $max_page, $before_links, $after_links, $prev_text, $next_text ) {
-		if ( ( ! isset( $max_page ) ) || ( ! isset( $before_links ) ) || ( ! isset( $after_links ) ) || ( ! isset( $prev_text ) ) || ( ! isset( $next_text ) ) ) {
+		if ( ( ! isset( $max_page ) ) || $max_page === 1 || ( ! isset( $before_links ) ) || ( ! isset( $after_links ) ) || ( ! isset( $prev_text ) ) || ( ! isset( $next_text ) ) ) {
 			return;
 		}
 		if ( ! empty( $before_links ) ) {
