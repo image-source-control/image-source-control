@@ -304,6 +304,38 @@ class ISC_Model {
 	}
 
 	/**
+	 * Update image-post index attached to attachments when a post is updated
+	 *
+	 * @param int     $post_ID      Post ID.
+	 * @param WP_Post $post_after   Post object following the update.
+	 * @param WP_Post $post_before  Post object before the update.
+	 *
+	 * @return void
+	 */
+	public static function update_image_post_meta( $post_ID, $post_after, $post_before ) {
+		if ( ! self::can_save_image_information( $post_ID ) ) {
+			return;
+		}
+
+		// remove
+
+		$image_ids = self::filter_image_ids( $post_before->post_content );
+		$thumb_id = get_post_thumbnail_id( $post_ID );
+		if ( ! empty( $thumb_id ) ) {
+			$image_ids[ $thumb_id ] = '';
+		}
+
+		// iterate through all image ids and remove the post ID from their "image_posts" meta data
+		foreach( $image_ids as $image_id => $image_src ) {
+			$meta = get_post_meta( $image_id, 'isc_image_posts', true );
+			if ( is_array( $meta ) ) {
+				unset( $meta[ array_search( $post_ID, $meta ) ] );
+				update_post_meta( $image_id, 'isc_image_posts', $meta );
+			}
+		}
+	}
+
+	/**
 	 * Remove post_images index
 	 * namely the post meta field `isc_post_images`
 	 *
