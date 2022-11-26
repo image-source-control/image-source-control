@@ -121,6 +121,11 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 
 == Changelog ==
 
+= untagged =
+
+- Improvement: Route all calls to update_post_meta through the same internal function for better debugging
+- Improvement: Introduced the `isc_update_post_meta` action to hook into post meta updates
+
 = 2.8.0 =
 
 - Feature: (Pro) manage images without a file extension
