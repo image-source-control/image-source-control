@@ -110,13 +110,13 @@ class ISC_Model {
 					if ( ! empty( $old_id ) ) {
 						$meta = get_post_meta( $old_id, 'isc_image_posts', true );
 						if ( empty( $meta ) ) {
-							update_post_meta( $old_id, 'isc_image_posts', array( $post_id ) );
+							self::update_post_meta( $old_id, 'isc_image_posts', array( $post_id ) );
 						} else {
 							// In case the isc_image_posts is not up to date
 							if ( is_array( $meta ) && ! in_array( $post_id, $meta ) ) {
 								array_push( $meta, $post_id );
 								$meta = array_unique( $meta );
-								update_post_meta( $old_id, 'isc_image_posts', $meta );
+								self::update_post_meta( $old_id, 'isc_image_posts', $meta );
 							}
 						}
 					}
@@ -127,11 +127,11 @@ class ISC_Model {
 		foreach ( $added_images as $id ) {
 			$meta = get_post_meta( $id, 'isc_image_posts', true );
 			if ( ! is_array( $meta ) || array() == $meta ) {
-				update_post_meta( $id, 'isc_image_posts', array( $post_id ) );
+				self::update_post_meta( $id, 'isc_image_posts', array( $post_id ) );
 			} else {
 				array_push( $meta, $post_id );
 				$meta = array_unique( $meta );
-				update_post_meta( $id, 'isc_image_posts', $meta );
+				self::update_post_meta( $id, 'isc_image_posts', $meta );
 			}
 		}
 
@@ -142,7 +142,7 @@ class ISC_Model {
 				if ( false !== $offset ) {
 					array_splice( $image_meta, $offset, 1 );
 					$image_meta = array_unique( $image_meta );
-					update_post_meta( $id, 'isc_image_posts', $image_meta );
+					self::update_post_meta( $id, 'isc_image_posts', $image_meta );
 				}
 			}
 		}
@@ -182,7 +182,7 @@ class ISC_Model {
 
 		ISC_Log::log( 'save isc_post_images with size of ' . count( $image_ids ) );
 
-		update_post_meta( $post_id, 'isc_post_images', $image_ids );
+		self::update_post_meta( $post_id, 'isc_post_images', $image_ids );
 	}
 
 	/**
@@ -214,7 +214,7 @@ class ISC_Model {
 			foreach ( $this->fields as $_field ) {
 				$meta = get_post_meta( $_attachment->ID, $_field['id'], true );
 				if ( empty( $meta ) ) {
-					update_post_meta( $_attachment->ID, $_field['id'], $_field['default'] );
+					self::update_post_meta( $_attachment->ID, $_field['id'], $_field['default'] );
 					$set = true;
 				}
 			}
@@ -235,7 +235,7 @@ class ISC_Model {
 		}
 
 		foreach ( $this->fields as $field ) {
-			update_post_meta( $att_id, $field['id'], $field['default'] );
+			self::update_post_meta( $att_id, $field['id'], $field['default'] );
 		}
 	}
 
@@ -278,7 +278,7 @@ class ISC_Model {
 			$value = trim( $value );
 		}
 
-		update_post_meta( $att_id, $key, $value );
+		self::update_post_meta( $att_id, $key, $value );
 	}
 
 	/**
@@ -330,7 +330,7 @@ class ISC_Model {
 			$meta = get_post_meta( $image_id, 'isc_image_posts', true );
 			if ( is_array( $meta ) ) {
 				unset( $meta[ array_search( $post_ID, $meta ) ] );
-				update_post_meta( $image_id, 'isc_image_posts', $meta );
+				self::update_post_meta( $image_id, 'isc_image_posts', $meta );
 			}
 		}
 	}
@@ -674,5 +674,29 @@ class ISC_Model {
 		}
 
 		return $id;
+	}
+
+	/**
+	 * Store post meta information.
+	 * Use this function instead of core’s update_post_meta() to allow debugging
+	 *
+	 * @param int    $post_id post ID of the attachment.
+	 * @param string $key     post meta key.
+	 * @param mixed  $value   value of the post meta information.
+	 */
+	public static function update_post_meta( int $post_id, string $key, $value ) {
+
+		/**
+		 * Run when any post meta information is stored by ISC
+		 *
+		 * @since 2.9.0
+		 *
+		 * @param int    $post_id post ID of the attachment.
+		 * @param string $key     post meta key.
+		 * @param mixed  $value   value of the post meta information.
+		 */
+		do_action( 'isc_update_post_meta', $post_id, $key, $value );
+
+		update_post_meta( $post_id, $key, $value );
 	}
 }

@@ -10,6 +10,16 @@ class ISC_Log {
 	const FILENAME = 'isc.log';
 
 	/**
+	 * Check if the log feature is enabled
+	 *
+	 * @return bool
+	 */
+	public static function enabled(): bool {
+		// true if the Debug Log option is enabled and the ?isc-log query parameter is set
+		return ( empty( ISC_Class::get_instance()->get_isc_options()['enable_log'] ) || ! isset( $_GET['isc-log'] ) );
+	}
+
+	/**
 	 * Log image source extraction into a separate file
 	 * can be used for debugging
 	 * set define( 'ISC_LOG', true ); in wp-config.php to enable it
@@ -18,10 +28,7 @@ class ISC_Log {
 	 */
 	public static function log( $message = '' ) {
 
-		$options = ISC_Class::get_instance()->get_isc_options();
-
-		// only log if the Debug Log option is enabled and the ?isc-log query parameter is set
-		if ( empty( $options['enable_log'] ) || null === $message || ! isset( $_GET['isc-log'] ) ) {
+		if ( ! self::enabled() || null === $message ) {
 			return;
 		}
 
