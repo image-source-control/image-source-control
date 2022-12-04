@@ -244,9 +244,6 @@ class ISC_Public extends ISC_Class {
 	 * @return string $content
 	 */
 	public function add_source_captions_to_content( $content ) {
-		$options          = $this->get_isc_options();
-		$exclude_standard = $this->is_standard_source( 'exclude' );
-
 		ISC_Log::log( 'start creating source overlays' );
 
 		/**
@@ -284,109 +281,103 @@ class ISC_Public extends ISC_Class {
 		 * Use (\x20|\x9|\xD|\xA)+ to match whitespace following HTML starting tag name according to W3C REC 3.1. See issue PR #136
 		 */
 		$pattern = '#(<[^>]*class="[^"]*(alignleft|alignright|alignnone|aligncenter).*)?((<a[\x20|\x9|\xD|\xA]+[^>]*(rel="[^"]*[^"]*wp-att-(\d+)"[^>]*)*>)?\s*(<img[\x20|\x9|\xD|\xA]+[^>]*[^>]*src="(.+)".*\/?>).*(\s*</a>)??[^<]*).*(<\/figure.*>)?#isU';
-
-		$match_content = apply_filters( 'isc_public_caption_regex_content', $content );
-
-		// PREG_SET_ORDER keeps all entries together under one key
-		$count = preg_match_all( $pattern, $match_content, $matches, PREG_SET_ORDER );
+		$content = apply_filters( 'isc_public_caption_regex_content', $content );
+		$count   = preg_match_all( $pattern, $content, $matches, PREG_SET_ORDER );
 
 		ISC_Log::log( 'embedded images found: ' . $count );
 
-		// gather elements already replaced to prevent duplicate sources, see github #105
-		$replaced = array();
-
-		if ( false !== $count ) {
-			foreach ( $matches as $key => $_match ) {
-				$hash = md5( $_match[3] );
-
-				if ( in_array( $hash, $replaced, true ) ) {
-					ISC_Log::log( 'skipped one image because it appears multiple times' );
-					continue;
-				} else {
-					$replaced[] = $hash;
-				}
-
-				/**
-				 * Interpret the image tag
-				 * we only need the ID if we don’t have it yet
-				 * it can be retrieved from "wp-image-" class (single) or "aria-describedby="gallery-1-34" in gallery
-				 */
-				$id      = $_match[6];
-				$img_tag = $_match[7];
-
-				ISC_Log::log( sprintf( 'found ID "%s" and img tag "%s"', $id, $img_tag ) );
-
-				if ( ! $id ) {
-						$success = preg_match( '#wp-image-(\d+)|aria-describedby="gallery-1-(\d+)#is', $img_tag, $matches_id );
-					if ( $success ) {
-						$id = $matches_id[1] ? intval( $matches_id[1] ) : intval( $matches_id[2] );
-						ISC_Log::log( sprintf( 'found ID "%s" in the image tag', $id ) );
-					} else {
-						ISC_Log::log( sprintf( 'no ID found for "%s" in the image tag', $img_tag ) );
-					}
-				}
-
-				// if ID is still missing get image by URL
-				if ( ! $id ) {
-					$src = $_match[8];
-					$id  = ISC_Model::get_image_by_url( $src );
-					ISC_Log::log( sprintf( 'ID for source "%s": "%s"', $src, $id ) );
-				}
-
-				// don’t show caption for own image if admin choose not to do so
-				if ( $exclude_standard ) {
-					if ( self::use_standard_source( $id ) ) {
-						ISC_Log::log( sprintf( 'skipped "own" image for ID "%s"', $id ) );
-						continue;
-					}
-				}
-
-				// don’t display empty sources
-				$source_string = $this->render_image_source_string( $id );
-				if ( ! $source_string ) {
-					ISC_Log::log( sprintf( 'skipped empty sources string for ID "%s"', $id ) );
-					continue;
-				}
-
-				// get any alignment from the original code
-				preg_match( '#alignleft|alignright|alignnone|aligncenter#is', $_match[0], $matches_align );
-				$alignment = isset( $matches_align[0] ) ? $matches_align[0] : '';
-
-				$old_content = $_match[3];
-				$new_content = str_replace( 'wp-image-' . $id, 'wp-image-' . $id . ' with-source', $old_content );
-
-				// default style
-				if ( empty( $options['caption_style'] ) ) {
-					$source        = '<span class="isc-source-text">' . $options['source_pretext'] . ' ' . $source_string . '</span>';
-					$markup_before = '<span id="isc_attachment_' . $id . '" class="isc-source ' . $alignment . '">';
-					$markup_after  = '</span>';
-				} else {
-					// no style
-					$source        = $options['source_pretext'] . ' ' . $source_string;
-					$markup_before = '';
-					$markup_after  = '';
-				}
-
-				$content = str_replace(
-					$old_content,
-					sprintf(
-						'%s%s%s%s',
-						apply_filters( 'isc_overlay_html_markup_before', $markup_before, $id ),
-						$new_content,
-						apply_filters( 'isc_overlay_html_source', $source, $id ),
-						apply_filters( 'isc_overlay_html_markup_after', $markup_after, $id )
-					),
-					$content
-				);
-			}
-			ISC_Log::log( 'number of unique images found: ' . count( $replaced ) );
+		if ( false === $count ) {
+			return $content;
 		}
+
+		$options          = $this->get_isc_options();
+		// gather elements already replaced to prevent duplicate sources, see github #105
+		$replaced         = array();
+
+		foreach ( $matches as $key => $_match ) {
+			$hash = md5( $_match[3] );
+
+			if ( in_array( $hash, $replaced, true ) ) {
+				ISC_Log::log( 'skipped one image because it appears multiple times' );
+				continue;
+			} else {
+				$replaced[] = $hash;
+			}
+
+			/**
+			 * Interpret the image tag
+			 * we only need the ID if we don’t have it yet
+			 * it can be retrieved from "wp-image-" class (single) or "aria-describedby="gallery-1-34" in gallery
+			 */
+			$id      = $_match[6];
+			$img_tag = $_match[7];
+
+			ISC_Log::log( sprintf( 'found ID "%s" and img tag "%s"', $id, $img_tag ) );
+
+			if ( ! $id ) {
+					$success = preg_match( '#wp-image-(\d+)|aria-describedby="gallery-1-(\d+)#is', $img_tag, $matches_id );
+				if ( $success ) {
+					$id = $matches_id[1] ? intval( $matches_id[1] ) : intval( $matches_id[2] );
+					ISC_Log::log( sprintf( 'found ID "%s" in the image tag', $id ) );
+				} else {
+					ISC_Log::log( sprintf( 'no ID found for "%s" in the image tag', $img_tag ) );
+				}
+			}
+
+			// if ID is still missing get image by URL
+			if ( ! $id ) {
+				$src = $_match[8];
+				$id  = ISC_Model::get_image_by_url( $src );
+				ISC_Log::log( sprintf( 'ID for source "%s": "%s"', $src, $id ) );
+			}
+
+			// don’t show caption for own image if admin choose not to do so
+			if ( $this->is_standard_source( 'exclude' ) && self::use_standard_source( $id ) ) {
+				ISC_Log::log( sprintf( 'skipped "own" image for ID "%s"', $id ) );
+				continue;
+			}
+
+			// don’t display empty sources
+			$source_string = $this->render_image_source_string( $id );
+			if ( ! $source_string ) {
+				ISC_Log::log( sprintf( 'skipped empty sources string for ID "%s"', $id ) );
+				continue;
+			}
+
+			// get any alignment from the original code
+			preg_match( '#alignleft|alignright|alignnone|aligncenter#is', $_match[0], $matches_align );
+			$alignment = isset( $matches_align[0] ) ? $matches_align[0] : '';
+
+			$old_content   = $_match[3];
+			$source        = $options['source_pretext'] . ' ' . $source_string;
+			$markup_before = '';
+			$markup_after  = '';
+
+			// default style
+			if ( empty( $options['caption_style'] ) ) {
+				$source        = '<span class="isc-source-text">' . $source . '</span>';
+				$markup_before = '<span id="isc_attachment_' . $id . '" class="isc-source ' . $alignment . '">';
+				$markup_after  = '</span>';
+			}
+
+			$content = str_replace(
+				$old_content,
+				sprintf(
+					'%s%s%s%s',
+					apply_filters( 'isc_overlay_html_markup_before', $markup_before, $id ),
+					str_replace( 'wp-image-' . $id, 'wp-image-' . $id . ' with-source', $old_content ), // new content
+					apply_filters( 'isc_overlay_html_source', $source, $id ),
+					apply_filters( 'isc_overlay_html_markup_after', $markup_after, $id )
+				),
+				$content
+			);
+		}
+		ISC_Log::log( 'number of unique images found: ' . count( $replaced ) );
+
 		/**
 		 * Attach follow content back
 		 */
-		$content = $content . $content_after;
-
-		return $content;
+		return $content . $content_after;
 	}
 
 	/**
