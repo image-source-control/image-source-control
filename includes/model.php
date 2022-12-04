@@ -486,7 +486,7 @@ class ISC_Model {
 	 * Filter image ids from content
 	 *
 	 * @param string $content post content.
-	 * @return array with image ids => image src uri-s
+	 * @return string[] with image ids => image src uri-s
 	 */
 	public static function filter_image_ids( $content = '' ) {
 		$srcs = array();
@@ -558,7 +558,15 @@ class ISC_Model {
 			}
 		}
 
-		return $srcs;
+		/**
+		 * Filter image IDs found in HTML content, or add new ones based on other rules.
+		 *
+		 * @since 2.9.0
+		 *
+		 * @param string[] $srcs image sources with image ids => image src uri
+		 * @param string $content any HTML document
+		 */
+		return apply_filters( 'isc_filter_image_ids_from_content', $srcs, $content );
 	}
 
 	/**
