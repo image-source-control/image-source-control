@@ -349,7 +349,7 @@ class ISC_Public extends ISC_Class {
 			$alignment = isset( $matches_align[0] ) ? $matches_align[0] : '';
 
 			$old_content   = $_match[3];
-			$source        = $options['source_pretext'] . ' ' . $source_string;
+			$source        = ! empty( $options['source_pretext'] ) ? $options['source_pretext'] . ' ' . $source_string : $source_string;
 			$markup_before = '';
 			$markup_after  = '';
 
