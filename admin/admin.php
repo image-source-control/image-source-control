@@ -921,9 +921,9 @@ class ISC_Admin extends ISC_Class {
 	public static function get_manual_url( $utm_campaign = 'manual' ) {
 		// check if the locale starts with "de_"
 		if ( strpos( determine_locale(), 'de_' ) === 0 ) {
-			$base_url = 'https://imagesourcecontrol.de/anleitung/';
+			$base_url = 'https://imagesourcecontrol.de/dokumentation/';
 		} else {
-			$base_url = 'https://imagesourcecontrol.com/manual/';
+			$base_url = 'https://imagesourcecontrol.com/documentation/';
 		}
 		return $base_url . '?utm_source=isc-plugin&utm_medium=link&utm_campaign=' . $utm_campaign;
 	}
