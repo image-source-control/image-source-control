@@ -888,30 +888,29 @@ class ISC_Admin extends ISC_Class {
 	/**
 	 * Get URL to the ISC website by site language
 	 *
+	 * @param string $url_param    Default parameter added to the main URL, leading to https://imagesourceocontrol.com/
+	 * @param string $url_param_de Parameter added to the main URL for German backends, leading to https://imagesourceocontrol.de/
+	 * @param string $utm_campaign Position of the link for the campaign link
+	 *
 	 * @return string website URL
 	 */
-	public static function get_isc_website_url() {
-		// check if the locale starts with "de_"
+	public static function get_isc_localized_website_url( string $url_param, string $url_param_de, string $utm_campaign ) {
 		if ( strpos( determine_locale(), 'de_' ) === 0 ) {
-			return 'https://imagesourcecontrol.de/';
+			$url = 'https://imagesourcecontrol.de/' . $url_param_de;
 		} else {
-			return 'https://imagesourcecontrol.com/';
+			$url = 'https://imagesourcecontrol.com/' . $url_param;
 		}
+		return esc_url( $url . '?utm_source=isc-plugin&utm_medium=link&utm_campaign=' . $utm_campaign );
 	}
 
 	/**
 	 * Get link to ISC Pro
 	 *
 	 * @param string $utm_campaign Position of the link for the campaign link
+	 * @return string
 	 */
 	public static function get_pro_link( $utm_campaign = 'upsell-link' ) {
-		// check if the locale starts with "de_"
-		if ( strpos( determine_locale(), 'de_' ) === 0 ) {
-			$base_url = 'https://imagesourcecontrol.de/preise/';
-		} else {
-			$base_url = 'https://imagesourcecontrol.com/pricing/';
-		}
-		return '<a href="' . $base_url . '?utm_source=isc-plugin&utm_medium=link&utm_campaign=' . $utm_campaign . '" class="isc-get-pro" target="_blank">' . esc_html__( 'Get ISC Pro', 'image-source-control-isc' ) . '</a>';
+		return '<a href="' . self::get_isc_localized_website_url( 'pricing/', 'preise/', $utm_campaign ) . '" class="isc-get-pro" target="_blank">' . esc_html__( 'Get ISC Pro', 'image-source-control-isc' ) . '</a>';
 	}
 
 	/**
