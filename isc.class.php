@@ -397,7 +397,7 @@ GFDL GNU Free Documentation License 1.3|https://www.gnu.org/licenses/fdl-1.3.htm
 	public function get_global_list_included_data_options() {
 		$included_columns_options = array(
 			'attachment_id' => array(
-				'label'       => __( 'Attachment’s ID', 'image-source-control-isc' ),
+				'label'       => __( 'Attachment ID', 'image-source-control-isc' ),
 				'is_pro'      => true,
 			),
 			'title' => array(

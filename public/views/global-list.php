@@ -14,7 +14,7 @@
 		<?php if ( $options['thumbnail_in_list'] ) : ?>
 			<th><?php esc_html_e( 'Thumbnail', 'image-source-control-isc' ); ?></th>
 		<?php endif; ?>
-		<th><?php esc_html_e( 'Attachment’s ID', 'image-source-control-isc' ); ?></th>
+		<th><?php esc_html_e( 'Attachment ID', 'image-source-control-isc' ); ?></th>
 		<th><?php esc_html_e( 'Title', 'image-source-control-isc' ); ?></th>
 		<th><?php esc_html_e( 'Attached to', 'image-source-control-isc' ); ?></th>
 		<th><?php esc_html_e( 'Source', 'image-source-control-isc' ); ?></th>
