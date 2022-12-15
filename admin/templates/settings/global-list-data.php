@@ -9,6 +9,8 @@
 <p class="description"><?php esc_html_e( 'Choose which data to include in the Global list.', 'image-source-control-isc' ); ?></p>
 <div>
 	<?php
+	$this->renderfield_thumbnail_in_list();
+
 	foreach ( $included_columns_options as $key => $_options ) :
 		$is_pro = ! empty( $_options['is_pro'] );
 		?>
