@@ -336,7 +336,7 @@ class ISC_Admin extends ISC_Class {
 		add_settings_section( 'isc_settings_section_complete_list', '3. ' . __( 'Global list', 'image-source-control-isc' ), '__return_false', 'isc_settings_page' );
 		add_settings_field( 'global_list_included_images', __( 'Included images', 'image-source-control-isc' ), array( $this, 'renderfield_global_list_included_images' ), 'isc_settings_page', 'isc_settings_section_complete_list' );
 		add_settings_field( 'images_per_page_in_list', __( 'Images per page', 'image-source-control-isc' ), array( $this, 'renderfield_images_per_page_in_list' ), 'isc_settings_page', 'isc_settings_section_complete_list' );
-		add_settings_field( 'global_list_included_columns', __( 'Included data', 'image-source-control-isc' ), array( $this, 'renderfield_global_list_columns' ), 'isc_settings_page', 'isc_settings_section_complete_list' );
+		add_settings_field( 'global_list_included_data', __( 'Included data', 'image-source-control-isc' ), array( $this, 'renderfield_global_list_data' ), 'isc_settings_page', 'isc_settings_section_complete_list' );
 		add_settings_field( 'thumbnail_in_list', __( 'Use thumbnails', 'image-source-control-isc' ), array( $this, 'renderfield_thumbnail_in_list' ), 'isc_settings_page', 'isc_settings_section_complete_list' );
 		add_settings_field( 'thumbnail_width', __( 'Thumbnails max-width', 'image-source-control-isc' ), array( $this, 'renderfield_thumbnail_width' ), 'isc_settings_page', 'isc_settings_section_complete_list' );
 		add_settings_field( 'thumbnail_height', __( 'Thumbnails max-height', 'image-source-control-isc' ), array( $this, 'renderfield_thumbnail_height' ), 'isc_settings_page', 'isc_settings_section_complete_list' );
@@ -560,11 +560,11 @@ class ISC_Admin extends ISC_Class {
 	/**
 	 * Render option to define which columns show up the global list
 	 */
-	public function renderfield_global_list_columns() {
+	public function renderfield_global_list_data() {
 		$options                  = $this->get_isc_options();
-		$included_columns         = ! empty( $options['global_list_included_columns'] ) ? $options['global_list_included_columns'] : array();
-		$included_columns_options = $this->get_global_list_included_columns_options();
-		require_once ISCPATH . '/admin/templates/settings/global-list-columns.php';
+		$included_columns         = ! empty( $options['global_list_included_data'] ) ? $options['global_list_included_data'] : array();
+		$included_columns_options = $this->get_global_list_included_data_options();
+		require_once ISCPATH . '/admin/templates/settings/global-list-data.php';
 	}
 
 	/**

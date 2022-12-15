@@ -394,7 +394,7 @@ GFDL GNU Free Documentation License 1.3|https://www.gnu.org/licenses/fdl-1.3.htm
 	/**
 	 * Get the options for which columns appear in the global list
 	 */
-	public function get_global_list_included_columns_options() {
+	public function get_global_list_included_data_options() {
 		$included_columns_options = array(
 			'attachment_id' => array(
 				'label'       => __( 'Attachment’s ID', 'image-source-control-isc' ),
@@ -414,7 +414,7 @@ GFDL GNU Free Documentation License 1.3|https://www.gnu.org/licenses/fdl-1.3.htm
 			)
 		);
 
-		return apply_filters( 'isc_global_list_included_columns_options', $included_columns_options );
+		return apply_filters( 'isc_global_list_included_data_options', $included_columns_options );
 	}
 
 		/**

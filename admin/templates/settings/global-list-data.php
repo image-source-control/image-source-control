@@ -2,7 +2,7 @@
 /**
  * Render the Included Columns option for the Global List
  *
- * @var string|bool $included_columns value of the "global_list_included_columns" option.
+ * @var string|bool $included_columns value of the "global_list_included_data" option.
  * @var array $included_columns_options information about the available options.
  */
 ?>
@@ -13,7 +13,7 @@
 		$is_pro = ! empty( $_options['is_pro'] );
 		?>
 		<label>
-			<input type="checkbox" name="isc_options[global_list_included_columns][]" value="<?php echo esc_attr( $key ); ?>"
+			<input type="checkbox" name="isc_options[global_list_included_data][]" value="<?php echo esc_attr( $key ); ?>"
 				<?php checked( $included_columns === array() || in_array( $key, $included_columns, true ) ); ?>
 				<?php echo $is_pro ? 'disabled="disabled" class="is-pro"' : ''; ?>
 			/>
