@@ -74,6 +74,7 @@
 .isc-settings-highlighted .description { margin-left: 1.7em; margin-bottom: .5em; }
 #isc-settings-licenses textarea { width: 40em; height: 7em; }
 #image-settings-form .hndle { cursor: text; user-select: all; }
+#thumbnail-size-select { vertical-align: baseline;}
 
 /**
  * Meta field in media view

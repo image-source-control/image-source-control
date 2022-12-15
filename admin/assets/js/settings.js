@@ -17,18 +17,16 @@ jQuery( document ).ready(
 function isc_thumbnail_input_checkstate(){
 	// enable the thumbnail size select field when thumbnails are enabled in general
 	if ( document.getElementById( 'use-thumbnail' ).checked ) {
-		document.getElementById( 'thumbnail-size-select' ).removeAttribute( 'disabled' );
+		document.getElementById( 'thumbnail-size-select' ).classList.remove( 'hidden' );
 	} else {
-		document.getElementById( 'thumbnail-size-select' ).setAttribute( 'disabled', 'disabled' );
+		document.getElementById( 'thumbnail-size-select' ).classList.add( 'hidden' )
 	}
 
 	// toggle the state of the thumbnail custom size options in the plugin settings to only enable them if the "custom" thumbnails size is used
 	if ( 'custom' == document.getElementById( 'thumbnail-size-select' ).value && document.getElementById( 'use-thumbnail' ).checked ) {
-		document.getElementById( 'isc-settings-custom-width' ).removeAttribute( 'disabled' );
-		document.getElementById( 'isc-settings-custom-height' ).removeAttribute( 'disabled' );
+		document.getElementById( 'isc-settings-custom-size' ).classList.remove( 'hidden' );
 	} else {
-		document.getElementById( 'isc-settings-custom-width' ).setAttribute( 'disabled', 'disabled' );
-		document.getElementById( 'isc-settings-custom-height' ).setAttribute( 'disabled', 'disabled' );
+		document.getElementById( 'isc-settings-custom-size' ).classList.add( 'hidden' );
 	}
 }
 

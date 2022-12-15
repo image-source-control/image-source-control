@@ -337,9 +337,6 @@ class ISC_Admin extends ISC_Class {
 		add_settings_field( 'global_list_included_images', __( 'Included images', 'image-source-control-isc' ), array( $this, 'renderfield_global_list_included_images' ), 'isc_settings_page', 'isc_settings_section_complete_list' );
 		add_settings_field( 'images_per_page_in_list', __( 'Images per page', 'image-source-control-isc' ), array( $this, 'renderfield_images_per_page_in_list' ), 'isc_settings_page', 'isc_settings_section_complete_list' );
 		add_settings_field( 'global_list_included_data', __( 'Included data', 'image-source-control-isc' ), array( $this, 'renderfield_global_list_data' ), 'isc_settings_page', 'isc_settings_section_complete_list' );
-		add_settings_field( 'thumbnail_in_list', __( 'Use thumbnails', 'image-source-control-isc' ), array( $this, 'renderfield_thumbnail_in_list' ), 'isc_settings_page', 'isc_settings_section_complete_list' );
-		add_settings_field( 'thumbnail_width', __( 'Thumbnails max-width', 'image-source-control-isc' ), array( $this, 'renderfield_thumbnail_width' ), 'isc_settings_page', 'isc_settings_section_complete_list' );
-		add_settings_field( 'thumbnail_height', __( 'Thumbnails max-height', 'image-source-control-isc' ), array( $this, 'renderfield_thumbnail_height' ), 'isc_settings_page', 'isc_settings_section_complete_list' );
 
 		// Licence settings group
 		add_settings_section( 'isc_settings_section_licenses', __( 'Image licenses', 'image-source-control-isc' ), '__return_false', 'isc_settings_page' );
@@ -592,23 +589,7 @@ class ISC_Admin extends ISC_Class {
 			}
 		}
 
-		require_once ISCPATH . '/admin/templates/settings/thumbnail-enable.php';
-	}
-
-	/**
-	 * Render option to define the width of the thumbnails displayed in the Global list.
-	 */
-	public function renderfield_thumbnail_width() {
-		$options = $this->get_isc_options();
-		require_once ISCPATH . '/admin/templates/settings/thumbnail-width.php';
-	}
-
-	/**
-	 * Render option to define the height of the thumbnails displayed in the Global list.
-	 */
-	public function renderfield_thumbnail_height() {
-		$options = $this->get_isc_options();
-		require_once ISCPATH . '/admin/templates/settings/thumbnail-height.php';
+		require_once ISCPATH . '/admin/templates/settings/global-list-thumbnail-enable.php';
 	}
 
 	/**
