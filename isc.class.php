@@ -218,6 +218,7 @@ GFDL GNU Free Documentation License 1.3|https://www.gnu.org/licenses/fdl-1.3.htm
 			$default['licences']                  = apply_filters( 'isc-licences-list', $licences );
 			$default['list_included_images']      = '';
 			$default['overlay_included_images']   = '';
+			$default['block_options']             = true;
 			$default['enable_log']                = false;
 			$default['standard_source']           = '';
 			$default['standard_source_text']      = '';

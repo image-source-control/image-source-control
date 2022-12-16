@@ -346,6 +346,7 @@ class ISC_Admin extends ISC_Class {
 		// Misc settings group
 		add_settings_section( 'isc_settings_section_misc', __( 'Miscellaneous settings', 'image-source-control-isc' ), '__return_false', 'isc_settings_page' );
 		add_settings_field( 'standard_source', __( 'Standard source', 'image-source-control-isc' ), array( $this, 'renderfield_standard_source' ), 'isc_settings_page', 'isc_settings_section_misc' );
+		add_settings_field( 'block_options', __( 'Block options', 'image-source-control-isc' ), array( $this, 'renderfield_block_options' ), 'isc_settings_page', 'isc_settings_section_misc' );
 		if ( defined( 'ELEMENTOR_VERSION' ) ) {
 			add_settings_field( 'elementor', __( 'Elementor', 'image-source-control-isc' ), array( $this, 'renderfield_elementor' ), 'isc_settings_page', 'isc_settings_section_misc' );
 		}
@@ -631,6 +632,15 @@ class ISC_Admin extends ISC_Class {
 	}
 
 	/**
+	 * Render options for block editor support
+	 */
+	public function renderfield_block_options() {
+		$options = $this->get_isc_options();
+		$checked = ! array_key_exists( 'block_options', $options ) || $options['block_options'];
+		require_once ISCPATH . '/admin/templates/settings/block-options.php';
+	}
+
+	/**
 	 * Render option for Elementor support
 	 */
 	public function renderfield_elementor() {
@@ -812,8 +822,8 @@ class ISC_Admin extends ISC_Class {
 		if ( isset( $output['enable_log'] ) && ! isset( $input['enable_log'] ) ) {
 			ISC_Log::delete_log_file();
 		}
-		$output['enable_log'] = ! empty( $input['enable_log'] );
-
+		$output['enable_log']          = ! empty( $input['enable_log'] );
+		$output['block_options']       = ! empty( $input['block_options'] );
 		$output['remove_on_uninstall'] = ! empty( $input['remove_on_uninstall'] );
 		$output['hide_list']           = ! empty( $input['hide_list'] );
 

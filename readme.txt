@@ -126,6 +126,7 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 - Improvement: (Pro) manage and display the image source for Elementor background images
 - Improvement: (Pro) choose which data is displayed in the Global List
 - Improvement: move the thumbnail options for global lists into the Included data settings
+- Improvement: use the new Block Options setting to disable ISC fields for image blocks in the editor
 - Improvement: route all calls to update_post_meta through the same internal function for better debugging
 - Improvement: introduced the `isc_update_post_meta` action to hook into post meta updates
 - Improvement: the new `isc_filter_image_ids_from_content` filter allows custom image ID filtering from the content
