@@ -40,7 +40,6 @@ require_once ISCPATH . 'isc.class.php';
 require_once ISCPATH . 'includes/model.php';
 require_once ISCPATH . 'includes/storage-model.php';
 require_once ISCPATH . 'includes/log.php';
-require_once ISCPATH . 'includes/gutenberg/gutenberg.php';
 
 if ( is_admin() ) {
 	if ( ! class_exists( 'ISC_Admin', false ) ) {
@@ -61,3 +60,5 @@ if ( is_admin() ) {
 if ( ! class_exists( 'ISC_Pro_Model', false ) && file_exists( ISCPATH . 'pro/isc-pro.php' ) ) {
 	require_once ISCPATH . 'pro/isc-pro.php';
 }
+
+require_once ISCPATH . 'includes/gutenberg/gutenberg.php';

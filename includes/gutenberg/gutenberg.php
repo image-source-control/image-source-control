@@ -11,9 +11,13 @@ class Isc_Gutenberg {
 		if ( ! function_exists( 'register_block_type' ) ) {
 			return;
 		}
-		add_action( 'enqueue_block_editor_assets', array( $this, 'editor_assets' ) );
-		add_action( 'init', array( $this, 'init' ) );
-		add_action( 'update_option', array( $this, 'widgets_update_option' ), 10, 3 );
+
+		$options = ISC_Class::get_instance()->get_isc_options();
+		if ( ! array_key_exists( 'block_options', $options ) || $options['block_options'] ) {
+			add_action( 'enqueue_block_editor_assets', array( $this, 'editor_assets' ) );
+			add_action( 'init', array( $this, 'init' ) );
+			add_action( 'update_option', array( $this, 'widgets_update_option' ), 10, 3 );
+		}
 	}
 
 	/**
