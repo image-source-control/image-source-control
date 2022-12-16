@@ -1,11 +1,11 @@
 <?php
 /**
- * Integration with Gutenberg
+ * Integration with the Block editor
  */
 
-class Isc_Gutenberg {
+class ISC_Block_Options {
 	/**
-	 * Construct an instance of Isc_Gutenberg
+	 * Construct an instance of ISC_Block_Options
 	 */
 	public function __construct() {
 		if ( ! function_exists( 'register_block_type' ) ) {
@@ -31,11 +31,11 @@ class Isc_Gutenberg {
 		register_post_meta( 'attachment', 'isc_image_licence', array( 'show_in_rest' => true, 'single' => true, 'type' => 'string' ) );
 		register_post_meta( 'attachment', 'isc_image_source_own', array( 'show_in_rest' => true, 'single' => true, 'type' => 'boolean' ) );
 
-		// Post Types supporting Gutenberg.
-		$gutenberg_ready_post_types = get_post_types_by_support( [ 'editor', 'show_in_rest' ] );
-		$gutenberg_ready_post_types += array( 'post', 'page' );
+		// Post Types supporting the block editor.
+		$block_ready_post_types = get_post_types_by_support( [ 'editor', 'show_in_rest' ] );
+		$block_ready_post_types += array( 'post', 'page' );
 
-		foreach ( $gutenberg_ready_post_types as $type ) {
+		foreach ( $block_ready_post_types as $type ) {
 			// See https://developer.wordpress.org/reference/hooks/rest_after_insert_this-post_type/.
 			add_action( "rest_after_insert_{$type}", array( $this, 'save_post' ) );
 		}
@@ -66,7 +66,7 @@ class Isc_Gutenberg {
 	/**
 	 * Grab ISC fields from a page|sidebar content then save the post meta
 	 *
-	 * @param string $content Gutenberg editor content.
+	 * @param string $content block editor content.
 	 * @param int    $post_id currently edited post (when not on widgets/customizer).
 	 *
 	 * @return void
@@ -140,7 +140,7 @@ class Isc_Gutenberg {
 			$isc_data = array(
 				'option'   => $plugin_options,
 				'postmeta' => new stdClass(),
-				'nonce'    => wp_create_nonce( 'isc-gutenberg-nonce' ),
+				'nonce'    => wp_create_nonce( 'isc-block-nonce' ),
 			);
 
 			// Add all our data as a variable in an inline script.
@@ -152,4 +152,4 @@ class Isc_Gutenberg {
 	}
 
 }
-new Isc_Gutenberg();
+new ISC_Block_Options();
