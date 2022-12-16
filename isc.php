@@ -61,4 +61,4 @@ if ( ! class_exists( 'ISC_Pro_Model', false ) && file_exists( ISCPATH . 'pro/isc
 	require_once ISCPATH . 'pro/isc-pro.php';
 }
 
-require_once ISCPATH . 'includes/gutenberg/gutenberg.php';
+require_once ISCPATH . 'includes/block-options/block-options.php';
