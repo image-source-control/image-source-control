@@ -140,7 +140,6 @@ class ISC_Block_Options {
 			$isc_data = array(
 				'option'   => $plugin_options,
 				'postmeta' => new stdClass(),
-				'nonce'    => wp_create_nonce( 'isc-block-nonce' ),
 			);
 
 			// Add all our data as a variable in an inline script.
