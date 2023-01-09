@@ -62,7 +62,9 @@ Check out the premium features to display the image caption overlay for featured
 * Handle images without file extensions
 * Bulk-edit image copyright information in the media library
 * Show the standard picture credit for all images without a selected source
+* Choose which data is displayed in the Global List
 * List only images with a proper source in the Global List
+* Show image sources for Elementor background images
 * Personal email support
 
 [See Pricing](https://imagesourcecontrol.com/pricing/?utm_source=wporg&utm_medium=link&utm_campaign=pricing).
