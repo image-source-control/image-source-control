@@ -121,6 +121,10 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 
 == Changelog ==
 
+= untagged =
+
+- Improvement: remove translation for the brand ”Elementor”
+
 = 2.9.0 =
 
 - Improvement: (Pro) manage and display the image source for Elementor background images

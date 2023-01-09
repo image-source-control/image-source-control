@@ -348,7 +348,7 @@ class ISC_Admin extends ISC_Class {
 		add_settings_field( 'standard_source', __( 'Standard source', 'image-source-control-isc' ), array( $this, 'renderfield_standard_source' ), 'isc_settings_page', 'isc_settings_section_misc' );
 		add_settings_field( 'block_options', __( 'Block options', 'image-source-control-isc' ), array( $this, 'renderfield_block_options' ), 'isc_settings_page', 'isc_settings_section_misc' );
 		if ( defined( 'ELEMENTOR_VERSION' ) ) {
-			add_settings_field( 'elementor', __( 'Elementor', 'image-source-control-isc' ), array( $this, 'renderfield_elementor' ), 'isc_settings_page', 'isc_settings_section_misc' );
+			add_settings_field( 'elementor', 'Elementor', array( $this, 'renderfield_elementor' ), 'isc_settings_page', 'isc_settings_section_misc' );
 		}
 		add_settings_field( 'warning_one_source', __( 'Warn about missing sources', 'image-source-control-isc' ), array( $this, 'renderfield_warning_source_missing' ), 'isc_settings_page', 'isc_settings_section_misc' );
 		add_settings_field( 'enable_log', __( 'Debug log', 'image-source-control-isc' ), array( $this, 'renderfield_enable_log' ), 'isc_settings_page', 'isc_settings_section_misc' );
