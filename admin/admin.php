@@ -200,6 +200,9 @@ class ISC_Admin extends ISC_Class {
 	 * @return array with form fields
 	 */
 	public function add_isc_fields( $form_fields, $post ) {
+		if ( strpos( sanitize_text_field( $_SERVER['HTTP_REFERER'] ), 'wp-admin/upload.php' ) === false ) {
+			return $form_fields;
+		}
 		if ( ! class_exists( 'ISC_Pro_Admin', false ) ) {
 			$form_fields['isc_image_source_pro']['label'] = '';
 			$form_fields['isc_image_source_pro']['input'] = 'html';

@@ -125,6 +125,7 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 
 = untagged =
 
+- Improvement: remove ISC fields from media frame when it is not loaded from the media library page to prevent confusions
 - Improvement: remove translation for the brand ”Elementor”
 
 = 2.9.0 =
