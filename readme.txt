@@ -126,6 +126,7 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 = untagged =
 
 - Improvement: remove translation for the brand ”Elementor”
+- Fix: Debug log was enabled when the option was disabled and not used
 
 = 2.9.0 =
 
