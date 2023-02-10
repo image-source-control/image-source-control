@@ -3,7 +3,7 @@ Contributors: webzunft
 Tags: images, credits, captions, copyrights, attributions, photos, pictures, sources, bildquellen, bilder, fotos, bildunterschriften
 Requires at least: 5.3
 Tested up to: 6.1
-Stable tag: 2.9.1
+Stable tag: 2.10.0
 Requires PHP: 7.2
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -123,7 +123,7 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 
 == Changelog ==
 
-= 2.9.1 =
+= 2.10.0 =
 
 - Improvement: remove ISC fields from media frame when it is not loaded from the media library page to prevent confusions
 - Improvement: remove translation for the brand ”Elementor”
