@@ -16,7 +16,7 @@ class ISC_Log {
 	 */
 	public static function enabled(): bool {
 		// true if the Debug Log option is enabled and the ?isc-log query parameter is set
-		return ( empty( ISC_Class::get_instance()->get_isc_options()['enable_log'] ) || ! isset( $_GET['isc-log'] ) );
+		return ( ! empty( ISC_Class::get_instance()->get_isc_options()['enable_log'] ) && isset( $_GET['isc-log'] ) );
 	}
 
 	/**
