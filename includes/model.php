@@ -12,6 +12,11 @@ class ISC_Model {
 	protected static $instance;
 
 	/**
+	 * Maximum number of entries in custom queries
+	 */
+	const MAX_POSTS = 100;
+
+	/**
 	 * Setup registers filters and actions.
 	 */
 	public function __construct() {
@@ -421,7 +426,7 @@ class ISC_Model {
 	public static function get_attachments_with_empty_sources() {
 		$args = array(
 			'post_type'   => 'attachment',
-			'numberposts' => -1,
+			'numberposts' => self::MAX_POSTS,
 			'post_status' => null,
 			'post_parent' => null,
 			'meta_query'  => array(
@@ -453,7 +458,7 @@ class ISC_Model {
 	public static function get_unused_attachments() {
 		$args = array(
 			'post_type'   => 'attachment',
-			'numberposts' => -1,
+			'numberposts' => self::MAX_POSTS,
 			'post_status' => null,
 			'post_parent' => null,
 			'meta_query'  => array(

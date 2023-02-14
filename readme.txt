@@ -123,6 +123,10 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 
 == Changelog ==
 
+= untagged =
+
+- Improvement: limit queries for missing sources to 100 to prevent the check from causing a timeout on sites with a lot of images
+
 = 2.10.0 =
 
 - Improvement: remove ISC fields from media frame when it is not loaded from the media library page to prevent confusions
