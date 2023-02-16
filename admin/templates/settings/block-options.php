@@ -8,4 +8,5 @@
 <label>
 	<input type="checkbox" name="isc_options[block_options]" value="1" <?php checked( $checked ); ?>/>
 	<?php esc_html_e( 'Show source options in block settings.', 'image-source-control-isc' ); ?>
+	<?php esc_html_e( 'If disabled, the source options will show in the media library overlay.', 'image-source-control-isc' ); ?>
 </label>
