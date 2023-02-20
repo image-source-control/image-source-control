@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: Image Source Control Lite
- * Version: 2.10.0
+ * Version: 2.11.0
  * Plugin URI: https://imagesourcecontrol.com/
  * Description: Image Source Control saves the source of an image, lists them and warns if it is missing.
  * Author: Thomas Maier
@@ -9,7 +9,7 @@
  * License: GPL v3
  *
  * Image Source Control Plugin for WordPress
- * Copyright (C) 2012-2022, Thomas Maier & webgilde GmbH
+ * Copyright (C) 2012-2023, Thomas Maier & webgilde GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,7 +29,7 @@ if ( class_exists( 'ISC_Class', false ) ) {
 	die( 'You can only activate Image Source Control once. Please disable the other version first.' );
 }
 
-define( 'ISCVERSION', '2.10.0' );
+define( 'ISCVERSION', '2.11.0' );
 define( 'ISCNAME', 'Image Source Control' );
 define( 'ISCDIR', basename( dirname( __FILE__ ) ) );
 define( 'ISCPATH', plugin_dir_path( __FILE__ ) );
