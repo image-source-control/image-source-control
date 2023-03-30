@@ -2,7 +2,7 @@
 Contributors: webzunft
 Tags: images, credits, captions, copyrights, attributions, photos, pictures, sources, bildquellen, bilder, fotos, bildunterschriften
 Requires at least: 5.3
-Tested up to: 6.1
+Tested up to: 6.2
 Stable tag: 2.11.0
 Requires PHP: 7.2
 License: GPLv3 or later
