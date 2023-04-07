@@ -1036,7 +1036,7 @@ class ISC_Public extends ISC_Class {
 		if ( '' != $metadata['source_url'] ) {
 			$source = apply_filters(
 				'isc_public_source_url_html',
-				sprintf( '<a href="%2$s" target="_blank" rel="nofollow">%1$s</a>', $source, $metadata['source_url'] ),
+				sprintf( '<a href="%2$s" target="_blank" rel="nofollow">%1$s</a>', $source, esc_url_raw( $metadata['source_url'] ) ),
 				$id,
 				$metadata
 			);

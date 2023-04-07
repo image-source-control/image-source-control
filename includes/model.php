@@ -259,7 +259,7 @@ class ISC_Model {
 			self::save_field( $post['ID'], 'isc_image_source', $attachment['isc_image_source'] );
 		}
 		if ( isset( $attachment['isc_image_source_url'] ) ) {
-			self::save_field( $post['ID'], 'isc_image_source_url', esc_url_raw( $attachment['isc_image_source_url'] ) );
+			self::save_field( $post['ID'], 'isc_image_source_url', $this->sanitize_source_url( $attachment['isc_image_source_url'], $attachment['isc_image_source'] ) );
 		}
 		$own = ( isset( $attachment['isc_image_source_own'] ) ) ? $attachment['isc_image_source_own'] : '';
 		self::save_field( $post['ID'], 'isc_image_source_own', $own );
@@ -269,6 +269,26 @@ class ISC_Model {
 		}
 
 		return $post;
+	}
+
+	/**
+	 * Sanitize source URL string
+	 * split multiple URLs by comma when the source string also contains commas
+	 * split only as much as commas exist in the source string
+	 * sanitize each URL individually and then put them back together
+	 *
+	 * @param string $source_url source URL string
+	 * @param string $source source string
+	 *
+	 * @return string sanitized source URL
+	 */
+	public function sanitize_source_url( $source_url, $source ) {
+		$source_url_parts = explode( ',', $source_url, substr_count( $source, ',' ) + 1 );
+		$sanitized_parts = array_map( function( $url_part ) {
+			return esc_url_raw( trim( $url_part ) );
+		}, $source_url_parts );
+
+		return implode( ',', $sanitized_parts );
 	}
 
 	/**

@@ -58,6 +58,7 @@ Check out the premium features to display the image caption overlay for featured
 [Check out all features of Image Source Control](https://imagesourcecontrol.com/?utm_source=wporg&utm_medium=link&utm_campaign=all-features).
 
 * List credits for images outside of the content
+* Multiple links in the source string
 * Manage image credits for images hosted outside of the media library
 * Handle images without file extensions
 * Bulk-edit image copyright information in the media library
@@ -122,6 +123,10 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 1. settings to manage image source licenses
 
 == Changelog ==
+
+= untagged =
+
+- Feature: (Pro) multiple links in the source string
 
 = 2.11.0 =
 
