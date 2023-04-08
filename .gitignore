@@ -1,4 +1,8 @@
 isc.log
 .idea
+.env.testing
 /pro
 /languages
+/vendor/
+codeception.dist.yml
+/tests/_data/dump.sql

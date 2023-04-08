@@ -1,0 +1,23 @@
+{
+    "name": "image-source-control/image-source-control",
+    "description": "Image Source Control WordPress Plugin",
+    "type": "library",
+    "license": "GPL 2.0 or later",
+    "authors": [
+        {
+            "name": "Thomas Maier",
+            "email": "thomas.maier@webgilde.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require-dev": {
+        "lucatume/wp-browser": "^3.1",
+        "codeception/module-asserts": "^1.0",
+        "codeception/module-phpbrowser": "^1.0",
+        "codeception/module-webdriver": "^1.0",
+        "codeception/module-db": "^1.0",
+        "codeception/module-filesystem": "^1.0",
+        "codeception/module-cli": "^1.0",
+        "codeception/util-universalframework": "^1.0"
+    }
+}
