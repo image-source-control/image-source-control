@@ -407,15 +407,17 @@ class ISC_Model {
 	 * Checks if there are image with missing sources
 	 * this includes attachments that were not indexed yet (don’t have the appropriate meta values)
 	 *
+	 * Functions are called with parameter $returnCount set to TRUE to reduce data returned by the query to post ID fields
+	 *
 	 * @return int number of images with missing sources
 	 */
 	public static function count_missing_sources() {
 
 		// get known and used attachments without sources
-		$count = count( self::get_attachments_with_empty_sources() );
+		$count = count( self::get_attachments_with_empty_sources(TRUE) );
 
 		// look for unindexed attachments
-		$count += count( self::get_unused_attachments() );
+		$count += count( self::get_unused_attachments(TRUE) );
 
 		return $count;
 	}
@@ -443,7 +445,7 @@ class ISC_Model {
 	 *
 	 * @return array with attachments.
 	 */
-	public static function get_attachments_with_empty_sources() {
+	public static function get_attachments_with_empty_sources($returnCount = FALSE) {
 		$args = array(
 			'post_type'   => 'attachment',
 			'numberposts' => self::MAX_POSTS,
@@ -464,6 +466,12 @@ class ISC_Model {
 				),
 			),
 		);
+		/**
+		 * query only ID fields in order to reduce resource consumption for tallying up missing sources and unused attachments
+		 */
+		if ( $returnCount === TRUE ) {
+			$args['fields'] = 'ids';
+		}
 
 		return get_posts( $args );
 	}
@@ -475,7 +483,7 @@ class ISC_Model {
 	 * @since 1.6
 	 * @return array with attachments.
 	 */
-	public static function get_unused_attachments() {
+	public static function get_unused_attachments($returnCount = FALSE) {
 		$args = array(
 			'post_type'   => 'attachment',
 			'numberposts' => self::MAX_POSTS,
@@ -490,6 +498,12 @@ class ISC_Model {
 				),
 			),
 		);
+		/**
+		 * query only ID fields in order to reduce resource consumption for tallying up missing sources and unused attachments
+		 */
+		if ( $returnCount === TRUE ) {
+			$args['fields'] = 'ids';
+		}
 
 		// is per function definition always returning an array, even if empty.
 		return get_posts( $args );
