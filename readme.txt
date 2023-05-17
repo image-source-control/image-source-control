@@ -127,6 +127,7 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 = untagged =
 
 - Feature: (Pro) multiple links in the source string
+- Improvement: update missing image sources warning when an images was uploaded or deleted
 
 = 2.11.0 =
 
