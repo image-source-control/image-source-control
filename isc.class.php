@@ -113,6 +113,23 @@ class ISC_Class {
 			add_action( 'updated_post_meta', array( $this, 'maybe_update_attachment_post_meta' ), 10, 3 );
 
 			/**
+			 * Register actions to update missing sources checks each time attachments’ post meta is added
+			 *
+			 * See the "added_post_meta" action hook
+			 */
+			add_action( 'added_post_meta', array( $this, 'maybe_update_attachment_post_meta' ), 10, 3 );
+
+			/**
+			 * Register actions to update missing sources when an attachment was added
+			 */
+			add_action( 'add_attachment', array( 'ISC_Model', 'update_missing_sources_transient' ) );
+
+			/**
+			 * Register an action to update missing sources when an attachment was deleted
+			 */
+			add_action( 'deleted_post', array( 'ISC_Model', 'update_missing_sources_transient' ) );
+
+			/**
 			 * Clear post-image index whenever the content of a post is updated
 			 * this could force reindexing the post after adding or removing image sources
 			 */
