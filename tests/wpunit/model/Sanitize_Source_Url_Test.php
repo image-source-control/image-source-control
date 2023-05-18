@@ -17,44 +17,55 @@ class Sanitize_Source_Url_Test extends \Codeception\TestCase\WPTestCase {
 		$expected_url = 'https://imagesourcecontrol.com/somepage/?someparam=somevalue';
 
 		$model  = new ISC_Model();
-		$actual = $model->sanitize_source_url( $source_url, 'Image Source Control' );
+		$actual = $model->sanitize_source_url( $source_url );
 		$this->assertEquals( $expected_url, $actual );
 	}
 
 	/**
-	 * Test if sanitize_source_url() returns the URL string escaped as one string, if multiple URLs are given in the string, but the source text does not contain a comma.
-	 */
-	public function test_sanitize_multiple_urls_in_string() {
-		$source_url   = 'https://imagesourcecontrol.com/, https://imagesourcecontrol.de/';
-		$expected_url = 'https://imagesourcecontrol.com/,%20https://imagesourcecontrol.de/';
-
-		$model  = new ISC_Model();
-		$actual = $model->sanitize_source_url( $source_url, 'Image Source Control' );
-		$this->assertEquals( $expected_url, $actual );
-	}
-
-	/**
-	 * Test if sanitize_source_url() returns comma-separated URLs if the source string also contains a comma.
-	 * Individual URLs are trimmed.
+	 * Test if sanitize_source_url() returns comma-separated URLs
 	 */
 	public function test_sanitize_multiple_urls_multiple_sources() {
 		$source_url   = 'https://imagesourcecontrol.com/, https://imagesourcecontrol.de/';
-		$expected_url = 'https://imagesourcecontrol.com/,https://imagesourcecontrol.de/';
+		$expected_url = 'https://imagesourcecontrol.com/, https://imagesourcecontrol.de/';
 
 		$model  = new ISC_Model();
-		$actual = $model->sanitize_source_url( $source_url, 'Image Source Control, Image Source Control DE' );
+		$actual = $model->sanitize_source_url( $source_url );
 		$this->assertEquals( $expected_url, $actual );
 	}
 
 	/**
-	 * Escape invalid URLs
+	 * Test if sanitize_source_url() keeps multiple commas
 	 */
-	public function test_sanitize_invalid_urls() {
-		$source_url   = 'https://imagesourcecontrol.com/, invalid url, ftp://invalidurl.com, javascript:alert(1), http://invalidurl|pipe';
-		$expected_url = 'https://imagesourcecontrol.com/,http://invalid%20url,ftp://invalidurl.com,,http://invalidurl|pipe';
+	public function test_sanitize_multiple_urls_multiple_sources_with_multiple_commas() {
+		$source_url   = 'https://imagesourcecontrol.com/, , https://imagesourcecontrol.de/';
+		$expected_url = 'https://imagesourcecontrol.com/, , https://imagesourcecontrol.de/';
 
 		$model  = new ISC_Model();
-		$actual = $model->sanitize_source_url( $source_url, 'One, Two, Three, Four, Five' );
+		$actual = $model->sanitize_source_url( $source_url );
+		$this->assertEquals( $expected_url, $actual );
+	}
+
+	/**
+	 * Test if sanitize_source_url() returns comma-separated URLs correctly for URLs that contain a comma
+	 */
+	public function test_sanitize_multiple_urls_multiple_sources_with_comma() {
+		$source_url   = 'https://imagesourcecontrol.com/?values=one,two,https://imagesourcecontrol.de/';
+		$expected_url = 'https://imagesourcecontrol.com/?values=one,two,https://imagesourcecontrol.de/';
+
+		$model  = new ISC_Model();
+		$actual = $model->sanitize_source_url( $source_url );
+		$this->assertEquals( $expected_url, $actual );
+	}
+
+	/**
+	 * Remove HTML from URLs
+	 */
+	public function test_sanitize_invalid_urls() {
+		$source_url   = 'https://imagesourcecontrol.com/,https://imagesourcecontrol.de/<script>alert("XSS")</script>';
+		$expected_url = 'https://imagesourcecontrol.com/,https://imagesourcecontrol.de/alert("XSS")';
+
+		$model  = new ISC_Model();
+		$actual = $model->sanitize_source_url( $source_url );
 		$this->assertEquals( $expected_url, $actual );
 	}
 }

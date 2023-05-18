@@ -89,4 +89,36 @@ class Multiple_Links_In_Source_String_Test extends \Codeception\TestCase\WPTestC
 		$actual   = $this->renderer->render_source_url_html( $markup, $id, $metadata );
 		$this->assertEquals( $expected, $actual );
 	}
+
+	/**
+	 * Test if render_source_url_html() can cope with commas in URLs.
+	 */
+	public function test_commas_in_urls() {
+		$markup   = '';
+		$id       = 1;
+		$metadata = [
+			'source'     => 'Source 1, Source 2, Source 3',
+			'source_url' => 'https://example.com/?values=one,two, , https://example.com/2',
+		];
+
+		$expected = '<a href="https://example.com/?values=one,two" target="_blank" rel="nofollow">Source 1</a>, Source 2, <a href="https://example.com/2" target="_blank" rel="nofollow">Source 3</a>';
+		$actual   = $this->renderer->render_source_url_html( $markup, $id, $metadata );
+		$this->assertEquals( $expected, $actual );
+	}
+
+	/**
+	 * Test if render_source_url_html() removes harmful code and HTML tags.
+	 */
+	public function test_harmful_code() {
+		$markup   = '';
+		$id       = 1;
+		$metadata = [
+			'source'     => 'Source 1, Source 2, Source 3',
+			'source_url' => 'https://example.com/1, <script>alert("Hello");</script>, https://example.com/3',
+		];
+
+		$expected = '<a href="https://example.com/1,%20scriptalert(Hello);/script" target="_blank" rel="nofollow">Source 1</a>, <a href="https://example.com/3" target="_blank" rel="nofollow">Source 2</a>, Source 3';
+		$actual   = $this->renderer->render_source_url_html( $markup, $id, $metadata );
+		$this->assertEquals( $expected, $actual );
+	}
 }
