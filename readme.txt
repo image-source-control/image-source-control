@@ -3,7 +3,7 @@ Contributors: webzunft
 Tags: images, credits, captions, copyrights, attributions, photos, pictures, sources, bildquellen, bilder, fotos, bildunterschriften
 Requires at least: 5.3
 Tested up to: 6.2
-Stable tag: 2.11.0
+Stable tag: 2.12.0
 Requires PHP: 7.2
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -124,9 +124,9 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 
 == Changelog ==
 
-= untagged =
+= 2.12.0 =
 
-- Feature: (Pro) multiple links in the source string
+- Feature: (Pro) link different terms in the source string to different URLs
 - Improvement: update missing image sources warning when an images was uploaded or deleted
 
 = 2.11.0 =
