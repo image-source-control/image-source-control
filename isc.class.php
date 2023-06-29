@@ -384,6 +384,43 @@ GFDL GNU Free Documentation License 1.3|https://www.gnu.org/licenses/fdl-1.3.htm
 		}
 
 		/**
+		 * Get the advanced options for images that get an overlay with the source
+		 * These will be checkboxes. One can enable multiple options at once.
+		 */
+		public function get_overlay_advanced_included_images_options() {
+			$options = array(
+				'inline_style_data'  => array(
+					'label'       => __( 'Load the overlay text for inline styles', 'image-source-control-isc' ),
+					'value'       => 'inline_style_data',
+					'is_pro' => true,
+				),
+				'inline_style_show' => array(
+					'label'       => __( 'Display the overlay within tags that use inline styles', 'image-source-control-isc' ),
+					'value'       => 'inline_style_show',
+					'is_pro'      => true,
+				),
+				'style_block_data'  => array(
+					'label'       => sprintf(
+						__( 'Load the overlay text for %s blocks', 'image-source-control-isc' ),
+						'<code>style</code>'
+					),
+					'value'       => 'style_block_data',
+					'is_pro' => true,
+				),
+				'style_block_show' => array(
+					'label'       => sprintf(
+						__( 'Display the overlay after %s blocks', 'image-source-control-isc' ),
+						'<code>style</code>'
+					),
+					'value'       => 'style_block_show',
+					'is_pro'      => true,
+				),
+			);
+
+			return apply_filters( 'isc_overlay_advanced_included_images_options', $options );
+		}
+
+		/**
 		 * Get the options for images that appear in the global list
 		 */
 		public function get_global_list_included_images_options() {

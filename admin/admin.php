@@ -535,10 +535,13 @@ class ISC_Admin extends ISC_Class {
 	 * Render option to define which images should show the overlay
 	 */
 	public function renderfield_overlay_included_images() {
-		$options                 = $this->get_isc_options();
-		$included_images         = ! empty( $options['overlay_included_images'] ) ? $options['overlay_included_images'] : '';
-		$included_images_options = $this->get_overlay_included_images_options();
+		$options                  = $this->get_isc_options();
+		$included_images          = ! empty( $options['overlay_included_images'] ) ? $options['overlay_included_images'] : '';
+		$included_images_options  = $this->get_overlay_included_images_options();
 		require_once ISCPATH . '/admin/templates/settings/overlay-included-images.php';
+		$checked_advanced_options = ! empty( $options['overlay_included_advanced'] ) && is_array( $options['overlay_included_advanced'] ) ? $options['overlay_included_advanced'] : array();
+		$advanced_options         = $this->get_overlay_advanced_included_images_options();
+		require_once ISCPATH . '/admin/templates/settings/overlay-advanced-included-images.php';
 	}
 
 	/**
@@ -841,6 +844,7 @@ class ISC_Admin extends ISC_Class {
 		}
 		$output['list_included_images']    = isset( $input['list_included_images'] ) ? esc_attr( $input['list_included_images'] ) : '';
 		$output['overlay_included_images'] = isset( $input['overlay_included_images'] ) ? esc_attr( $input['overlay_included_images'] ) : '';
+		$output['overlay_included_advanced'] = isset( $input['overlay_included_advanced'] ) && is_array( $input['overlay_included_advanced'] ) ? $input['overlay_included_advanced'] : array();
 		$output['global_list_included_images'] = isset( $input['global_list_included_images'] ) ? esc_attr( $input['global_list_included_images'] ) : '';
 
 		/**
