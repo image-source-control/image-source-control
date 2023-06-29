@@ -127,8 +127,10 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 = untagged =
 
 - Feature: (Pro) set the `isc-disable-overlay` class on specific images to prevent the overlay from showing up
+- Feature: (Pro) Various options to load and show overlays for images in `style` attributes and `<style>` blocks.
 - Improvement: find alignment information classes also, when multiple classes are given in the `<figure>` tag
 - Improvement: added the `isc_extract_images_from_html` filter to manipulate images that use captions
+- Improvement: The `ISC_Public->render_caption_string()` function renders the overlay string
 - Fix: the page content was not put together correctly when `isc_stop_overlay` was added manually to it and no images were found
 
 = 2.12.0 =

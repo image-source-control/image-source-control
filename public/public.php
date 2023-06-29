@@ -976,7 +976,6 @@ class ISC_Public extends ISC_Class {
 	 */
 	public function render_image_source_string( $id, $data = array() ) {
 		$id = esc_attr( $id );
-
 		$options = $this->get_isc_options();
 
 		$metadata['source']     = isset( $data['source'] ) ? $data['source'] : self::get_image_source_text( $id );
@@ -1031,6 +1030,33 @@ class ISC_Public extends ISC_Class {
 		}
 
 		return $source;
+	}
+
+	/**
+	 * Render caption string / markup
+	 * The string is not wrapped, e.g., in a <span> tag
+	 *
+	 * @param int $id   id of the image.
+	 * @param int $data metadata.
+	 *
+	 * @return string false if no source was given, else string with source
+	 */
+	public function render_caption_string( int $id, $data = array() ) {
+		$source_string = $this->render_image_source_string( $id, $data );
+
+		if ( ! $source_string ) {
+			ISC_Log::log( sprintf( 'render_caption_string() skipped overlay for empty sources string for ID "%s"', $id ) );
+			return '';
+		}
+
+		// don’t render the caption for own images if the admin choose not to do so
+		if ( self::is_standard_source( 'exclude' ) && ISC_Public::use_standard_source( $id ) ) {
+			ISC_Log::log( sprintf( 'render_caption_string() skipped overlay for "own" image ID "%s"', $id ) );
+			return '';
+		}
+
+		$options = $this->get_isc_options();
+		return ! empty( $options['source_pretext'] ) ? $options['source_pretext'] . ' ' . $source_string : $source_string;
 	}
 
 	/**

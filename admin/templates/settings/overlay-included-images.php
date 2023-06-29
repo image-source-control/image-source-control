@@ -4,13 +4,14 @@
  *
  * @var string|bool $included_images value of the "overlay_included_images" option.
  * @var array $included_images_options information about the available options.
+ * @var array $advanced_options information about advanced options.
  */
 ?>
 <p class="description"><?php esc_html_e( 'Choose which images should show a source overlay.', 'image-source-control-isc' ); ?></p>
 <div class="isc-settings-highlighted">
 	<?php
 	foreach ( $included_images_options as $_key => $_options ) :
-		$value  = isset( $_options['value'] ) ? $_options['value'] : '';
+		$value  = $_options['value'] ?? '';
 		$is_pro = ! empty( $_options['is_pro'] );
 		?>
 		<label>
