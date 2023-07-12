@@ -238,9 +238,9 @@ class Extract_Images_From_Html_Test extends \Codeception\TestCase\WPTestCase {
 	}
 
 	/**
-	 * Test with line breaks and spaces
+	 * Test line breaks between the tags
 	 */
-	public function DISABLED_test_extract_image_with_line_breaks_and_spaces() {
+	public function test_line_breaks_between_tags() {
 		$html = '<figure class="wp-block-image isc-disable-overlay">
 			<a href="https://example.com">
 				<img src="https://example.com/test.jpg">
@@ -252,7 +252,8 @@ class Extract_Images_From_Html_Test extends \Codeception\TestCase\WPTestCase {
 			<a href="https://example.com">
 				<img src="https://example.com/test.jpg">
 			</a>',
-				1 => '<figure class="wp-block-image isc-disable-overlay">',
+				1 => '<figure class="wp-block-image isc-disable-overlay">
+			',
 				2 => 'wp-block-image isc-disable-overlay',
 				3 => '<a href="https://example.com">
 				<img src="https://example.com/test.jpg">
@@ -262,7 +263,42 @@ class Extract_Images_From_Html_Test extends \Codeception\TestCase\WPTestCase {
 				6 => '',
 				7 => '<img src="https://example.com/test.jpg">',
 				8 => 'https://example.com/test.jpg',
-				9 => '</a>'
+				9 => '
+			</a>'
+			]
+		];
+		$result = ISC_Model::extract_images_from_html( $html );
+		$this->assertEquals( $expected, $result, "extract_images_from_html did not return the correct image information" );
+	}
+
+	/**
+	 * Test with line breaks and spaces
+	 */
+	public function test_line_breaks_and_spaces_between_tags() {
+		$html = '<figure class="wp-block-image isc-disable-overlay"> 
+			<a href="https://example.com"> 
+				<img src="https://example.com/test.jpg"> 
+			</a>
+		</figure>';
+		$expected = [
+			[
+				0 => '<figure class="wp-block-image isc-disable-overlay"> 
+			<a href="https://example.com"> 
+				<img src="https://example.com/test.jpg"> 
+			</a>',
+				1 => '<figure class="wp-block-image isc-disable-overlay"> 
+			',
+				2 => 'wp-block-image isc-disable-overlay',
+				3 => '<a href="https://example.com"> 
+				<img src="https://example.com/test.jpg"> 
+			</a>',
+				4 => '<a href="https://example.com">',
+				5 => '',
+				6 => '',
+				7 => '<img src="https://example.com/test.jpg">',
+				8 => 'https://example.com/test.jpg',
+				9 => ' 
+			</a>'
 			]
 		];
 		$result = ISC_Model::extract_images_from_html( $html );
