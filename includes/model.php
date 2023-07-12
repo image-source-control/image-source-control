@@ -739,12 +739,12 @@ class ISC_Model {
 		 * 1 - <figure> if set and having a class attribute
 		 * 2 – classes from figure tag
 		 * 3 – inner code starting with <a>
-		 * 4 – opening link attribute
+		 * 4 – opening link tag
 		 * 5 – "rel" attribute from link tag
 		 * 6 – image id from link wp-att- value in "rel" attribute
 		 * 7 – full img tag
 		 * 8 – image URL
-		 * 9 – (unused)
+		 * 9 – closing link tag
 		 *
 		 * tested with:
 		 * * with and without [caption]
