@@ -260,8 +260,8 @@ class ISC_Public extends ISC_Class {
 		 * img tag is checked individually since there is a different order of attributes when images are used in gallery or individually
 		 *
 		 * 0 – full match
-		 * 1 - <figure> if set
-		 * 2 – alignment
+		 * 1 - <figure> if set and having a class attribute
+		 * 2 – classes from figure tag
 		 * 3 – inner code starting with <a>
 		 * 4 – opening link attribute
 		 * 5 – "rel" attribute from link tag
@@ -269,7 +269,6 @@ class ISC_Public extends ISC_Class {
 		 * 7 – full img tag
 		 * 8 – image URL
 		 * 9 – (unused)
-		 * 10 - </figure>
 		 *
 		 * tested with:
 		 * * with and without [caption]
@@ -280,7 +279,7 @@ class ISC_Public extends ISC_Class {
 		 *
 		 * Use (\x20|\x9|\xD|\xA)+ to match whitespace following HTML starting tag name according to W3C REC 3.1. See issue PR #136
 		 */
-		$pattern = '#(<[^>]*class="[^"]*(alignleft|alignright|alignnone|aligncenter).*)?((<a[\x20|\x9|\xD|\xA]+[^>]*(rel="[^"]*[^"]*wp-att-(\d+)"[^>]*)*>)?\s*(<img[\x20|\x9|\xD|\xA]+[^>]*[^>]*src="(.+)".*\/?>).*(\s*</a>)??[^<]*).*(<\/figure.*>)?#isU';
+		$pattern = '#(<figure[^>]*class="([^"]*)"[^>]*>)?((<a[\x20|\x9|\xD|\xA]+[^>]*(rel="[^"]*[^"]*wp-att-(\d+)"[^>]*)*>)?\s*(<img[\x20|\x9|\xD|\xA]+[^>]*[^>]*src="(.+)".*\/?>).*(\s*</a>)??[^<]*)#isU';
 		$content = apply_filters( 'isc_public_caption_regex_content', $content );
 		$count   = preg_match_all( $pattern, $content, $matches, PREG_SET_ORDER );
 
