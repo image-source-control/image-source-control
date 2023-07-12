@@ -758,6 +758,9 @@ class ISC_Model {
 		$pattern = '#(<figure[^>]*class="([^"]*)"[^>]*>)?((<a[\x20|\x9|\xD|\xA]+[^>]*(rel="[^"]*[^"]*wp-att-(\d+)"[^>]*)*>)?\s*(<img[\x20|\x9|\xD|\xA]+[^>]*[^>]*src="(.+)".*\/?>).*(\s*</a>)??[^<]*)#isU';
 		preg_match_all( $pattern, apply_filters( 'isc_public_caption_regex_content', $html ), $matches, PREG_SET_ORDER );
 
-		return $matches;
+		/**
+		 * Filter matches from regex
+		 */
+		return apply_filters( 'isc_extract_images_from_html', $matches );
 	}
 }
