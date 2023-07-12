@@ -204,6 +204,40 @@ class Extract_Images_From_Html_Test extends \Codeception\TestCase\WPTestCase {
 	}
 
 	/**
+	 * Find multiple images in HTML
+	 */
+	public function test_extract_multiple_images() {
+		$html = '<figure class="wp-block-image"><img decoding="async" width="267" height="200" class="wp-image-177" src="http://example.com/wp-content/uploads/2020/11/400x300-267x200.png" alt="" srcset="http://example.com/wp-content/uploads/2020/11/400x300-267x200.png 267w, http://example.com/wp-content/uploads/2020/11/400x300.png 400w" sizes="(max-width: 267px) 100vw, 267px" /></figure>
+<p><img decoding="async" loading="lazy" class="alignnone size-medium wp-image-6315" src="http://example.com/wp-content/uploads/2023/04/logo-300x179.jpeg" alt="" width="300" height="179" srcset="http://example.com/wp-content/uploads/2023/04/logo-300x179.jpeg 300w, http://example.com/wp-content/uploads/2023/04/logo.jpeg 512w" sizes="(max-width: 300px) 100vw, 300px" /></p>';
+		$expected = [
+			[
+				0 => '<figure class="wp-block-image"><img decoding="async" width="267" height="200" class="wp-image-177" src="http://example.com/wp-content/uploads/2020/11/400x300-267x200.png" alt="" srcset="http://example.com/wp-content/uploads/2020/11/400x300-267x200.png 267w, http://example.com/wp-content/uploads/2020/11/400x300.png 400w" sizes="(max-width: 267px) 100vw, 267px" />',
+				1 => '<figure class="wp-block-image">',
+				2 => 'wp-block-image',
+				3 => '<img decoding="async" width="267" height="200" class="wp-image-177" src="http://example.com/wp-content/uploads/2020/11/400x300-267x200.png" alt="" srcset="http://example.com/wp-content/uploads/2020/11/400x300-267x200.png 267w, http://example.com/wp-content/uploads/2020/11/400x300.png 400w" sizes="(max-width: 267px) 100vw, 267px" />',
+				4 => '',
+				5 => '',
+				6 => '',
+				7 => '<img decoding="async" width="267" height="200" class="wp-image-177" src="http://example.com/wp-content/uploads/2020/11/400x300-267x200.png" alt="" srcset="http://example.com/wp-content/uploads/2020/11/400x300-267x200.png 267w, http://example.com/wp-content/uploads/2020/11/400x300.png 400w" sizes="(max-width: 267px) 100vw, 267px" />',
+				8 => 'http://example.com/wp-content/uploads/2020/11/400x300-267x200.png'
+			],
+			[
+				0 => '<img decoding="async" loading="lazy" class="alignnone size-medium wp-image-6315" src="http://example.com/wp-content/uploads/2023/04/logo-300x179.jpeg" alt="" width="300" height="179" srcset="http://example.com/wp-content/uploads/2023/04/logo-300x179.jpeg 300w, http://example.com/wp-content/uploads/2023/04/logo.jpeg 512w" sizes="(max-width: 300px) 100vw, 300px" />',
+				1 => '',
+				2 => '',
+				3 => '<img decoding="async" loading="lazy" class="alignnone size-medium wp-image-6315" src="http://example.com/wp-content/uploads/2023/04/logo-300x179.jpeg" alt="" width="300" height="179" srcset="http://example.com/wp-content/uploads/2023/04/logo-300x179.jpeg 300w, http://example.com/wp-content/uploads/2023/04/logo.jpeg 512w" sizes="(max-width: 300px) 100vw, 300px" />',
+				4 => '',
+				5 => '',
+				6 => '',
+				7 => '<img decoding="async" loading="lazy" class="alignnone size-medium wp-image-6315" src="http://example.com/wp-content/uploads/2023/04/logo-300x179.jpeg" alt="" width="300" height="179" srcset="http://example.com/wp-content/uploads/2023/04/logo-300x179.jpeg 300w, http://example.com/wp-content/uploads/2023/04/logo.jpeg 512w" sizes="(max-width: 300px) 100vw, 300px" />',
+				8 => 'http://example.com/wp-content/uploads/2023/04/logo-300x179.jpeg'
+			]
+		];
+		$result = ISC_Model::extract_images_from_html( $html );
+		$this->assertEquals( $expected, $result, "extract_images_from_html did not return the correct image information" );
+	}
+
+	/**
 	 * Test with line breaks and spaces
 	 */
 	public function DISABLED_test_extract_image_with_line_breaks_and_spaces() {
