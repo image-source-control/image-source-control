@@ -124,6 +124,12 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 
 == Changelog ==
 
+= untagged =
+
+- Feature: (Pro) set the `isc-disable-overlay` class on specific images to prevent the overlay from showing up
+- Improvement: find alignment information classes also, when multiple classes are given in the `<figure>` tag
+- Improvement: added the `isc_extract_images_from_html` filter to manipulate images that use captions
+
 = 2.12.0 =
 
 - Feature: (Pro) link different terms in the source string to different URLs
