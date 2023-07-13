@@ -756,7 +756,7 @@ class ISC_Model {
 		 * Use (\x20|\x9|\xD|\xA)+ to match whitespace following HTML starting tag name according to W3C REC 3.1. See issue PR #136
 		 */
 		$pattern = '#(<figure[^>]*class="([^"]*)"[^>]*>\s*)?((<a[\x20|\x9|\xD|\xA]+[^>]*(rel="[^"]*[^"]*wp-att-(\d+)"[^>]*)*>)?\s*(<img[\x20|\x9|\xD|\xA]+[^>]*[^>]*src="(.+)".*\/?>).*(\s*</a>)??[^<]*)#isU';
-		preg_match_all( $pattern, apply_filters( 'isc_public_caption_regex_content', $html ), $matches, PREG_SET_ORDER );
+		preg_match_all( $pattern, $html, $matches, PREG_SET_ORDER );
 
 		/**
 		 * Filter matches from regex
