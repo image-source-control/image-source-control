@@ -126,6 +126,7 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 
 = untagged =
 
+- Feature: find .webp images after they are now supported in the WordPress Media library as well
 - Feature: (Pro) set the `isc-disable-overlay` class on specific images to prevent the overlay from showing up
 - Feature: (Pro) Various options to load and show overlays for images in `style` attributes and `<style>` blocks.
 - Improvement: find alignment information classes also, when multiple classes are given in the `<figure>` tag
