@@ -42,6 +42,7 @@ class ISC_Class {
 			'png',
 			'gif',
 			'jpeg',
+			'webp',
 		);
 
 		/**
