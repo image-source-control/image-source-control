@@ -261,7 +261,7 @@ class ISC_Public extends ISC_Class {
 		ISC_Log::log( 'embedded images found: ' . count( $matches ) );
 
 		if ( ! count( $matches ) ) {
-			return $content;
+			return $content . $content_after;
 		}
 
 		$options          = $this->get_isc_options();
