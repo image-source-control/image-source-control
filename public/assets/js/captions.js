@@ -61,29 +61,38 @@ function isc_update_captions_positions() {
  */
 function isc_update_caption_position( el ) {
 	var main_id = el.id;
+	var caption = el.querySelector( '.isc-source-text' );
+	if ( ! caption ) {
+		return;
+	}
 
 	// attachment ID. unused
 	var att_id = main_id.split( '_' )[2];
 
 	var att  = el.querySelector( 'img' );
-	var attw = att.width;
-	var atth = att.height;
+	var is_fallback = false;
+	// fall back to the current main container to get the width and height, if no image was found. This could be a background image defined in CSS
+	if ( ! att ) {
+		att = el;
+		is_fallback = true;
+	}
+	// look for the actual width and height as a fallback, if these attributes are not set
+	var attw = att instanceof HTMLImageElement ? att.width : att.offsetWidth;
+	var atth = att instanceof HTMLImageElement ? att.height : att.offsetHeight;
 
 	// relative position
-	var l = att.offsetLeft;
-	var t = att.offsetTop;
-
-	var caption = el.querySelector( '.isc-source-text' );
+	var l = ! is_fallback ? att.offsetLeft : 0;
+	var t = ! is_fallback ? att.offsetTop : 0;
 
 	// caption width + padding & margin (after moving onto image)
 	var tw = ISCouterWidth( caption );
 	// caption height + padding (idem)
 	var th = ISCouterHeight( caption );
 
-	var attpl = parseInt( window.getComputedStyle( att )[ 'padding-left' ].substring( 0, window.getComputedStyle( att )[ 'padding-left' ].indexOf( 'px' ) ) );
-	var attpt = parseInt( window.getComputedStyle( att )[ 'padding-top' ].substring( 0, window.getComputedStyle( att )[ 'padding-top' ].indexOf( 'px' ) ) );
-	var attml = parseInt( window.getComputedStyle( att )[ 'margin-left' ].substring( 0, window.getComputedStyle( att )[ 'margin-left' ].indexOf( 'px' ) ) );
-	var attmt = parseInt( window.getComputedStyle( att )[ 'margin-top' ].substring( 0, window.getComputedStyle( att )[ 'margin-top' ].indexOf( 'px' ) ) );
+	var attpl = ! is_fallback ? parseInt( window.getComputedStyle( att )[ 'padding-left' ].substring( 0, window.getComputedStyle( att )[ 'padding-left' ].indexOf( 'px' ) ) ) : 0;
+	var attpt = ! is_fallback ? parseInt( window.getComputedStyle( att )[ 'padding-top' ].substring( 0, window.getComputedStyle( att )[ 'padding-top' ].indexOf( 'px' ) ) ) : 0;
+	var attml = ! is_fallback ? parseInt( window.getComputedStyle( att )[ 'margin-left' ].substring( 0, window.getComputedStyle( att )[ 'margin-left' ].indexOf( 'px' ) ) ) : 0;
+	var attmt = ! is_fallback ? parseInt( window.getComputedStyle( att )[ 'margin-top' ].substring( 0, window.getComputedStyle( att )[ 'margin-top' ].indexOf( 'px' ) ) ) : 0;
 
 	// caption horizontal margin
 	var tml = 5;
