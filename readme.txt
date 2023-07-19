@@ -3,7 +3,7 @@ Contributors: webzunft
 Tags: images, credits, captions, copyrights, attributions, photos, pictures, sources, bildquellen, bilder, fotos, bildunterschriften
 Requires at least: 5.3
 Tested up to: 6.2
-Stable tag: 2.12.0
+Stable tag: 2.13.0
 Requires PHP: 7.2
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -31,10 +31,10 @@ Choose between different credit displays:
 **Frontend Features**
 
 * Display image credits in the content, for image galleries, images added by shortcodes, and featured images
+* … see more listed under Premium features below
 * Define the layout and position of those attributions
 * Attach the Per-page list automatically, by using a shortcode, or with a PHP function
 * Display image sources on archive pages
-* Block editor: detects image sources for the image, cover image, and gallery blocks
 * Link to the copyright holder and include a link to the image license
 
 **Backend Features**
@@ -53,19 +53,21 @@ The featured image caption shows in the Per-page list with all other image sourc
 
 Check out the premium features to display the image caption overlay for featured images.
 
-**Premium-Features**
+**Premium Features**
 
 [Check out all features of Image Source Control](https://imagesourcecontrol.com/?utm_source=wporg&utm_medium=link&utm_campaign=all-features).
 
-* List credits for images outside of the content
-* Multiple links in the source string
-* Manage image credits for images hosted outside of the media library
+* List credits for images outside the content
+* Add multiple links to the source string
+* Manage image credits for images hosted outside the Media Library
 * Handle images without file extensions
 * Bulk-edit image copyright information in the media library
 * Show the standard picture credit for all images without a selected source
 * Choose which data is displayed in the Global List
 * List only images with a proper source in the Global List
 * Show image sources for Elementor background images
+* Developer options to show overlay captions for CSS background images
+* Exclude certain images from showing the overlay by adding the `isc-disable-overlay` class
 * Personal email support
 
 [See Pricing](https://imagesourcecontrol.com/pricing/?utm_source=wporg&utm_medium=link&utm_campaign=pricing).
@@ -76,9 +78,7 @@ Take a look at the [Image Source Control Documentation](https://imagesourcecontr
 
 Find a list of missing images sources and other debug tools under _Media > Image sources_
 
-**Automatic image sources**
-
-You can choose to display image sources automatically below the post content or as a small caption overlay above your images. Just visit the settings page of the plugin to enable those options.
+You can choose to display image sources below the post content or as a small caption overlay above your images. Just visit the settings page of the plugin to enable those options.
 
 **Manually included image sources on pages/posts**
 
@@ -124,12 +124,13 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 
 == Changelog ==
 
-= untagged =
+= 2.13.0 =
 
-- Feature: find .webp images after they are now supported in the WordPress Media library as well
+- Feature: find .webp images. They are now officially supported in the WordPress Media library
 - Feature: (Pro) set the `isc-disable-overlay` class on specific images to prevent the overlay from showing up
-- Feature: (Pro) Various options to load and show overlays for images in `style` attributes and `<style>` blocks.
+- Feature: (Pro) Various options to load and show overlays for images in inline `style` attributes and between `<style>` tags
 - Improvement: find alignment information classes also, when multiple classes are given in the `<figure>` tag
+- Improvement: allow line breaks between `<figure>` and the next tag
 - Improvement: added the `isc_extract_images_from_html` filter to manipulate images that use captions
 - Improvement: The `ISC_Public->render_caption_string()` function renders the overlay string
 - Fix: the page content was not put together correctly when `isc_stop_overlay` was added manually to it and no images were found
