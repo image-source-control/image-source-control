@@ -395,13 +395,13 @@ GFDL GNU Free Documentation License 1.3|https://www.gnu.org/licenses/fdl-1.3.htm
 					'is_pro' => true,
 				),
 				'inline_style_show' => array(
-					'label'       => __( 'Display the overlay within tags that use inline styles', 'image-source-control-isc' ),
+					'label'       => __( 'Display the overlay within HTML tags that use inline styles', 'image-source-control-isc' ),
 					'value'       => 'inline_style_show',
 					'is_pro'      => true,
 				),
 				'style_block_data'  => array(
 					'label'       => sprintf(
-						__( 'Load the overlay text for %s blocks', 'image-source-control-isc' ),
+						__( 'Load the overlay text for %s tags', 'image-source-control-isc' ),
 						'<code>style</code>'
 					),
 					'value'       => 'style_block_data',
@@ -409,7 +409,7 @@ GFDL GNU Free Documentation License 1.3|https://www.gnu.org/licenses/fdl-1.3.htm
 				),
 				'style_block_show' => array(
 					'label'       => sprintf(
-						__( 'Display the overlay after %s blocks', 'image-source-control-isc' ),
+						__( 'Display the overlay after %s tags', 'image-source-control-isc' ),
 						'<code>style</code>'
 					),
 					'value'       => 'style_block_show',
