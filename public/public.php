@@ -268,41 +268,26 @@ class ISC_Public extends ISC_Class {
 		// gather elements already replaced to prevent duplicate sources, see github #105
 		$replaced         = array();
 
-		foreach ( $matches as $key => $_match ) {
-			$hash = md5( $_match[3] );
+		foreach ( $matches as $_match ) {
+			if ( ! $_match['img_src'] ) {
+				ISC_Log::log( 'skipped an image because src is empty' );
+				continue;
+			}
+			$hash = md5( $_match['inner_code'] );
 
 			if ( in_array( $hash, $replaced, true ) ) {
-				ISC_Log::log( 'skipped one image because it appears multiple times' );
+				ISC_Log::log( 'skipped an image because it appears multiple times' );
 				continue;
 			} else {
 				$replaced[] = $hash;
 			}
 
-			/**
-			 * Interpret the image tag
-			 * we only need the ID if we don’t have it yet
-			 * it can be retrieved from "wp-image-" class (single) or "aria-describedby="gallery-1-34" in gallery
-			 */
-			$id      = $_match[6];
-			$img_tag = $_match[7];
-
-			ISC_Log::log( sprintf( 'found ID "%s" and img tag "%s"', $id, $img_tag ) );
-
-			if ( ! $id ) {
-					$success = preg_match( '#wp-image-(\d+)|aria-describedby="gallery-1-(\d+)#is', $img_tag, $matches_id );
-				if ( $success ) {
-					$id = $matches_id[1] ? intval( $matches_id[1] ) : intval( $matches_id[2] );
-					ISC_Log::log( sprintf( 'found ID "%s" in the image tag', $id ) );
-				} else {
-					ISC_Log::log( sprintf( 'no ID found for "%s" in the image tag', $img_tag ) );
-				}
-			}
+			$id = $this->html_analyzer->extract_image_id( $_match['inner_code'] );
 
 			// if ID is still missing get image by URL
 			if ( ! $id ) {
-				$src = $_match[8];
-				$id  = ISC_Model::get_image_by_url( $src );
-				ISC_Log::log( sprintf( 'ID for source "%s": "%s"', $src, $id ) );
+				$id  = ISC_Model::get_image_by_url( $_match['img_src'] );
+				ISC_Log::log( sprintf( 'ID for source "%s": "%s"', $_match['img_src'], $id ) );
 			}
 
 			// don’t show caption for own image if admin choose not to do so
@@ -319,10 +304,10 @@ class ISC_Public extends ISC_Class {
 			}
 
 			// get any alignment from the original code
-			preg_match( '#alignleft|alignright|alignnone|aligncenter#is', $_match[0], $matches_align );
-			$alignment = isset( $matches_align[0] ) ? $matches_align[0] : '';
+			preg_match( '#alignleft|alignright|alignnone|aligncenter#is', $_match['full'], $matches_align );
+			$alignment = $matches_align[0] ?? '';
 
-			$old_content   = $_match[3];
+			$old_content   = $_match['inner_code'];
 			$source        = ! empty( $options['source_pretext'] ) ? $options['source_pretext'] . ' ' . $source_string : $source_string;
 			$markup_before = '';
 			$markup_after  = '';

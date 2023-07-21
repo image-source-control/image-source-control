@@ -98,6 +98,13 @@ class ISC_Class {
 		}
 
 		/**
+		 * Helper to extract information from HTML
+		 *
+		 * @var ISC\Analyze_HTML
+		 */
+		public $html_analyzer;
+
+		/**
 		 * Setup registers filters and actions.
 		 */
 		public function __construct() {
@@ -105,6 +112,7 @@ class ISC_Class {
 			$this->options  = $this->get_isc_options();
 			self::$instance = $this;
 			$this->model    = new ISC_Model();
+			$this->html_analyzer = new ISC\Analyze_HTML;
 
 			/**
 			 * Register actions to update missing sources checks each time attachments’ post meta is updated
