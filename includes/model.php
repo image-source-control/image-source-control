@@ -21,8 +21,8 @@ class ISC_Model {
 	 */
 	public function __construct() {
 		// attachment field handling
-		add_action( 'add_attachment', array( $this, 'attachment_added' ), 10, 2 );
-		add_filter( 'attachment_fields_to_save', array( $this, 'isc_fields_save' ), 10, 2 );
+		add_action( 'add_attachment', [ $this, 'attachment_added' ], 10, 2 );
+		add_filter( 'attachment_fields_to_save', [ $this, 'isc_fields_save' ], 10, 2 );
 	}
 
 	/**
@@ -72,8 +72,8 @@ class ISC_Model {
 	public static function update_image_posts_meta( $post_id, $image_ids ) {
 		ISC_Log::log( 'enter update_image_posts_meta()' );
 
-		$added_images   = array();
-		$removed_images = array();
+		$added_images   = [];
+		$removed_images = [];
 
 		// add thumbnail information
 		$thumb_id = get_post_thumbnail_id( $post_id );
@@ -86,7 +86,7 @@ class ISC_Model {
 		$image_ids = apply_filters( 'isc_images_in_posts_simple', $image_ids, $post_id );
 
 		// check if image IDs refer to an attachment post type
-		$valid_image_post_types = apply_filters( 'isc_valid_post_types', array( 'attachment' ) );
+		$valid_image_post_types = apply_filters( 'isc_valid_post_types', [ 'attachment' ] );
 		foreach ( $image_ids as $_id => $_url ) {
 			if ( ! in_array( get_post_type( $_id ), $valid_image_post_types, true ) ) {
 				unset( $image_ids[ $_id ] );
@@ -96,7 +96,7 @@ class ISC_Model {
 		$isc_post_images = get_post_meta( $post_id, 'isc_post_images', true );
 		// just needed in very rare cases, when updates comes from outside of isc and meta fields doesn’t exist yet
 		if ( empty( $isc_post_images ) ) {
-			$isc_post_images = array();
+			$isc_post_images = [];
 		}
 
 		foreach ( $image_ids as $id => $url ) {
@@ -115,7 +115,7 @@ class ISC_Model {
 					if ( ! empty( $old_id ) ) {
 						$meta = get_post_meta( $old_id, 'isc_image_posts', true );
 						if ( empty( $meta ) ) {
-							self::update_post_meta( $old_id, 'isc_image_posts', array( $post_id ) );
+							self::update_post_meta( $old_id, 'isc_image_posts', [ $post_id ] );
 						} else {
 							// In case the isc_image_posts is not up to date
 							if ( is_array( $meta ) && ! in_array( $post_id, $meta ) ) {
@@ -131,8 +131,8 @@ class ISC_Model {
 
 		foreach ( $added_images as $id ) {
 			$meta = get_post_meta( $id, 'isc_image_posts', true );
-			if ( ! is_array( $meta ) || array() == $meta ) {
-				self::update_post_meta( $id, 'isc_image_posts', array( $post_id ) );
+			if ( ! is_array( $meta ) || $meta == [] ) {
+				self::update_post_meta( $id, 'isc_image_posts', [ $post_id ] );
 			} else {
 				array_push( $meta, $post_id );
 				$meta = array_unique( $meta );
@@ -144,7 +144,7 @@ class ISC_Model {
 			$image_meta = get_post_meta( $id, 'isc_image_posts', true );
 			if ( is_array( $image_meta ) ) {
 				$offset = array_search( $post_id, $image_meta );
-				if ( false !== $offset ) {
+				if ( $offset !== false ) {
 					array_splice( $image_meta, $offset, 1 );
 					$image_meta = array_unique( $image_meta );
 					self::update_post_meta( $id, 'isc_image_posts', $image_meta );
@@ -171,10 +171,10 @@ class ISC_Model {
 		 * If an image is used both inside the post and as post thumbnail, the thumbnail entry overrides the regular image.
 		 */
 		if ( ! empty( $thumb_id ) ) {
-			$image_ids[ $thumb_id ] = array(
+			$image_ids[ $thumb_id ] = [
 				'src'       => wp_get_attachment_url( $thumb_id ),
 				'thumbnail' => true,
-			);
+			];
 			ISC_Log::log( 'thumbnail found with ID' . $thumb_id );
 		}
 
@@ -182,7 +182,7 @@ class ISC_Model {
 		$image_ids = apply_filters( 'isc_images_in_posts', $image_ids, $post_id );
 
 		if ( empty( $image_ids ) ) {
-			$image_ids = array();
+			$image_ids = [];
 		}
 
 		ISC_Log::log( 'save isc_post_images with size of ' . count( $image_ids ) );
@@ -200,12 +200,12 @@ class ISC_Model {
 	 */
 	public function add_meta_values_to_attachments() {
 		// retrieve all attachments
-		$args = array(
+		$args = [
 			'post_type'   => 'attachment',
 			'numberposts' => -1,
 			'post_status' => null,
 			'post_parent' => null,
-		);
+		];
 
 		$attachments = get_posts( $args );
 		if ( empty( $attachments ) || ! is_array( $attachments ) ) {
@@ -279,7 +279,7 @@ class ISC_Model {
 	 * @return string sanitized source URL
 	 */
 	public function sanitize_source_url( string $source_url ): string {
-		return wp_kses( $source_url, array() );
+		return wp_kses( $source_url, [] );
 	}
 
 	/**
@@ -310,9 +310,9 @@ class ISC_Model {
 		$post = get_post( $post_id );
 
 		if ( ! isset( $post->post_type )
-			 || ! in_array( $post->post_type, get_post_types( array( 'public' => true ), 'names' ), true ) // is the post type public
-			 || 'attachment' === $post->post_type
-			 || 'revision' === $post->post_type ) {
+			 || ! in_array( $post->post_type, get_post_types( [ 'public' => true ], 'names' ), true ) // is the post type public
+			 || $post->post_type === 'attachment'
+			 || $post->post_type === 'revision' ) {
 			return false;
 		}
 
@@ -336,13 +336,13 @@ class ISC_Model {
 		// remove
 
 		$image_ids = self::filter_image_ids( $post_before->post_content );
-		$thumb_id = get_post_thumbnail_id( $post_ID );
+		$thumb_id  = get_post_thumbnail_id( $post_ID );
 		if ( ! empty( $thumb_id ) ) {
 			$image_ids[ $thumb_id ] = '';
 		}
 
 		// iterate through all image ids and remove the post ID from their "image_posts" meta data
-		foreach( $image_ids as $image_id => $image_src ) {
+		foreach ( $image_ids as $image_id => $image_src ) {
 			$meta = get_post_meta( $image_id, 'isc_image_posts', true );
 			if ( is_array( $meta ) ) {
 				unset( $meta[ array_search( $post_ID, $meta ) ] );
@@ -360,7 +360,7 @@ class ISC_Model {
 	public static function clear_post_images_index() {
 		global $wpdb;
 
-		return $wpdb->delete( $wpdb->postmeta, array( 'meta_key' => 'isc_post_images' ), array( '%s' ) );
+		return $wpdb->delete( $wpdb->postmeta, [ 'meta_key' => 'isc_post_images' ], [ '%s' ] );
 	}
 
 	/**
@@ -372,7 +372,7 @@ class ISC_Model {
 	public static function clear_image_posts_index() {
 		global $wpdb;
 
-		return $wpdb->delete( $wpdb->postmeta, array( 'meta_key' => 'isc_image_posts' ), array( '%s' ) );
+		return $wpdb->delete( $wpdb->postmeta, [ 'meta_key' => 'isc_image_posts' ], [ '%s' ] );
 	}
 
 	/**
@@ -387,7 +387,7 @@ class ISC_Model {
 		$rows_deleted_1 = self::clear_post_images_index();
 		$rows_deleted_2 = self::clear_image_posts_index();
 
-		if ( false !== $rows_deleted_1 && false !== $rows_deleted_2 ) {
+		if ( $rows_deleted_1 !== false && $rows_deleted_2 !== false ) {
 			return $rows_deleted_1 + $rows_deleted_2;
 		}
 
@@ -419,12 +419,12 @@ class ISC_Model {
 	 * @return array with attachments. Returns all attachments in the Media Library if called without additional arguments.
 	 */
 	public static function get_attachments( $args ) {
-		$args = wp_parse_args( $args, array(
+		$args = wp_parse_args( $args, [
 			'post_type'   => 'attachment',
 			'numberposts' => -1,
 			'post_status' => null,
 			'post_parent' => null,
-		) );
+		] );
 
 		return get_posts( $args );
 	}
@@ -435,26 +435,26 @@ class ISC_Model {
 	 * @return array with attachments.
 	 */
 	public static function get_attachments_with_empty_sources() {
-		$args = array(
+		$args = [
 			'post_type'   => 'attachment',
 			'numberposts' => self::MAX_POSTS,
 			'post_status' => null,
 			'post_parent' => null,
-			'meta_query'  => array(
+			'meta_query'  => [
 				// image source is empty
-				array(
+				[
 					'key'     => 'isc_image_source',
 					'value'   => '',
 					'compare' => '=',
-				),
+				],
 				// and does not belong to an author
-				array(
+				[
 					'key'     => 'isc_image_source_own',
 					'value'   => '1',
 					'compare' => '!=',
-				),
-			),
-		);
+				],
+			],
+		];
 
 		return get_posts( $args );
 	}
@@ -467,20 +467,20 @@ class ISC_Model {
 	 * @return array with attachments.
 	 */
 	public static function get_unused_attachments() {
-		$args = array(
+		$args = [
 			'post_type'   => 'attachment',
 			'numberposts' => self::MAX_POSTS,
 			'post_status' => null,
 			'post_parent' => null,
-			'meta_query'  => array(
+			'meta_query'  => [
 				// image source is empty
-				array(
+				[
 					'key'     => 'isc_image_source',
 					'value'   => 'any', /* any string; needed prior to WP 3.9 */
 					'compare' => 'NOT EXISTS',
-				),
-			),
-		);
+				],
+			],
+		];
 
 		// is per function definition always returning an array, even if empty.
 		return get_posts( $args );
@@ -505,7 +505,7 @@ class ISC_Model {
 	 * @return string[] with image ids => image src uri-s
 	 */
 	public static function filter_image_ids( $content = '' ) {
-		$srcs = array();
+		$srcs = [];
 
 		ISC_Log::log( 'enter filter_image_ids() to look for image IDs within the content' );
 
@@ -531,10 +531,10 @@ class ISC_Model {
 		 * the original use case is checking AMP pages generated in reader mode in the AMP plugin and in AMPforWP
 		 * for IMG and AMP-IMG tags
 		 */
-		$tags = apply_filters( 'isc_filter_image_ids_tags', array( 'img' ) );
+		$tags = apply_filters( 'isc_filter_image_ids_tags', [ 'img' ] );
 
 		if ( ! is_array( $tags ) ) {
-			return array();
+			return [];
 		}
 
 		// I am keeping the original $dom->getElementsByTagName as well as the new DOMXpath solution for multiple elements for now
@@ -550,7 +550,7 @@ class ISC_Model {
 		foreach ( $nodes as $node ) {
 			if ( isset( $node->attributes ) ) {
 				$matched = false;
-				if ( null !== $node->attributes->getNamedItem( 'class' ) ) {
+				if ( $node->attributes->getNamedItem( 'class' ) !== null ) {
 					ISC_Log::log( sprintf( 'found class attribute "%s"', $node->attributes->getNamedItem( 'class' )->textContent ) );
 
 					if ( preg_match( '#.*wp-image-(\d+?).*#U', $node->attributes->getNamedItem( 'class' )->textContent, $matches ) ) {
@@ -561,7 +561,7 @@ class ISC_Model {
 					}
 				}
 				if ( ! $matched ) {
-					if ( null !== $node->attributes->getNamedItem( 'src' ) ) {
+					if ( $node->attributes->getNamedItem( 'src' ) !== null ) {
 						$url = $node->attributes->getNamedItem( 'src' )->textContent;
 						ISC_Log::log( sprintf( 'found src "%s"', $url ) );
 						// get ID of images by url
@@ -649,21 +649,21 @@ class ISC_Model {
 		}
 
 		// remove protocoll (http or https)
-		$url    = str_ireplace( array( 'http:', 'https:' ), '', $url );
-		$newurl = str_ireplace( array( 'http:', 'https:' ), '', $newurl );
+		$url    = str_ireplace( [ 'http:', 'https:' ], '', $url );
+		$newurl = str_ireplace( [ 'http:', 'https:' ], '', $newurl );
 
 		// gather different URLs formats
-		$urls = array(
+		$urls = [
 			'http:' . $url,
 			'https:' . $url,
 			'http:' . $newurl,
 			'https:' . $newurl,
-		);
+		];
 
 		// remove duplicates
 		$urls = array_unique( $urls );
 
-		$url_queries = array();
+		$url_queries = [];
 		foreach ( $urls as $_url ) {
 			// return if any of the URLs is already in storage
 			if ( $storage->is_image_url_in_storage( $_url ) ) {
@@ -675,7 +675,7 @@ class ISC_Model {
 			$url_queries[] = 'guid = "' . esc_url( $_url ) . '"';
 		}
 		$url_query_string = implode( ' OR ', $url_queries );
-		ISC_Log::log( sprintf( 'SQL query looking for anything with %s', implode( ', ', array_unique( array( $url, $newurl ) ) ) ) );
+		ISC_Log::log( sprintf( 'SQL query looking for anything with %s', implode( ', ', array_unique( [ $url, $newurl ] ) ) ) );
 
 		// not escaped, because escaping already happened above
 		$raw_query = "SELECT ID, guid FROM `$wpdb->posts` WHERE post_type='attachment' AND {$url_query_string} LIMIT 1";
@@ -693,7 +693,7 @@ class ISC_Model {
 			// this should ideally only apply to image URLs that are not in the media library
 			// ISC also stores the URL to prevent too many database requests
 			// using $newurl, because it is already stripped by potential parameters and stuff
-			$storage->update( $newurl, array( 'post_id' => null ) );
+			$storage->update( $newurl, [ 'post_id' => null ] );
 			ISC_Log::log( 'no image ID found' );
 		}
 
@@ -759,8 +759,24 @@ class ISC_Model {
 		preg_match_all( $pattern, $html, $matches, PREG_SET_ORDER );
 
 		/**
+		 * Convert the matches into a multidimensional array with string keys to simplify usage and manipulation
+		 */
+		$matches_new = array_map(
+			function( $match ) {
+				return [
+					'full'         => $match[0] ?? '',
+					'figure_class' => $match[2] ?? '',
+					'inner_code'   => $match[3] ?? '',
+					'img_tag'      => $match[7] ?? '',
+					'img_src'      => $match[8] ?? '',
+				];
+			},
+			$matches
+		);
+
+		/**
 		 * Filter matches from regex
 		 */
-		return apply_filters( 'isc_extract_images_from_html', $matches );
+		return apply_filters( 'isc_extract_images_from_html', $matches_new, $matches, $pattern );
 	}
 }

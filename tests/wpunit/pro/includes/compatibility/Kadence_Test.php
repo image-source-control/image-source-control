@@ -16,15 +16,20 @@ class Kadence_Test extends \Codeception\TestCase\WPTestCase {
 		$markup   = '<figure class="alignleft"><a href="https://example.com/image.png"><div class="kadence-blocks-gallery-item"><img src="https://example.com/image.png"/></div></a></figure>';
 		$expected = [
 			[
-				0 => '<figure class="alignleft"><a href="https://example.com/image.png"><div class="kadence-blocks-gallery-item"><img src="https://example.com/image.png"/>',
-				1 => '<figure class="alignleft">',
-				2 => 'alignleft',
-				3 => '<a href="https://example.com/image.png"><div class="kadence-blocks-gallery-item"><img src="https://example.com/image.png"/></div></a>',
-				4 => '<a href="https://example.com/image.png">',
-				5 => '',
-				6 => '',
-				7 => '<img src="https://example.com/image.png"/>',
-				8 => 'https://example.com/image.png'
+				'full' => '<figure class="alignleft"><a href="https://example.com/image.png"><div class="kadence-blocks-gallery-item"><img src="https://example.com/image.png"/></div></a></figure>',
+				'figure_class' => 'alignleft',
+				'inner_code' => '<a href="https://example.com/image.png"><div class="kadence-blocks-gallery-item"><img src="https://example.com/image.png"/></div></a>',
+				'img_src' => 'https://example.com/image.png',
+				/*'original' => [
+					0 => '<figure class="alignleft"><a href="https://example.com/image.png"><div class="kadence-blocks-gallery-item"><img src="https://example.com/image.png"/></div></a></figure>',
+					1 => 'alignleft',
+					2 => '<a href="https://example.com/image.png"><div class="kadence-blocks-gallery-item"><img src="https://example.com/image.png"/></div></a>',
+					3 => '<a href="https://example.com/image.png">',
+					4 => '',
+					5 => '',
+					6 => '<img src="https://example.com/image.png"/>',
+					7 => 'https://example.com/image.png'
+				],*/
 			],
 		];
 		$actual   = ISC_Model::extract_images_from_html( $markup );
