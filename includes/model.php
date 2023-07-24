@@ -755,7 +755,7 @@ class ISC_Model {
 		 *
 		 * Use (\x20|\x9|\xD|\xA)+ to match whitespace following HTML starting tag name according to W3C REC 3.1. See issue PR #136
 		 */
-		$pattern = apply_filters( 'isc_public_caption_regex', '#(<figure[^>]*class="([^"]*)"[^>]*>\s*)?((<a[\x20|\x9|\xD|\xA]+[^>]*(rel="[^"]*[^"]*wp-att-(\d+)"[^>]*)*>)?\s*(<img[\x20|\x9|\xD|\xA]+[^>]*[^>]*src="(.+)".*\/?>).*(\s*</a>)??[^<]*)#isU', $html );
+		$pattern = apply_filters( 'isc_public_caption_regex', '#(?:<figure[^>]*class="([^"]*)"[^>]*>\s*)?((<a[\x20|\x9|\xD|\xA]+[^>]*>)?\s*(<img[\x20|\x9|\xD|\xA]+[^>]*[^>]*src="(.+)".*\/?>).*(\s*</a>)??[^<]*)#isU', $html );
 		preg_match_all( $pattern, $html, $matches, PREG_SET_ORDER );
 
 		/**
@@ -765,10 +765,9 @@ class ISC_Model {
 			function( $match ) {
 				return [
 					'full'         => $match[0] ?? '',
-					'figure_class' => $match[2] ?? '',
-					'inner_code'   => $match[3] ?? '',
-					//'img_tag'      => $match[7] ?? '',
-					'img_src'      => $match[8] ?? '',
+					'figure_class' => $match[1] ?? '',
+					'inner_code'   => $match[2] ?? '',
+					'img_src'      => $match[5] ?? '',
 				];
 			},
 			$matches
