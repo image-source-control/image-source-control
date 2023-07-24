@@ -17,7 +17,7 @@ class Disable_Overlay_Class_Test extends \Codeception\TestCase\WPTestCase {
 		$markup   = '<figure class="alignleft isc-disable-overlay"><img src="https://example.com/image.png"/></figure><figure class="alignright"><img src="https://example.com/image2.png"/></figure><figure class="aligncenter"><img src="https://example.com/image3.png" class="isc-disable-overlay"/></figure>';
 		$expected = [
 			[
-				'full'         => '<figure class="alignright"><img src="https://example.com/image2.png"/></figure>',
+				'full'         => '<figure class="alignright"><img src="https://example.com/image2.png"/>',
 				'figure_class' => 'alignright',
 				'inner_code'   => '<img src="https://example.com/image2.png"/>',
 				'img_src'      => 'https://example.com/image2.png',

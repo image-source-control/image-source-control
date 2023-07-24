@@ -767,7 +767,7 @@ class ISC_Model {
 					'full'         => $match[0] ?? '',
 					'figure_class' => $match[2] ?? '',
 					'inner_code'   => $match[3] ?? '',
-					'img_tag'      => $match[7] ?? '',
+					//'img_tag'      => $match[7] ?? '',
 					'img_src'      => $match[8] ?? '',
 				];
 			},

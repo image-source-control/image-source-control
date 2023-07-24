@@ -9,6 +9,14 @@ use \ISC_Model;
  */
 class Extract_Images_From_Html_Test extends \Codeception\TestCase\WPTestCase {
 
+	public function setUp() : void {
+		parent::setUp();
+		// Remove all hooked functions from 'isc_public_caption_regex' action hook to prevent accidental override.
+		remove_all_actions('isc_public_caption_regex');
+		// Remove all hooked functions from 'isc_extract_images_from_html' filter hook to prevent accidental override.
+		remove_all_filters('isc_extract_images_from_html');
+	}
+
 	/**
 	 * Test if the function returns an array
 	 * Whatever is entered, it is always an array
@@ -83,7 +91,7 @@ class Extract_Images_From_Html_Test extends \Codeception\TestCase\WPTestCase {
 		$html     = '<figure><img src="https://example.com/test.jpg"></figure>';
 		$expected = [
 			[
-				'full'         => '<img src="https://example.com/test.jpg"></figure>',
+				'full'         => '<img src="https://example.com/test.jpg">',
 				'figure_class' => '',
 				'inner_code'   => '<img src="https://example.com/test.jpg">',
 				'img_src'      => 'https://example.com/test.jpg',
@@ -100,7 +108,7 @@ class Extract_Images_From_Html_Test extends \Codeception\TestCase\WPTestCase {
 		$html     = '<figure class="wp-block-image"><img src="https://example.com/test.jpg"></figure>';
 		$expected = [
 			[
-				'full'         => '<figure class="wp-block-image"><img src="https://example.com/test.jpg"></figure>',
+				'full'         => '<figure class="wp-block-image"><img src="https://example.com/test.jpg">',
 				'figure_class' => 'wp-block-image',
 				'inner_code'   => '<img src="https://example.com/test.jpg">',
 				'img_src'      => 'https://example.com/test.jpg',
@@ -117,7 +125,7 @@ class Extract_Images_From_Html_Test extends \Codeception\TestCase\WPTestCase {
 		$html     = '<figure class="wp-block-image isc-disable-overlay"><a href="https://example.com"><img src="https://example.com/test.jpg"></a></figure>';
 		$expected = [
 			[
-				'full'         => '<figure class="wp-block-image isc-disable-overlay"><a href="https://example.com"><img src="https://example.com/test.jpg"></a></figure>',
+				'full'         => '<figure class="wp-block-image isc-disable-overlay"><a href="https://example.com"><img src="https://example.com/test.jpg"></a>',
 				'figure_class' => 'wp-block-image isc-disable-overlay',
 				'inner_code'   => '<a href="https://example.com"><img src="https://example.com/test.jpg"></a>',
 				'img_src'      => 'https://example.com/test.jpg',
@@ -151,7 +159,7 @@ class Extract_Images_From_Html_Test extends \Codeception\TestCase\WPTestCase {
 		$html     = '<figure class="wp-block-image aligncenter size-full is-style-default isc_disable_overlay"><a href="http://example.com/wp-content/uploads/2023/04/logo.jpeg"><img decoding="async" width="512" height="306" src="http://example.com/wp-content/uploads/2023/04/logo.jpeg" alt="" class="wp-image-6315" srcset="http://example.com/wp-content/uploads/2023/04/logo.jpeg 512w, http://example.com/wp-content/uploads/2023/04/logo-300x179.jpeg 300w" sizes="(max-width: 512px) 100vw, 512px" /></a></figure>';
 		$expected = [
 			[
-				'full'         => '<figure class="wp-block-image aligncenter size-full is-style-default isc_disable_overlay"><a href="http://example.com/wp-content/uploads/2023/04/logo.jpeg"><img decoding="async" width="512" height="306" src="http://example.com/wp-content/uploads/2023/04/logo.jpeg" alt="" class="wp-image-6315" srcset="http://example.com/wp-content/uploads/2023/04/logo.jpeg 512w, http://example.com/wp-content/uploads/2023/04/logo-300x179.jpeg 300w" sizes="(max-width: 512px) 100vw, 512px" /></a></figure>',
+				'full'         => '<figure class="wp-block-image aligncenter size-full is-style-default isc_disable_overlay"><a href="http://example.com/wp-content/uploads/2023/04/logo.jpeg"><img decoding="async" width="512" height="306" src="http://example.com/wp-content/uploads/2023/04/logo.jpeg" alt="" class="wp-image-6315" srcset="http://example.com/wp-content/uploads/2023/04/logo.jpeg 512w, http://example.com/wp-content/uploads/2023/04/logo-300x179.jpeg 300w" sizes="(max-width: 512px) 100vw, 512px" /></a>',
 				'figure_class' => 'wp-block-image aligncenter size-full is-style-default isc_disable_overlay',
 				'inner_code'   => '<a href="http://example.com/wp-content/uploads/2023/04/logo.jpeg"><img decoding="async" width="512" height="306" src="http://example.com/wp-content/uploads/2023/04/logo.jpeg" alt="" class="wp-image-6315" srcset="http://example.com/wp-content/uploads/2023/04/logo.jpeg 512w, http://example.com/wp-content/uploads/2023/04/logo-300x179.jpeg 300w" sizes="(max-width: 512px) 100vw, 512px" /></a>',
 				'img_src'      => 'http://example.com/wp-content/uploads/2023/04/logo.jpeg',
@@ -169,7 +177,7 @@ class Extract_Images_From_Html_Test extends \Codeception\TestCase\WPTestCase {
 <p><img decoding="async" loading="lazy" class="alignnone size-medium wp-image-6315" src="http://example.com/wp-content/uploads/2023/04/logo-300x179.jpeg" alt="" width="300" height="179" srcset="http://example.com/wp-content/uploads/2023/04/logo-300x179.jpeg 300w, http://example.com/wp-content/uploads/2023/04/logo.jpeg 512w" sizes="(max-width: 300px) 100vw, 300px" /></p>';
 		$expected = [
 			[
-				'full'         => '<figure class="wp-block-image"><img decoding="async" width="267" height="200" class="wp-image-177" src="http://example.com/wp-content/uploads/2020/11/400x300-267x200.png" alt="" srcset="http://example.com/wp-content/uploads/2020/11/400x300-267x200.png 267w, http://example.com/wp-content/uploads/2020/11/400x300.png 400w" sizes="(max-width: 267px) 100vw, 267px" /></figure>',
+				'full'         => '<figure class="wp-block-image"><img decoding="async" width="267" height="200" class="wp-image-177" src="http://example.com/wp-content/uploads/2020/11/400x300-267x200.png" alt="" srcset="http://example.com/wp-content/uploads/2020/11/400x300-267x200.png 267w, http://example.com/wp-content/uploads/2020/11/400x300.png 400w" sizes="(max-width: 267px) 100vw, 267px" />',
 				'figure_class' => 'wp-block-image',
 				'inner_code'   => '<img decoding="async" width="267" height="200" class="wp-image-177" src="http://example.com/wp-content/uploads/2020/11/400x300-267x200.png" alt="" srcset="http://example.com/wp-content/uploads/2020/11/400x300-267x200.png 267w, http://example.com/wp-content/uploads/2020/11/400x300.png 400w" sizes="(max-width: 267px) 100vw, 267px" />',
 				'img_src'      => 'http://example.com/wp-content/uploads/2020/11/400x300-267x200.png',
@@ -199,8 +207,7 @@ class Extract_Images_From_Html_Test extends \Codeception\TestCase\WPTestCase {
 				'full'         => '<figure class="wp-block-image isc-disable-overlay">
 			<a href="https://example.com">
 				<img src="https://example.com/test.jpg">
-			</a>
-		</figure>',
+			</a>',
 				'figure_class' => 'wp-block-image isc-disable-overlay',
 				'inner_code'   => '<a href="https://example.com">
 				<img src="https://example.com/test.jpg">
@@ -226,8 +233,7 @@ class Extract_Images_From_Html_Test extends \Codeception\TestCase\WPTestCase {
 				'full'         => '<figure class="wp-block-image isc-disable-overlay"> 
 			<a href="https://example.com"> 
 				<img src="https://example.com/test.jpg"> 
-			</a>
-		</figure>',
+			</a>',
 				'figure_class' => 'wp-block-image isc-disable-overlay',
 				'inner_code'   => '<a href="https://example.com"> 
 				<img src="https://example.com/test.jpg"> 
