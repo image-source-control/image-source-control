@@ -17,15 +17,11 @@ class Disable_Overlay_Class_Test extends \Codeception\TestCase\WPTestCase {
 		$markup   = '<figure class="alignleft isc-disable-overlay"><img src="https://example.com/image.png"/></figure><figure class="alignright"><img src="https://example.com/image2.png"/></figure><figure class="aligncenter"><img src="https://example.com/image3.png" class="isc-disable-overlay"/></figure>';
 		$expected = [
 			[
-				0 => '<figure class="alignright"><img src="https://example.com/image2.png"/>',
-				1 => '<figure class="alignright">',
-				2 => 'alignright',
-				3 => '<img src="https://example.com/image2.png"/>',
-				4 => '',
-				5 => '',
-				6 => '',
-				7 => '<img src="https://example.com/image2.png"/>',
-				8 => 'https://example.com/image2.png'
+				'full'         => '<figure class="alignright"><img src="https://example.com/image2.png"/></figure>',
+				'figure_class' => 'alignright',
+				'inner_code'   => '<img src="https://example.com/image2.png"/>',
+				'img_src'      => 'https://example.com/image2.png',
+
 			],
 		];
 		// run the filter ISC_Pro_Public::remove_overlay_from_isc_disable_overlay_class() manually
