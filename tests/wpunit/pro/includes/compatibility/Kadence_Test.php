@@ -39,12 +39,29 @@ class Kadence_Test extends Extract_Images_From_Html_Test {
 	 * Test multiple nested div containers
 	 */
 	public function test_public_caption_regex_nested_divs() {
-		$markup = '<figure class="my-figure"><a href="https://example.com"><div><div><img src="http://example.com/image.jpg" alt="test image" /></div></div></a></figure>';
+		$markup = '<figure class="my-figure"><a href="https://example.com"><div><div><img src="https://example.com/image.jpg" alt="test image" /></div></div></a></figure>';
 		$expected = [
 			[
-				'full' => '<img src="https://example.com/image.jpg" alt="test image" />',
+				'full' => '<figure class="my-figure"><a href="https://example.com"><div><div><img src="https://example.com/image.jpg" alt="test image" /></div></div></a>',
 				'figure_class' => 'my-figure',
-				'inner_code' => '<img src="http://example.com/image.jpg" alt="test image" />',
+				'inner_code' => '<a href="https://example.com"><div><div><img src="https://example.com/image.jpg" alt="test image" /></div></div></a>',
+				'img_src' => 'https://example.com/image.jpg',
+			],
+		];
+		$actual   = ISC_Model::extract_images_from_html( $markup );
+		$this->assertEquals( $expected, $actual );
+	}
+
+	/**
+	 * Test mismatching DIVs
+	 */
+	public function test_public_caption_regex_mismatching_divs() {
+		$markup = '<figure class="my-figure"><a href="https://example.com"><div><div><img src="https://example.com/image.jpg" alt="test image" /></div></a></div></figure>';
+		$expected = [
+			[
+				'full' => '<figure class="my-figure"><a href="https://example.com"><div><div><img src="https://example.com/image.jpg" alt="test image" /></div></a>',
+				'figure_class' => 'my-figure',
+				'inner_code' => '<a href="https://example.com"><div><div><img src="https://example.com/image.jpg" alt="test image" /></div></a>',
 				'img_src' => 'https://example.com/image.jpg',
 			],
 		];
