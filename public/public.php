@@ -256,7 +256,7 @@ class ISC_Public extends ISC_Class {
 		}
 
 		$content = apply_filters( 'isc_public_caption_regex_content', $content );
-		$matches = ISC_Model::extract_images_from_html( $content );
+		$matches = $this->html_analyzer->extract_images_from_html( $content );
 
 		ISC_Log::log( 'embedded images found: ' . count( $matches ) );
 

@@ -2,13 +2,25 @@
 
 namespace ISC\Tests\WPUnit;
 
-use \ISC_Model;
-use \ISC_Pro_Public;
+use \ISC\Analyze_HTML;
 
 /**
  * Test if ISC_Pro_Public::remove_overlay_from_isc_disable_overlay_class() removes images with the isc-disable-overlay class from the content.
  */
 class Disable_Overlay_Class_Test extends \Codeception\TestCase\WPTestCase {
+
+	/**
+	 * Helper to extract information from HTML
+	 *
+	 * @var Analyze_HTML
+	 */
+	public $html_analyzer;
+
+	public function setUp() : void {
+		parent::setUp();
+		$this->html_analyzer = new Analyze_HTML();
+	}
+
 	/**
 	 * Test if remove_overlay_from_isc_disable_overlay_class() removes images with the isc-disable-overlay class from the content.
 	 * The markup contains three images, two of them have the isc-disable-overlay class somewhere. So only one image should be returned.
@@ -26,7 +38,7 @@ class Disable_Overlay_Class_Test extends \Codeception\TestCase\WPTestCase {
 		];
 		// run the filter ISC_Pro_Public::remove_overlay_from_isc_disable_overlay_class() manually
 		add_filter( 'isc_extract_images_from_html', [ 'ISC_Pro_Public', 'remove_overlay_from_isc_disable_overlay_class' ], 10 );
-		$actual = ISC_Model::extract_images_from_html( $markup );
+		$actual = $this->html_analyzer->extract_images_from_html( $markup );
 		$this->assertEquals( $expected, $actual );
 	}
 }

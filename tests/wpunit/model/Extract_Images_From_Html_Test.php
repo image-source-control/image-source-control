@@ -2,12 +2,19 @@
 
 namespace ISC\Tests\WPUnit;
 
-use \ISC_Model;
+use \ISC\Analyze_HTML;
 
 /**
- * Test if ISC_Model::extract_images_from_html() works as expected.
+ * Test if ISC/Analyze_HTML:extract_images_from_html() works as expected.
  */
 class Extract_Images_From_Html_Test extends \Codeception\TestCase\WPTestCase {
+
+	/**
+	 * Helper to extract information from HTML
+	 *
+	 * @var Analyze_HTML
+	 */
+	public $html_analyzer;
 
 	public function setUp() : void {
 		parent::setUp();
@@ -15,6 +22,8 @@ class Extract_Images_From_Html_Test extends \Codeception\TestCase\WPTestCase {
 		remove_all_actions('isc_public_caption_regex');
 		// Remove all hooked functions from 'isc_extract_images_from_html' filter hook to prevent accidental override.
 		remove_all_filters('isc_extract_images_from_html');
+
+		$this->html_analyzer = new Analyze_HTML();
 	}
 
 	/**
@@ -23,7 +32,7 @@ class Extract_Images_From_Html_Test extends \Codeception\TestCase\WPTestCase {
 	 */
 	public function test_array() {
 		$html   = 'some random string';
-		$result = ISC_Model::extract_images_from_html( $html );
+		$result = $this->html_analyzer->extract_images_from_html( $html );
 		$this->assertEquals( [], $result, 'extract_images_from_html did not return an empty array' );
 		$this->assertIsArray( $result, 'extract_images_from_html did not return an array' );
 	}
@@ -44,7 +53,7 @@ class Extract_Images_From_Html_Test extends \Codeception\TestCase\WPTestCase {
 				'img_src'      => 'https://example.com/test.jpg',
 			],
 		];
-		$result   = ISC_Model::extract_images_from_html( $html );
+		$result   = $this->html_analyzer->extract_images_from_html( $html );
 		// fwrite( STDERR, print_r( $result, TRUE ) );
 		$this->assertEquals( $expected, $result, 'extract_images_from_html did not return the correct image information' );
 	}
@@ -62,7 +71,7 @@ class Extract_Images_From_Html_Test extends \Codeception\TestCase\WPTestCase {
 				'img_src'      => 'https://example.com/test',
 			],
 		];
-		$result   = ISC_Model::extract_images_from_html( $html );
+		$result   = $this->html_analyzer->extract_images_from_html( $html );
 		$this->assertEquals( $expected, $result, 'extract_images_from_html did not return the correct image information' );
 	}
 
@@ -73,7 +82,7 @@ class Extract_Images_From_Html_Test extends \Codeception\TestCase\WPTestCase {
 	public function test_unquoted_src_attribute() {
 		$html     = '<img src=https://example.com/test>';
 		$expected = [];
-		$result   = ISC_Model::extract_images_from_html( $html );
+		$result   = $this->html_analyzer->extract_images_from_html( $html );
 		file_put_contents( WP_CONTENT_DIR . '/test.log', print_r( $result, true ) . "\n". FILE_APPEND );
 		$this->assertEquals( $expected, $result, 'extract_images_from_html did not return the correct image information' );
 	}
@@ -91,7 +100,7 @@ class Extract_Images_From_Html_Test extends \Codeception\TestCase\WPTestCase {
 				'img_src'      => 'https://example.com/test.jpg',
 			],
 		];
-		$result   = ISC_Model::extract_images_from_html( $html );
+		$result   = $this->html_analyzer->extract_images_from_html( $html );
 		$this->assertEquals( $expected, $result, 'extract_images_from_html did not return the correct image information' );
 	}
 
@@ -109,7 +118,7 @@ class Extract_Images_From_Html_Test extends \Codeception\TestCase\WPTestCase {
 				'img_src'      => 'https://example.com/test.jpg',
 			],
 		];
-		$result   = ISC_Model::extract_images_from_html( $html );
+		$result   = $this->html_analyzer->extract_images_from_html( $html );
 		$this->assertEquals( $expected, $result, 'extract_images_from_html did not return the correct image information' );
 	}
 
@@ -127,7 +136,7 @@ class Extract_Images_From_Html_Test extends \Codeception\TestCase\WPTestCase {
 				'img_src'      => 'https://example.com/test.jpg',
 			],
 		];
-		$result   = ISC_Model::extract_images_from_html( $html );
+		$result   = $this->html_analyzer->extract_images_from_html( $html );
 		$this->assertEquals( $expected, $result, 'extract_images_from_html did not return the correct image information' );
 	}
 
@@ -144,7 +153,7 @@ class Extract_Images_From_Html_Test extends \Codeception\TestCase\WPTestCase {
 				'img_src'      => 'https://example.com/test.jpg',
 			],
 		];
-		$result   = ISC_Model::extract_images_from_html( $html );
+		$result   = $this->html_analyzer->extract_images_from_html( $html );
 		$this->assertEquals( $expected, $result, 'extract_images_from_html did not return the correct image information' );
 	}
 
@@ -161,7 +170,7 @@ class Extract_Images_From_Html_Test extends \Codeception\TestCase\WPTestCase {
 				'img_src'      => 'https://example.com/test.jpg',
 			],
 		];
-		$result   = ISC_Model::extract_images_from_html( $html );
+		$result   = $this->html_analyzer->extract_images_from_html( $html );
 		$this->assertEquals( $expected, $result, 'extract_images_from_html did not return the correct image information' );
 	}
 
@@ -178,7 +187,7 @@ class Extract_Images_From_Html_Test extends \Codeception\TestCase\WPTestCase {
 				'img_src'      => 'http://example.com/wp-content/uploads/2023/04/logo-300x179.jpeg',
 			],
 		];
-		$result   = ISC_Model::extract_images_from_html( $html );
+		$result   = $this->html_analyzer->extract_images_from_html( $html );
 		$this->assertEquals( $expected, $result, 'extract_images_from_html did not return the correct image information' );
 	}
 
@@ -195,7 +204,7 @@ class Extract_Images_From_Html_Test extends \Codeception\TestCase\WPTestCase {
 				'img_src'      => 'http://example.com/wp-content/uploads/2023/04/logo.jpeg',
 			],
 		];
-		$result   = ISC_Model::extract_images_from_html( $html );
+		$result   = $this->html_analyzer->extract_images_from_html( $html );
 		$this->assertEquals( $expected, $result, 'extract_images_from_html did not return the correct image information' );
 	}
 
@@ -224,7 +233,7 @@ class Extract_Images_From_Html_Test extends \Codeception\TestCase\WPTestCase {
 				'img_src' => 'https://example.com/image3.jpeg',
 			]
 		];
-		$result   = ISC_Model::extract_images_from_html( $html );
+		$result   = $this->html_analyzer->extract_images_from_html( $html );
 		$this->assertEquals( $expected, $result, 'extract_images_from_html did not return the correct image information' );
 	}
 
@@ -248,7 +257,7 @@ class Extract_Images_From_Html_Test extends \Codeception\TestCase\WPTestCase {
 				'img_src'      => 'http://example.com/wp-content/uploads/2023/04/logo-300x179.jpeg',
 			],
 		];
-		$result   = ISC_Model::extract_images_from_html( $html );
+		$result   = $this->html_analyzer->extract_images_from_html( $html );
 		$this->assertEquals( $expected, $result, 'extract_images_from_html did not return the correct image information' );
 	}
 
@@ -274,7 +283,7 @@ class Extract_Images_From_Html_Test extends \Codeception\TestCase\WPTestCase {
 				'img_src'      => 'https://example.com/test.jpg',
 			],
 		];
-		$result   = ISC_Model::extract_images_from_html( $html );
+		$result   = $this->html_analyzer->extract_images_from_html( $html );
 		$this->assertEquals( $expected, $result, 'extract_images_from_html did not return the correct image information' );
 	}
 
@@ -303,7 +312,7 @@ src="https://example.com/image.jpg">
 				'img_src'      => 'https://example.com/image.jpg',
 			],
 		];
-		$result   = ISC_Model::extract_images_from_html( $html );
+		$result   = $this->html_analyzer->extract_images_from_html( $html );
 		$this->assertEquals( $expected, $result, 'extract_images_from_html did not return the correct image information' );
 	}
 
@@ -329,7 +338,7 @@ src="https://example.com/image.jpg">
 				'img_src'      => 'https://example.com/test.jpg',
 			],
 		];
-		$result   = ISC_Model::extract_images_from_html( $html );
+		$result   = $this->html_analyzer->extract_images_from_html( $html );
 		$this->assertEquals( $expected, $result, 'extract_images_from_html did not return the correct image information' );
 	}
 }
