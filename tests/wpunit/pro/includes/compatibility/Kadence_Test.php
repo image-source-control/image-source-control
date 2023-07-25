@@ -31,7 +31,7 @@ class Kadence_Test extends Extract_Images_From_Html_Test {
 				'img_src' => 'https://example.com/image.png',
 			],
 		];
-		$actual   = ISC_Model::extract_images_from_html( $markup );
+		$actual   = $this->html_analyzer->extract_images_from_html( $markup );
 		$this->assertEquals( $expected, $actual );
 	}
 
@@ -48,7 +48,7 @@ class Kadence_Test extends Extract_Images_From_Html_Test {
 				'img_src' => 'https://example.com/image.jpg',
 			],
 		];
-		$actual   = ISC_Model::extract_images_from_html( $markup );
+		$actual   = $this->html_analyzer->extract_images_from_html( $markup );
 		$this->assertEquals( $expected, $actual );
 	}
 
@@ -65,7 +65,7 @@ class Kadence_Test extends Extract_Images_From_Html_Test {
 				'img_src' => 'https://example.com/image.jpg',
 			],
 		];
-		$actual   = ISC_Model::extract_images_from_html( $markup );
+		$actual   = $this->html_analyzer->extract_images_from_html( $markup );
 		$this->assertEquals( $expected, $actual );
 	}
 
@@ -86,7 +86,7 @@ class Kadence_Test extends Extract_Images_From_Html_Test {
 		];
 		// run the filter ISC_Pro_Public::remove_overlay_from_isc_disable_overlay_class() manually
 		add_filter( 'isc_extract_images_from_html', [ 'ISC_Pro_Public', 'remove_overlay_from_isc_disable_overlay_class' ], 10 );
-		$actual = ISC_Model::extract_images_from_html( $markup );
+		$actual = $this->html_analyzer->extract_images_from_html( $markup );
 		$this->assertEquals( $expected, $actual );
 	}
 }
