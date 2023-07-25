@@ -65,7 +65,7 @@ Check out the premium features to display the image caption overlay for featured
 * Show the standard picture credit for all images without a selected source
 * Choose which data is displayed in the Global List
 * List only images with a proper source in the Global List
-* Show image sources for Elementor background images
+* Show image sources for Elementor background images, images in Kadence Blocks Galleries, and Kadence Related Content Carousel
 * Developer options to show overlay captions for CSS background images
 * Exclude certain images from showing the overlay by adding the `isc-disable-overlay` class
 * Personal email support
@@ -123,6 +123,10 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 1. settings to manage image source licenses
 
 == Changelog ==
+
+= untagged =
+
+- Feature: (Pro) Support for images in Kadence Blocks Galleries and Kadence Related Content Carousel
 
 = 2.13.0 =
 
