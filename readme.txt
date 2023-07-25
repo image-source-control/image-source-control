@@ -127,6 +127,7 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 = untagged =
 
 - Feature: (Pro) Support for images in Kadence Blocks Galleries and Kadence Related Content Carousel
+- Feature: Added "CC BY-SA 2.0 DE" to available licenses
 
 = 2.13.0 =
 
