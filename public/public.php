@@ -209,7 +209,7 @@ class ISC_Public extends ISC_Class {
 			&& apply_filters( 'isc_public_add_source_captions_to_content', true ) ) {
 			$content = self::add_source_captions_to_content( $content );
 		} else {
-			ISC_Log::log( 'not creating image overlays because the option is disabled' );
+			ISC_Log::log( 'ISC_Public: not creating image overlays because the option is disabled for post content' );
 		}
 		// maybe add source list
 		$content = self::add_source_list_to_content( $content );
