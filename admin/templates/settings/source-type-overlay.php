@@ -16,9 +16,6 @@
 		<?php
 		esc_html_e( 'Display the image source as an overlay.', 'image-source-control-isc' );
 		?>
-		 <?php
-			esc_html_e( 'It only works for images in the content.', 'image-source-control-isc' );
-			?>
 	</p>
 </div>
 <?php
