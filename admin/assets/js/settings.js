@@ -8,6 +8,27 @@ jQuery( document ).ready(
 		$( '#isc-settings-overlay-enable' ).on( 'click', function(){ isc_caption_checkstate() } );
 		$( '.isc-settings-standard-source input' ).on( 'change', isc_toggle_standard_source_text );
 		$( '#thumbnail-size-select, #use-thumbnail' ).on( 'change', function(){ isc_thumbnail_input_checkstate(); } );
+
+		// Show and update preview when a position option is clicked
+		$('#isc-settings-caption-pos-options button').on( 'click', function (event) {
+			// Stop propagation to prevent document click event from hiding the preview immediately
+			event.stopPropagation();
+
+			$('#isc-settings-caption-pos-options button.selected').removeClass('selected');
+			$(this).addClass('selected');
+			$('#isc-settings-caption-position').val($(this).data('position'));
+
+			var newURL = isc_settings.baseurl + 'admin/templates/settings/preview/caption-preview.html' + "?path=" + encodeURIComponent( isc_settings.baseurl ) + "&caption_position=" + $(this).data('position');
+			$('#isc-settings-caption-preview iframe').attr('src', newURL);
+			$('#isc-settings-caption-preview').removeClass('hidden');
+		});
+
+		// Hide the preview when the mouse leaves the option area or a click occurs outside the option area
+		$(document).on('click mouseout', function (event) {
+			if (!$(event.target).closest('#isc-settings-caption-pos-options').length) {
+				$('#isc-settings-caption-preview').addClass('hidden');
+			}
+		});
 	}
 );
 

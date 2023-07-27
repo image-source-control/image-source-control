@@ -76,6 +76,69 @@
 #image-settings-form .hndle { cursor: text; user-select: all; }
 #thumbnail-size-select { vertical-align: baseline;}
 
+#isc-settings-caption-position-options-wrapper {
+    display: flex;
+    align-items: flex-start;
+    position: relative;
+}
+
+#isc-settings-caption-pos-options {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    width: 100px;
+    margin-bottom: 20px;
+}
+
+#isc-settings-caption-pos-options button {
+    background: rgba(241, 241, 241, 0.7); /* #f1f1f1 with 70% opacity */
+    flex-basis: calc(100% / 3);
+    height: 25px;
+    border: none;
+    padding: 0;
+    margin: 0;
+    font-size: 4px;
+    cursor: pointer;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+#isc-settings-caption-pos-options button.center {
+    flex-basis: 100%; /* the center button takes the whole width */
+}
+
+#isc-settings-caption-pos-options button.selected {
+    background: transparent;
+}
+
+#isc-settings-caption-pos-options button span::before {
+    content: "";
+    display: inline-block;
+    width: 14px;
+    height: 4px;
+    line-height: 4px;
+    background-color: #fff;
+    box-shadow: -2px -2px 0 #000,
+    2px -2px 0 #000,
+    -2px 2px 0 #000,
+    2px 2px 0 #000;
+}
+
+#isc-settings-caption-pos-options button:not(.selected) span {
+    background: transparent;
+    opacity: .5;
+}
+
+#isc-settings-caption-preview {
+    position: absolute;
+    top: 0;
+    left: 120px;
+}
+
+#isc-settings-caption-preview iframe {
+    border: 1px solid #ddd;
+}
+
 /**
  * Meta field in media view
  */
