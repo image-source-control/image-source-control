@@ -148,9 +148,10 @@ class ISC_Admin extends ISC_Class {
 		// texts in JavaScript on sources page
 		if ( 'upload.php' === $pagenow && isset( $_GET['page'] ) && 'isc-sources' === $_GET['page'] ) {
 			?>
-			<script type="text/javascript">
+			<script>
 				isc_data = {
-					confirm_message : '<?php esc_html_e( 'Are you sure?', 'image-source-control-isc' ); ?>'
+					confirm_message : '<?php esc_html_e( 'Are you sure?', 'image-source-control-isc' ); ?>',
+					baseurl : : '<?php echo ISCBASEURL; ?>'
 				}
 			</script>
 			<?php
@@ -171,6 +172,21 @@ class ISC_Admin extends ISC_Class {
 			?>
 			<style>
 				.row-actions .isc-get-pro { font-weight: bold; color: #F70; }
+			</style>
+			<?php
+		}
+		// add style and scripts to settings page
+		if ( isset( $screen->id ) && $screen->id === 'settings_page_isc-settings' ) {
+			?>
+			<script>
+				isc_settings = {
+					baseurl : '<?php echo ISCBASEURL; ?>'
+				}
+			</script>
+			<style>
+				#isc-settings-caption-pos-options {
+					background: url(<?php echo ISCBASEURL . 'admin/templates/settings/preview/image-for-position-preview.jpg'; ?>) no-repeat center/cover;
+				}
 			</style>
 			<?php
 		}

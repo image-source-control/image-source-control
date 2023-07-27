@@ -121,7 +121,7 @@ class ISC_Public extends ISC_Class {
 
 		$options = $this->get_isc_options();
 		?>
-			<script type="text/javascript">
+			<script>
 			/* <![CDATA[ */
 				var isc_front_data =
 				{

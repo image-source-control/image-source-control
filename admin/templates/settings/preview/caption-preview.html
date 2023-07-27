@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script>
+		// Parse the caption_position from the GET parameters.
+		var urlParams = new URLSearchParams(window.location.search);
+		var caption_position = urlParams.get('caption_position');
+
+		// Create the isc_front_data object.
+		var isc_front_data =
+		{
+			caption_position: caption_position,
+		}
+
+		var path = urlParams.get('path');
+
+		// Create a script element.
+		var script = document.createElement('script');
+
+		// Set the src of the script element to the URL of your JavaScript file.
+		script.src = path + 'public/assets/js/captions.js';
+
+		// Append the script element to the head of the document.
+		document.head.appendChild(script);
+	</script>
+	<style>
+		body {
+			margin: 0;
+			padding: 0;
+		}
+        .isc-source {
+            position: relative;
+            display: inline-block;
+			line-height: initial;
+        }
+
+        .isc-source img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+	</style>
+</head>
+<body>
+<div class="isc-source">
+	<img id="preview_image" src="">
+	<span class="isc-source-text">© Source</span>
+</div>
+<script>
+	document.getElementById('preview_image').src = path + 'admin/templates/settings/preview/image-for-position-preview.jpg';
+</script>
+</body>
+</html>
