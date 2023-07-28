@@ -76,7 +76,7 @@
 #image-settings-form .hndle { cursor: text; user-select: all; }
 #thumbnail-size-select { vertical-align: baseline;}
 
-#isc-settings-caption-position-options-wrapper {
+#isc-settings-caption-position-options-wrapper:not(.hidden) {
     display: flex;
     align-items: flex-start;
     position: relative;
