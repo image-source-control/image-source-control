@@ -350,7 +350,6 @@ class ISC_Admin extends ISC_Class {
 		add_settings_section( 'isc_settings_section_overlay', '2. ' . __( 'Overlay', 'image-source-control-isc' ), '__return_false', 'isc_settings_page' );
 		add_settings_field( 'source_overlay', __( 'Overlay pre-text', 'image-source-control-isc' ), array( $this, 'renderfield_overlay_text' ), 'isc_settings_page', 'isc_settings_section_overlay' );
 		add_settings_field( 'overlay_style', __( 'Layout', 'image-source-control-isc' ), array( $this, 'renderfield_overlay_style' ), 'isc_settings_page', 'isc_settings_section_overlay' );
-		add_settings_field( 'overlay_position', __( 'Overlay position', 'image-source-control-isc' ), array( $this, 'renderfield_overlay_position' ), 'isc_settings_page', 'isc_settings_section_overlay' );
 		add_settings_field( 'overlay_included_images', __( 'Included images', 'image-source-control-isc' ), array( $this, 'renderfield_overlay_included_images' ), 'isc_settings_page', 'isc_settings_section_overlay' );
 
 		// Global list group
@@ -537,13 +536,6 @@ class ISC_Admin extends ISC_Class {
 		$options       = $this->get_isc_options();
 		$caption_style = ! empty( $options['caption_style'] ) ? $options['caption_style'] : null;
 		require_once ISCPATH . '/admin/templates/settings/overlay-style.php';
-	}
-
-	/**
-	 * Render option for the position of the overlay on images
-	 */
-	public function renderfield_overlay_position() {
-		$options = $this->get_isc_options();
 		require_once ISCPATH . '/admin/templates/settings/overlay-position.php';
 	}
 

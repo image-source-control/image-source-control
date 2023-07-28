@@ -129,6 +129,7 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 - Feature: (Pro) Support for images in Kadence Blocks Galleries and Kadence Related Content Carousel
 - Feature: Added "CC BY-SA 2.0 DE" to available licenses
 - Improvement: The overview position option became more visual and shows a preview of the choice when changed
+- Improvement: Hide the position option, when the option to disable frontend markup is checked
 
 = 2.13.0 =
 

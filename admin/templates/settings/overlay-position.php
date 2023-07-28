@@ -5,6 +5,7 @@
  * @var array $options ISC options.
  */
 ?>
+<h4><?php esc_html_e( 'Overlay position', 'image-source-control-isc' ); ?></h4>
 <div id="isc-settings-caption-position-options-wrapper">
 	<div id="isc-settings-caption-pos-options">
 		<?php

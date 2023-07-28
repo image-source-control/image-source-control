@@ -5,7 +5,7 @@
  * @var array $caption_style Caption style
  */
 ?>
-<label><input type="checkbox" name="isc_options[caption_style]" value="none" <?php checked( $caption_style, 'none' ); ?>/>
+<label><input id="isc-settings-caption-style" type="checkbox" name="isc_options[caption_style]" value="none" <?php checked( $caption_style, 'none' ); ?>/>
 	<?php esc_html_e( 'Remove markup and style', 'image-source-control-isc' ); ?>
 </label>
 <p class="description"><?php esc_html_e( 'Deliver the overlay content without any markup and style.', 'image-source-control-isc' ); ?>

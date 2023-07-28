@@ -5,9 +5,11 @@ jQuery( document ).ready(
 	function($) {
 		isc_thumbnail_input_checkstate();
 		isc_caption_checkstate();
+		isc_toggle_caption_position();
 		$( '#isc-settings-overlay-enable' ).on( 'click', function(){ isc_caption_checkstate() } );
 		$( '.isc-settings-standard-source input' ).on( 'change', isc_toggle_standard_source_text );
 		$( '#thumbnail-size-select, #use-thumbnail' ).on( 'change', function(){ isc_thumbnail_input_checkstate(); } );
+		$( '#isc-settings-caption-style' ).on( 'change', function(){ isc_toggle_caption_position(); } );
 
 		// Show and update preview when a position option is clicked
 		$('#isc-settings-caption-pos-options button').on( 'click', function (event) {
@@ -44,7 +46,7 @@ function isc_thumbnail_input_checkstate(){
 	}
 
 	// toggle the state of the thumbnail custom size options in the plugin settings to only enable them if the "custom" thumbnails size is used
-	if ( 'custom' == document.getElementById( 'thumbnail-size-select' ).value && document.getElementById( 'use-thumbnail' ).checked ) {
+	if ( 'custom' === document.getElementById( 'thumbnail-size-select' ).value && document.getElementById( 'use-thumbnail' ).checked ) {
 		document.getElementById( 'isc-settings-custom-size' ).classList.remove( 'hidden' );
 	} else {
 		document.getElementById( 'isc-settings-custom-size' ).classList.add( 'hidden' );
@@ -88,5 +90,26 @@ function isc_toggle_standard_source_text() {
 		document.getElementById( 'isc-custom-text' ).removeAttribute( 'disabled' );
 	} else {
 		document.getElementById( 'isc-custom-text' ).setAttribute( 'disabled', 'disabled' );
+	}
+}
+
+/**
+ * Toggle the visibility of the position option when the caption style is changed
+ */
+function isc_toggle_caption_position() {
+	var caption_style = document.getElementById( 'isc-settings-caption-style' );
+
+	if ( ! caption_style ) {
+		return;
+	}
+
+	if ( caption_style.checked ) {
+		document.getElementById( 'isc-settings-caption-position-options-wrapper' ).classList.add( 'hidden' );
+		// add class also to the sibling H4 element
+		document.getElementById( 'isc-settings-caption-position-options-wrapper' ).previousElementSibling.classList.add( 'hidden' );
+	} else {
+		document.getElementById( 'isc-settings-caption-position-options-wrapper' ).classList.remove( 'hidden' );
+		// remove class also from the sibling H4 element
+		document.getElementById( 'isc-settings-caption-position-options-wrapper' ).previousElementSibling.classList.remove( 'hidden' );
 	}
 }
