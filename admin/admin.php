@@ -427,7 +427,7 @@ class ISC_Admin extends ISC_Class {
 			<?php
 			if ( $section['title'] ) {
 				?>
-				<div class="postbox-header"><h2 class="hndle"><?php echo $section['title']; ?></h2></div>
+				<div class="postbox-header"><h2 class="hndle"><?php echo esc_html( $section['title'] ); ?></h2></div>
 				<?php
 			}
 
