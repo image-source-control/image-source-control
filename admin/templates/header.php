@@ -8,7 +8,7 @@
 ?>
 <div id="isc-header">
 	<div id="isc-header-wrapper">
-		<img src="<?php echo ISCBASEURL . 'admin/assets/images/image_source_control_logo_positive_512px.png'; ?>" width="256" height="28" alt="<?php esc_html_e( 'Image Source Control', 'image-source-control-isc' ); ?>"/>
+		<img src="<?php echo esc_url( ISCBASEURL ) . 'admin/assets/images/image_source_control_logo_positive_512px.png'; ?>" width="256" height="28" alt="<?php esc_html_e( 'Image Source Control', 'image-source-control-isc' ); ?>"/>
 		<h1><?php echo esc_html( $title ); ?></h1>
 	</div>
 	<div id="isc-header-links">
@@ -23,7 +23,7 @@
 				<a href="<?php echo esc_url( admin_url( 'options-general.php?page=isc-settings' ) ); ?>"><?php esc_html_e( 'Settings', 'image-source-control-isc' ); ?></a>
 		<?php break; ?>
 		<?php endswitch; ?>
-		<a href="<?php echo ISC_Admin::get_manual_url( 'header-manual' ); ?>" target="_blank"><?php esc_html_e( 'Manual', 'image-source-control-isc' ); ?></a>
+		<a href="<?php echo esc_url( ISC_Admin::get_manual_url( 'header-manual' ) ); ?>" target="_blank"><?php esc_html_e( 'Manual', 'image-source-control-isc' ); ?></a>
 	</div>
 </div>
 <div class="wrap">

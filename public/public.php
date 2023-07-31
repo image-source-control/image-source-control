@@ -508,8 +508,8 @@ class ISC_Public extends ISC_Class {
 
 		ob_start();
 
-		printf( '<p class="isc_image_list_title">%1$s</p>', $headline );
 		?>
+			<p class="isc_image_list_title"><?php echo esc_html( $headline ); ?></p>
 			<ul class="isc_image_list">
 		<?php
 
@@ -742,7 +742,7 @@ class ISC_Public extends ISC_Class {
 
 		// a thumbnail might be missing for images that are not hosted within WordPress
 		if ( ! $thumbnail  ) {
-			?><img src="<?php echo ISCBASEURL . '/public/assets/images/isc-icon-gray.svg' ?>"/><?php
+			?><img src="<?php echo esc_url( ISCBASEURL ) . '/public/assets/images/isc-icon-gray.svg' ?>"/><?php
 		}
 
 		echo $thumbnail;
@@ -861,11 +861,11 @@ class ISC_Public extends ISC_Class {
 				for ( $i = 1; $i <= $max_page; $i++ ) {
 					if ( $i == $page ) {
 						?>
-							<span class="page-numbers current"><?php echo $i; ?></span>
+							<span class="page-numbers current"><?php echo (int) $i; ?></span>
 							<?php
 					} else {
 						?>
-							<a href="<?php echo $page_link . $query_string . $isc_query_tag . $i; ?>" class="page-numbers"><?php echo $i; ?></a>
+							<a href="<?php echo $page_link . $query_string . $isc_query_tag . $i; ?>" class="page-numbers"><?php echo (int) $i; ?></a>
 							<?php
 					}
 				}
@@ -884,11 +884,11 @@ class ISC_Public extends ISC_Class {
 	/**
 	 * Get source string of a feature image
 	 *
-	 * @since 1.8
 	 * @param integer $post_id post object ID.
+	 *
 	 * @return string source
 	 */
-	public function get_thumbnail_source_string( $post_id = 0 ) {
+	public function get_thumbnail_source_string( int $post_id = 0 ): string {
 		if ( empty( $post_id ) ) {
 			return '';
 		}

@@ -9,7 +9,7 @@
 <div class="wrap">
 	<div class="error isc-notice"><p>
 		<?php
-		printf( _n( '%s image has no credits.', '%s images have no credits.', $missing_sources, 'image-source-control-isc' ), $missing_sources );
+		printf( esc_html( _n( '%s image has no credits.', '%s images have no credits.', absint( $missing_sources ), 'image-source-control-isc' ) ), absint( $missing_sources ) );
 		echo ' ';
 		printf(
 			wp_kses(

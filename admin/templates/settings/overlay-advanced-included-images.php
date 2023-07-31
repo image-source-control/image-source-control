@@ -9,7 +9,7 @@
 <h4><?php esc_html_e( 'Developer Options', 'image-source-control-isc' ); ?></h4>
 <p class="description">
 	<?php esc_html_e( 'Find images and display overlays in sensitive areas in your site’s HTML. They might need additional code to work or for styling.', 'image-source-control-isc' ); ?>
-	<a href="<?php echo ISC_Admin::get_isc_localized_website_url( 'blog/image-captions-for-background-images/', 'bildquellen-hintergrundbilder/', 'overlay-developer-options' ); ?>" target="_blank"><?php esc_html_e( 'Manual', 'image-source-control-isc' ); ?></a>
+	<a href="<?php echo esc_url( ISC_Admin::get_isc_localized_website_url( 'blog/image-captions-for-background-images/', 'bildquellen-hintergrundbilder/', 'overlay-developer-options' ) ); ?>" target="_blank"><?php esc_html_e( 'Manual', 'image-source-control-isc' ); ?></a>
 </p>
 <div>
 	<?php
