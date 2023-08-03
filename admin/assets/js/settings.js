@@ -20,9 +20,15 @@ jQuery( document ).ready(
 			$(this).addClass('selected');
 			$('#isc-settings-caption-position').val($(this).data('position'));
 
-			var newURL = isc_settings.baseurl + 'admin/templates/settings/preview/caption-preview.html' + "?path=" + encodeURIComponent( isc_settings.baseurl ) + "&caption_position=" + $(this).data('position');
-			$('#isc-settings-caption-preview iframe').attr('src', newURL);
-			$('#isc-settings-caption-preview').removeClass('hidden');
+			var iframe = document.createElement('iframe');
+			iframe.src = isc_settings.baseurl + 'admin/templates/settings/preview/caption-preview.html' + "?path=" + encodeURIComponent( isc_settings.baseurl ) + "&position=" + $(this).data('position') + "&pretext=" + encodeURIComponent( $('#source-pretext').val() );
+			iframe.width = "250";
+			iframe.height = "181";
+
+			var preview_container = $('#isc-settings-caption-preview');
+			preview_container.find('iframe').remove();
+			preview_container.append(iframe);
+			preview_container.removeClass('hidden');
 		});
 
 		// Hide the preview when the mouse leaves the option area or a click occurs outside the option area

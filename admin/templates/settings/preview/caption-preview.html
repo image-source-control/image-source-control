@@ -4,7 +4,8 @@
 	<script>
 		// Parse the caption_position from the GET parameters.
 		var urlParams = new URLSearchParams(window.location.search);
-		var caption_position = urlParams.get('caption_position');
+		var caption_position = urlParams.get('position');
+		var caption_pretext = urlParams.get('pretext');
 
 		// Create the isc_front_data object.
 		var isc_front_data =
@@ -44,10 +45,11 @@
 <body>
 <div class="isc-source">
 	<img id="preview_image" src="">
-	<span class="isc-source-text">© Source</span>
+	<span class="isc-source-text"></span>
 </div>
 <script>
 	document.getElementById('preview_image').src = path + 'admin/templates/settings/preview/image-for-position-preview.jpg';
+	document.querySelector('.isc-source-text').innerHTML = caption_pretext + '@ Source';
 </script>
 </body>
 </html>
