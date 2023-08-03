@@ -5,13 +5,12 @@
  * @var array $post_type_image_index list of post types with the number of public posts and the number of indexed posts
  */
 ?>
-<h2><?php esc_html_e( 'Post Index', 'image-source-control-isc' ); ?></h2>
 <p class="description">
 	<?php esc_html_e( 'If you are using the Global List with “Images in the content” selected, only images from “indexed” post types appear in it.', 'image-source-control-isc' ); ?>
 	<br><?php esc_html_e( 'Image Source Control knows posts that have been visited in the frontend or were saved in the backend.', 'image-source-control-isc' ); ?>
 	<br><?php esc_html_e( 'The table below shows the number of indexed published posts.', 'image-source-control-isc' ); ?>
 </p>
-<table class="widefat isc-table" style="width: 80%;" >
+<table class="widefat striped isc-table" style="width: 80%;" >
 	<thead>
 		<tr>
 			<th><?php esc_html_e( 'Post type', 'image-source-control-isc' ); ?></th>

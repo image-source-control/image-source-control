@@ -467,32 +467,62 @@ class ISC_Admin extends ISC_Class {
 	 * Missing sources page callback
 	 */
 	public function render_sources_page() {
-		$storage_model = new ISC_Storage_Model();
-		$storage_size  = count( $storage_model->get_storage() );
 
-		$attachments = ISC_Model::get_attachments_with_empty_sources();
-		if ( ! empty( $attachments ) ) {
-			require_once ISCPATH . '/admin/templates/sources/images-without-sources.php';
-		} else {
-			?>
-			<div class="notice notice-success"><p><span class="dashicons dashicons-yes" style="color: #46b450"></span><?php esc_html_e( 'All images found in the frontend have sources assigned.', 'image-source-control-isc' ); ?></p></div>
-			<?php
-		}
+		?><div class="wrap metabox-holder">
+			<div id="isc-section-wrapper">
+		<?php
 
-		$attachments = ISC_Model::get_unused_attachments();
-		if ( ! empty( $attachments ) ) {
-			require_once ISCPATH . '/admin/templates/sources/unused-attachments.php';
-		}
+			$attachments = ISC_Model::get_attachments_with_empty_sources();
+			if ( ! empty( $attachments ) ) {
+				ob_start();
+				require_once ISCPATH . '/admin/templates/sources/images-without-sources.php';
+				$this->render_sources_page_section( ob_get_clean(), esc_html__( 'Images without sources', 'image-source-control-isc' ), 'images-without-sources');
+			} else {
+				?>
+				<div class="notice notice-success"><p><span class="dashicons dashicons-yes" style="color: #46b450"></span><?php esc_html_e( 'All images found in the frontend have sources assigned.', 'image-source-control-isc' ); ?></p></div>
+				<?php
+			}
 
-		$post_type_image_index = ISC_Model::get_posts_with_image_index();
-		require_once ISCPATH . '/admin/templates/sources/post-index.php';
+			$attachments = ISC_Model::get_unused_attachments();
+			if ( ! empty( $attachments ) ) {
+				ob_start();
+				require_once ISCPATH . '/admin/templates/sources/unused-attachments.php';
+				$this->render_sources_page_section( ob_get_clean(), esc_html__( 'Images with unknown position', 'image-source-control-isc' ), 'unused-attachments');
+			}
 
-		$external_images = $storage_model->get_storage_without_wp_images();
-		if ( ! empty( $stored_images ) ) {
-			require_once ISCPATH . '/admin/templates/sources/external-images.php';
-		}
+			$post_type_image_index = ISC_Model::get_posts_with_image_index();
+			ob_start();
+			require_once ISCPATH . '/admin/templates/sources/post-index.php';
+			$this->render_sources_page_section( ob_get_clean(), esc_html__( 'Post Index', 'image-source-control-isc' ), 'post-index');
 
-		require_once ISCPATH . '/admin/templates/sources/storage.php';
+			$storage_model = new ISC_Storage_Model();
+			$external_images = $storage_model->get_storage_without_wp_images();
+			if ( ! empty( $stored_images ) ) {
+				ob_start();
+				require_once ISCPATH . '/admin/templates/sources/external-images.php';
+				$this->render_sources_page_section( ob_get_clean(), esc_html__( 'Additional images', 'image-source-control-isc' ), 'external-images');
+			}
+
+			$storage_size  = count( $storage_model->get_storage() );
+			ob_start();
+			require_once ISCPATH . '/admin/templates/sources/storage.php';
+			$this->render_sources_page_section( ob_get_clean(), esc_html__( 'Storage', 'image-source-control-isc' ), 'storage');
+
+		?>
+			</div>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Render sources page sections
+	 *
+	 * @param string $section section HTML.
+	 * @param string $title section title.
+	 * @param string $id section id.
+	 */
+	public function render_sources_page_section( $section, $title = '', $id = '' ) {
+		include ISCPATH . '/admin/templates/sources/section.php';
 	}
 
 	/**

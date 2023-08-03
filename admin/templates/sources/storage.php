@@ -5,7 +5,6 @@
  * @var integer $storage_size size of the storage
  */
 ?>
-<h2><?php esc_html_e( 'Storage', 'image-source-control-isc' ); ?></h2>
 <p class="description"><?php esc_html_e( 'ISC keeps an internal index of image URLs and IDs from the media library to limit the number of database requests in the frontend.', 'image-source-control-isc' ); ?>
 	<br/><?php esc_html_e( 'Click the button above to clear that index.', 'image-source-control-isc' ); ?>
 	<a href="<?php echo ISC_Admin::get_manual_url( 'tools-clear-index' ); ?>" target="_blank" rel="noopener"><?php esc_html_e( 'Manual', 'image-source-control-isc' ); ?></a>

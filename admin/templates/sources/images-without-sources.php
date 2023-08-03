@@ -5,7 +5,6 @@
  * @var array $attachments list of attachments without source information
  */
 ?>
-<h2><?php esc_html_e( 'Images without sources', 'image-source-control-isc' ); ?></h2>
 <?php if( count( $attachments ) >= ISC_Model::MAX_POSTS ) : ?>
 	<p><?php
 		printf(
@@ -15,7 +14,7 @@
 		); ?>
 	</p>
 <?php endif; ?>
-<table class="widefat isc-table" style="width: 80%;" >
+<table class="widefat striped isc-table" style="width: 80%;" >
 	<thead>
 		<tr>
 			<th><?php esc_html_e( 'Image', 'image-source-control-isc' ); ?></th>

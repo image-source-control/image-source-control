@@ -5,7 +5,6 @@
  * @var array $attachments list of attachments without association to a post
  */
 ?>
-<h2><?php esc_html_e( 'Images with unknown position', 'image-source-control-isc' ); ?></h2>
 <p><?php esc_html_e( 'The list contains images that neither have sources nor were yet found by ISC on your site.', 'image-source-control-isc' ); ?>&nbsp;
 	<?php esc_html_e( 'They might not need a source after all.', 'image-source-control-isc' ); ?></p>
 <?php if( count( $attachments ) >= ISC_Model::MAX_POSTS ) : ?>
@@ -17,7 +16,7 @@
 	); ?>
 </p>
 <?php endif; ?>
-<table class="widefat isc-table" style="width: 80%;" >
+<table class="widefat striped isc-table" style="width: 80%;" >
 	<thead>
 	<tr>
 		<th><?php esc_html_e( 'Thumbnail', 'image-source-control-isc' ); ?></th>
