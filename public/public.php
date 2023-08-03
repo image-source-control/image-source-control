@@ -742,7 +742,7 @@ class ISC_Public extends ISC_Class {
 
 		// a thumbnail might be missing for images that are not hosted within WordPress
 		if ( ! $thumbnail  ) {
-			?><img src="<?php echo esc_url( ISCBASEURL ) . '/public/assets/images/isc-icon-gray.svg' ?>"/><?php
+			?><img src="<?php echo esc_url( ISCBASEURL ) . '/public/assets/images/isc-icon-gray.svg' ?>" style="width: 100%;"/><?php
 		}
 
 		echo $thumbnail;
