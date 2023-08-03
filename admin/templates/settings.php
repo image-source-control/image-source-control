@@ -1,5 +1,5 @@
 <div class="wrap metabox-holder">
-	<form id="image-settings-form" method="post" action="options.php">
+	<form id="isc-section-wrapper" method="post" action="options.php">
 		<?php
 		ISC_Admin::do_settings_sections( 'isc_settings_page' );
 		settings_fields( 'isc_options_group' );

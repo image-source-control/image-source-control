@@ -73,7 +73,7 @@
 .isc-settings-highlighted .isc-empty-label { margin-left: 1.7em;  }
 .isc-settings-highlighted .description { margin-left: 1.7em; margin-bottom: .5em; }
 #isc-settings-licenses textarea { width: 40em; height: 7em; }
-#image-settings-form .hndle { cursor: text; user-select: all; }
+#isc-section-wrapper .hndle { cursor: text; user-select: all; }
 #thumbnail-size-select { vertical-align: baseline;}
 
 #isc-settings-caption-position-options-wrapper:not(.hidden) {
@@ -156,6 +156,7 @@
 .isc-table:not(.isc-table-debug-list) thead th:first-of-type { width: 20%; }
 .isc-table-debug-list th { width: 50%; }
 .isc-table img.attachment-60x60 { width: 60px; height: auto; }
+#isc-section-wrapper .isc-table { border: 0; }
 
 /**
  + Miscellaneous

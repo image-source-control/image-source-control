@@ -736,7 +736,6 @@ class ISC_Model {
 		// remove the attachment post type
 		$post_types = array_diff( $post_types, ['attachment'] );
 		$results = [];
-		$posts_limit = 100;
 
 		foreach ( $post_types as $post_type ) {
 			$count_posts = wp_count_posts( $post_type );
@@ -744,7 +743,7 @@ class ISC_Model {
 
 			$args = [
 				'post_type'      => $post_type,
-				'posts_per_page' => $posts_limit,
+				'posts_per_page' => self::MAX_POSTS,
 				'post_status'    => 'publish',
 				'fields'         => 'ids',
 				'meta_query'     => [
