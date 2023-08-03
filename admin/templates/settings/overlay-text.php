@@ -6,4 +6,3 @@
  */
 ?>
 <input type="text" id='source-pretext' name="isc_options[source_pretext]" value="<?php echo esc_attr( $options['source_pretext'] ); ?>" />
-<p class="description"><?php esc_html_e( 'The text preceding the source.', 'image-source-control-isc' ); ?></p>
