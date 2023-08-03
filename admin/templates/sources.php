@@ -32,7 +32,7 @@ if ( ! empty( $attachments ) ) :
 			?>
 		<tr>
 			<td><?php echo absint( $_attachment->ID ); ?></td>
-			<td><a href="<?php echo esc_url( admin_url( 'media.php?attachment_id=' . $_attachment->ID . '&action=edit' ) ); ?>" title="<?php esc_html_e( 'edit this image', 'image-source-control-isc' ); ?>"><?php echo esc_html( $_attachment->post_title ); ?></a></td>
+			<td><?php edit_post_link( esc_html( $_attachment->post_title ), '', '', $_attachment->ID ); ?></td>
 			<td>
 			<?php
 			if ( $_attachment->post_parent ) :
@@ -79,7 +79,7 @@ if ( ! empty( $attachments ) ) :
 			?>
 		<tr>
 			<td><?php echo absint( $_attachment->ID ); ?></td>
-			<td><a href="<?php echo esc_url( admin_url( 'media.php?attachment_id=' . $_attachment->ID . '&action=edit' ) ); ?>" title="<?php esc_html_e( 'edit this image', 'image-source-control-isc' ); ?>"><?php echo esc_html( $_attachment->post_title ); ?></a></td>
+			<td><?php edit_post_link( esc_html( $_attachment->post_title ), '', '', $_attachment->ID ); ?></td>
 		</tr>
 		<?php endforeach; ?>
 	</tbody></table>

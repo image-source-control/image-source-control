@@ -20,7 +20,9 @@ if ( $images_with_posts->have_posts() ) : ?>
 			if ( is_array( $_posts ) && count( $_posts ) > 0 ) :
 				?>
 		<tr>
-			<td><a href="<?php echo esc_url( admin_url( 'media.php?attachment_id=' . get_the_ID() . '&action=edit' ) ); ?>"><?php the_title(); ?></a></td>
+			<td>
+				<?php edit_post_link( get_the_title(), '', '', get_the_ID() ); ?>
+			</td>
 			<td>
 					<ul>
 					<?php
