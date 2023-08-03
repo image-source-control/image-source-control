@@ -1,31 +1,15 @@
 <?php
 /**
- * Render ISC_Storage data for images that are hosted outside of the WP media library.
+ * Render the Debug section on the ISC Tools page
+ *
+ * @var integer $storage_size size of the storage
  */
 ?>
-<h2><?php esc_html_e( 'Additional images', 'image-source-control-isc' ); ?></h2>
-<p><?php esc_html_e( 'ISC found image URLs that are not part of the media library.', 'image-source-control-isc' ); ?></p>
-<table class="widefat isc-table isc-table-storage" style="width: 80%;">
-	<thead>
-	<tr>
-		<th><?php esc_html_e( 'Image URL', 'image-source-control-isc' ); ?></th>
-		<th><?php esc_html_e( 'Image Source', 'image-source-control-isc' ); ?></th>
-	</tr>
-	</thead><tbody>
-	<?php
-	foreach ( $stored_images as $_image_url => $_stored_image ) :
-		// we add HTTPS by default, assuming, that this is a standard now, even though the image might not use HTTPS
-		$image_url = 'https://' . $_image_url;
-		?>
-		<tr>
-			<td style="width: 60%;"><a href="<?php echo esc_url( $image_url ); ?>" rel="noopener noreferrer"><?php echo esc_url( $image_url ); ?></a></td>
-			<td>
-				<?php
-				if ( ! class_exists( 'ISC_Pro_Admin', false ) ) : echo ISC_Admin::get_pro_link( 'external-sources' ); endif;
-				do_action( 'isc_admin_sources_storage_table_source_row', $_image_url );
-				?>
-			</td>
-		</tr>
-	<?php endforeach; ?>
-	</tbody>
-</table>
+<h2><?php esc_html_e( 'Storage', 'image-source-control-isc' ); ?></h2>
+<p class="description"><?php esc_html_e( 'ISC keeps an internal index of image URLs and IDs from the media library to limit the number of database requests in the frontend.', 'image-source-control-isc' ); ?>
+	<br/><?php esc_html_e( 'Click the button above to clear that index.', 'image-source-control-isc' ); ?>
+	<a href="<?php echo ISC_Admin::get_manual_url( 'tools-clear-index' ); ?>" target="_blank" rel="noopener"><?php esc_html_e( 'Manual', 'image-source-control-isc' ); ?></a>
+</p>
+<p><?php printf( esc_html__( '%d images in storage', 'image-source-control-isc'), $storage_size ); ?></p>
+<button id="isc-clear-storage" class="button button-secondary"><?php esc_html_e( 'clear storage', 'image-source-control-isc' ); ?></button>
+<div id="isc-clear-storage-feedback"></div>

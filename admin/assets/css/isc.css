@@ -153,6 +153,7 @@
 /**
  * SOURCES PAGE
  */
+.isc-table:not(.isc-table-debug-list) thead th:first-of-type { width: 20%; }
 .isc-table-debug-list th { width: 50%; }
 
 /**
