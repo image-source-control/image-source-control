@@ -20,7 +20,7 @@
 <table class="widefat isc-table" style="width: 80%;" >
 	<thead>
 	<tr>
-		<th><?php esc_html_e( 'ID', 'image-source-control-isc' ); ?></th>
+		<th><?php esc_html_e( 'Thumbnail', 'image-source-control-isc' ); ?></th>
 		<th><?php esc_html_e( 'Image title', 'image-source-control-isc' ); ?></th>
 	</tr>
 	</thead><tbody>
@@ -28,7 +28,7 @@
 	foreach ( $attachments as $_attachment ) :
 		?>
 		<tr>
-			<td><?php echo absint( $_attachment->ID ); ?></td>
+			<td><?php edit_post_link( wp_get_attachment_image( $_attachment->ID, [ 60, 60 ] ), '', '', $_attachment->ID ); ?></td>
 			<td><?php edit_post_link( esc_html( $_attachment->post_title ), '', '', $_attachment->ID ); ?></td>
 		</tr>
 	<?php endforeach; ?>
