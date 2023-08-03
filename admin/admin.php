@@ -151,7 +151,7 @@ class ISC_Admin extends ISC_Class {
 			<script>
 				isc_data = {
 					confirm_message : '<?php esc_html_e( 'Are you sure?', 'image-source-control-isc' ); ?>',
-					baseurl : : '<?php echo ISCBASEURL; ?>'
+					baseurl : '<?php echo ISCBASEURL; ?>'
 				}
 			</script>
 			<?php
@@ -484,12 +484,15 @@ class ISC_Admin extends ISC_Class {
 			require_once ISCPATH . '/admin/templates/sources/unused-attachments.php';
 		}
 
-		$stored_images = $storage_model->get_storage_without_wp_images();
+		$post_type_image_index = ISC_Model::get_posts_with_image_index();
+		require_once ISCPATH . '/admin/templates/sources/post-index.php';
+
+		$external_images = $storage_model->get_storage_without_wp_images();
 		if ( ! empty( $stored_images ) ) {
-			require_once ISCPATH . '/admin/templates/sources/storage.php';
+			require_once ISCPATH . '/admin/templates/sources/external-images.php';
 		}
 
-		require_once ISCPATH . '/admin/templates/sources/debug.php';
+		require_once ISCPATH . '/admin/templates/sources/storage.php';
 	}
 
 	/**

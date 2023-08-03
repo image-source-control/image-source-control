@@ -723,4 +723,47 @@ class ISC_Model {
 
 		update_post_meta( $post_id, $key, $value );
 	}
+
+	/**
+	 * Get an array of all posts that have the isc_post_images meta field set
+	 * and the number of them not having it
+	 * list each post type separately
+	 *
+	 * @return array
+	 */
+	public static function get_posts_with_image_index(): array {
+		$post_types = get_post_types( [ 'public' => true ] );
+		// remove the attachment post type
+		$post_types = array_diff( $post_types, ['attachment'] );
+		$results = [];
+		$posts_limit = 100;
+
+		foreach ( $post_types as $post_type ) {
+			$count_posts = wp_count_posts( $post_type );
+			$total_posts = $count_posts->publish;
+
+			$args = [
+				'post_type'      => $post_type,
+				'posts_per_page' => $posts_limit,
+				'post_status'    => 'publish',
+				'fields'         => 'ids',
+				'meta_query'     => [
+					[
+						'key'     => 'isc_post_images',
+						'compare' => 'NOT EXISTS',
+					]
+				]
+			];
+			$query_without = new WP_Query( $args );
+			$posts_without_meta_field = $query_without->post_count;
+
+			$results[$post_type] = [
+				'total_posts'          => $total_posts,
+				'without_meta_field'   => $posts_without_meta_field,
+				'with_meta_field'      => $total_posts - $posts_without_meta_field
+			];
+		}
+
+		return $results;
+	}
 }
