@@ -27,7 +27,8 @@ if ( $posts_with_images->have_posts() ) : ?>
 					foreach ( $_images as $_image_id => $_image_url ) :
 						?>
 						<li><?php if ( $_image_id ) : ?>
-							<a href="<?php echo esc_url( admin_url( 'media.php?attachment_id=' . $_image_id . '&action=edit' ) ); ?>" title="<?php esc_html_e( 'edit this image', 'image-source-control-isc' ); ?>"><?php echo esc_html( get_the_title( $_image_id ) ); ?></a></li>
+							<?php edit_post_link( esc_html( get_the_title( $_image_id ) ), '', '', $_image_id ); ?>
+						</li>
 						<?php else : ?>
 							<?php print_r( $_images ); ?>
 						<?php endif; ?>
