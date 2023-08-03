@@ -131,7 +131,7 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 - Improvement: The overview position option became more visual and shows a preview of the choice when changed
 - Improvement: Hide the position option, when the option to disable frontend markup is checked
 - Improvement: Added Post Index section to Tools page with a list of indexed published posts by post type
-- Improvement: Reordered Tools page for more clarity
+- Improvement: Reordered items and improved layout of the Tools page for more clarity
 - Dev: Replace usage of media.php for compatibility with WordPress 6.3
 
 = 2.13.0 =
