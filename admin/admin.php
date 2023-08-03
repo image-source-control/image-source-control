@@ -470,7 +470,26 @@ class ISC_Admin extends ISC_Class {
 		$storage_model = new ISC_Storage_Model();
 		$storage_size  = count( $storage_model->get_storage() );
 
-		require_once ISCPATH . '/admin/templates/sources.php';
+		$attachments = ISC_Model::get_attachments_with_empty_sources();
+		if ( ! empty( $attachments ) ) {
+			require_once ISCPATH . '/admin/templates/sources/images-without-sources.php';
+		} else {
+			?>
+			<div class="notice notice-success"><p><span class="dashicons dashicons-yes" style="color: #46b450"></span><?php esc_html_e( 'All images found in the frontend have sources assigned.', 'image-source-control-isc' ); ?></p></div>
+			<?php
+		}
+
+		$attachments = ISC_Model::get_unused_attachments();
+		if ( ! empty( $attachments ) ) {
+			require_once ISCPATH . '/admin/templates/sources/unused-attachments.php';
+		}
+
+		$stored_images = $storage_model->get_storage_without_wp_images();
+		if ( ! empty( $stored_images ) ) {
+			require_once ISCPATH . '/admin/templates/sources/storage.php';
+		}
+
+		require_once ISCPATH . '/admin/templates/sources/debug.php';
 	}
 
 	/**
