@@ -19,6 +19,9 @@
 	</thead><tbody>
 	<?php
 	foreach ( $post_type_image_index as $post_type => $_post_type_data ) :
+		if ( ! $_post_type_data['total_posts'] ) {
+			continue;
+		}
 		$post_type_object = get_post_type_object( $post_type ); // Get the post type object
 		$post_type_label = $post_type_object->labels->name; // Get the public label of the post type
 		?>
