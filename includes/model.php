@@ -352,6 +352,14 @@ class ISC_Model {
 	}
 
 	/**
+	 * Remove the post_images index from a single post
+	 * namely the post meta field `isc_post_images`
+	 */
+	public static function clear_single_post_images_index( $post_id ) {
+		delete_post_meta( $post_id, 'isc_post_images' );
+	}
+
+	/**
 	 * Remove post_images index
 	 * namely the post meta field `isc_post_images`
 	 *

@@ -139,10 +139,10 @@ class ISC_Class {
 			add_action( 'deleted_post', array( 'ISC_Model', 'update_missing_sources_transient' ) );
 
 			/**
-			 * Clear post-image index whenever the content of a post is updated
+			 * Clear post-image index whenever the content of a single post is updated
 			 * this could force reindexing the post after adding or removing image sources
 			 */
-			add_action( 'wp_insert_post', array( 'ISC_Model', 'clear_post_images_index' ) );
+			add_action( 'wp_insert_post', array( 'ISC_Model', 'clear_single_post_images_index' ) );
 
 			/**
 			 * Fire when a post or page was updated
