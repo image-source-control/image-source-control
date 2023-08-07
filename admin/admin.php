@@ -49,7 +49,7 @@ class ISC_Admin extends ISC_Class {
 	 */
 	private static function is_isc_page() {
 		$screen = get_current_screen();
-		return isset( $screen->id ) && in_array( $screen->id, array( 'settings_page_isc-settings', 'media_page_isc-sources' ), true );
+		return isset( $screen->id ) && in_array( $screen->id, apply_filters( 'isc_admin_pages', [ 'settings_page_isc-settings', 'media_page_isc-sources' ] ), true );
 	}
 
 	/**
