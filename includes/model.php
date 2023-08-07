@@ -484,7 +484,7 @@ class ISC_Model {
 				// image source is empty
 				[
 					'key'     => 'isc_image_source',
-					'value'   => 'any', /* any string; needed prior to WP 3.9 */
+					//'value'   => 'any', /* any string; needed prior to WP 3.9 */
 					'compare' => 'NOT EXISTS',
 				],
 			],
