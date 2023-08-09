@@ -594,14 +594,13 @@ class ISC_Model {
 	}
 
 	/**
-	 * Get image by url accessing the database directly
+	 * Get image ID by url accessing the database directly
 	 *
-	 * @since 1.1
-	 * @updated 1.1.3
 	 * @param string $url url of the image.
+	 *
 	 * @return integer ID of the image.
 	 */
-	public static function get_image_by_url( $url = '' ) {
+	public static function get_image_by_url( string $url = '' ): ?int {
 		global $wpdb;
 
 		ISC_Log::log( 'enter get_image_by_url() to look for URL ' . $url );
@@ -656,7 +655,7 @@ class ISC_Model {
 			return $id;
 		}
 
-		// remove protocoll (http or https)
+		// remove protocol (http or https)
 		$url    = str_ireplace( [ 'http:', 'https:' ], '', $url );
 		$newurl = str_ireplace( [ 'http:', 'https:' ], '', $newurl );
 
@@ -691,8 +690,8 @@ class ISC_Model {
 		$query   = apply_filters( 'isc_get_image_by_url_query', $raw_query, $newurl );
 		$results = $wpdb->get_results( $query );
 
-		$id   = isset( $results[0]->ID ) ? absint( $results[0]->ID ) : null;
-		$guid = isset( $results[0]->guid ) ? $results[0]->guid : null;
+		$id   = isset( $results[0]->ID ) ? absint( $results[0]->ID ) : 0;
+		$guid = $results[0]->guid ?? null;
 
 		if ( $id ) {
 			$storage->update_post_id( $guid, $id );
