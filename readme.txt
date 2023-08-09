@@ -2,8 +2,8 @@
 Contributors: webzunft
 Tags: images, credits, captions, copyrights, attributions, photos, pictures, sources, bildquellen, bilder, fotos, bildunterschriften
 Requires at least: 5.3
-Tested up to: 6.2
-Stable tag: 2.13.0
+Tested up to: 6.3
+Stable tag: 2.14.0
 Requires PHP: 7.2
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -124,14 +124,16 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 
 == Changelog ==
 
-= untagged =
+= 2.14.0 =
 
 - Feature: (Pro) Support for images in Kadence Blocks Galleries and Kadence Related Content Carousel
 - Feature: Added "CC BY-SA 2.0 DE" to available licenses
-- Improvement: The overview position option became more visual and shows a preview of the choice when changed
+- Improvement: The Overlay position option became more visual and shows a preview when changed
 - Improvement: Hide the position option, when the option to disable frontend markup is checked
-- Improvement: Added Post Index section to Tools page with a list of indexed published posts by post type
+- Improvement: Added Post Index section to the Tools page with a list of indexed published posts by post type
 - Improvement: Reordered items and improved layout of the Tools page for more clarity
+- Fix: Prevent the post_images index from being deleted for all posts when one post was updated. This bug had no negative visible effects, though.
+- Dev: Move the code to analyze HTML to the new ISC\Analyze_HTML class
 - Dev: Replace usage of media.php for compatibility with WordPress 6.3
 
 = 2.13.0 =
