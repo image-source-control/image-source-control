@@ -594,9 +594,9 @@ class ISC_Model {
 	}
 
 	/**
-	 * Get image ID by url accessing the database directly
+	 * Get image ID by URL accessing the database directly
 	 *
-	 * @param string $url url of the image.
+	 * @param string $url URL of the image.
 	 *
 	 * @return integer ID of the image.
 	 */
@@ -618,7 +618,12 @@ class ISC_Model {
 			} else {
 				return 0;
 			}
+		} elseif ( ! in_array( $ext, ISC_Class::get_instance()->allowed_extensions, true ) ) {
+			// a valid image extension is required, if an extension is given
+			ISC_Log::log( 'exit get_image_by_url() due to invalid image extension' );
+			return 0;
 		}
+
 		/**
 		 * Check for the format 'image-title-(e12452112-)300x200.jpg(?query…)' and removes
 		 * - the image size

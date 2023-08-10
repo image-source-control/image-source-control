@@ -124,6 +124,10 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 
 == Changelog ==
 
+= untagged =
+
+- Dev: Prevent unnecessary database queries when an image has an invalid file extension
+
 = 2.14.1 =
 
 - Fix: PHP error on the first load of a page with an image that is not part of the media library
