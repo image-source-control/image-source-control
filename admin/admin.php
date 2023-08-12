@@ -207,10 +207,6 @@ class ISC_Admin extends ISC_Class {
 	/**
 	 * Add custom field to attachment
 	 *
-	 * @since 1.0
-	 * @updated 1.1
-	 * @updated 1.3.5 added field for license
-	 * @updated 1.5 added field for url
 	 * @param array  $form_fields field fields.
 	 * @param object $post post object.
 	 * @return array with form fields
@@ -218,9 +214,14 @@ class ISC_Admin extends ISC_Class {
 	public function add_isc_fields( $form_fields, $post ) {
 		$options = $this->get_isc_options();
 
-		if ( ! array_key_exists( 'block_options', $options ) || $options['block_options'] ) {
+		/**
+		 * Return, when the ISC fields are enabled for blocks and the HTTP_REFERER is a post edit page. This likely means, that the block editor is used.
+		 * While the URL to edit an attachment can also include "wp-admin.php.php", the HTTP_REFERER is then different
+		 */
+		if ( ! empty( $_SERVER['HTTP_REFERER'] ) && strpos( $_SERVER['HTTP_REFERER'], 'wp-admin/post.php' ) !== false && ( ! array_key_exists( 'block_options', $options ) || $options['block_options'] ) ) {
 			return $form_fields;
 		}
+
 		if ( ! class_exists( 'ISC_Pro_Admin', false ) ) {
 			$form_fields['isc_image_source_pro']['label'] = '';
 			$form_fields['isc_image_source_pro']['input'] = 'html';
