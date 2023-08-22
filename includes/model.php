@@ -408,15 +408,10 @@ class ISC_Model {
 	 *
 	 * @return int number of images with missing sources
 	 */
-	public static function count_missing_sources() {
+	public static function count_missing_sources(): int {
 
 		// get known and used attachments without sources
-		$count = count( self::get_attachments_with_empty_sources() );
-
-		// look for unindexed attachments
-		$count += count( self::get_unused_attachments() );
-
-		return $count;
+		return count( self::get_attachments_with_empty_sources() );
 	}
 
 	/**
@@ -449,17 +444,26 @@ class ISC_Model {
 			'post_status' => null,
 			'post_parent' => null,
 			'meta_query'  => [
-				// image source is empty
+				'relation' => 'OR', // Use OR to combine the conditions
+				// images with empty source string that are not using the standard source option
+				[
+					'relation' => 'AND',
+					[
+						'key'     => 'isc_image_source',
+						'value'   => '',
+						'compare' => '=',
+					],
+					[
+						'key'     => 'isc_image_source_own',
+						'value'   => '1',
+						'compare' => '!=',
+					],
+				],
+				// ISC meta key is completely missing, which means that ISC has not yet seen this image anywhere
+				// or it was saved after the plugin was installed
 				[
 					'key'     => 'isc_image_source',
-					'value'   => '',
-					'compare' => '=',
-				],
-				// and does not belong to an author
-				[
-					'key'     => 'isc_image_source_own',
-					'value'   => '1',
-					'compare' => '!=',
+					'compare' => 'NOT EXISTS',
 				],
 			],
 		];
@@ -469,29 +473,74 @@ class ISC_Model {
 
 	/**
 	 * Get all attachments that are not used
-	 * read: they don’t have the proper meta values set up, yet.
+	 * We are using a custom query since WP_Query is not flexible enough
 	 *
-	 * @since 1.6
-	 * @return array with attachments.
+	 * @return array|object|stdClass[]|null query results objects or post IDs.
 	 */
 	public static function get_unused_attachments() {
-		$args = [
-			'post_type'   => 'attachment',
-			'numberposts' => self::MAX_POSTS,
-			'post_status' => null,
-			'post_parent' => null,
-			'meta_query'  => [
-				// image source is empty
-				[
-					'key'     => 'isc_image_source',
-					//'value'   => 'any', /* any string; needed prior to WP 3.9 */
-					'compare' => 'NOT EXISTS',
-				],
-			],
+		global $wpdb;
+
+		/**
+		 * Notes on the query:
+		 *
+		 * if the `isc_image_posts` post meta value is not set or an empty array, the image is not known to ISC.
+		 * `_thumbnail_id` is the post meta key for the featured image of a post. Image IDs in here are considered used images
+		 *     though we cannot be 100% sure if the theme makes use of them
+		 * we are not considering `post_parent` relevant here, since an image might have been uploaded to a post once, but no longer be used in there
+		 */
+		$query = "SELECT DISTINCT p.*, attachment_meta.meta_value as metadata
+		FROM {$wpdb->posts} p
+		LEFT JOIN {$wpdb->postmeta} pm ON p.ID = pm.post_id AND pm.meta_key = 'isc_image_posts'
+		LEFT JOIN {$wpdb->postmeta} featured ON featured.meta_value = p.ID AND featured.meta_key = '_thumbnail_id'
+		LEFT JOIN {$wpdb->postmeta} attachment_meta ON attachment_meta.post_id = p.ID AND attachment_meta.meta_key = '_wp_attachment_metadata'
+		WHERE p.post_type = 'attachment'
+		AND (pm.meta_value IS NULL OR pm.meta_value = 'a:0:{}')
+		AND featured.meta_value IS NULL
+		LIMIT " . ISC_Model::MAX_POSTS;
+
+		return $wpdb->get_results( $query );
+	}
+
+	/**
+	 * Calculates the number of files and total filesize of all associated image files from the given metadata array.
+	 *
+	 * @param string|array $image_metadata The metadata array of the image.
+	 * @return int[] analyzed information with [files] and [total_size]
+	 */
+	public static function analyze_unused_image( $image_metadata ): array {
+		$information = [
+			'files' => 0,
+			'total_size'  => 0,
 		];
 
-		// is per function definition always returning an array, even if empty.
-		return get_posts( $args );
+		if ( empty( $image_metadata ) ) {
+			return $information;
+		}
+
+		$image_metadata = maybe_unserialize( $image_metadata );
+
+		if ( isset( $image_metadata['filesize'] ) ) {
+			$information['files']++;
+			$information['total_size'] += (int) $image_metadata['filesize'];
+		}
+
+		foreach ( $image_metadata as $value ) {
+			if ( is_array( $value ) ) {
+				if ( isset( $value['filesize'] ) ) {
+					$information['files']++;
+					$information['total_size'] += (int) $value['filesize'];
+				}
+
+				// If the current value contains nested arrays (e.g., 'sizes'), recursively call the function
+				if ( is_array( reset( $value ) ) ) {
+					$return = self::analyze_unused_image( $value );
+					$information['files'] += (int) $return['files'] ?? 0;
+					$information['total_size'] += (int) $return['total_size'] ?? 0;
+				}
+			}
+		}
+
+		return $information;
 	}
 
 	/**

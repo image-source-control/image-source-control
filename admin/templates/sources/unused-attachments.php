@@ -1,35 +1,41 @@
 <?php
 /**
- * Render view wit unused attachments
+ * Render view for possibly unused attachments
  *
- * @var array $attachments list of attachments without association to a post
+ * @var int $attachment_count number of attachments
+ * @var int $files total number of image files (including scaled versions)
+ * @var int $filesize total size of all attachments
  */
 ?>
-<p><?php esc_html_e( 'The list contains images that neither have sources nor were yet found by ISC on your site.', 'image-source-control-isc' ); ?>&nbsp;
-	<?php esc_html_e( 'They might not need a source after all.', 'image-source-control-isc' ); ?></p>
-<?php if( count( $attachments ) >= ISC_Model::MAX_POSTS ) : ?>
-<p><?php
+<p>
+<?php
+if ( $attachment_count >= ISC_Model::MAX_POSTS ) {
 	printf(
-	// translators: %d is the number of entries in the following table
-		esc_html__( 'The list only shows the last %d images.', 'image-source-control-isc' ),
-		ISC_Model::MAX_POSTS
-	); ?>
+	// translators: %1$d is the number of unused attachments and %2$s their combined filesize, including the unit
+		esc_html__( 'At least %1$d unused image files take up over %2$s in disk space on your server.', 'image-source-control-isc' ),
+		$files,
+		size_format( $filesize )
+	);
+} else {
+	printf(
+	// translators: %d is the number of unused attachments and %s their combined filesize, including the unit
+		esc_html__( '%1$d possibly unused image files take up to %2$s in disk space on your server.', 'image-source-control-isc' ),
+		$files,
+		size_format( $filesize )
+	);
+}
+?>
 </p>
-<?php endif; ?>
-<table class="widefat striped isc-table" style="width: 80%;" >
-	<thead>
-	<tr>
-		<th><?php esc_html_e( 'Thumbnail', 'image-source-control-isc' ); ?></th>
-		<th><?php esc_html_e( 'Image title', 'image-source-control-isc' ); ?></th>
-	</tr>
-	</thead><tbody>
+<p>
+<?php
+if ( ! class_exists( 'ISC_Pro_Admin' ) ) :
+	?>
+	<a href="<?php echo esc_url( ISC_Admin::get_isc_localized_website_url( 'l/_unused-images', 'z/_ungenutzte-bilder', 'unused-images' ) ); ?>" target="_blank" class="button button-primary"><?php esc_html_e( 'Clean up unused images', 'image-source-control-isc' ); ?> (Pro)</a>
 	<?php
-	foreach ( $attachments as $_attachment ) :
-		?>
-		<tr>
-			<td><?php edit_post_link( wp_get_attachment_image( $_attachment->ID, [ 60, 60 ] ), '', '', $_attachment->ID ); ?></td>
-			<td><?php edit_post_link( esc_html( $_attachment->post_title ), '', '', $_attachment->ID ); ?></td>
-		</tr>
-	<?php endforeach; ?>
-	</tbody>
-</table>
+else :
+	?>
+	<a href="<?php echo esc_url( admin_url( 'upload.php?page=isc-unused-images' ) ); ?>" class="button button-primary"><?php esc_html_e( 'Clean up unused images', 'image-source-control-isc' ); ?></a>
+	<?php
+endif;
+?>
+</p>
