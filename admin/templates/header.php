@@ -21,7 +21,10 @@
 		<?php break;
 		case 'media_page_isc-sources' : ?>
 				<a href="<?php echo esc_url( admin_url( 'options-general.php?page=isc-settings' ) ); ?>"><?php esc_html_e( 'Settings', 'image-source-control-isc' ); ?></a>
-		<?php break; ?>
+		<?php break;
+		default : ?>
+				<a href="<?php echo esc_url( admin_url( 'upload.php?page=isc-sources' ) ); ?>"><?php esc_html_e( 'Tools', 'image-source-control-isc' ); ?></a>
+				<a href="<?php echo esc_url( admin_url( 'options-general.php?page=isc-settings' ) ); ?>"><?php esc_html_e( 'Settings', 'image-source-control-isc' ); ?></a>
 		<?php endswitch; ?>
 		<a href="<?php echo esc_url( ISC_Admin::get_manual_url( 'header-manual' ) ); ?>" target="_blank"><?php esc_html_e( 'Manual', 'image-source-control-isc' ); ?></a>
 	</div>

@@ -68,6 +68,7 @@ Check out the premium features to display the image caption overlay for featured
 * Show image sources for Elementor background images, images in Kadence Blocks Galleries, and Kadence Related Content Carousel
 * Developer options to show overlay captions for CSS background images
 * Exclude certain images from showing the overlay by adding the `isc-disable-overlay` class
+* Unused Images – a media cleaner overview of possibly unused images that runs a deep check before removing an image
 * Personal email support
 
 [See Pricing](https://imagesourcecontrol.com/pricing/?utm_source=wporg&utm_medium=link&utm_campaign=pricing).
@@ -110,7 +111,7 @@ e.g.
 
 1. Upload `image-source-control-isc.zip` through the 'Plugin' menu in your WordPress backend
 1. Activate the plugin
-1. Visit _Settings > Image Control_ for the main settings
+1. Visit _Settings > Image Sources_ for the main settings
 
 See the _Instructions_ section [here](https://wordpress.org/plugins/image-source-control-isc/#description).
 
@@ -121,8 +122,14 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 1. display image source within the image
 1. basic settings to customize how to display image sources
 1. settings to manage image source licenses
+1. Unused Images – Media Cleaner feature to safely remove unused images
 
 == Changelog ==
+
+= untagged =
+
+- Feature (Pro): Unused Images feature to help clean up the media library
+- Improvement: combine images without sources and with empty sources in the "Images without sources" list on the Tools page instead of having two separate tables
 
 = 2.15.0 =
 
