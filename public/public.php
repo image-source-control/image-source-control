@@ -955,18 +955,26 @@ class ISC_Public extends ISC_Class {
 	 * @updated 1.5 wrapped source into source url
 	 * @updated 2.4 accept metadata as an argument
 	 *
-	 * @param int $id   id of the image.
-	 * @param int $data metadata.
+	 * @param int|string $id   id of the image.
+	 * @param string[]   $data metadata.
+	 * @param array      $args arguments
+	 *                         use "disable-links" = (any value)), to disable any working links.
+	 *
 	 * @return bool|string false if no source was given, else string with source
 	 */
-	public function render_image_source_string( $id, $data = array() ) {
-		$id = esc_attr( $id );
+	public function render_image_source_string( $id, array $data = [], array $args = [] ) {
+		$id      = (int) $id;
 		$options = $this->get_isc_options();
 
-		$metadata['source']     = isset( $data['source'] ) ? $data['source'] : self::get_image_source_text( $id );
-		$metadata['source_url'] = isset( $data['source_url'] ) ? $data['source_url'] : get_post_meta( $id, 'isc_image_source_url', true );
-		$metadata['own']        = isset( $data['own'] ) ? $data['own'] : self::use_standard_source( $id );
-		$metadata['licence']    = isset( $data['licence'] ) ? $data['licence'] : get_post_meta( $id, 'isc_image_licence', true );
+		$metadata['source']     = $data['source'] ?? self::get_image_source_text( $id );
+		$metadata['own']        = $data['own'] ?? self::use_standard_source( $id );
+		$metadata['licence']    = $data['licence'] ?? get_post_meta( $id, 'isc_image_licence', true );
+
+		if ( ! isset( $args[ 'disable-links'] ) ) {
+			$metadata['source_url'] = $data['source_url'] ?? get_post_meta( $id, 'isc_image_source_url', true );
+		} else {
+			$metadata['source_url'] = '';
+		}
 
 		$source = '';
 
@@ -1003,7 +1011,7 @@ class ISC_Public extends ISC_Class {
 		// add license if enabled
 		if ( $options['enable_licences'] && isset( $metadata['licence'] ) && $metadata['licence'] ) {
 			$licences = $this->licences_text_to_array( $options['licences'] );
-			if ( isset( $licences[ $metadata['licence'] ]['url'] ) ) {
+			if ( ! isset( $args[ 'disable-links'] ) && isset( $licences[ $metadata['licence'] ]['url'] ) ) {
 				$licence_url = $licences[ $metadata['licence'] ]['url'];
 			}
 
@@ -1021,13 +1029,16 @@ class ISC_Public extends ISC_Class {
 	 * Render caption string / markup
 	 * The string is not wrapped, e.g., in a <span> tag
 	 *
-	 * @param int $id   id of the image.
-	 * @param int $data metadata.
+	 * @param int      $id   id of the image.
+	 * @param string[] $data metadata.
+	 * @param array    $args additional arguments
+	 *                       use "disable-links" = (any value), to disable any working links.
+	 *
 	 *
 	 * @return string false if no source was given, else string with source
 	 */
-	public function render_caption_string( int $id, $data = array() ) {
-		$source_string = $this->render_image_source_string( $id, $data );
+	public function render_caption_string( int $id, array $data = [], array $args = [] ) {
+		$source_string = $this->render_image_source_string( $id, $data, $args );
 
 		if ( ! $source_string ) {
 			ISC_Log::log( sprintf( 'render_caption_string() skipped overlay for empty sources string for ID "%s"', $id ) );
