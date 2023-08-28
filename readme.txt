@@ -3,7 +3,7 @@ Contributors: webzunft
 Tags: images, credits, captions, copyrights, attributions, photos, pictures, sources, bildquellen, bilder, fotos, bildunterschriften
 Requires at least: 5.3
 Tested up to: 6.3
-Stable tag: 2.14.2
+Stable tag: 2.15.0
 Requires PHP: 7.2
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -123,6 +123,13 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 1. settings to manage image source licenses
 
 == Changelog ==
+
+= 2.15.0 =
+
+- Improvement: (Pro) Support for dynamic background images in Elementor templates, e.g., featured images
+- Improvement: (Pro) Disable links in overlays, e.g., when Elementor assigns a background image to `<a>` tags
+- Fix: The `<style>` block detection could sometimes cover multiple blocks and add the caption only to the last one
+- Dev: Added argument to `render_image_source_string()` that allows to disable links in the caption output
 
 = 2.14.2 =
 
