@@ -3,7 +3,7 @@ Contributors: webzunft
 Tags: images, credits, captions, copyrights, attributions, photos, pictures, sources, bildquellen, bilder, fotos, bildunterschriften
 Requires at least: 5.3
 Tested up to: 6.3
-Stable tag: 2.15.0
+Stable tag: 2.16.0
 Requires PHP: 7.2
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -126,7 +126,7 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 
 == Changelog ==
 
-= untagged =
+= 2.16.0 =
 
 - Feature (Pro): Unused Images feature to help clean up the media library
 - Improvement: combine images without sources and with empty sources in the "Images without sources" list on the Tools page instead of having two separate tables
