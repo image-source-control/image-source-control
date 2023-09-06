@@ -826,4 +826,26 @@ class ISC_Model {
 
 		return $results;
 	}
+
+    /**
+     * Generate the base file name for an attachment ID
+     * to use when searching the database
+     * E.g., `image-300x200.jpg` or `image-12345.jpg` would return just "image"
+     *
+     * @param int $image_id
+     *
+     * @return string
+     */
+    public function get_base_file_name( int $image_id ): string {
+        // load the attachment post
+        $file = get_post_meta( $image_id, '_wp_attached_file', true );
+        // get guid as fallback, e.g., _wp_attached_file can be empty for external images
+        if ( empty( $file ) ) {
+            $attachment = get_post( $image_id );
+            $file       = $attachment->guid;
+        }
+
+        // remove the extension from the file URL
+        return str_replace( '.' . pathinfo( $file, PATHINFO_EXTENSION ), '', $file );
+    }
 }
