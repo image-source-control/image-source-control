@@ -1,7 +1,6 @@
 <?php
 
 namespace ISC\Tests\WPUnit;
-use \ISC_Model;
 
 include_once dirname( __FILE__, 4 ) . '/model/Extract_Images_From_Html_Test.php';
 /**
