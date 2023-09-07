@@ -685,9 +685,7 @@ class ISC_Model {
 		// $newurl = esc_url( preg_replace( "/(-e\d+){0,1}(-\d+x\d+){0,1}\.({$types})(.*)/i", '.${3}', $url ) );
 		// this is how WordPress core is detecting changed image URLs
 		$newurl   = esc_url( preg_replace( "/-(?:\d+x\d+|scaled|rotated)\.{$ext}(.*)/i", '.' . $ext, $url ) );
-		$orig_url = $url;
-
-		$storage = new ISC_Storage_Model();
+		$storage  = new ISC_Storage_Model();
 
 		// check if the URL is already in storage and if so, take it from there
 		if ( $storage->is_image_url_in_storage( $newurl ) ) {
