@@ -118,4 +118,22 @@ EOD,
 EOD
         );
     }
+
+	/**
+	 * Test with an inline style containing multiple brackets
+	 * Example taken from a group block with a background image
+	 */
+	public function test_multiple_brackets(\FunctionalTester $I) {
+		$I->havePageInDatabase([
+			'post_name' => 'test-page',
+			'post_content' => '<div class="wp-block-group" style="margin-top:0;margin-bottom:0;padding-top:var(--wp--preset--spacing--20);padding-right:var(--wp--preset--spacing--20);padding-bottom:var(--wp--preset--spacing--20);padding-left:var(--wp--preset--spacing--20);background-image:url(https://example.com/image-in-style-attribute.jpg);background-size:cover;">Some Content</div>',
+		]);
+
+		// Go to the page.
+		$I->amOnPage('/test-page');
+		// see the source information
+		$I->see('Team ISC');
+		// see the actual HTML output, including the data attribute and the overlay code at the beginning of the DIV container
+		$I->seeInSource('<div class="wp-block-group" style="margin-top:0;margin-bottom:0;padding-top:var(--wp--preset--spacing--20);padding-right:var(--wp--preset--spacing--20);padding-bottom:var(--wp--preset--spacing--20);padding-left:var(--wp--preset--spacing--20);background-image:url(https://example.com/image-in-style-attribute.jpg);background-size:cover;" data-isc-source-text="Quelle: &lt;a href=&quot;https://www.imagesourcecontrol.com&quot; target=&quot;_blank&quot; rel=&quot;nofollow&quot;&gt;Team ISC&lt;/a&gt;" data-isc-images="123"><span class="isc-source-text">Quelle: <a href="https://www.imagesourcecontrol.com" target="_blank" rel="nofollow">Team ISC</a></span>Some Content</div>');
+	}
 }
