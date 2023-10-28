@@ -136,4 +136,21 @@ class Get_Image_By_Url_Test extends \Codeception\TestCase\WPTestCase {
 		$result = ISC_Model::get_image_by_url( 'https://example.com/wp-content/uploads/image.png' );
 		$this->assertEquals( 0, $result ); // The modified query should not find any matching records
 	}
+
+	/**
+	 * Test with image file names containing "DALL·E", which is an AI image generator from Open AI
+	 * The "·" in the file name previously caused an issue since it is not a valid URL character, but WordPress accepts it, so we implemented a workaround
+	 */
+	public function test_dall_e() {
+		$image_id = wp_insert_attachment( [
+			'guid'      => 'https://example.com/wp-content/uploads/DALL·E.png',
+			'post_type' => 'attachment',
+		] );
+
+		// add a _wp_attached_file meta value
+		update_post_meta( $image_id, '_wp_attached_file', 'DALL·E.png' );
+
+		$result = ISC_Model::get_image_by_url( 'https://example.com/wp-content/uploads/DALL·E.png' );
+		$this->assertEquals( $image_id, $result );
+	}
 }
