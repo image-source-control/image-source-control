@@ -664,6 +664,8 @@ class ISC_Model {
 
 		ISC_Log::log( 'enter get_image_by_url() to look for URL ' . $url );
 
+		$url = apply_filters( 'isc_filter_url_pre_get_image_by_url', $url );
+
 		// replace certain characters that WordPress accepts in file names only to test if the URL is valid
 		// - "·" is in files names from DALL·E (OpenAI image generator)
 		$url_to_check = str_replace( [ 'DALL·E' ], 'DALLE', $url );
