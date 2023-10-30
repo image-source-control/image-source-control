@@ -12,8 +12,8 @@
 	echo sprintf(
 	// translators: $s is replaced by starting and ending a tags to create a link
 		esc_html__( 'Writes image source activity to the %1$sisc.log%2$s file when %3$s is added to the URL of a page.', 'image-source-control-isc' ),
-		'<a href="' . esc_url( $log_file_url ) . '" target="_blank">',
-		'</a>',
+		$checked ? '<a href="' . esc_url( $log_file_url ) . '" target="_blank">' : '',
+		$checked ? '</a>' : '',
 		'<code>?isc-log</code>'
 	);
 	?>
