@@ -5,9 +5,14 @@
 class ISC_Log {
 
 	/**
-	 * Name of the log file
+	 * Get the name of the log file
+	 *
+	 * @return string
 	 */
-	const FILENAME = 'isc.log';
+	public static function get_file_name(): string {
+		// Hash the AUTH_KEY to create a unique but persistent filename
+		return 'isc_' . hash( 'crc32', AUTH_KEY ) . '.log';
+	}
 
 	/**
 	 * Check if the log feature is enabled
@@ -32,20 +37,6 @@ class ISC_Log {
 			return;
 		}
 
-		// get calling function
-		// source: https://stackoverflow.com/questions/190421/get-name-of-caller-function-in-php
-		// currently unused, keeping the code in case we need it again
-		$trace            = debug_backtrace();
-		$caller           = $trace[1];
-		$calling_function = '';
-		if ( isset( $caller['function'] ) ) {
-			if ( isset( $caller['class'] ) ) {
-				$calling_function .= "{$caller['class']}::{$caller['function']}";
-			} else {
-				$calling_function .= "{$caller['function']}";
-			}
-		}
-
 		$message = is_array( $message ) ? print_r( $message, true ) : $message;
 
 		error_log( '[' . date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ) ) . "] $message\n", 3, self::get_log_file_path() );
@@ -60,15 +51,19 @@ class ISC_Log {
 
 	/**
 	 * Get the URL to the log file
+	 *
+	 * @return string
 	 */
-	public static function get_log_file_URL() {
-		return ISCBASEURL . self::FILENAME;
+	public static function get_log_file_URL(): string {
+		return ISCBASEURL . self::get_file_name();
 	}
 
 	/**
 	 * Get the path to the log file
+	 *
+	 * @return string
 	 */
-	public static function get_log_file_path() {
-		return ISCPATH . '/' . self::FILENAME;
+	public static function get_log_file_path(): string {
+		return ISCPATH . '/' . self::get_file_name();
 	}
 }
