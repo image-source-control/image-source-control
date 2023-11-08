@@ -3,7 +3,7 @@ Contributors: webzunft
 Tags: images, credits, captions, copyrights, attributions, photos, pictures, sources, bildquellen, bilder, fotos, bildunterschriften
 Requires at least: 5.3
 Tested up to: 6.4
-Stable tag: 2.17.0
+Stable tag: 2.17.1
 Requires PHP: 7.2
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -127,10 +127,10 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 
 == Changelog ==
 
-= untagged =
+= 2.17.1 =
 
 - Improvement: create a unique name for the log file
-- Improvement: always show the overlay caption in the bottom left in the lightbox (added in WordPress 6.4) to prevent it from not showing at all in some cases
+- Improvement: show the overlay caption in the bottom left in the lightbox (added in WordPress 6.4) where the current position doesn’t show up
 
 = 2.17.0 =
 
