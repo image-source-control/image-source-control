@@ -136,6 +136,10 @@ class ISC_Public extends ISC_Class {
 				// The 2022 theme adds display:block to the featured image block, which creates additional line breaks. `display: inline` fixes that.
 				?>
 				span.isc-source-text a { display: inline; color: #fff; }
+				<?php
+				// force the overlay caption into the bottom left corner for lightboxes introduced in WP 6.4 since otherwise, for some positions, the caption wasn’t visible at all
+				?>
+                .wp-lightbox-overlay.active .isc-source-text { top: initial !important; left: initial !important; bottom: 0! important; }
 			</style>
 			<?php
 	}
