@@ -130,6 +130,7 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 = untagged =
 
 - Improvement: create a unique name for the log file
+- Improvement: always show the overlay caption in the bottom left in the lightbox (added in WordPress 6.4) to prevent it from not showing at all in some cases
 
 = 2.17.0 =
 
