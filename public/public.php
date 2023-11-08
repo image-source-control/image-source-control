@@ -137,9 +137,13 @@ class ISC_Public extends ISC_Class {
 				?>
 				span.isc-source-text a { display: inline; color: #fff; }
 				<?php
-				// force the overlay caption into the bottom left corner for lightboxes introduced in WP 6.4 since otherwise, for some positions, the caption wasn’t visible at all
+				// force the overlay caption into the bottom left corner for lightboxes introduced in WP 6.4; only applied to the positions that are currently broken
+				if ( in_array( $options['caption_position'], array( 'top-center', 'top-right', 'center' ), true ) ) {
+					?>
+					.wp-lightbox-overlay.active .isc-source-text { top: initial !important; left: initial !important; bottom: 0! important; }
+					<?php
+				}
 				?>
-                .wp-lightbox-overlay.active .isc-source-text { top: initial !important; left: initial !important; bottom: 0! important; }
 			</style>
 			<?php
 	}
