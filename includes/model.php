@@ -664,7 +664,8 @@ class ISC_Model {
 
 		ISC_Log::log( 'enter get_image_by_url() to look for URL ' . $url );
 
-		$url = apply_filters( 'isc_filter_url_pre_get_image_by_url', $url );
+		$original_url = $url;
+		$url          = apply_filters( 'isc_filter_url_pre_get_image_by_url', $url );
 
 		// replace certain characters that WordPress accepts in file names only to test if the URL is valid
 		// - "·" is in files names from DALL·E (OpenAI image generator)
@@ -760,6 +761,16 @@ class ISC_Model {
 
 		$id   = isset( $results[0]->ID ) ? absint( $results[0]->ID ) : 0;
 		$guid = $results[0]->guid ?? null;
+
+		/**
+		 * Filter the image ID found by ISC
+		 *
+		 * Especially useful for compatibility with plugins that manipulate the image URL or meta data so that our checks don’t work
+		 *
+		 * @param int   $id     attachment ID or null
+		 * @param array $params array with additional, optional parameters
+		 */
+		$id = apply_filters( 'isc_filter_final_id_get_image_by_url', $id, [ 'original_url' => $original_url, 'newurl' => $newurl, 'url' => $url ] );
 
 		if ( $id ) {
 			$storage->update_post_id( $guid, $id );
