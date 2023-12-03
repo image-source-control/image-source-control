@@ -41,6 +41,7 @@ require_once ISCPATH . 'includes/model.php';
 require_once ISCPATH . 'includes/storage-model.php';
 require_once ISCPATH . 'includes/analyze-html.php';
 require_once ISCPATH . 'includes/log.php';
+require_once ISCPATH . 'includes/standard-source.php';
 
 if ( is_admin() ) {
 	if ( ! class_exists( 'ISC_Admin', false ) ) {

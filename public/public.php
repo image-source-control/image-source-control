@@ -1,5 +1,8 @@
 <?php
-	/**
+
+use ISC\Includes\Standard_Source;
+
+/**
 	 * Handles all admin functionalities
 	 *
 	 * @todo move frontend-only functions from general class here
@@ -299,7 +302,7 @@ class ISC_Public extends ISC_Class {
 			}
 
 			// don’t show caption for own image if admin choose not to do so
-			if ( $this->is_standard_source( 'exclude' ) && self::use_standard_source( $id ) ) {
+			if ( Standard_Source::hide_standard_source_for_image( $id ) ) {
 				ISC_Log::log( sprintf( 'skipped "own" image for ID "%s"', $id ) );
 				continue;
 			}
@@ -460,13 +463,13 @@ class ISC_Public extends ISC_Class {
 		}
 
 		$attachments      = get_post_meta( $post_id, 'isc_post_images', true );
-		$exclude_standard = $this->is_standard_source( 'exclude' );
+		$exclude_standard = Standard_Source::standard_source_is( 'exclude' );
 
 		if ( ! empty( $attachments ) ) {
 			ISC_Log::log( sprintf( 'going through %d attachments', count( $attachments ) ) );
 			$atts = array();
 			foreach ( $attachments as $attachment_id => $attachment_array ) {
-				$use_standard_source = self::use_standard_source( $attachment_id );
+				$use_standard_source = Standard_Source::use_standard_source( $attachment_id );
 				$source              = self::get_image_source_text( $attachment_id );
 
 				// check if source of own images can be displayed
@@ -633,17 +636,17 @@ class ISC_Public extends ISC_Class {
 
 		foreach ( $attachments as $_attachment ) {
 			$connected_atts[ $_attachment->ID ]['source']   = self::get_image_source_text( $_attachment->ID );
-			$connected_atts[ $_attachment->ID ]['standard'] = self::use_standard_source( $_attachment->ID );
+			$connected_atts[ $_attachment->ID ]['standard'] = Standard_Source::use_standard_source( $_attachment->ID );
 			// jump to next element if the standard source is set to be excluded from the source list
-			if ( $this->is_standard_source( 'exclude' ) && '' != $connected_atts[ $_attachment->ID ]['standard'] ) {
+			if ( Standard_Source::standard_source_is( 'exclude' ) && '' != $connected_atts[ $_attachment->ID ]['standard'] ) {
 				unset( $connected_atts[ $_attachment->ID ] );
 				continue;
 			}
 
 			$connected_atts[ $_attachment->ID ]['title']       = $_attachment->post_title;
 			$connected_atts[ $_attachment->ID ]['author_name'] = '';
-			if ( $this->is_standard_source( 'custom_text' ) && ! empty( $connected_atts[ $_attachment->ID ]['own'] ) ) {
-				$connected_atts[ $_attachment->ID ]['author_name'] = $this->get_standard_source_text();
+			if ( Standard_Source::standard_source_is( 'custom_text' ) && ! empty( $connected_atts[ $_attachment->ID ]['own'] ) ) {
+				$connected_atts[ $_attachment->ID ]['author_name'] = Standard_Source::get_standard_source_text();
 			} else {
 				// show author name
 				$connected_atts[ $_attachment->ID ]['author_name'] = get_the_author_meta( 'display_name', $_attachment->post_author );
@@ -906,10 +909,8 @@ class ISC_Public extends ISC_Class {
 			$thumb = get_post( $post_id );
 
 			// don’t show caption for own image if admin choose not to do so
-			if ( $this->is_standard_source( 'exclude' ) ) {
-				if ( self::use_standard_source( $id ) ) {
-					return '';
-				}
+			if ( Standard_Source::hide_standard_source_for_image( $id ) ) {
+				return '';
 			}
 			// don’t display empty sources
 			$src           = $thumb->guid;
@@ -966,7 +967,7 @@ class ISC_Public extends ISC_Class {
 	 * @param int|string $id   id of the image.
 	 * @param string[]   $data metadata.
 	 * @param array      $args arguments
-	 *                         use "disable-links" = (any value)), to disable any working links.
+	 *                         use "disable-links" = (any value), to disable any working links.
 	 *
 	 * @return bool|string false if no source was given, else string with source
 	 */
@@ -975,27 +976,19 @@ class ISC_Public extends ISC_Class {
 		$options = $this->get_isc_options();
 
 		$metadata['source']     = $data['source'] ?? self::get_image_source_text( $id );
-		$metadata['own']        = $data['own'] ?? self::use_standard_source( $id );
-		$metadata['licence']    = $data['licence'] ?? get_post_meta( $id, 'isc_image_licence', true );
+		$metadata['own']        = $data['own'] ?? Standard_Source::use_standard_source( $id );
+		$metadata['licence']    = $data['licence'] ?? self::get_image_license( $id );
 
 		if ( ! isset( $args[ 'disable-links'] ) ) {
-			$metadata['source_url'] = $data['source_url'] ?? get_post_meta( $id, 'isc_image_source_url', true );
+			$metadata['source_url'] = $data['source_url'] ?? self::get_image_source_url( $id );
 		} else {
 			$metadata['source_url'] = '';
 		}
 
 		$source = '';
 
-		$att_post = get_post( $id );
-
 		if ( '' != $metadata['own'] ) {
-			if ( $this->is_standard_source( 'author_name' ) ) {
-				if ( ! empty( $att_post ) ) {
-					$source = get_the_author_meta( 'display_name', $att_post->post_author );
-				}
-			} else {
-				$source = $this->get_standard_source_text();
-			}
+			$source = Standard_Source::get_standard_source_text_for_attachment( $id );
 		} else {
 			if ( '' != $metadata['source'] ) {
 				$source = $metadata['source'];
@@ -1054,7 +1047,7 @@ class ISC_Public extends ISC_Class {
 		}
 
 		// don’t render the caption for own images if the admin choose not to do so
-		if ( self::is_standard_source( 'exclude' ) && ISC_Public::use_standard_source( $id ) ) {
+		if ( Standard_Source::hide_standard_source_for_image( $id ) ) {
 			ISC_Log::log( sprintf( 'render_caption_string() skipped overlay for "own" image ID "%s"', $id ) );
 			return '';
 		}
@@ -1085,20 +1078,6 @@ class ISC_Public extends ISC_Class {
 		}
 
 		return false;
-	}
-
-	/**
-	 * Check if the given attachment ought to use the standard source
-	 *
-	 * @param int $attachment_id attachment ID
-	 * @return bool true if standard source is used
-	 */
-	public static function use_standard_source( $attachment_id ) {
-		return (bool) apply_filters(
-			'isc_public_attachment_use_standard_source',
-			get_post_meta( $attachment_id, 'isc_image_source_own', true ),
-			$attachment_id
-		);
 	}
 
 	/**

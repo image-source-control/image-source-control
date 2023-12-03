@@ -246,7 +246,7 @@ class ISC_Admin extends ISC_Class {
 			sprintf(
 			// translators: %s is the name of an option
 				__( 'Currently selected: %s', 'image-source-control-isc' ),
-				ISC_Class::get_instance()->get_standard_source_label()
+				ISC\Includes\Standard_Source::get_standard_source_label()
 			);
 		$form_fields['isc_image_source_own']['html'] =
 			"<input type='checkbox' value='1' name='attachments[{$post->ID}][isc_image_source_own]' id='attachments[{$post->ID}][isc_image_source_own]' "
@@ -274,7 +274,7 @@ class ISC_Admin extends ISC_Class {
 			$form_fields['isc_image_licence']['html'] = $html;
 		}
 
-		return $form_fields;
+		return apply_filters( 'isc_admin_attachment_form_fields', $form_fields, $post, $options );
 	}
 
 	/**
@@ -700,9 +700,8 @@ class ISC_Admin extends ISC_Class {
 	 * Render options for standard image sources
 	 */
 	public function renderfield_standard_source() {
-		$options              = $this->get_isc_options();
-		$standard_source      = ! empty( $options['standard_source'] ) ? $options['standard_source'] : $this->get_standard_source();
-		$standard_source_text = $this->get_standard_source_text();
+		$standard_source      = ISC\Includes\Standard_Source::get_standard_source();
+		$standard_source_text = ISC\Includes\Standard_Source::get_standard_source_text();
 		require_once ISCPATH . '/admin/templates/settings/standard-source.php';
 
 		do_action( 'isc_admin_settings_template_after_standard_source' );
@@ -934,7 +933,7 @@ class ISC_Admin extends ISC_Class {
 		if ( isset( $input['by_author_text'] ) ) {
 			$output['standard_source_text'] = esc_html( $input['by_author_text'] );
 		} else {
-			$output['standard_source_text'] = isset( $input['standard_source_text'] ) ? esc_attr( $input['standard_source_text'] ) : $this->get_standard_source_text();
+			$output['standard_source_text'] = ISC\Includes\Standard_Source::get_standard_source_text();
 		}
 
 		/**
