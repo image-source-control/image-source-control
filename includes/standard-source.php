@@ -158,22 +158,11 @@ class Standard_Source {
 	 */
 	public static function use_standard_source( int $attachment_id ): bool {
 
-		$use_standard_source = (bool) apply_filters(
-			'isc_raw_attachment_use_standard_source',
+		return (bool) apply_filters(
+			'isc_use_standard_source_for_attachment',
 			get_post_meta( $attachment_id, 'isc_image_source_own', true ),
 			$attachment_id
 		);
-
-		// have another filter for frontend use for historic reasons
-		if ( ! is_admin() ) {
-			return (bool) apply_filters(
-				'isc_public_attachment_use_standard_source',
-				$use_standard_source,
-				$attachment_id
-			);
-		}
-
-		return $use_standard_source;
 	}
 
 	/**
