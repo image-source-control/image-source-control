@@ -216,7 +216,7 @@ class ISC_Class {
 			$default['overlay_included_images']   = '';
 			$default['block_options']             = true;
 			$default['enable_log']                = false;
-			$default['standard_source']           = '';
+			$default['standard_source']           = 'custom_text';
 			$default['standard_source_text']      = '';
 
 			/**

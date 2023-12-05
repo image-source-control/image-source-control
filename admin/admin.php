@@ -926,7 +926,7 @@ class ISC_Admin extends ISC_Class {
 			// show author name
 			$output['standard_source'] = 'author_name';
 		} else {
-			$output['standard_source'] = isset( $input['standard_source'] ) ? esc_attr( $input['standard_source'] ) : 'author_name';
+			$output['standard_source'] = isset( $input['standard_source'] ) ? esc_attr( $input['standard_source'] ) : 'custom_text';
 		}
 
 		// custom source text
