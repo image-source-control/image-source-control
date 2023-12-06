@@ -27,6 +27,14 @@ class Standard_Source {
 	}
 
 	/**
+	 * Clear class options
+	 * needed for automatic testing
+	 */
+	public static function clear_options() {
+		self::$options = null;
+	}
+
+	/**
 	 * Get the standard source text as set up under Settings > Standard Source > Custom text
 	 * if there was no input, yet
 	 *
@@ -53,7 +61,7 @@ class Standard_Source {
 	public static function get_standard_source_text_for_attachment( int $attachment_id ): string {
 
 		if ( ! self::use_standard_source( $attachment_id ) ) {
-			return '';
+			//return '';
 		}
 
 		if ( self::standard_source_is( 'author_name' ) ) {
