@@ -127,6 +127,14 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 
 == Changelog ==
 
+= untagged =
+
+- Feature (Pro): show the IPTC copyright or credit meta information as a standard source
+- Feature (Pro): authors now see the IPTC copyright and credit meta information in the backend and can copy it to the image source field with one click
+- Fix: pre-select the "custom text" standard source option when the plugin options weren’t saved yet to reflect how this state behaves in the frontend
+- Dev: move all features related to the standard source into ISC\Standard_Source
+- Dev: replace the `isc_raw_attachment_use_standard_source` and `isc_public_attachment_use_standard_source` with the `isc_use_standard_source_for_attachment` filter
+
 = 2.17.1 =
 
 - Improvement: create a unique name for the log file
