@@ -13,7 +13,7 @@
 		<input type="radio" name="isc_options[standard_source]" value="exclude" <?php checked( $standard_source, 'exclude' ); ?> />
 		<?php esc_html_e( 'Exclude from lists', 'image-source-control-isc' ); ?>
 	</label>
-	<p class="description"><?php esc_html_e( 'Hide images sources in the frontend. You can still manage them in the dashboard.', 'image-source-control-isc' ); ?></p>
+	<p class="description"><?php esc_html_e( 'Hide image sources in the frontend.', 'image-source-control-isc' ); ?></p>
 	<label>
 		<input type="radio" name="isc_options[standard_source]" value="author_name" <?php checked( $standard_source, 'author_name' ); ?> />
 		<?php esc_html_e( 'Author name', 'image-source-control-isc' ); ?>
