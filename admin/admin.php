@@ -933,7 +933,7 @@ class ISC_Admin extends ISC_Class {
 		if ( isset( $input['by_author_text'] ) ) {
 			$output['standard_source_text'] = esc_html( $input['by_author_text'] );
 		} else {
-			$output['standard_source_text'] = ISC\Includes\Standard_Source::get_standard_source_text();
+			$output['standard_source_text'] = isset( $input['standard_source_text'] ) ? esc_attr( $input['standard_source_text'] ) : ISC\Includes\Standard_Source::get_standard_source_text();
 		}
 
 		/**
