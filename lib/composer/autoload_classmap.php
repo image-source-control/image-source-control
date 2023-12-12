@@ -11,6 +11,7 @@ return array(
     'ISC\\Autoloader' => $baseDir . '/includes/class-autoloader.php',
     'ISC\\Pro\\IPTC' => $baseDir . '/pro/includes/IPTC.php',
     'ISC\\Standard_Source' => $baseDir . '/includes/standard-source.php',
+    'ISC\\Unused_Images' => $baseDir . '/includes/unused-images.php',
     'ISC_Admin' => $baseDir . '/admin/admin.php',
     'ISC_Block_Options' => $baseDir . '/includes/block-options/block-options.php',
     'ISC_Class' => $baseDir . '/includes/isc.class.php',

@@ -484,14 +484,14 @@ class ISC_Admin extends ISC_Class {
 				<?php
 			}
 
-			$attachments = ISC_Model::get_unused_attachments();
+			$attachments = ISC\Unused_Images::get_unused_attachments();
 			if ( ! empty( $attachments ) ) {
 				ob_start();
 				$attachment_count = count( $attachments );
 				$files = 0;
 				$filesize = 0;
 				foreach( $attachments as $attachment ) {
-					$file_info = ISC_Model::analyze_unused_image( $attachment->metadata );
+					$file_info = ISC\Unused_Images::analyze_unused_image( $attachment->metadata );
 					$files += $file_info['files'] ?? 0;
 					$filesize += $file_info['total_size'] ?? 0;
 				}
