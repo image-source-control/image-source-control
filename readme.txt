@@ -134,6 +134,7 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 - Fix: pre-select the "custom text" standard source option when the plugin options weren’t saved yet to reflect how this state behaves in the frontend
 - Dev: move all features related to the standard source into ISC\Standard_Source
 - Dev: replace the `isc_raw_attachment_use_standard_source` and `isc_public_attachment_use_standard_source` with the `isc_use_standard_source_for_attachment` filter
+- Dev: added the `isc_can_load` filter to allow developers to disable ISC on certain pages in the frontend
 
 = 2.17.1 =
 
