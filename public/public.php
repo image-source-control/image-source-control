@@ -70,7 +70,7 @@ class ISC_Public extends ISC_Class {
 			return false;
 		}
 
-		return true;
+		return apply_filters( 'isc_can_load', '__return_true' );
 	}
 
 	/**
