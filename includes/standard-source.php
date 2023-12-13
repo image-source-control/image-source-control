@@ -60,10 +60,6 @@ class Standard_Source {
 	 */
 	public static function get_standard_source_text_for_attachment( int $attachment_id ): string {
 
-		if ( ! self::use_standard_source( $attachment_id ) ) {
-			//return '';
-		}
-
 		if ( self::standard_source_is( 'author_name' ) ) {
 			$author = get_post_field( 'post_author', $attachment_id );
 			$source = ! empty( $author ) ? get_the_author_meta( 'display_name', $author ) : '';
