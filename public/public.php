@@ -1,9 +1,9 @@
 <?php
 
-use ISC\Includes\Standard_Source;
+use ISC\Standard_Source;
 
 /**
-	 * Handles all admin functionalities
+	 * Handles all frontend facing functionalities
 	 *
 	 * @todo move frontend-only functions from general class here
 	 */

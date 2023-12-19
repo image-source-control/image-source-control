@@ -151,4 +151,3 @@ class ISC_Block_Options {
 	}
 
 }
-new ISC_Block_Options();

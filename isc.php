@@ -25,8 +25,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-if ( class_exists( 'ISC_Class', false ) ) {
-	die( 'You can only activate Image Source Control once. Please disable the other version first.' );
+if ( defined( 'ISCVERSION' ) ) {
+	wp_die( 'You can only activate Image Source Control once. Please disable the other version first.' );
 }
 
 define( 'ISCVERSION', '2.17.1' );
@@ -36,25 +36,16 @@ define( 'ISCPATH', plugin_dir_path( __FILE__ ) );
 define( 'ISCBASE', plugin_basename( __FILE__ ) ); // plugin base as used by WordPress to identify it.
 define( 'ISCBASEURL', plugin_dir_url( __FILE__ ) ); // URL to the plugin directory
 
-require_once ISCPATH . 'isc.class.php';
-require_once ISCPATH . 'includes/model.php';
-require_once ISCPATH . 'includes/storage-model.php';
-require_once ISCPATH . 'includes/analyze-html.php';
-require_once ISCPATH . 'includes/log.php';
-require_once ISCPATH . 'includes/standard-source.php';
+// Load the autoloader.
+require_once ISCPATH . 'includes/class-autoloader.php';
+\ISC\Autoloader::get()->initialize();
 
 if ( is_admin() ) {
-	if ( ! class_exists( 'ISC_Admin', false ) ) {
-		require_once ISCPATH . 'admin/admin.php';
-	}
 	new ISC_Admin();
 } elseif ( ! is_admin() && ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) ) {
 	// include frontend functions
-	if ( ! class_exists( 'ISC_Public', false ) ) {
-		require_once ISCPATH . 'public/public.php';
-	}
 	new ISC_Public();
-	require_once ISCPATH . 'functions.php';
+	require_once ISCPATH . 'includes/functions.php';
 } else {
 	new ISC_Class();
 }
@@ -63,4 +54,4 @@ if ( ! class_exists( 'ISC_Pro_Model', false ) && file_exists( ISCPATH . 'pro/isc
 	require_once ISCPATH . 'pro/isc-pro.php';
 }
 
-require_once ISCPATH . 'includes/block-options/block-options.php';
+new ISC_Block_Options();
