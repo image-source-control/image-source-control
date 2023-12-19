@@ -2,7 +2,7 @@
 
 namespace ISC\Tests\WPUnit;
 
-use ISC\Includes\Standard_Source;
+use ISC\Standard_Source;
 use phpDocumentor\Reflection\Types\Object_;
 
 /**

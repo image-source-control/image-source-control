@@ -2,7 +2,7 @@
 /**
  * Render the standard source
  */
-namespace ISC\Includes;
+namespace ISC;
 use ISC_Class;
 
 class Standard_Source {

@@ -19,5 +19,18 @@
         "codeception/module-filesystem": "^1.0",
         "codeception/module-cli": "^1.0",
         "codeception/util-universalframework": "^1.0"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "autoload": {
+        "psr-4": {
+            "ISC\\": "includes/"
+        },
+        "classmap": [
+            "admin/",
+            "includes",
+            "public/"
+        ]
     }
 }
