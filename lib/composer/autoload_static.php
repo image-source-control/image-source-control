@@ -9,11 +9,16 @@ class ComposerStaticInitdb72a6bac11cb0e6b971811c93d09a9b
     public static $prefixLengthsPsr4 = array (
         'I' => 
         array (
+            'ISC\\Pro\\' => 8,
             'ISC\\' => 4,
         ),
     );
 
     public static $prefixDirsPsr4 = array (
+        'ISC\\Pro\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/pro/includes',
+        ),
         'ISC\\' => 
         array (
             0 => __DIR__ . '/../..' . '/includes',
@@ -24,6 +29,7 @@ class ComposerStaticInitdb72a6bac11cb0e6b971811c93d09a9b
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'ISC\\Analyze_HTML' => __DIR__ . '/../..' . '/includes/analyze-html.php',
         'ISC\\Autoloader' => __DIR__ . '/../..' . '/includes/class-autoloader.php',
+        'ISC\\Pro\\IPTC' => __DIR__ . '/../..' . '/pro/includes/IPTC.php',
         'ISC\\Standard_Source' => __DIR__ . '/../..' . '/includes/standard-source.php',
         'ISC_Admin' => __DIR__ . '/../..' . '/admin/admin.php',
         'ISC_Block_Options' => __DIR__ . '/../..' . '/includes/block-options/block-options.php',

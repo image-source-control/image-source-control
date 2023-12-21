@@ -6,5 +6,6 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
+    'ISC\\Pro\\' => array($baseDir . '/pro/includes'),
     'ISC\\' => array($baseDir . '/includes'),
 );

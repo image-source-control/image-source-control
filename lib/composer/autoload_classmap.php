@@ -9,6 +9,7 @@ return array(
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
     'ISC\\Analyze_HTML' => $baseDir . '/includes/analyze-html.php',
     'ISC\\Autoloader' => $baseDir . '/includes/class-autoloader.php',
+    'ISC\\Pro\\IPTC' => $baseDir . '/pro/includes/IPTC.php',
     'ISC\\Standard_Source' => $baseDir . '/includes/standard-source.php',
     'ISC_Admin' => $baseDir . '/admin/admin.php',
     'ISC_Block_Options' => $baseDir . '/includes/block-options/block-options.php',

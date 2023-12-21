@@ -6,7 +6,7 @@
     "authors": [
         {
             "name": "Thomas Maier",
-            "email": "thomas.maier@webgilde.com"
+            "email": "thomas@imagesourcecontrol.com"
         }
     ],
     "minimum-stability": "stable",
@@ -25,7 +25,8 @@
     },
     "autoload": {
         "psr-4": {
-            "ISC\\": "includes/"
+            "ISC\\": "includes/",
+            "ISC\\Pro\\": "pro/includes/"
         },
         "classmap": [
             "admin/",
