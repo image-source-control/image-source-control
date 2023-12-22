@@ -26,7 +26,7 @@
 
 	<rule ref="WordPress.WP.I18n">
 		<properties>
-			<property name="text_domain" type="array" value="image-source" />
+			<property name="text_domain" type="array" value="image-source-control-isc" />
 		</properties>
 	</rule>
 

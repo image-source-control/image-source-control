@@ -3,10 +3,10 @@
 use ISC\Standard_Source;
 
 /**
-	 * Handles all frontend facing functionalities
-	 *
-	 * @todo move frontend-only functions from general class here
-	 */
+ * Handles all frontend facing functionalities
+ *
+ * @todo move frontend-only functions from general class here
+ */
 class ISC_Public extends ISC_Class {
 
 	/**
@@ -22,7 +22,7 @@ class ISC_Public extends ISC_Class {
 	public function __construct() {
 		parent::__construct();
 
-		add_action( 'wp', array( $this, 'register_hooks' ) );
+		add_action( 'wp', [ $this, 'register_hooks' ] );
 	}
 
 	/**
@@ -37,17 +37,17 @@ class ISC_Public extends ISC_Class {
 		$options = $this->get_isc_options();
 		// load caption layout scripts and styles. The default layout loads scripts
 		if ( empty( $options['caption_style'] ) ) {
-			add_action( 'wp_enqueue_scripts', array( $this, 'front_scripts' ) );
-			add_action( 'wp_head', array( $this, 'front_head' ) );
+			add_action( 'wp_enqueue_scripts', [ $this, 'front_scripts' ] );
+			add_action( 'wp_head', [ $this, 'front_head' ] );
 		}
 
 		// Content filters need to be above 10 in order to interpret also gallery shortcode
 		self::register_the_content_filters();
-		add_filter( 'the_excerpt', array( $this, 'excerpt_filter' ), 20 );
-		add_filter( 'render_block', array( $this, 'add_featured_image_source_to_excerpt_block' ), 10, 2 );
+		add_filter( 'the_excerpt', [ $this, 'excerpt_filter' ], 20 );
+		add_filter( 'render_block', [ $this, 'add_featured_image_source_to_excerpt_block' ], 10, 2 );
 
-		add_shortcode( 'isc_list', array( $this, 'list_post_attachments_with_sources_shortcode' ) );
-		add_shortcode( 'isc_list_all', array( $this, 'list_all_post_attachments_sources_shortcode' ) );
+		add_shortcode( 'isc_list', [ $this, 'list_post_attachments_with_sources_shortcode' ] );
+		add_shortcode( 'isc_list_all', [ $this, 'list_all_post_attachments_sources_shortcode' ] );
 	}
 
 	/**
@@ -60,13 +60,13 @@ class ISC_Public extends ISC_Class {
 		$post_id = get_the_ID();
 
 		if ( $post_id
-			 && is_singular()
+			&& is_singular()
 			/**
 			 * Filter posts that should not output ISC information by their ID
 			 *
 			 * @param int[] void WP_Post IDs.
 			 */
-			 && in_array( $post_id, apply_filters( 'isc_public_excluded_post_ids', array() ) ) ) {
+			&& in_array( $post_id, apply_filters( 'isc_public_excluded_post_ids', [] ), true ) ) {
 			return false;
 		}
 
@@ -80,7 +80,7 @@ class ISC_Public extends ISC_Class {
 
 		// Content filters need to be above 10 in order to interpret also gallery shortcode
 		// needs to be added to remove_the_content_filters() as well to prevent infinite loops
-		add_filter( 'the_content', array( self::get_instance(), 'add_sources_to_content' ), 20 );
+		add_filter( 'the_content', [ self::get_instance(), 'add_sources_to_content' ], 20 );
 	}
 
 	/**
@@ -88,7 +88,7 @@ class ISC_Public extends ISC_Class {
 	 * used in places where we want to prevent infinite loops
 	 */
 	public static function remove_the_content_filters() {
-		remove_filter( 'the_content', array( self::get_instance(), 'add_sources_to_content' ), 20 );
+		remove_filter( 'the_content', [ self::get_instance(), 'add_sources_to_content' ], 20 );
 	}
 
 	/**
@@ -97,7 +97,9 @@ class ISC_Public extends ISC_Class {
 	 * @return ISC_Public|null
 	 */
 	public static function get_instance() {
-		null === self::$instance && self::$instance = new self();
+		if ( null === self::$instance ) {
+			self::$instance = new self();
+		}
 		return self::$instance;
 	}
 
@@ -134,14 +136,14 @@ class ISC_Public extends ISC_Class {
 			</script>
 			<style>
 				.isc-source { position: relative; display: inline-block; line-height: initial; }
-                .wp-block-cover .isc-source { position: static; }
+				.wp-block-cover .isc-source { position: static; }
 				<?php
 				// The 2022 theme adds display:block to the featured image block, which creates additional line breaks. `display: inline` fixes that.
 				?>
 				span.isc-source-text a { display: inline; color: #fff; }
 				<?php
 				// force the overlay caption into the bottom left corner for lightboxes introduced in WP 6.4; only applied to the positions that are currently broken
-				if ( in_array( $options['caption_position'], array( 'top-center', 'top-right', 'center' ), true ) ) {
+				if ( in_array( $options['caption_position'], [ 'top-center', 'top-right', 'center' ], true ) ) {
 					?>
 					.wp-lightbox-overlay.active .isc-source-text { top: initial !important; left: initial !important; bottom: 0! important; }
 					<?php
@@ -275,9 +277,9 @@ class ISC_Public extends ISC_Class {
 			return $content . $content_after;
 		}
 
-		$options          = $this->get_isc_options();
+		$options = $this->get_isc_options();
 		// gather elements already replaced to prevent duplicate sources, see github #105
-		$replaced         = array();
+		$replaced = [];
 
 		foreach ( $matches as $_match ) {
 			if ( ! $_match['img_src'] ) {
@@ -297,7 +299,7 @@ class ISC_Public extends ISC_Class {
 
 			// if ID is still missing get image by URL
 			if ( ! $id ) {
-				$id  = ISC_Model::get_image_by_url( $_match['img_src'] );
+				$id = ISC_Model::get_image_by_url( $_match['img_src'] );
 				ISC_Log::log( sprintf( 'ID for source "%s": "%s"', $_match['img_src'], $id ) );
 			}
 
@@ -396,7 +398,7 @@ class ISC_Public extends ISC_Class {
 	 * Add image source of featured image to the post excerpt block in the frontend
 	 *
 	 * @param string $block_content rendered content of the block.
-	 * @param array $block full block details.
+	 * @param array  $block full block details.
 	 * @return string $excerpt
 	 */
 	public function add_featured_image_source_to_excerpt_block( $block_content, $block ) {
@@ -512,7 +514,7 @@ class ISC_Public extends ISC_Class {
 		ISC_Log::log( 'start to render attachments list' );
 
 		// don't display anything, if no image sources displayed
-		if ( $attachments === array() ) {
+		if ( $attachments === [] ) {
 			ISC_Log::log( 'exit render_attachments() due to missing attachments' );
 			return '';
 		}
@@ -556,7 +558,7 @@ class ISC_Public extends ISC_Class {
 	 * @param array $atts attributes.
 	 * @return string
 	 */
-	public function list_post_attachments_with_sources_shortcode( $atts = array() ) {
+	public function list_post_attachments_with_sources_shortcode( $atts = [] ) {
 		global $post;
 
 		ISC_Log::log( 'enter list_post_attachments_with_sources_shortcode() for [isc_list] shortcode' );
@@ -567,7 +569,7 @@ class ISC_Public extends ISC_Class {
 			return '';
 		}
 
-		$a = shortcode_atts( array( 'id' => 0 ), $atts );
+		$a = shortcode_atts( [ 'id' => 0 ], $atts );
 
 		// if $id not set, use the current ID from the post
 		if ( ! $a['id'] && isset( $post->ID ) ) {
@@ -583,18 +585,18 @@ class ISC_Public extends ISC_Class {
 	 * @param array $atts attributes.
 	 * @return string
 	 */
-	public function list_all_post_attachments_sources_shortcode( $atts = array() ) {
+	public function list_all_post_attachments_sources_shortcode( $atts = [] ) {
 		$options = $this->get_isc_options();
 
 		$a = shortcode_atts(
-			array(
+			[
 				'per_page'     => null,
 				'before_links' => '',
 				'after_links'  => '',
 				'prev_text'    => '&#171; Previous',
 				'next_text'    => 'Next &#187;',
 				'included'     => null,
-			),
+			],
 			$atts
 		);
 
@@ -617,16 +619,16 @@ class ISC_Public extends ISC_Class {
 		$next_text = 'Next &#187;' === $a['next_text'] ? __( 'Next &#187;', 'image-source-control-isc' ) : $a['next_text'];
 
 		// check which images are included
-		$args = array();
+		$args = [];
 		if ( 'all' !== $included ) {
 			// only load images attached to posts
-			$args['meta_query'] = array(
-				array(
+			$args['meta_query'] = [
+				[
 					'key'     => 'isc_image_posts',
 					'value'   => 'a:0:{}',
 					'compare' => '!=',
-				),
-			);
+				],
+			];
 		}
 
 		$attachments = ISC_Model::get_attachments( apply_filters( 'isc_global_list_get_attachment_arguments', $args ) );
@@ -635,13 +637,13 @@ class ISC_Public extends ISC_Class {
 			return '';
 		}
 
-		$connected_atts = array();
+		$connected_atts = [];
 
 		foreach ( $attachments as $_attachment ) {
 			$connected_atts[ $_attachment->ID ]['source']   = self::get_image_source_text( $_attachment->ID );
 			$connected_atts[ $_attachment->ID ]['standard'] = Standard_Source::use_standard_source( $_attachment->ID );
 			// jump to next element if the standard source is set to be excluded from the source list
-			if ( Standard_Source::standard_source_is( 'exclude' ) && '' != $connected_atts[ $_attachment->ID ]['standard'] ) {
+			if ( Standard_Source::standard_source_is( 'exclude' ) && '' !== $connected_atts[ $_attachment->ID ]['standard'] ) {
 				unset( $connected_atts[ $_attachment->ID ] );
 				continue;
 			}
@@ -658,9 +660,9 @@ class ISC_Public extends ISC_Class {
 			$metadata   = get_post_meta( $_attachment->ID, 'isc_image_posts', true );
 			$usage_data = '';
 
-			if ( is_array( $metadata ) && array() !== $metadata ) {
+			if ( is_array( $metadata ) && [] !== $metadata ) {
 				$usage_data      .= "<ul style='margin: 0;'>";
-				$usage_data_array = array();
+				$usage_data_array = [];
 				foreach ( $metadata as $data ) {
 					// only list published posts
 					if ( get_post_status( $data ) === 'publish' ) {
@@ -673,7 +675,7 @@ class ISC_Public extends ISC_Class {
 						);
 					}
 				}
-				if ( 'all' !== $included && $usage_data_array === array() ) {
+				if ( 'all' !== $included && $usage_data_array === [] ) {
 					unset( $connected_atts[ $_attachment->ID ] );
 					continue;
 				}
@@ -686,7 +688,7 @@ class ISC_Public extends ISC_Class {
 
 		$total = count( $connected_atts );
 
-		if ( 0 == $total ) {
+		if ( 0 === $total ) {
 			return '';
 		}
 
@@ -699,7 +701,7 @@ class ISC_Public extends ISC_Class {
 			$rem      = $total % $per_page; // The Remainder of $total / $per_page
 			$up_limit = ( $total - $rem ) / $per_page;
 			if ( 0 < $rem ) {
-				$up_limit++; // If rem is positive, add the last page that contains less than $per_page attachment;
+				++$up_limit; // If rem is positive, add the last page that contains less than $per_page attachment;
 			}
 		}
 
@@ -719,14 +721,14 @@ class ISC_Public extends ISC_Class {
 	 * Render the global list
 	 *
 	 * @param array[] $atts attachments.
-	 * @param int     $max_page total page count.
+	 * @param int     $up_limit total page count.
 	 * @param string  $before_links optional html to display before pagination links.
 	 * @param string  $after_links optional html to display after pagination links.
 	 * @param string  $prev_text text for the previous page link.
 	 * @param string  $next_text text for the next page link.
 	 */
 	public function display_all_attachment_list( $atts, $up_limit, $before_links = '', $after_links = '', $prev_text = '', $next_text = '' ) {
-		if ( ! is_array( $atts ) || $atts === array() ) {
+		if ( ! is_array( $atts ) || $atts === [] ) {
 			return;
 		}
 		$options = $this->get_isc_options();
@@ -751,12 +753,14 @@ class ISC_Public extends ISC_Class {
 		if ( 'custom' !== $options['thumbnail_size'] ) {
 			$thumbnail = wp_get_attachment_image( $attachment_id, $options['thumbnail_size'] );
 		} else {
-			$thumbnail = wp_get_attachment_image( $attachment_id, array( $options['thumbnail_width'], $options['thumbnail_height'] ) );
+			$thumbnail = wp_get_attachment_image( $attachment_id, [ $options['thumbnail_width'], $options['thumbnail_height'] ] );
 		}
 
 		// a thumbnail might be missing for images that are not hosted within WordPress
-		if ( ! $thumbnail  ) {
-			?><img src="<?php echo esc_url( ISCBASEURL ) . '/public/assets/images/isc-icon-gray.svg' ?>" style="width: 100%;"/><?php
+		if ( ! $thumbnail ) {
+			?>
+			<img src="<?php echo esc_url( ISCBASEURL ) . '/public/assets/images/isc-icon-gray.svg'; ?>" style="width: 100%;"/>
+			<?php
 		}
 
 		echo $thumbnail;
@@ -845,7 +849,7 @@ class ISC_Public extends ISC_Class {
 						<?php
 				} else {
 					for ( $i = 1; $i <= $page; $i++ ) {
-						if ( $i == $page ) {
+						if ( $i === $page ) {
 							?>
 								<span class="page-numbers current"><?php echo $i; ?></span>
 								<?php
@@ -873,7 +877,7 @@ class ISC_Public extends ISC_Class {
 				}
 			} else {
 				for ( $i = 1; $i <= $max_page; $i++ ) {
-					if ( $i == $page ) {
+					if ( $i === $page ) {
 						?>
 							<span class="page-numbers current"><?php echo (int) $i; ?></span>
 							<?php
@@ -884,7 +888,7 @@ class ISC_Public extends ISC_Class {
 					}
 				}
 			}
-			if ( $page != $max_page ) {
+			if ( $page !== $max_page ) {
 				?>
 					<a href="<?php echo $page_link . $query_string . $isc_query_tag . ( $page + 1 ); ?>" class="next page-numbers"><?php echo $next_text; ?></a>
 					<?php
@@ -978,11 +982,11 @@ class ISC_Public extends ISC_Class {
 		$id      = (int) $id;
 		$options = $this->get_isc_options();
 
-		$metadata['source']     = $data['source'] ?? self::get_image_source_text( $id );
-		$metadata['own']        = $data['own'] ?? Standard_Source::use_standard_source( $id );
-		$metadata['licence']    = $data['licence'] ?? self::get_image_license( $id );
+		$metadata['source']  = $data['source'] ?? self::get_image_source_text( $id );
+		$metadata['own']     = $data['own'] ?? Standard_Source::use_standard_source( $id );
+		$metadata['licence'] = $data['licence'] ?? self::get_image_license( $id );
 
-		if ( ! isset( $args[ 'disable-links'] ) ) {
+		if ( ! isset( $args['disable-links'] ) ) {
 			$metadata['source_url'] = $data['source_url'] ?? self::get_image_source_url( $id );
 		} else {
 			$metadata['source_url'] = '';
@@ -990,20 +994,18 @@ class ISC_Public extends ISC_Class {
 
 		$source = '';
 
-		if ( '' != $metadata['own'] ) {
+		if ( '' !== $metadata['own'] ) {
 			$source = Standard_Source::get_standard_source_text_for_attachment( $id );
-		} else {
-			if ( '' != $metadata['source'] ) {
+		} elseif ( '' !== $metadata['source'] ) {
 				$source = $metadata['source'];
-			}
 		}
 
-		if ( $source == '' ) {
+		if ( $source === '' ) {
 			return false;
 		}
 
 		// wrap link around source, if given
-		if ( '' != $metadata['source_url'] ) {
+		if ( '' !== $metadata['source_url'] ) {
 			$source = apply_filters(
 				'isc_public_source_url_html',
 				sprintf( '<a href="%2$s" target="_blank" rel="nofollow">%1$s</a>', $source, esc_url_raw( $metadata['source_url'] ) ),
@@ -1015,11 +1017,11 @@ class ISC_Public extends ISC_Class {
 		// add license if enabled
 		if ( $options['enable_licences'] && isset( $metadata['licence'] ) && $metadata['licence'] ) {
 			$licences = $this->licences_text_to_array( $options['licences'] );
-			if ( ! isset( $args[ 'disable-links'] ) && isset( $licences[ $metadata['licence'] ]['url'] ) ) {
+			if ( ! isset( $args['disable-links'] ) && isset( $licences[ $metadata['licence'] ]['url'] ) ) {
 				$licence_url = $licences[ $metadata['licence'] ]['url'];
 			}
 
-			if ( isset( $licence_url ) && $licence_url != '' ) {
+			if ( isset( $licence_url ) && $licence_url !== '' ) {
 				$source = sprintf( '%1$s | <a href="%3$s" target="_blank" rel="nofollow">%2$s</a>', $source, $metadata['licence'], $licence_url );
 			} else {
 				$source = sprintf( '%1$s | %2$s', $source, $metadata['licence'] );
@@ -1037,7 +1039,6 @@ class ISC_Public extends ISC_Class {
 	 * @param string[] $data metadata.
 	 * @param array    $args additional arguments
 	 *                       use "disable-links" = (any value), to disable any working links.
-	 *
 	 *
 	 * @return string false if no source was given, else string with source
 	 */
@@ -1075,7 +1076,7 @@ class ISC_Public extends ISC_Class {
 		if (
 				(
 				( is_archive() || is_home() )
-			   && isset( $options['list_on_archives'] ) && $options['list_on_archives'] )
+				&& isset( $options['list_on_archives'] ) && $options['list_on_archives'] )
 			|| ( is_singular() && isset( $options['display_type'] ) && is_array( $options['display_type'] ) && in_array( 'list', $options['display_type'], true ) ) ) {
 			return true;
 		}
@@ -1086,7 +1087,7 @@ class ISC_Public extends ISC_Class {
 	/**
 	 * Get image source string for public output
 	 *
-	 * @param int $attachment_id attachment ID
+	 * @param int $attachment_id attachment ID.
 	 * @return string
 	 */
 	public static function get_image_source_text( $attachment_id ) {
@@ -1106,11 +1107,11 @@ class ISC_Public extends ISC_Class {
 	public static function is_amp() {
 		global $pagenow;
 		if ( is_admin()
-			 || is_embed()
-			 || is_feed()
-			 || ( isset( $pagenow ) && in_array( $pagenow, array( 'wp-login.php', 'wp-signup.php', 'wp-activate.php' ), true ) )
-			 || ( defined( 'REST_REQUEST' ) && REST_REQUEST )
-			 || ( defined( 'XMLRPC_REQUEST' ) && XMLRPC_REQUEST )
+			|| is_embed()
+			|| is_feed()
+			|| ( isset( $pagenow ) && in_array( $pagenow, [ 'wp-login.php', 'wp-signup.php', 'wp-activate.php' ], true ) )
+			|| ( defined( 'REST_REQUEST' ) && REST_REQUEST )
+			|| ( defined( 'XMLRPC_REQUEST' ) && XMLRPC_REQUEST )
 		) {
 			return false;
 		}
@@ -1120,10 +1121,10 @@ class ISC_Public extends ISC_Class {
 		}
 
 		return ( function_exists( 'is_amp_endpoint' ) && is_amp_endpoint() )
-			   || ( function_exists( 'is_wp_amp' ) && is_wp_amp() )
-			   || ( function_exists( 'ampforwp_is_amp_endpoint' ) && ampforwp_is_amp_endpoint() )
-			   || ( function_exists( 'is_penci_amp' ) && is_penci_amp() )
-			   || isset( $_GET [ 'wpamp' ] );
+				|| ( function_exists( 'is_wp_amp' ) && is_wp_amp() )
+				|| ( function_exists( 'ampforwp_is_amp_endpoint' ) && ampforwp_is_amp_endpoint() )
+				|| ( function_exists( 'is_penci_amp' ) && is_penci_amp() )
+				|| isset( $_GET ['wpamp'] );
 	}
 
 	/**
@@ -1154,7 +1155,4 @@ class ISC_Public extends ISC_Class {
 
 		return false;
 	}
-
-
-
 }
