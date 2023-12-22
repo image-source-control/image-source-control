@@ -480,11 +480,14 @@ class ISC_Public extends ISC_Class {
 						ISC_Log::log( sprintf( 'image %d: skipped because of empty source', $attachment_id ) );
 					}
 					unset( $atts[ $attachment_id ] );
-					continue;
 				} else {
 					$atts[ $attachment_id ]['title'] = get_the_title( $attachment_id );
 					ISC_Log::log( sprintf( 'image %d: getting title "%s"', $attachment_id, $atts[ $attachment_id ]['title'] ) );
 					$atts[ $attachment_id ]['source'] = $this->render_image_source_string( $attachment_id );
+					if ( ! $atts[ $attachment_id ]['source'] ) {
+						ISC_Log::log( sprintf( 'image %d: skipped because of empty standard source', $attachment_id ) );
+						unset( $atts[ $attachment_id ] );
+					}
 				}
 			}
 
