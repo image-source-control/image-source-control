@@ -49,6 +49,10 @@
 	<rule ref="Squiz.Commenting.FileComment">
 		<exclude name="Squiz.Commenting.FileComment.MissingPackageTag"/>
 	</rule>
+	<!-- Disable warning about missing punctuation at the end of inline comments -->
+	<rule ref="Squiz.Commenting.InlineComment">
+		<exclude name="Squiz.Commenting.InlineComment.InvalidEndChar"/>
+	</rule>
 
 	<rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
 
@@ -68,6 +72,11 @@
 	<rule ref="WordPress.PHP.StrictInArray">
         <type>error</type>
     </rule>
+
+	<!-- Disable Yoda condition checks -->
+	<rule ref="WordPress.PHP.YodaConditions">
+		<exclude name="WordPress.PHP.YodaConditions.NotYoda"/>
+	</rule>
 
 	<!-- Method names MUST NOT be prefixed with a single underscore to indicate protected or private visibility. That is, an underscore prefix explicitly has no meaning. -->
     <rule ref="PSR2.Methods.MethodDeclaration.Underscore">
