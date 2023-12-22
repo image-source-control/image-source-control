@@ -1,4 +1,3 @@
-isc.log
 .idea
 .env.testing
 /pro
@@ -6,3 +5,4 @@ isc.log
 /vendor/
 codeception.dist.yml
 /tests/_data/dump.sql
+*.log

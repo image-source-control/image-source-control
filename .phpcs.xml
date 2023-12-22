@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<ruleset name="Image Source Control">
+	<description>Image Source Control Coding Standards.</description>
+
+	<!-- PHPCS arguments: -->
+	<arg value="ps" />
+	<arg name="colors"/>
+	<arg name="parallel" value="20" />
+	<arg name="extensions" value="php"/>
+
+	<!-- Set files and paths: -->
+	<file>.</file>
+
+	<!-- Exclude paths -->
+	<exclude-pattern>*/lib/*</exclude-pattern>
+	<exclude-pattern>*/tests/*</exclude-pattern>
+	<exclude-pattern>*/vendor/*</exclude-pattern>
+	<exclude-pattern>*/index.php</exclude-pattern>
+
+	<!-- PHPCompatibility configs: -->
+	<config name="testVersion" value="7.2-" />
+	<config name="minimum_supported_wp_version" value="5.3" />
+
+	<!-- Rules: -->
+    <rule ref="WordPress"/>
+
+	<rule ref="WordPress.WP.I18n">
+		<properties>
+			<property name="text_domain" type="array" value="image-source" />
+		</properties>
+	</rule>
+
+	<rule ref="WordPress.NamingConventions">
+		<exclude name="WordPress.NamingConventions.PrefixAllGlobals" />
+	</rule>
+
+	<rule ref="WordPress.NamingConventions.ValidHookName">
+		<properties>
+			<property name="additionalWordDelimiters" value="-"/>
+		</properties>
+	</rule>
+
+	<!-- Disable disallow short arrays and enforce them: -->
+	<rule ref="WordPress-Extra">
+		<exclude name="Universal.Arrays.DisallowShortArraySyntax"/>
+	</rule>
+
+	<!-- Disable warning about missing @package in PHPDoc -->
+	<rule ref="Squiz.Commenting.FileComment">
+		<exclude name="Squiz.Commenting.FileComment.MissingPackageTag"/>
+	</rule>
+
+	<rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
+
+	<!-- Elevate these rules to an error, so it gets printed on commit   -->
+    <rule ref="Generic.Formatting.MultipleStatementAlignment">
+        <type>error</type>
+    </rule>
+
+	<rule ref="Generic.CodeAnalysis.AssignmentInCondition">
+        <type>error</type>
+    </rule>
+
+	<rule ref="Universal.Operators.StrictComparisons">
+        <type>error</type>
+    </rule>
+
+	<rule ref="WordPress.PHP.StrictInArray">
+        <type>error</type>
+    </rule>
+
+	<!-- Method names MUST NOT be prefixed with a single underscore to indicate protected or private visibility. That is, an underscore prefix explicitly has no meaning. -->
+    <rule ref="PSR2.Methods.MethodDeclaration.Underscore">
+        <type>error</type>
+        <message>Method name "%s" must not be prefixed with an underscore to indicate visibility</message>
+    </rule>
+
+</ruleset>
