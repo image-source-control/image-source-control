@@ -31,10 +31,10 @@ if ( defined( 'ISCVERSION' ) ) {
 
 define( 'ISCVERSION', '2.17.1' );
 define( 'ISCNAME', 'Image Source Control' );
-define( 'ISCDIR', basename( dirname( __FILE__ ) ) );
+define( 'ISCDIR', basename( __DIR__ ) );
 define( 'ISCPATH', plugin_dir_path( __FILE__ ) );
 define( 'ISCBASE', plugin_basename( __FILE__ ) ); // plugin base as used by WordPress to identify it.
-define( 'ISCBASEURL', plugin_dir_url( __FILE__ ) ); // URL to the plugin directory
+define( 'ISCBASEURL', plugin_dir_url( __FILE__ ) ); // URL to the plugin directory.
 
 // Load the autoloader.
 require_once ISCPATH . 'includes/class-autoloader.php';
@@ -43,7 +43,7 @@ require_once ISCPATH . 'includes/class-autoloader.php';
 if ( is_admin() ) {
 	new ISC_Admin();
 } elseif ( ! is_admin() && ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) ) {
-	// include frontend functions
+	// include frontend functions.
 	new ISC_Public();
 	require_once ISCPATH . 'includes/functions.php';
 } else {
