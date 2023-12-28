@@ -994,7 +994,7 @@ class ISC_Public extends ISC_Class {
 
 		$source = '';
 
-		if ( '' !== $metadata['own'] ) {
+		if ( $metadata['own'] ) {
 			$source = Standard_Source::get_standard_source_text_for_attachment( $id );
 		} elseif ( '' !== $metadata['source'] ) {
 				$source = $metadata['source'];
