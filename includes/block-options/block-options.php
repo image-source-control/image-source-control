@@ -8,16 +8,29 @@ class ISC_Block_Options {
 	 * Construct an instance of ISC_Block_Options
 	 */
 	public function __construct() {
-		if ( ! function_exists( 'register_block_type' ) ) {
+		if ( ! function_exists( 'register_block_type' ) || ! self::enabled() ) {
 			return;
 		}
 
+		add_action( 'enqueue_block_editor_assets', [ $this, 'editor_assets' ] );
+		add_action( 'init', [ $this, 'init' ] );
+		add_action( 'update_option', [ $this, 'widgets_update_option' ], 10, 3 );
+	}
+
+	/**
+	 * Check, if block options are enabled
+	 *
+	 * @return bool
+	 */
+	public static function enabled(): bool {
 		$options = ISC_Class::get_instance()->get_isc_options();
-		if ( ! array_key_exists( 'block_options', $options ) || $options['block_options'] ) {
-			add_action( 'enqueue_block_editor_assets', array( $this, 'editor_assets' ) );
-			add_action( 'init', array( $this, 'init' ) );
-			add_action( 'update_option', array( $this, 'widgets_update_option' ), 10, 3 );
+		// if settings don’t exist, block options are enabled by default
+		if ( ! array_key_exists( 'block_options', $options )
+			|| $options['block_options']
+			|| apply_filters( 'isc_force_block_options', false ) ) {
+			return true;
 		}
+		return false;
 	}
 
 	/**
