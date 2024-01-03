@@ -29,6 +29,8 @@ class ISC_Public extends ISC_Class {
 	 * Register hooks after the page is set up so that we have access to the post ID.
 	 */
 	public function register_hooks() {
+		// register the shortcode for the global list. Since this shortcode has to be placed manually and is normally only used once, checking if ISC is disabled on cetain pages doesn’t make sense
+		add_shortcode( 'isc_list_all', [ $this, 'list_all_post_attachments_sources_shortcode' ] );
 
 		if ( ! self::can_load_isc() ) {
 			return;
@@ -47,7 +49,6 @@ class ISC_Public extends ISC_Class {
 		add_filter( 'render_block', [ $this, 'add_featured_image_source_to_excerpt_block' ], 10, 2 );
 
 		add_shortcode( 'isc_list', [ $this, 'list_post_attachments_with_sources_shortcode' ] );
-		add_shortcode( 'isc_list_all', [ $this, 'list_all_post_attachments_sources_shortcode' ] );
 	}
 
 	/**
