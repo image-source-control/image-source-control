@@ -233,7 +233,10 @@ class ISC_Admin extends ISC_Class {
 		 * Return, when the ISC fields are enabled for blocks and the HTTP_REFERER is a post edit page. This likely means, that the block editor is used.
 		 * While the URL to edit an attachment can also include "wp-admin.php.php", the HTTP_REFERER is then different
 		 */
-		if ( ! empty( $_SERVER['HTTP_REFERER'] ) && strpos( $_SERVER['HTTP_REFERER'], 'wp-admin/post.php' ) !== false && ( ! array_key_exists( 'block_options', $options ) || $options['block_options'] ) ) {
+		if ( ! empty( $_SERVER['HTTP_REFERER'] )
+			&& strpos( $_SERVER['HTTP_REFERER'], 'wp-admin/post.php' ) !== false
+			// the filter allows users to force the ISC fields and Block options at the same time
+			&& ( ISC_Block_Options::enabled() && ! apply_filters( 'isc_force_block_options', false ) ) ) {
 			return $form_fields;
 		}
 
@@ -731,8 +734,9 @@ class ISC_Admin extends ISC_Class {
 	 * Render options for block editor support
 	 */
 	public function renderfield_block_options() {
-		$options = $this->get_isc_options();
-		$checked = ! array_key_exists( 'block_options', $options ) || $options['block_options'];
+		$options  = $this->get_isc_options();
+		$checked  = ISC_Block_Options::enabled();
+		$disabled = apply_filters( 'isc_force_block_options', false );
 		require_once ISCPATH . '/admin/templates/settings/block-options.php';
 	}
 
