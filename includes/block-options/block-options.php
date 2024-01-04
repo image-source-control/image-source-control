@@ -9,6 +9,8 @@ class ISC_Block_Options {
 	 */
 	public function __construct() {
 		if ( ! function_exists( 'register_block_type' ) || ! self::enabled() ) {
+			// if block options are disabled, at least add a link to the media library where one can adjust the source
+			add_action( 'enqueue_block_editor_assets', [ $this, 'edit_link_assets' ] );
 			return;
 		}
 
@@ -161,6 +163,19 @@ class ISC_Block_Options {
 		wp_enqueue_script( 'isc/image-block' );
 
 		wp_enqueue_script( 'isc/media-upload', trailingslashit( ISCBASEURL ) . 'admin/assets/js/media-upload.js', array( 'media-upload' ), ISCVERSION, true );
+	}
+
+	/**
+	 * Enqueue script to add an edit button to image blocks
+	 */
+	public function edit_link_assets() {
+		wp_enqueue_script(
+			'isc/image-block-edit-link',
+			plugin_dir_url( __FILE__ ) . 'isc-image-block-edit-link.js',
+			[ 'wp-blocks', 'wp-i18n', 'wp-element', 'wp-editor' ],
+			ISCVERSION,
+			true // load in the footer
+		);
 	}
 
 }
