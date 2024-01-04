@@ -3,7 +3,7 @@ Contributors: webzunft
 Tags: images, credits, captions, copyrights, attributions, photos, pictures, sources, bildquellen, bilder, fotos, bildunterschriften
 Requires at least: 5.3
 Tested up to: 6.4
-Stable tag: 2.17.1
+Stable tag: 2.18.0
 Requires PHP: 7.2
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -127,15 +127,17 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 
 == Changelog ==
 
-= untagged =
+= 2.18.0 =
 
-- Feature (Pro): show the IPTC copyright or credit meta information as a standard source
+- Feature (Pro): show the IPTC copyright or credit meta information as a standard source. See this [blog post](https://imagesourcecontrol.com/blog/iptc-copyright-information-image-caption-wordpress/)
 - Feature (Pro): authors now see the IPTC copyright and credit meta information in the backend and can copy it to the image source field with one click
+- Feature (Pro): the standard source appears as a placeholder in the image source field in media list overview, when no individual source is entered
 - Fix: pre-select the "custom text" standard source option when the plugin options weren’t saved yet to reflect how this state behaves in the frontend
+- Dev: added an autoloader for plugin classes
 - Dev: move all features related to the standard source into ISC\Standard_Source
 - Dev: replace the `isc_raw_attachment_use_standard_source` and `isc_public_attachment_use_standard_source` with the `isc_use_standard_source_for_attachment` filter
 - Dev: added the `isc_can_load` filter to allow developers to disable ISC on certain pages in the frontend
-- Dev: you can use the `isc_force_block_options` filter hook to enable ISC fields in the block options and media modal in the block editor at the same time
+- Dev: added the `isc_force_block_options` filter hook to enable ISC fields in the block options and media modal in the block editor at the same time
 
 = 2.17.1 =
 
