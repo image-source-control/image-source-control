@@ -234,9 +234,17 @@ class ISC_Admin extends ISC_Class {
 		 * While the URL to edit an attachment can also include "wp-admin.php.php", the HTTP_REFERER is then different
 		 */
 		if ( ! empty( $_SERVER['HTTP_REFERER'] )
+			 // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash
 			&& strpos( $_SERVER['HTTP_REFERER'], 'wp-admin/post.php' ) !== false
 			// the filter allows users to force the ISC fields and Block options at the same time
 			&& ( ISC_Block_Options::enabled() && ! apply_filters( 'isc_force_block_options', false ) ) ) {
+
+			$form_fields['isc_field_note'] = [
+				'label' => __( 'Image Source', 'image-source-control-isc' ),
+				'input' => 'html',
+				'html'  => __( 'Find the image source fields in the image block options or media library.', 'image-source-control-isc' ),
+			];
+
 			return $form_fields;
 		}
 
