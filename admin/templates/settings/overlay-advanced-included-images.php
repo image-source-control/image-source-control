@@ -22,7 +22,6 @@
 				<?php checked( in_array( $value, $checked_advanced_options ) ); ?>
 				<?php echo $is_pro ? 'disabled="disabled" class="is-pro"' : ''; ?>
 			/>
-			<?php if ( $is_pro ) : echo ISC_Admin::get_pro_link( 'overlay-' . sanitize_title( $_options['label'] ) ); endif; ?>
 			<?php if ( isset( $_options['label'] ) ) :
 				echo wp_kses(
 					$_options['label'],
@@ -52,4 +51,9 @@
 			endif;
 			?>
 	<?php endforeach; ?>
+	<?php if ( ! class_exists( 'ISC_Pro_Admin', false ) ) : ?>
+		<p>
+			<?php echo ISC_Admin::get_pro_link( 'overlay-developer-options-pitch' ); ?>
+		</p>
+	<?php endif; ?>
 </div>
