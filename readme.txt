@@ -63,6 +63,7 @@ Check out the premium features to display the image caption overlay for featured
 * Handle images without file extensions
 * Bulk-edit image copyright information in the media library
 * Show the standard picture credit for all images without a selected source
+* [Display IPTC copyright metadata](https://imagesourcecontrol.com/blog/iptc-copyright-information-image-caption-wordpress/) in the backend and automatically as a standard source in the frontend
 * Choose which data is displayed in the Global List
 * List only images with a proper source in the Global List
 * Show image sources for Elementor background images, images in Kadence Blocks Galleries, and Kadence Related Content Carousel
