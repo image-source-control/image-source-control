@@ -130,7 +130,8 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 
 = 2.18.1 =
 
-- Fix: The Global List didn’t show any images when _Miscellaneous settings > Standard source > Exclude from lists_ was enabled
+- Improvement: show a hint about where to edit image sources in the block editor, depending on The Block Options settings
+- Fix: the Global List didn’t show any images when _Miscellaneous settings > Standard source > Exclude from lists_ was enabled
 
 = 2.18.0 =
 
