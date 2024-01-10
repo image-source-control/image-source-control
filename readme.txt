@@ -128,6 +128,10 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 
 == Changelog ==
 
+= 2.18.1 =
+
+- Fix: The Global List didn’t show any images when _Miscellaneous settings > Standard source > Exclude from lists_ was enabled
+
 = 2.18.0 =
 
 - Feature (Pro): show the IPTC copyright or credit meta information as a standard source. See this [blog post](https://imagesourcecontrol.com/blog/iptc-copyright-information-image-caption-wordpress/)
