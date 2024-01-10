@@ -472,12 +472,12 @@ class ISC_Public extends ISC_Class {
 			ISC_Log::log( sprintf( 'going through %d attachments', count( $attachments ) ) );
 			$atts = [];
 			foreach ( $attachments as $attachment_id => $attachment_array ) {
-				$use_standard_source = Standard_Source::use_standard_source( $attachment_id );
-				$source              = self::get_image_source_text( $attachment_id );
+				$image_uses_standard_source = Standard_Source::use_standard_source( $attachment_id );
+				$source                     = self::get_image_source_text( $attachment_id );
 
 				// check if source of own images can be displayed
-				if ( ( $use_standard_source === '' && $source === '' ) || ( $use_standard_source !== '' && $exclude_standard ) ) {
-					if ( $use_standard_source !== '' && $exclude_standard ) {
+				if ( ( ! $image_uses_standard_source && $source === '' ) || ( $image_uses_standard_source && $exclude_standard ) ) {
+					if ( $image_uses_standard_source && $exclude_standard ) {
 						ISC_Log::log( sprintf( 'image %d: "own" sources are excluded', $attachment_id ) );
 					} else {
 						ISC_Log::log( sprintf( 'image %d: skipped because of empty source', $attachment_id ) );
@@ -644,7 +644,7 @@ class ISC_Public extends ISC_Class {
 			$connected_atts[ $_attachment->ID ]['source']   = self::get_image_source_text( $_attachment->ID );
 			$connected_atts[ $_attachment->ID ]['standard'] = Standard_Source::use_standard_source( $_attachment->ID );
 			// jump to next element if the standard source is set to be excluded from the source list
-			if ( Standard_Source::standard_source_is( 'exclude' ) && '' !== $connected_atts[ $_attachment->ID ]['standard'] ) {
+			if ( Standard_Source::standard_source_is( 'exclude' ) && $connected_atts[ $_attachment->ID ]['standard'] ) {
 				unset( $connected_atts[ $_attachment->ID ] );
 				continue;
 			}
