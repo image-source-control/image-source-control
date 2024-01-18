@@ -395,6 +395,16 @@ class ISC_Class {
 				),
 			);
 
+			// push Avada Builder option as the first option
+			if ( defined( 'FUSION_BUILDER_VERSION' ) ) {
+				$avada_builder_option = [
+					'label'  => 'Avada Builder: ' . __( 'Display the overlay text for background images', 'image-source-control-isc' ),
+					'value'  => 'avada_background_overlay',
+					'is_pro' => true,
+				];
+				array_unshift( $options, $avada_builder_option );
+			}
+
 			return apply_filters( 'isc_overlay_advanced_included_images_options', $options );
 		}
 
