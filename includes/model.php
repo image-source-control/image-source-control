@@ -509,8 +509,8 @@ class ISC_Model {
 	 */
 	public static function analyze_unused_image( $image_metadata ): array {
 		$information = [
-			'files' => 0,
-			'total_size'  => 0,
+			'files'      => 0,
+			'total_size' => 0,
 		];
 
 		if ( empty( $image_metadata ) ) {
@@ -520,21 +520,31 @@ class ISC_Model {
 		$image_metadata = maybe_unserialize( $image_metadata );
 
 		if ( isset( $image_metadata['filesize'] ) ) {
-			$information['files']++;
 			$information['total_size'] += (int) $image_metadata['filesize'];
+		}
+
+		if ( isset( $image_metadata['file'] ) ) {
+			++$information['files'];
+		}
+
+		if ( isset( $image_metadata['original_image'] ) ) {
+			++$information['files'];
 		}
 
 		foreach ( $image_metadata as $value ) {
 			if ( is_array( $value ) ) {
 				if ( isset( $value['filesize'] ) ) {
-					$information['files']++;
 					$information['total_size'] += (int) $value['filesize'];
+				}
+
+				if ( isset( $value['file'] ) ) {
+					++$information['files'];
 				}
 
 				// If the current value contains nested arrays (e.g., 'sizes'), recursively call the function
 				if ( is_array( reset( $value ) ) ) {
-					$return = self::analyze_unused_image( $value );
-					$information['files'] += (int) $return['files'] ?? 0;
+					$return                     = self::analyze_unused_image( $value );
+					$information['files']      += (int) $return['files'] ?? 0;
 					$information['total_size'] += (int) $return['total_size'] ?? 0;
 				}
 			}
