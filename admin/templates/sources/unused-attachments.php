@@ -12,16 +12,22 @@
 if ( $attachment_count >= ISC_Model::MAX_POSTS ) {
 	printf(
 	// translators: %1$d is the number of unused attachments and %2$s their combined filesize, including the unit
-		esc_html__( 'At least %1$d unused image files take up over %2$s in disk space on your server.', 'image-source-control-isc' ),
-		$files,
-		size_format( $filesize )
+		esc_html__( 'At least %d unused image files.', 'image-source-control-isc' ),
+		(int) $files
 	);
 } else {
 	printf(
 	// translators: %d is the number of unused attachments and %s their combined filesize, including the unit
-		esc_html__( '%1$d possibly unused image files take up to %2$s in disk space on your server.', 'image-source-control-isc' ),
-		$files,
-		size_format( $filesize )
+		esc_html__( '%d possibly unused image files.', 'image-source-control-isc' ),
+		(int) $files
+	);
+}
+if ( $filesize > 1000000 ) {
+	echo ' ';
+	printf(
+	// translators: %s is the number of unused attachments
+		esc_html__( 'They take up at least %s in disk space on your server.', 'image-source-control-isc' ),
+		esc_html( size_format( $filesize ) )
 	);
 }
 ?>
