@@ -522,6 +522,10 @@ class ISC_Admin extends ISC_Class {
 				$files            = 0;
 				$filesize         = 0;
 				foreach ( $attachments as $attachment ) {
+					// attachments without meta data are not images; e.g., ZIP files
+					if ( empty( $attachment->metadata ) ) {
+						continue;
+					}
 					$file_info = ISC_Model::analyze_unused_image( $attachment->metadata );
 					$files    += $file_info['files'] ?? 0;
 					$filesize += $file_info['total_size'] ?? 0;
