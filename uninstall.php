@@ -19,4 +19,7 @@ if ( ! empty( $options['remove_on_uninstall'] ) ) {
 	delete_option( 'isc_options' );
 	// delete storage
 	delete_option( 'isc_storage' );
+
+	// delete user meta
+	delete_metadata( 'user', null, 'isc_newsletter_subscribed', '', true );
 }

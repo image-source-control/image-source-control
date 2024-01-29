@@ -37,6 +37,29 @@ jQuery( document ).ready(
 				$('#isc-settings-caption-preview').addClass('hidden');
 			}
 		});
+
+		$('#isc-signup-nl').prop( 'disabled', false );
+		$('#isc-signup-nl').on( 'click', function() {
+			$('#isc-signup-nl').prop( 'disabled', true );
+			$('#isc-signup-loader').removeClass('hidden');
+			$.ajax({
+				type: 'POST',
+				url: ajaxurl,
+				data: {
+					action: 'newsletter_signup',
+					nonce: isc.ajaxNonce,
+				},
+				dataType: 'json',
+				success: function( response ) {
+					if ( ! response.success ) {
+						$('#isc-signup-nl-error').removeClass('hidden').html(response.error);
+					} else {
+						$('#isc-signup-nl-success').removeClass('hidden');
+					}
+					$('#isc-signup-loader').addClass('hidden');
+				}
+			});
+		});
 	}
 );
 
