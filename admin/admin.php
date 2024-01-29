@@ -362,6 +362,8 @@ class ISC_Admin extends ISC_Class {
 		$this->upgrade_management();
 		register_setting( 'isc_options_group', 'isc_options', [ $this, 'settings_validation' ] );
 
+		new ISC\Settings\Newsletter();
+
 		// Position: How and where to display image sources
 		add_settings_section( 'isc_settings_section_source_type', __( 'Position of the image sources', 'image-source-control-isc' ), [ $this, 'render_section_position' ], 'isc_settings_page' );
 		add_settings_field( 'source_type_list', '1. ' . __( 'Per-page list', 'image-source-control-isc' ), [ $this, 'renderfield_source_type_list' ], 'isc_settings_page', 'isc_settings_section_source_type' );
