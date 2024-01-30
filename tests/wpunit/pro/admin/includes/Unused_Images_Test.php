@@ -4,7 +4,7 @@ namespace ISC\Tests\WPUnit;
 
 require_once dirname( __FILE__, 6 ) . '/pro/admin/includes/unused-images.php';
 
-use \ISC_Pro_Admin_Unused_Images;
+use \ISC\Pro\Includes\Unused_Images;
 
 class Unused_Images_Test extends \Codeception\TestCase\WPTestCase {
 
@@ -78,7 +78,7 @@ class Unused_Images_Test extends \Codeception\TestCase\WPTestCase {
 	 * Test the search_filepath_in_post_content() function to see if it returns the only image within post content.
 	 */
 	public function test_file_path_in_content() {
-		$unused_images = new ISC_Pro_Admin_Unused_Images();
+		$unused_images = new Unused_Images();
 		$result        = $unused_images->search_filepath_in_post_content( 'image-one' );
 
 		// returns one result
@@ -94,7 +94,7 @@ class Unused_Images_Test extends \Codeception\TestCase\WPTestCase {
 	 * Test the search_filepath_in_postmeta() function to see if it returns the only image within post meta.
 	 */
 	public function test_file_path_in_postmeta() {
-		$unused_images = new ISC_Pro_Admin_Unused_Images();
+		$unused_images = new Unused_Images();
 		$result        = $unused_images->search_filepath_in_postmeta( 'image-four', 4 );
 
 		// returns one result
@@ -109,7 +109,7 @@ class Unused_Images_Test extends \Codeception\TestCase\WPTestCase {
 	 * Test the search_filepath_in_options() function to see if it returns the only image within options.
 	 */
 	public function test_file_path_in_options() {
-		$unused_images = new ISC_Pro_Admin_Unused_Images();
+		$unused_images = new Unused_Images();
 		$result        = $unused_images->search_filepath_in_options( 'image-three' );
 
 		// returns one result

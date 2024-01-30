@@ -517,21 +517,12 @@ class ISC_Admin extends ISC_Class {
 				<?php
 			}
 
-			$attachments = ISC_Model::get_unused_attachments();
-			if ( ! empty( $attachments ) ) {
+			$stats            = ISC\Unused_Images::get_unused_attachment_stats();
+			$attachment_count = $stats['attachment_count'] ?? 0;
+			$files            = $stats['files'] ?? 0;
+			$filesize         = $stats['filesize'] ?? 0;
+			if ( $files ) {
 				ob_start();
-				$attachment_count = count( $attachments );
-				$files            = 0;
-				$filesize         = 0;
-				foreach ( $attachments as $attachment ) {
-					// attachments without meta data are not images; e.g., ZIP files
-					if ( empty( $attachment->metadata ) ) {
-						continue;
-					}
-					$file_info = ISC_Model::analyze_unused_image( $attachment->metadata );
-					$files    += $file_info['files'] ?? 0;
-					$filesize += $file_info['total_size'] ?? 0;
-				}
 				require_once ISCPATH . '/admin/templates/sources/unused-attachments.php';
 				$this->render_sources_page_section( ob_get_clean(), esc_html__( 'Unused Images', 'image-source-control-isc' ), 'unused-attachments' );
 			}
@@ -987,12 +978,16 @@ class ISC_Admin extends ISC_Class {
 	/**
 	 * Actions to perform when an attachment is removed
 	 * - delete it from the ISC storage
+	 * - clear the transient with the information about unused images
 	 *
 	 * @param int $post_id WP_Post ID.
 	 */
 	public function delete_attachment( $post_id ) {
 		$storage_model = new ISC_Storage_Model();
 		$storage_model->remove_image_by_id( $post_id );
+
+		// remove the transient with the unused image numbers
+		delete_transient( 'isc-unused-attachments-stats' );
 	}
 
 	/**

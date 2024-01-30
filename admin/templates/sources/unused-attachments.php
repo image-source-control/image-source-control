@@ -6,10 +6,11 @@
  * @var int $files total number of image files (including scaled versions)
  * @var int $filesize total size of all attachments
  */
+
 ?>
 <p>
 <?php
-if ( $attachment_count >= ISC_Model::MAX_POSTS ) {
+if ( $attachment_count >= \ISC\Unused_Images::ESTIMATE_LIMIT ) {
 	printf(
 	// translators: %1$d is the number of unused attachments and %2$s their combined filesize, including the unit
 		esc_html__( 'At least %d unused image files.', 'image-source-control-isc' ),
@@ -32,7 +33,6 @@ if ( $filesize > 1000000 ) {
 }
 ?>
 </p>
-<p>
 <?php
 if ( ! class_exists( 'ISC_Pro_Admin' ) ) :
 	?>
@@ -43,5 +43,3 @@ else :
 	<a href="<?php echo esc_url( admin_url( 'upload.php?page=isc-unused-images' ) ); ?>" class="button button-primary"><?php esc_html_e( 'Clean up unused images', 'image-source-control-isc' ); ?></a>
 	<?php
 endif;
-?>
-</p>

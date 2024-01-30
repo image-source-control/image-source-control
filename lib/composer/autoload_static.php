@@ -33,6 +33,7 @@ class ComposerStaticInitdb72a6bac11cb0e6b971811c93d09a9b
         'ISC\\Pro\\IPTC' => __DIR__ . '/../..' . '/pro/includes/IPTC.php',
         'ISC\\Settings\\Newsletter' => __DIR__ . '/../..' . '/includes/settings/newsletter.php',
         'ISC\\Standard_Source' => __DIR__ . '/../..' . '/includes/standard-source.php',
+        'ISC\\Unused_Images' => __DIR__ . '/../..' . '/includes/unused-images.php',
         'ISC_Admin' => __DIR__ . '/../..' . '/admin/admin.php',
         'ISC_Block_Options' => __DIR__ . '/../..' . '/includes/block-options/block-options.php',
         'ISC_Class' => __DIR__ . '/../..' . '/includes/isc.class.php',
