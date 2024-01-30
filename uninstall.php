@@ -14,11 +14,14 @@ if ( ! empty( $options['remove_on_uninstall'] ) ) {
 	$wpdb->delete( $wpdb->postmeta, array( 'meta_key' => 'isc_image_source' ), array( '%s' ) );
 	$wpdb->delete( $wpdb->postmeta, array( 'meta_key' => 'isc_image_source_own' ), array( '%s' ) );
 	$wpdb->delete( $wpdb->postmeta, array( 'meta_key' => 'isc_image_source_url' ), array( '%s' ) );
+	$wpdb->delete( $wpdb->postmeta, array( 'meta_key' => 'isc_possible_usages' ), array( '%s' ) );
 
 	// delete main plugin options
 	delete_option( 'isc_options' );
 	// delete storage
 	delete_option( 'isc_storage' );
+	// delete the total number of unused images (Pro)
+	delete_option( 'isc_unused_images_total_items' );
 
 	// delete user meta
 	delete_metadata( 'user', null, 'isc_newsletter_subscribed', '', true );
