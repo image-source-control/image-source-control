@@ -1,10 +1,10 @@
 <?php
-/**
- * Count unused images
- */
 
 namespace ISC;
 
+/**
+ * Count unused images
+ */
 class Unused_Images {
 
 	/**

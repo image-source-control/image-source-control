@@ -48,6 +48,7 @@
 	<!-- Disable warning about missing @package in PHPDoc -->
 	<rule ref="Squiz.Commenting.FileComment">
 		<exclude name="Squiz.Commenting.FileComment.MissingPackageTag"/>
+		<exclude name="Squiz.Commenting.FileComment.Missing"/>
 	</rule>
 	<!-- Disable warning about missing punctuation at the end of inline comments -->
 	<rule ref="Squiz.Commenting.InlineComment">
@@ -76,6 +77,10 @@
 	<!-- Disable Yoda condition checks -->
 	<rule ref="WordPress.PHP.YodaConditions">
 		<exclude name="WordPress.PHP.YodaConditions.NotYoda"/>
+	</rule>
+
+	<rule ref="WordPress.Files.FileName">
+		<exclude name="WordPress.Files.FileName.InvalidClassFileName"/>
 	</rule>
 
 	<!-- Method names MUST NOT be prefixed with a single underscore to indicate protected or private visibility. That is, an underscore prefix explicitly has no meaning. -->
