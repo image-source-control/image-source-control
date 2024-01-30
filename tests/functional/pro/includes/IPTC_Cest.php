@@ -3,7 +3,7 @@
 namespace ISC\Tests\Functional;
 
 /**
- * Test ISC\Pro\Includes\IPTC
+ * Test ISC\Pro\IPTC
  */
 class IPTC_Cest {
 
