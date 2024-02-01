@@ -15,6 +15,7 @@ if ( ! empty( $options['remove_on_uninstall'] ) ) {
 	$wpdb->delete( $wpdb->postmeta, array( 'meta_key' => 'isc_image_source_own' ), array( '%s' ) );
 	$wpdb->delete( $wpdb->postmeta, array( 'meta_key' => 'isc_image_source_url' ), array( '%s' ) );
 	$wpdb->delete( $wpdb->postmeta, array( 'meta_key' => 'isc_possible_usages' ), array( '%s' ) );
+	$wpdb->delete( $wpdb->postmeta, array( 'meta_key' => 'isc_possible_usages_last_check' ), array( '%s' ) );
 
 	// delete main plugin options
 	delete_option( 'isc_options' );
