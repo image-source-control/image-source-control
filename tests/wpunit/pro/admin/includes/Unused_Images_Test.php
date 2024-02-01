@@ -1,10 +1,8 @@
 <?php
 
-namespace ISC\Tests\WPUnit;
+namespace ISC\Pro;
 
 require_once dirname( __FILE__, 6 ) . '/pro/admin/includes/unused-images.php';
-
-use \ISC\Pro\Unused_Images;
 
 class Unused_Images_Test extends \Codeception\TestCase\WPTestCase {
 

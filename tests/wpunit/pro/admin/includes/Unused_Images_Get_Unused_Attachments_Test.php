@@ -1,6 +1,5 @@
 <?php
 
-namespace ISC\Tests\WPUnit;
 use \ISC\Pro\Unused_Images;
 
 include_once dirname( __FILE__, 4 ) . '/includes/Unused_Images_Test.php';
