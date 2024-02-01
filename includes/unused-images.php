@@ -79,24 +79,30 @@ class Unused_Images {
 
 		$image_metadata = maybe_unserialize( $image_metadata );
 
-		if ( isset( $image_metadata['filesize'] ) ) {
+		if ( isset( $image_metadata['file'] ) ) {
 			++$information['files'];
+		}
+		if ( isset( $image_metadata['filesize'] ) ) {
 			$information['total_size'] += (int) $image_metadata['filesize'];
 		}
 
-		foreach ( $image_metadata as $value ) {
-			if ( is_array( $value ) ) {
-				if ( isset( $value['filesize'] ) ) {
-					++$information['files'];
-					$information['total_size'] += (int) $value['filesize'];
-				}
+		if ( ! array_key_exists( 'sizes', $image_metadata ) || ! is_array( $image_metadata['sizes'] ) ) {
+			return $information;
+		}
 
-				// If the current value contains nested arrays (e.g., 'sizes'), recursively call the function
-				if ( is_array( reset( $value ) ) ) {
-					$return                     = self::analyze_unused_image( $value );
-					$information['files']      += (int) $return['files'] ?? 0;
-					$information['total_size'] += (int) $return['total_size'] ?? 0;
-				}
+		foreach ( $image_metadata['sizes'] as $value ) {
+			if ( isset( $value['file'] ) ) {
+				++$information['files'];
+			}
+			if ( isset( $value['filesize'] ) ) {
+				$information['total_size'] += (int) $value['filesize'];
+			}
+
+			// If the current value contains nested arrays (e.g., 'sizes'), recursively call the function
+			if ( is_array( reset( $value ) ) ) {
+				$return                     = self::analyze_unused_image( $value );
+				$information['files']      += (int) $return['files'] ?? 0;
+				$information['total_size'] += (int) $return['total_size'] ?? 0;
 			}
 		}
 
