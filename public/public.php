@@ -414,6 +414,10 @@ class ISC_Public extends ISC_Class {
 		}
 
 		$post = get_post();
+		if ( ! $post || empty( $post->ID ) ) {
+			return $block_content;
+		}
+
 		return str_replace(
 			'</p></div>',
 			$this->get_thumbnail_source_string( $post->ID ) . '</p></div>',
