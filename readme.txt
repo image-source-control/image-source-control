@@ -3,7 +3,7 @@ Contributors: webzunft
 Tags: images, credits, captions, copyrights, attributions, photos, pictures, sources, bildquellen, bilder, fotos, bildunterschriften
 Requires at least: 5.3
 Tested up to: 6.4
-Stable tag: 2.18.1
+Stable tag: 2.19.0
 Requires PHP: 7.2
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -70,8 +70,19 @@ Check out the premium features to display the image caption overlay for featured
 * Developer options to show overlay captions for CSS background images
 * Support for [background images of the Group block](https://imagesourcecontrol.com/blog/group-block-background-image/)
 * Exclude certain images from showing the overlay by adding the `isc-disable-overlay` class
-* Unused Images – a media cleaner overview of possibly unused images that runs a deep check before removing an image
+* Unused Images (see below)
 * Personal email support
+
+[See Pricing](https://imagesourcecontrol.com/pricing/?utm_source=wporg&utm_medium=link&utm_campaign=pricing).
+
+**Unused Images**
+
+Premium media cleaner features to remove unused images safely.
+
+– Go to _Media > Unused Images_ to see and remove unused images
+- Run an additional deep check to see if images are used in widgets, meta fields, or options
+- Bulk delete unused images
+- Filter the list by various states
 
 [See Pricing](https://imagesourcecontrol.com/pricing/?utm_source=wporg&utm_medium=link&utm_campaign=pricing).
 
@@ -127,6 +138,20 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 1. Unused Images – Media Cleaner feature to safely remove unused images
 
 == Changelog ==
+
+= 2.19.0 =
+
+- Feature: (Pro) show caption overlay for [Avada Builder background images](https://imagesourcecontrol.com/documentation/compatibility/#Avada_Builder)
+- Improvement: the check for unused images became faster and more reliable by excluding non-images
+- Improvement: updated the uninstall script to remove recently added data when the plugin is deleted
+- Improvement: (Pro) allow editors to use the bulk edit feature for image sources
+- Improvement: (Pro) introduced pagination for the list of unused images
+- Improvement: (Pro) bulk selecting enabled for checking unused images and deleting them
+- Improvement: (Pro) introduced various filters to the list of unused images
+- Fix: a possible empty post ID for the excerpt block caused a PHP warning
+- Fix: (Pro) a PHP warning appeared when an unused image was associated with a deleted post
+- Dev: introducing the ISC\Unused_Images class with improvements to unused images code
+- Dev: (Pro) use WP_List_Table when displaying the Unused Images list
 
 = 2.18.1 =
 
