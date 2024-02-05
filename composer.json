@@ -40,6 +40,8 @@
         ]
     },
     "scripts": {
-        "cs": "vendor/bin/phpcs --standard=.phpcs.xml"
+        "cs": "vendor/bin/phpcs --standard=.phpcs.xml",
+        "wpunit": "vendor/bin/codecept run wpunit",
+        "functional": "vendor/bin/codecept run functional"
     }
 }
