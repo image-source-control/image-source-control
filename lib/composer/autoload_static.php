@@ -29,6 +29,7 @@ class ComposerStaticInitdb72a6bac11cb0e6b971811c93d09a9b
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'ISC\\Analyze_HTML' => __DIR__ . '/../..' . '/includes/analyze-html.php',
         'ISC\\Autoloader' => __DIR__ . '/../..' . '/includes/class-autoloader.php',
+        'ISC\\Helpers' => __DIR__ . '/../..' . '/includes/helpers.php',
         'ISC\\Newsletter' => __DIR__ . '/../..' . '/includes/newsletter.php',
         'ISC\\Pro\\IPTC' => __DIR__ . '/../..' . '/pro/includes/IPTC.php',
         'ISC\\Settings\\Newsletter' => __DIR__ . '/../..' . '/includes/settings/newsletter.php',
