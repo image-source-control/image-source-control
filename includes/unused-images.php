@@ -77,7 +77,7 @@ class Unused_Images {
 			return $information;
 		}
 
-		$image_metadata = maybe_unserialize( $image_metadata );
+		$image_metadata = Helpers::maybe_unserialize( $image_metadata );
 
 		if ( isset( $image_metadata['file'] ) ) {
 			++$information['files'];
