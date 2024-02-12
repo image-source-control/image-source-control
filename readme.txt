@@ -3,7 +3,7 @@ Contributors: webzunft
 Tags: images, credits, captions, copyrights, attributions, photos, pictures, sources, bildquellen, bilder, fotos, bildunterschriften
 Requires at least: 5.3
 Tested up to: 6.4
-Stable tag: 2.19.0
+Stable tag: 2.20.0
 Requires PHP: 7.2
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -138,6 +138,13 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 1. Unused Images – Media Cleaner feature to safely remove unused images
 
 == Changelog ==
+
+= 2.20.0 =
+
+- Improvement: (Pro) the deep check for image usages looks for attachment IDs in options, e.g., to find site logos
+- Fix: unused images table layout was shifted for non-English backends
+- Dev: added a helper class for utility functions
+- Dev: use a custom unserialize function to prevent object injection
 
 = 2.19.0 =
 
