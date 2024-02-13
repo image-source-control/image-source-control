@@ -1,22 +1,33 @@
-if (document.readyState != 'loading') {
+if ( document.readyState !== 'loading' ) {
 	ISCready();
 } else {
 	// DOMContentLoaded fires after the content is loaded, but before scripts and images.
 	document.addEventListener( 'DOMContentLoaded', ISCready );
 }
 
+// Use values from isc_front_data if available, otherwise use default values
+const ISC_FONT_SIZE                 = isc_front_data.font_size || '0.9em';
+const ISC_BACKGROUND_COLOR          = isc_front_data.background_color || '#333';
+const ISC_TEXT_COLOR                = isc_front_data.text_color || '#fff';
+const ISC_OPACITY                   = isc_front_data.opacity || 0.70;
+const ISC_PADDING                   = isc_front_data.padding || '0 0.15em';
+const ISC_DISPLAY                   = isc_front_data.display || 'block';
+const ISC_Z_INDEX                   = isc_front_data.z_index || '9999';
+const ISC_CAPTION_HORIZONTAL_MARGIN = isc_front_data.caption_horizontal_margin || 5;
+const ISC_CAPTION_VERTICAL_MARGIN   = isc_front_data.caption_vertical_margin || 5;
+
 /**
  * Initialize ISC after the DOM was loaded
  */
 function ISCready(){
 		/**
-		 * Move caption into image with a short delay to way for the images to load
+		 * Move the caption into the image with a short delay so the images can fully load
 		 */
 		setTimeout( function(){
-			var captions = document.querySelectorAll( '.isc-source .isc-source-text' );
-			var l        = captions.length;
-			for ( var i = 0; i < l; i++ ) {
-				captions[i].setAttribute( "style", "position: absolute; font-size: 0.9em; background-color: #333; color: #fff; opacity: 0.70; padding: 0 0.15em; text-shadow: none; display: block" );
+			const captions = document.querySelectorAll( '.isc-source .isc-source-text' );
+			const l        = captions.length;
+			for ( let i = 0; i < l; i++ ) {
+				captions[i].setAttribute( "style", `position: absolute; font-size: ${ISC_FONT_SIZE}; background-color: ${ISC_BACKGROUND_COLOR}; color: ${ISC_TEXT_COLOR}; opacity: ${ISC_OPACITY}; padding: ${ISC_PADDING}; text-shadow: none; display: ${ISC_DISPLAY}` );
 				// Some themes handle the bottom padding of the attachment's div with the caption text (which is in between
 				// the image and the bottom border) not with the div itself. The following line set the padding on the bottom equal to the top.
 				captions[i].style.paddingBottom = window.getComputedStyle( captions[i] )['padding-top'];
@@ -47,9 +58,9 @@ function ISCready(){
  * Iterate through image source captions and set their position on the screen
  */
 function isc_update_captions_positions() {
-	var captions = document.querySelectorAll( '.isc-source' );
-	var l        = captions.length;
-	for ( var i = 0; i < l; i++ ) {
+	const captions = document.querySelectorAll( '.isc-source' );
+	const l        = captions.length;
+	for ( let i = 0; i < l; i++ ) {
 		isc_update_caption_position( captions[i] );
 	}
 }
@@ -60,48 +71,44 @@ function isc_update_captions_positions() {
  * @param el image source caption that needs positioning
  */
 function isc_update_caption_position( el ) {
-	var main_id = el.id;
-	var caption = el.querySelector( '.isc-source-text' );
+	const caption = el.querySelector( '.isc-source-text' );
 	if ( ! caption ) {
 		return;
 	}
 
-	// attachment ID. unused
-	var att_id = main_id.split( '_' )[2];
-
-	var att  = el.querySelector( 'img' );
-	var is_fallback = false;
+	let att = el.querySelector( 'img' );
+	let is_fallback = false;
 	// fall back to the current main container to get the width and height, if no image was found. This could be a background image defined in CSS
 	if ( ! att ) {
 		att = el;
 		is_fallback = true;
 	}
 	// look for the actual width and height as a fallback, if these attributes are not set
-	var attw = att instanceof HTMLImageElement ? att.width : att.offsetWidth;
-	var atth = att instanceof HTMLImageElement ? att.height : att.offsetHeight;
+	const attw = att instanceof HTMLImageElement ? att.width : att.offsetWidth;
+	const atth = att instanceof HTMLImageElement ? att.height : att.offsetHeight;
 
 	// relative position
-	var l = ! is_fallback ? att.offsetLeft : 0;
-	var t = ! is_fallback ? att.offsetTop : 0;
+	const l = ! is_fallback ? att.offsetLeft : 0;
+	const t = ! is_fallback ? att.offsetTop : 0;
 
 	// caption width + padding & margin (after moving onto image)
-	var tw = ISCouterWidth( caption );
+	const tw = ISCouterWidth( caption );
 	// caption height + padding (idem)
-	var th = ISCouterHeight( caption );
+	const th = ISCouterHeight( caption );
 
-	var attpl = ! is_fallback ? parseInt( window.getComputedStyle( att )[ 'padding-left' ].substring( 0, window.getComputedStyle( att )[ 'padding-left' ].indexOf( 'px' ) ) ) : 0;
-	var attpt = ! is_fallback ? parseInt( window.getComputedStyle( att )[ 'padding-top' ].substring( 0, window.getComputedStyle( att )[ 'padding-top' ].indexOf( 'px' ) ) ) : 0;
-	var attml = ! is_fallback ? parseInt( window.getComputedStyle( att )[ 'margin-left' ].substring( 0, window.getComputedStyle( att )[ 'margin-left' ].indexOf( 'px' ) ) ) : 0;
-	var attmt = ! is_fallback ? parseInt( window.getComputedStyle( att )[ 'margin-top' ].substring( 0, window.getComputedStyle( att )[ 'margin-top' ].indexOf( 'px' ) ) ) : 0;
+	const attpl = ! is_fallback ? parseInt( window.getComputedStyle( att )[ 'padding-left' ].substring( 0, window.getComputedStyle( att )[ 'padding-left' ].indexOf( 'px' ) ) ) : 0;
+	const attpt = ! is_fallback ? parseInt( window.getComputedStyle( att )[ 'padding-top' ].substring( 0, window.getComputedStyle( att )[ 'padding-top' ].indexOf( 'px' ) ) ) : 0;
+	const attml = ! is_fallback ? parseInt( window.getComputedStyle( att )[ 'margin-left' ].substring( 0, window.getComputedStyle( att )[ 'margin-left' ].indexOf( 'px' ) ) ) : 0;
+	const attmt = ! is_fallback ? parseInt( window.getComputedStyle( att )[ 'margin-top' ].substring( 0, window.getComputedStyle( att )[ 'margin-top' ].indexOf( 'px' ) ) ) : 0;
 
 	// caption horizontal margin
-	var tml = 5;
+	const tml = ISC_CAPTION_HORIZONTAL_MARGIN;
 	// caption vertical margin
-	var tmt = 5;
+	const tmt = ISC_CAPTION_VERTICAL_MARGIN;
 
-	var pos  = isc_front_data.caption_position;
-	var posl = 0;
-	var post = 0;
+	const pos = isc_front_data.caption_position;
+	let posl  = 0;
+	let post  = 0;
 	switch (pos) {
 		case 'top-left':
 			posl = l + attpl + attml + tml;
@@ -134,48 +141,27 @@ function isc_update_caption_position( el ) {
 	}
 	caption.style.left   = posl + 'px';
 	caption.style.top    = post + 'px';
-	caption.style.zIndex = '9999';
+	caption.style.zIndex = ISC_Z_INDEX;
 }
 
 /**
- * Polyfills to work on IE 8
+ * Mimics `outerWidth(true)` which includes margins
  *
- * Note: there are a couple of holes, e.g., with missing addEventListener; I am not yet decided on adding full IE 8 support
+ * @source http://youmightnotneedjquery.com/
  */
-// source: https://gist.github.com/abbotto/19a6680bf052e8c64f6e
-if ( ! window.getComputedStyle) {
-	/**
-	 * Implement getComputedStyle() for browsers that don’t support it, e.g., IE 8
-	 *
-	 * @param {(Element|null)} e
-	 * @param {(null|string)=} t
-	 * @return {(CSSStyleDeclaration|null)}
-	 */
-	window.getComputedStyle = function(e, t) {
-		return this.el = e, this.getPropertyValue = function(t) {
-			// @type {RegExp}
-			var n = /(\-([a-z]){1})/g;
-			return t == "float" && (t = "styleFloat"), n.test( t ) && (t = t.replace( n, function() {
-				return arguments[2].toUpperCase();
-			} )), e.currentStyle[t] ? e.currentStyle[t] : null;
-		}, this;
-	};
-}
-// mimics `outerWidth(true)` which includes margins
-// source http://youmightnotneedjquery.com/
 function ISCouterWidth(el) {
-	var width = el.offsetWidth;
-	var style = getComputedStyle( el );
+	let style = getComputedStyle( el );
 
-	width += parseInt( style.marginLeft ) + parseInt( style.marginRight );
-	return width;
+	return el.offsetWidth + parseInt( style.marginLeft ) + parseInt( style.marginRight );
 }
-// mimics `outerHeight(true)` which includes margins
-// source http://youmightnotneedjquery.com/
-function ISCouterHeight(el) {
-	var height = el.offsetHeight;
-	var style  = getComputedStyle( el );
 
-	height += parseInt( style.marginTop ) + parseInt( style.marginBottom );
-	return height;
+/**
+ * Mimics `outerHeight(true)` which includes margins
+ *
+ * @source http://youmightnotneedjquery.com/
+ */
+function ISCouterHeight(el) {
+	let style = getComputedStyle( el );
+
+	return el.offsetHeight + parseInt( style.marginTop ) + parseInt( style.marginBottom );
 }
