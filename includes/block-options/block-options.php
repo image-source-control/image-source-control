@@ -41,18 +41,50 @@ class ISC_Block_Options {
 	 * @return void
 	 */
 	public function init() {
-		register_post_meta( 'attachment', 'isc_image_source', array( 'show_in_rest' => true, 'single' => true, 'type' => 'string' ) );
-		register_post_meta( 'attachment', 'isc_image_source_url', array( 'show_in_rest' => true, 'single' => true, 'type' => 'string' ) );
-		register_post_meta( 'attachment', 'isc_image_licence', array( 'show_in_rest' => true, 'single' => true, 'type' => 'string' ) );
-		register_post_meta( 'attachment', 'isc_image_source_own', array( 'show_in_rest' => true, 'single' => true, 'type' => 'boolean' ) );
+		register_post_meta(
+			'attachment',
+			'isc_image_source',
+			[
+				'show_in_rest' => true,
+				'single'       => true,
+				'type'         => 'string',
+			]
+		);
+		register_post_meta(
+			'attachment',
+			'isc_image_source_url',
+			[
+				'show_in_rest' => true,
+				'single'       => true,
+				'type'         => 'string',
+			]
+		);
+		register_post_meta(
+			'attachment',
+			'isc_image_licence',
+			[
+				'show_in_rest' => true,
+				'single'       => true,
+				'type'         => 'string',
+			]
+		);
+		register_post_meta(
+			'attachment',
+			'isc_image_source_own',
+			[
+				'show_in_rest' => true,
+				'single'       => true,
+				'type'         => 'boolean',
+			]
+		);
 
 		// Post Types supporting the block editor.
-		$block_ready_post_types = get_post_types_by_support( [ 'editor', 'show_in_rest' ] );
-		$block_ready_post_types += array( 'post', 'page' );
+		$block_ready_post_types  = get_post_types_by_support( [ 'editor', 'show_in_rest' ] );
+		$block_ready_post_types += [ 'post', 'page' ];
 
 		foreach ( $block_ready_post_types as $type ) {
 			// See https://developer.wordpress.org/reference/hooks/rest_after_insert_this-post_type/.
-			add_action( "rest_after_insert_{$type}", array( $this, 'save_post' ) );
+			add_action( "rest_after_insert_{$type}", [ $this, 'save_post' ] );
 		}
 	}
 
@@ -107,7 +139,7 @@ class ISC_Block_Options {
 				continue;
 			}
 
-			foreach ( array( 'isc_image_source', 'isc_image_source_url', 'isc_image_source_own', 'isc_image_licence' ) as $field ) {
+			foreach ( [ 'isc_image_source', 'isc_image_source_url', 'isc_image_source_own', 'isc_image_licence' ] as $field ) {
 				if ( $field === 'isc_image_source_own' ) {
 					ISC_Model::update_post_meta( $image_id, $field, isset( $attributes[ $field ] ) && $attributes[ $field ] === true ? '1' : '' );
 					continue;
@@ -132,9 +164,9 @@ class ISC_Block_Options {
 	 * Enqueue JS file and print all needed JS variables
 	 */
 	public function editor_assets() {
-		$dependencies = array( 'jquery', 'wp-api', 'lodash', 'wp-blocks', 'wp-element', 'wp-i18n' );
+		$dependencies = [ 'jquery', 'wp-api', 'lodash', 'wp-blocks', 'wp-element', 'wp-i18n' ];
 		$screen       = get_current_screen();
-		wp_enqueue_script( 'isc_attachment_compat', trailingslashit( ISCBASEURL ) . 'admin/assets/js/wp.media.view.AttachmentCompat.js', array( 'media-upload' ), ISCVERSION, true );
+		wp_enqueue_script( 'isc_attachment_compat', trailingslashit( ISCBASEURL ) . 'admin/assets/js/wp.media.view.AttachmentCompat.js', [ 'media-upload' ], ISCVERSION, true );
 
 		if ( $screen && isset( $screen->base ) && $screen->base !== 'widgets' ) {
 			$dependencies[] = 'wp-editor';
@@ -152,17 +184,17 @@ class ISC_Block_Options {
 
 		if ( ( ! empty( $post ) && current_user_can( 'edit_post', $post->ID ) ) || in_array( $pagenow, [ 'widgets.php', 'customize.php', 'site-editor.php' ], true ) ) {
 			// The current user can edit the current post, or on widgets page or customizer.
-			$isc_data = array(
+			$isc_data = [
 				'option'   => $plugin_options,
 				'postmeta' => new stdClass(),
-			);
+			];
 
 			// Add all our data as a variable in an inline script.
 			wp_add_inline_script( 'isc/image-block', 'var iscData = ' . wp_json_encode( $isc_data ) . ';', 'before' );
 		}
 		wp_enqueue_script( 'isc/image-block' );
 
-		wp_enqueue_script( 'isc/media-upload', trailingslashit( ISCBASEURL ) . 'admin/assets/js/media-upload.js', array( 'media-upload' ), ISCVERSION, true );
+		wp_enqueue_script( 'isc/media-upload', trailingslashit( ISCBASEURL ) . 'admin/assets/js/media-upload.js', [ 'media-upload' ], ISCVERSION, true );
 	}
 
 	/**
@@ -177,5 +209,4 @@ class ISC_Block_Options {
 			true // load in the footer
 		);
 	}
-
 }
