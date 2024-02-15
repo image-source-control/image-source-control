@@ -150,7 +150,7 @@ class ISC_Block_Options {
 
 		global $post, $pagenow;
 
-		if ( ( ! empty( $post ) && current_user_can( 'edit_post', $post->ID ) ) || in_array( $pagenow, array( 'widgets.php', 'customize.php' ) ) ) {
+		if ( ( ! empty( $post ) && current_user_can( 'edit_post', $post->ID ) ) || in_array( $pagenow, [ 'widgets.php', 'customize.php', 'site-editor.php' ], true ) ) {
 			// The current user can edit the current post, or on widgets page or customizer.
 			$isc_data = array(
 				'option'   => $plugin_options,
