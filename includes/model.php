@@ -503,7 +503,7 @@ class ISC_Model {
 		$dom = new DOMDocument();
 
 		libxml_use_internal_errors( true );
-		if ( function_exists( 'mb_convert_encoding' ) ) {
+		if ( version_compare( PHP_VERSION, '8.2', '<' ) && function_exists( 'mb_convert_encoding' ) ) {
 			$content = mb_convert_encoding( $content, 'HTML-ENTITIES', 'UTF-8' );
 		}
 		$dom->loadHTML( $content );
