@@ -3,7 +3,7 @@ Contributors: webzunft
 Tags: images, credits, captions, copyrights, attributions, photos, pictures, sources, bildquellen, bilder, fotos, bildunterschriften
 Requires at least: 5.3
 Tested up to: 6.4
-Stable tag: 2.20.0
+Stable tag: 2.20.1
 Requires PHP: 7.2
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -138,6 +138,12 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 1. Unused Images – Media Cleaner feature to safely remove unused images
 
 == Changelog ==
+
+= 2.20.1 =
+
+- Fix: image source fields for image blocks in the site editor threw a JavaScript error
+- Dev: resolved a PHP 8.2 encoding warning
+- Dev: improved code style in the caption frontend script
 
 = 2.20.0 =
 
