@@ -12,6 +12,9 @@ class ISC_Admin extends ISC_Class {
 	public function __construct() {
 		parent::__construct();
 
+		// load more admin-related classes
+		add_action( 'plugins_loaded', [ $this, 'plugins_loaded' ] );
+
 		// register attachment fields
 		add_filter( 'attachment_fields_to_edit', [ $this, 'add_isc_fields' ], 10, 2 );
 
@@ -38,6 +41,13 @@ class ISC_Admin extends ISC_Class {
 
 		// fire when an attachment is removed
 		add_action( 'delete_attachment', [ $this, 'delete_attachment' ] );
+	}
+
+	/**
+	 * Load additional admin classes
+	 */
+	public function plugins_loaded() {
+		new \ISC\Feedback();
 	}
 
 	/**

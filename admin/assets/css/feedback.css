@@ -1,0 +1,27 @@
+#isc-feedback-overlay {
+	height: 100%;
+	width: 100%;
+	position: fixed;
+	z-index: 10000;
+	left: 0;
+	top: 0;
+	background-color: rgb(120,120,120);
+	background-color: rgba(0,0,0, 0.5);
+}
+#isc-feedback-content {
+	position: relative;
+	top: 25%;
+	width: 500px;
+	max-width: 100%;
+	margin: auto;
+	margin-top: 30px;
+	max-height: 50%;
+	padding: 20px;
+	background-color: #fff;
+	overflow-y: scroll;
+}
+#isc-feedback-overlay-close-button { position: absolute; top: 10px; right: 10px; cursor: pointer; }
+#isc-feedback-content textarea,
+#isc-feedback-content input[type="email"] { width: 100%; }
+.isc-feedback-only-deactivate { display: block; text-align: right; }
+#isc-feedback-overlay .dashicons-admin-comments { color: #F70; }
