@@ -4,6 +4,9 @@
  * storing updated information is not part of this class since it is only included if is_admin() returns true
  * which is not the case for the Customizer of Block editor
  */
+
+use ISC\User;
+
 class ISC_Admin extends ISC_Class {
 
 	/**
@@ -1015,7 +1018,7 @@ class ISC_Admin extends ISC_Class {
 	 * @return string website URL
 	 */
 	public static function get_isc_localized_website_url( string $url_param, string $url_param_de, string $utm_campaign ) {
-		if ( strpos( determine_locale(), 'de_' ) === 0 ) {
+		if ( User::has_german_backend() ) {
 			$url = 'https://imagesourcecontrol.de/' . $url_param_de;
 		} else {
 			$url = 'https://imagesourcecontrol.com/' . $url_param;
@@ -1042,7 +1045,7 @@ class ISC_Admin extends ISC_Class {
 	 */
 	public static function get_manual_url( $utm_campaign = 'manual' ) {
 		// check if the locale starts with "de_"
-		if ( strpos( determine_locale(), 'de_' ) === 0 ) {
+		if ( User::has_german_backend() ) {
 			$base_url = 'https://imagesourcecontrol.de/dokumentation/';
 		} else {
 			$base_url = 'https://imagesourcecontrol.com/documentation/';

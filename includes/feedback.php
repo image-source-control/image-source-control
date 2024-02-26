@@ -57,12 +57,10 @@ class Feedback {
 			return;
 		}
 
-		$from         = '';
-		$email        = '';
-		$current_user = wp_get_current_user();
-		if ( $current_user instanceof WP_User ) {
-			$from  = sprintf( '%1$s <%2$s>', $current_user->user_nicename, trim( $current_user->user_email ) );
-			$email = $current_user->user_email;
+		$from  = '';
+		$email = User::get_email();
+		if ( $email ) {
+			$from = sprintf( '%1$s <%2$s>', User::get_name(), sanitize_email( $email ) );
 		}
 
 		include ISCPATH . 'admin/templates/feedback.php';
@@ -90,11 +88,10 @@ class Feedback {
 		if (
 			! empty( $_POST['isc-feedback-send-reply'] )
 		) {
-			$current_user = wp_get_current_user();
-			$name         = ( $current_user instanceof WP_User ) ? $current_user->user_nicename : '';
-			$email        = $data['email'];
-			$from         = $name . ' <' . $email . '>';
-			$text        .= "\n\n" . 'Feedback: ✓';
+			$name  = User::get_name();
+			$email = $data['email'];
+			$from  = $name . ' <' . $email . '>';
+			$text .= "\n\n" . 'Feedback: ✓';
 		}
 
 		if ( class_exists( 'ISC_Pro_Admin', false ) ) {
