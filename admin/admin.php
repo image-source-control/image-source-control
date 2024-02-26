@@ -979,6 +979,11 @@ class ISC_Admin extends ISC_Class {
 			$output['standard_source_text'] = isset( $input['standard_source_text'] ) ? esc_attr( $input['standard_source_text'] ) : ISC\Standard_Source::get_standard_source_text();
 		}
 
+		// add activation date when the settings are saved for the first time
+		if ( ! array_key_exists( 'activated', $output ) ) {
+			$output['activated'] = time();
+		}
+
 		/**
 		 * Allow other developers to manipulate settings on save
 		 */

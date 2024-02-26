@@ -81,11 +81,10 @@ class Feedback {
 
 		$data = $this->prepare_feedback_data( $_POST );
 
-		$installed = $data['installed'];
-		$from      = $data['from'];
-		$subject   = 'Image Source Control Feedback';
-		$text      = $data['text'];
-		$text     .= "\n\n" . home_url() . " ($installed)";
+		$from    = $data['from'];
+		$subject = 'Image Source Control Feedback';
+		$text    = $data['text'];
+		$text   .= "\n\n" . home_url() . ' (' . $data['activated'] . ')';
 
 		// The user sent feedback with a reply request
 		if (
@@ -127,7 +126,7 @@ class Feedback {
 		$feedback['email'] = ! array_key_exists( 'isc-feedback-reply-email', $data ) || ! is_email( $data['isc-feedback-reply-email'] ) ? '' : trim( $data['isc-feedback-reply-email'] );
 
 		$options               = ISC_Class::get_instance()->get_isc_options();
-		$feedback['installed'] = isset( $options['installed'] ) ? gmdate( 'd.m.Y', $options['installed'] ) : '–';
+		$feedback['activated'] = isset( $options['activated'] ) ? gmdate( 'd.m.Y', $options['activated'] ) : '–';
 
 		return $feedback;
 	}

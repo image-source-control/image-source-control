@@ -190,7 +190,9 @@ class ISC_Class {
 		}
 
 		/**
-		 *   Returns default options
+		 * Returns default options
+		 *
+		 * @return string[]
 		 */
 		public function default_options() {
 			include ISCPATH . 'includes/default-licenses.php';
@@ -227,6 +229,8 @@ class ISC_Class {
 
 		/**
 		 * Returns isc_options if it exists, returns the default options otherwise.
+		 *
+		 * @return string[]
 		 */
 		public function get_isc_options() {
 			return get_option( 'isc_options', $this->default_options() );
