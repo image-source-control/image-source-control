@@ -15,17 +15,6 @@ class Newsletter {
 	private const SIGNUP_URL = 'https://imagesourcecontrol.com/remote/subscribe.php';
 
 	/**
-	 * Get the current user email address
-	 *
-	 * @return string|false email address or false if none is set
-	 */
-	public function get_user_email() {
-		$email = wp_get_current_user()->user_email;
-
-		return is_email( $email ) ? $email : false;
-	}
-
-	/**
 	 * Subscribe to the newsletter
 	 *
 	 * @return array
@@ -35,7 +24,7 @@ class Newsletter {
 			'success' => false,
 		];
 
-		$email = $this->get_user_email();
+		$email = User::get_email();
 		if ( ! $email ) {
 			$return['error'] = 'Email invalid';
 			return $return;
@@ -43,7 +32,7 @@ class Newsletter {
 
 		$data = [
 			'email' => $email,
-			'lang'  => strpos( determine_locale(), 'de_' ) === 0 ? 'de' : 'en',
+			'lang'  => User::has_german_backend() ? 'de' : 'en',
 		];
 
 		$result = wp_remote_post(

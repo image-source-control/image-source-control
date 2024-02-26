@@ -2,6 +2,8 @@
 
 namespace ISC\Settings;
 
+use ISC\User;
+
 /**
  * Handle newsletter signup
  */
@@ -45,7 +47,7 @@ class Newsletter {
 	 * Render settings section
 	 */
 	public function render_settings_section() {
-		$email      = $this->newsletter->get_user_email();
+		$email      = sanitize_email( User::get_email() );
 		$signup_url = \ISC_Admin::get_isc_localized_website_url( 'newsletter', 'newsletter', 'newsletter' );
 
 		require_once ISCPATH . 'admin/templates/settings/newsletter.php';
