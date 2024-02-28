@@ -26,7 +26,7 @@ class Newsletter {
 
 		$email = User::get_email();
 		if ( ! $email ) {
-			$return['error'] = 'Email invalid';
+			$return['message'] = 'Email invalid';
 			return $return;
 		}
 
@@ -50,19 +50,22 @@ class Newsletter {
 		$status_code = wp_remote_retrieve_response_code( $result );
 
 		if ( is_wp_error( $result ) ) {
-			$return['error'] = esc_html__( 'Something went wrong. Please sign up manually.', 'image-source-control-isc' );
+			$return['message'] = esc_html__( 'Something went wrong. Please sign up manually.', 'image-source-control-isc' );
 		} elseif ( $status_code === 201 ) {
+			$return['message'] = esc_html__( 'Please check your email for the confirmation message.', 'image-source-control-isc' );
+			$return['success'] = true;
 			// mark as subscribed
 			$this->mark_current_users_as_subscribed();
-			$return['success'] = true;
 		} elseif ( $status_code === 204 ) {
-			$return['error'] = esc_html__( 'The email address is invalid.', 'image-source-control-isc' );
+			$return['message'] = esc_html__( 'The email address is invalid.', 'image-source-control-isc' );
 		} elseif ( $status_code === 304 ) {
-			$return['error'] = esc_html__( 'The email address is already subscribed.', 'image-source-control-isc' );
+			// the email is already subscribed to any list; if they weren’t subscribed to Marketing, they are now
+			$return['message'] = esc_html__( 'The email address is already subscribed.', 'image-source-control-isc' );
+			$return['success'] = true;
 			// if users see this, their WordPress probably doesn’t know that they are already subscribed
 			$this->mark_current_users_as_subscribed();
 		} else {
-			$return['error'] = esc_html__( 'Something went wrong. Please sign up manually.', 'image-source-control-isc' );
+			$return['message'] = esc_html__( 'Something went wrong. Please sign up manually.', 'image-source-control-isc' );
 		}
 
 		return $return;

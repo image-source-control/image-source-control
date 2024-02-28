@@ -52,9 +52,9 @@ jQuery( document ).ready(
 				dataType: 'json',
 				success: function( response ) {
 					if ( ! response.success ) {
-						$('#isc-signup-nl-error').removeClass('hidden').html(response.error);
+						$('#isc-signup-nl-error').removeClass('hidden').html(response.message);
 					} else {
-						$('#isc-signup-nl-success').removeClass('hidden');
+						$('#isc-signup-nl-success').removeClass('hidden').html(response.message);
 					}
 					$('#isc-signup-loader').addClass('hidden');
 				}

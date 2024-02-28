@@ -67,17 +67,9 @@ class Newsletter {
 
 		$return = $this->newsletter->subscribe();
 
-		if ( ! $return['success'] ) {
-			$response = [
-				'success' => false,
-				'error'   => $return['error'],
-			];
-			echo wp_json_encode( $response );
-			die();
-		}
-
 		$response = [
 			'success' => true,
+			'message' => $return['message'],
 		];
 		echo wp_json_encode( $response );
 

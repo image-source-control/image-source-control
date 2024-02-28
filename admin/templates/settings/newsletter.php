@@ -34,4 +34,4 @@
 </p>
 <p id="isc-signup-loader" class="hidden"><span class="spinner is-active"></span></p>
 <p id="isc-signup-nl-error" class="notice notice-error hidden"></p>
-<p id="isc-signup-nl-success" class="notice notice-success hidden"><?php esc_html_e( 'Please check your email for the confirmation message.', 'image-source-control-isc' ); ?></p>
+<p id="isc-signup-nl-success" class="notice notice-success hidden"></p>
