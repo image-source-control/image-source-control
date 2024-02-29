@@ -91,6 +91,38 @@ class Multiple_Links_In_Source_String_Test extends \Codeception\TestCase\WPTestC
 	}
 
 	/**
+	 * Test if render_source_url_html() skips the first source text link if the URL meta value starts with a comma
+	 */
+	public function test_empty_first() {
+		$markup   = '';
+		$id       = 1;
+		$metadata = [
+			'source'     => 'Source 1, Source 2, Source 3',
+			'source_url' => ', https://example.com/2, https://example.com/3',
+		];
+
+		$expected = 'Source 1, <a href="https://example.com/2" target="_blank" rel="nofollow">Source 2</a>, <a href="https://example.com/3" target="_blank" rel="nofollow">Source 3</a>';
+		$actual   = $this->renderer->render_source_url_html( $markup, $id, $metadata );
+		$this->assertEquals( $expected, $actual );
+	}
+
+	/**
+	 * Test if render_source_url_html() skips the last source text link if the URL meta value ends with a comma
+	 */
+	public function test_empty_last() {
+		$markup   = '';
+		$id       = 1;
+		$metadata = [
+			'source'     => 'Source 1, Source 2, Source 3',
+			'source_url' => 'https://example.com/1, https://example.com/2,',
+		];
+
+		$expected = '<a href="https://example.com/1" target="_blank" rel="nofollow">Source 1</a>, <a href="https://example.com/2" target="_blank" rel="nofollow">Source 2</a>, Source 3';
+		$actual   = $this->renderer->render_source_url_html( $markup, $id, $metadata );
+		$this->assertEquals( $expected, $actual );
+	}
+
+	/**
 	 * Test if render_source_url_html() can cope with commas in URLs.
 	 */
 	public function test_commas_in_urls() {
