@@ -240,15 +240,19 @@ class ISC_Admin extends ISC_Class {
 	 * @return array with form fields
 	 */
 	public function add_isc_fields( $form_fields, $post ) {
-		$options = $this->get_isc_options();
-
 		/**
-		 * Return, when the ISC fields are enabled for blocks and the HTTP_REFERER is a post edit page. This likely means, that the block editor is used.
-		 * While the URL to edit an attachment can also include "wp-admin.php.php", the HTTP_REFERER is then different
+		 * Return, when the ISC fields are enabled for blocks, and we are not using the block editor.
+		 * It is tricky to detect and easy to break, so here is more information on it:
+		 *
+		 * Media modal on the block editor: uses AJAX and doesn’t "know" it is on a block editor page. But it knows that it comes from "wp-admin/post.php"
+		 * Media modal in the Grid view of the Media Library: also uses AJAX, but the referrer is "wp-admin/upload.php"
+		 * The List view of the Media Library does not open the modal, nor uses AJAX, but links to the attachment page; when testing, make sure to test a reload of the attachment page and when it was saved since the Referer then changes
+		 * Classic Editor: not supported. I wasn’t able to find reliably parameters for it; technically, it looks like the media modal on the block editor; users can disable block support actively on these sites
 		 */
 		if ( ! empty( $_SERVER['HTTP_REFERER'] )
-			 // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash
+		     // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash
 			&& strpos( $_SERVER['HTTP_REFERER'], 'wp-admin/post.php' ) !== false
+			&& wp_doing_ajax()
 			// the filter allows users to force the ISC fields and Block options at the same time
 			&& ( ISC_Block_Options::enabled() && ! apply_filters( 'isc_force_block_options', false ) ) ) {
 
