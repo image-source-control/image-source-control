@@ -200,6 +200,7 @@ class ISC_Block_Options {
 			wp_add_inline_script( 'isc/image-block', 'var iscData = ' . wp_json_encode( $isc_data ) . ';', 'before' );
 		}
 		wp_enqueue_script( 'isc/image-block' );
+		wp_set_script_translations( 'isc/image-block', 'image-source-control-isc', apply_filters( 'isc_path_to_languages', '' ) );
 
 		wp_enqueue_script( 'isc/media-upload', trailingslashit( ISCBASEURL ) . 'admin/assets/js/media-upload.js', [ 'media-upload' ], ISCVERSION, true );
 	}
@@ -215,5 +216,7 @@ class ISC_Block_Options {
 			ISCVERSION,
 			true // load in the footer
 		);
+
+		wp_set_script_translations( 'isc/image-block-edit-link', 'image-source-control-isc', apply_filters( 'isc_path_to_languages', '' ) );
 	}
 }
