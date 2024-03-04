@@ -3,7 +3,7 @@ Contributors: webzunft
 Tags: images, credits, captions, copyrights, attributions, photos, pictures, sources, bildquellen, bilder, fotos, bildunterschriften
 Requires at least: 5.3
 Tested up to: 6.4
-Stable tag: 2.20.1
+Stable tag: 2.21.0
 Requires PHP: 7.2
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -138,6 +138,21 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 1. Unused Images – Media Cleaner feature to safely remove unused images
 
 == Changelog ==
+
+= 2.21.0 =
+
+- Improvement: (Pro) the bulk edit options are visually more compact now
+- Improvement: (Pro) Elementor: disable the Image Optimization module in Elementor when checking images in the whole content. This module is known for conflicting with many plugins and in review by the Elementor team
+- Improvement: (Pro) Avada: recognize the `data-preload-img` attribute for Avada background images
+- Improvement: (Pro) add a link to some words in the image source, but not to words at the end of the caption
+- Improvement: show a feedback form when disabling the plugin
+- Fix: (Pro) comma-separated URLs in the bulk edit fields were wrongly sanitized
+- Fix: the image source fields in the media edit page disappeared when saving the page
+- Fix: labels in the block editor were not translated
+- Fix: newsletter subscription returned an error for subscribed users
+- Dev: `ISC_Block_Options` threw a PHP warning due to an early hook
+- Dev: introduced `ISC\User` to gather user-based helper functions
+- Dev: add an output buffer handle to better analyze a conflict with other output buffers
 
 = 2.20.1 =
 
