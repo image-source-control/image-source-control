@@ -393,11 +393,7 @@ class ISC_Admin extends ISC_Class {
 		add_settings_field( 'image_list_headline', __( 'Headline', 'image-source-control-isc' ), [ $this, 'renderfield_list_headline' ], 'isc_settings_page', 'isc_settings_section_list_below_content' );
 		add_settings_field( 'below_content_included_images', __( 'Included images', 'image-source-control-isc' ), [ $this, 'renderfield_below_content_included_images' ], 'isc_settings_page', 'isc_settings_section_list_below_content' );
 
-		// source in caption
-		add_settings_section( 'isc_settings_section_overlay', '2. ' . __( 'Overlay', 'image-source-control-isc' ), '__return_false', 'isc_settings_page' );
-		add_settings_field( 'source_overlay', __( 'Overlay pre-text', 'image-source-control-isc' ), [ $this, 'renderfield_overlay_text' ], 'isc_settings_page', 'isc_settings_section_overlay' );
-		add_settings_field( 'overlay_style', __( 'Layout', 'image-source-control-isc' ), [ $this, 'renderfield_overlay_style' ], 'isc_settings_page', 'isc_settings_section_overlay' );
-		add_settings_field( 'overlay_included_images', __( 'Included images', 'image-source-control-isc' ), [ $this, 'renderfield_overlay_included_images' ], 'isc_settings_page', 'isc_settings_section_overlay' );
+		new ISC\Settings\Caption();
 
 		// Global list group
 		add_settings_section( 'isc_settings_section_complete_list', '3. ' . __( 'Global list', 'image-source-control-isc' ), '__return_false', 'isc_settings_page' );
@@ -626,37 +622,6 @@ class ISC_Admin extends ISC_Class {
 		$included_images         = ! empty( $options['list_included_images'] ) ? $options['list_included_images'] : '';
 		$included_images_options = $this->get_list_included_images_options();
 		require_once ISCPATH . '/admin/templates/settings/below-content-included-images.php';
-	}
-
-	/**
-	 * Render option for the text preceding the source.
-	 */
-	public function renderfield_overlay_text() {
-		$options = $this->get_isc_options();
-		require_once ISCPATH . '/admin/templates/settings/overlay-text.php';
-	}
-
-	/**
-	 * Render option for the style of the overlay
-	 */
-	public function renderfield_overlay_style() {
-		$options       = $this->get_isc_options();
-		$caption_style = ! empty( $options['caption_style'] ) ? $options['caption_style'] : null;
-		require_once ISCPATH . '/admin/templates/settings/overlay-style.php';
-		require_once ISCPATH . '/admin/templates/settings/overlay-position.php';
-	}
-
-	/**
-	 * Render option to define which images should show the overlay
-	 */
-	public function renderfield_overlay_included_images() {
-		$options                 = $this->get_isc_options();
-		$included_images         = ! empty( $options['overlay_included_images'] ) ? $options['overlay_included_images'] : '';
-		$included_images_options = $this->get_overlay_included_images_options();
-		require_once ISCPATH . '/admin/templates/settings/overlay-included-images.php';
-		$checked_advanced_options = ! empty( $options['overlay_included_advanced'] ) && is_array( $options['overlay_included_advanced'] ) ? $options['overlay_included_advanced'] : [];
-		$advanced_options         = $this->get_overlay_advanced_included_images_options();
-		require_once ISCPATH . '/admin/templates/settings/overlay-advanced-included-images.php';
 	}
 
 	/**
@@ -954,16 +919,7 @@ class ISC_Admin extends ISC_Class {
 		$output['remove_on_uninstall'] = ! empty( $input['remove_on_uninstall'] );
 		$output['hide_list']           = ! empty( $input['hide_list'] );
 
-		if ( isset( $input['caption_position'] ) && in_array( $input['caption_position'], $this->caption_position, true ) ) {
-			$output['caption_position'] = $input['caption_position'];
-		}
-		$output['caption_style'] = ! empty( $input['caption_style'] ) ? $input['caption_style'] : null;
-		if ( isset( $input['source_pretext'] ) ) {
-			$output['source_pretext'] = esc_textarea( $input['source_pretext'] );
-		}
 		$output['list_included_images']        = isset( $input['list_included_images'] ) ? esc_attr( $input['list_included_images'] ) : '';
-		$output['overlay_included_images']     = isset( $input['overlay_included_images'] ) ? esc_attr( $input['overlay_included_images'] ) : '';
-		$output['overlay_included_advanced']   = isset( $input['overlay_included_advanced'] ) && is_array( $input['overlay_included_advanced'] ) ? $input['overlay_included_advanced'] : [];
 		$output['global_list_included_images'] = isset( $input['global_list_included_images'] ) ? esc_attr( $input['global_list_included_images'] ) : '';
 
 		/**

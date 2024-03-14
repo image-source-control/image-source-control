@@ -1,0 +1,48 @@
+<?php
+/**
+ * Render the caption style setting
+ *
+ * @var array $caption_style Caption style
+ * @var array $caption_style_options Available caption style options
+ */
+
+?>
+<div class="isc-settings-highlighted">
+	<?php
+	foreach ( $caption_style_options as $_key => $style_options ) :
+		$value  = $style_options['value'] ?? '';
+		$is_pro = ! empty( $style_options['is_pro'] );
+		?>
+		<label>
+			<input type="radio" name="isc_options[caption_style]" value="<?php echo esc_attr( $value ); ?>"
+				<?php checked( $caption_style, $value ); ?>
+				<?php echo $is_pro ? 'disabled="disabled" class="is-pro"' : ''; ?>
+			/>
+			<?php
+			if ( $is_pro ) :
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				echo ISC_Admin::get_pro_link( 'overlay-' . esc_html( $style_options['label'] ) );
+			endif;
+			?>
+			<?php echo isset( $style_options['label'] ) ? esc_html( $style_options['label'] ) : ''; ?>
+		</label>
+		<?php
+		if ( isset( $style_options['description'] ) ) :
+			?>
+			<p class="description">
+				<?php
+				echo wp_kses(
+					$style_options['description'],
+					[
+						'code' => [],
+					]
+				);
+				?>
+			</p>
+			<?php
+		else :
+			echo '<br>';
+		endif;
+		?>
+	<?php endforeach; ?>
+</div>
