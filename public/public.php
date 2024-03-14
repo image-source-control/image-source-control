@@ -36,9 +36,7 @@ class ISC_Public extends ISC_Class {
 			return;
 		}
 
-		$options = $this->get_isc_options();
-		// load caption layout scripts and styles. The default layout loads scripts
-		if ( empty( $options['caption_style'] ) ) {
+		if ( ISC\Renderer\Caption::has_caption_style() ) {
 			add_action( 'wp_enqueue_scripts', [ $this, 'front_scripts' ] );
 			add_action( 'wp_head', [ $this, 'front_head' ] );
 		}
@@ -279,18 +277,18 @@ class ISC_Public extends ISC_Class {
 		}
 
 		$options = $this->get_isc_options();
-		// gather elements already replaced to prevent duplicate sources, see github #105
+		// gather elements already replaced to prevent duplicate sources, see GitHub #105
 		$replaced = [];
 
 		foreach ( $matches as $_match ) {
 			if ( ! $_match['img_src'] ) {
-				ISC_Log::log( 'skipped an image because src is empty' );
+				ISC_Log::log( 'ISC_Public::add_source_captions_to_content skipped an image because src is empty' );
 				continue;
 			}
 			$hash = md5( $_match['inner_code'] );
 
 			if ( in_array( $hash, $replaced, true ) ) {
-				ISC_Log::log( 'skipped an image because it appears multiple times' );
+				ISC_Log::log( 'ISC_Public::add_source_captions_to_content skipped an image because it appears multiple times' );
 				continue;
 			} else {
 				$replaced[] = $hash;
@@ -298,37 +296,28 @@ class ISC_Public extends ISC_Class {
 
 			$id = $this->html_analyzer->extract_image_id( $_match['inner_code'] );
 
-			// if ID is still missing get image by URL
+			// if ID is still missing get the image by URL
 			if ( ! $id ) {
 				$id = ISC_Model::get_image_by_url( $_match['img_src'] );
-				ISC_Log::log( sprintf( 'ID for source "%s": "%s"', $_match['img_src'], $id ) );
+				ISC_Log::log( sprintf( 'ISC_Public::add_source_captions_to_content ID for source "%s": "%s"', $_match['img_src'], $id ) );
 			}
 
-			// don’t show caption for own image if admin choose not to do so
-			if ( Standard_Source::hide_standard_source_for_image( $id ) ) {
-				ISC_Log::log( sprintf( 'skipped "own" image for ID "%s"', $id ) );
-				continue;
-			}
+			$source = ISC\Renderer\Caption::get( $id );
 
-			// don’t display empty sources
-			$source_string = $this->render_image_source_string( $id );
-			if ( ! $source_string ) {
-				ISC_Log::log( sprintf( 'skipped empty sources string for ID "%s"', $id ) );
+			if ( ! $source ) {
+				ISC_Log::log( sprintf( 'ISC_Public::add_source_captions_to_content skipped empty sources string for ID "%s"', $id ) );
 				continue;
 			}
 
 			// get any alignment from the original code
 			preg_match( '#alignleft|alignright|alignnone|aligncenter#is', $_match['full'], $matches_align );
-			$alignment = $matches_align[0] ?? '';
-
+			$alignment     = $matches_align[0] ?? '';
 			$old_content   = $_match['inner_code'];
-			$source        = ! empty( $options['source_pretext'] ) ? $options['source_pretext'] . ' ' . $source_string : $source_string;
 			$markup_before = '';
 			$markup_after  = '';
 
 			// default style
-			if ( empty( $options['caption_style'] ) ) {
-				$source        = '<span class="isc-source-text">' . $source . '</span>';
+			if ( ISC\Renderer\Caption::has_caption_style() ) {
 				$markup_before = '<span id="isc_attachment_' . $id . '" class="isc-source ' . $alignment . '">';
 				$markup_after  = '</span>';
 			}
@@ -339,7 +328,7 @@ class ISC_Public extends ISC_Class {
 					'%s%s%s%s',
 					apply_filters( 'isc_overlay_html_markup_before', $markup_before, $id ),
 					str_replace( 'wp-image-' . $id, 'wp-image-' . $id . ' with-source', $old_content ), // new content
-					apply_filters( 'isc_overlay_html_source', $source, $id ),
+					$source,
 					apply_filters( 'isc_overlay_html_markup_after', $markup_after, $id )
 				),
 				$content
@@ -984,9 +973,13 @@ class ISC_Public extends ISC_Class {
 	 * @return bool|string false if no source was given, else string with source
 	 */
 	public function render_image_source_string( $id, array $data = [], array $args = [] ) {
-		$id      = (int) $id;
-		$options = $this->get_isc_options();
+		$id = (int) $id;
 
+		if ( ! $id ) {
+			return false;
+		}
+
+		$options             = $this->get_isc_options();
 		$metadata['source']  = $data['source'] ?? self::get_image_source_text( $id );
 		$metadata['own']     = $data['own'] ?? Standard_Source::use_standard_source( $id );
 		$metadata['licence'] = $data['licence'] ?? self::get_image_license( $id );
@@ -1034,35 +1027,6 @@ class ISC_Public extends ISC_Class {
 		}
 
 		return $source;
-	}
-
-	/**
-	 * Render caption string / markup
-	 * The string is not wrapped, e.g., in a <span> tag
-	 *
-	 * @param int      $id   id of the image.
-	 * @param string[] $data metadata.
-	 * @param array    $args additional arguments
-	 *                       use "disable-links" = (any value), to disable any working links.
-	 *
-	 * @return string false if no source was given, else string with source
-	 */
-	public function render_caption_string( int $id, array $data = [], array $args = [] ) {
-		$source_string = $this->render_image_source_string( $id, $data, $args );
-
-		if ( ! $source_string ) {
-			ISC_Log::log( sprintf( 'render_caption_string() skipped overlay for empty sources string for ID "%s"', $id ) );
-			return '';
-		}
-
-		// don’t render the caption for own images if the admin choose not to do so
-		if ( Standard_Source::hide_standard_source_for_image( $id ) ) {
-			ISC_Log::log( sprintf( 'render_caption_string() skipped overlay for "own" image ID "%s"', $id ) );
-			return '';
-		}
-
-		$options = $this->get_isc_options();
-		return ! empty( $options['source_pretext'] ) ? $options['source_pretext'] . ' ' . $source_string : $source_string;
 	}
 
 	/**
