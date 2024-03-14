@@ -60,21 +60,6 @@ class ISC_Class {
 		protected $options = array();
 
 		/**
-		 * Position of image's caption
-		 *
-		 * @var array available positions for the image source overlay.
-		 */
-		protected $caption_position = array(
-			'top-left',
-			'top-center',
-			'top-right',
-			'center',
-			'bottom-left',
-			'bottom-center',
-			'bottom-right',
-		);
-
-		/**
 		 * Instance of ISC_Class.
 		 *
 		 * @var ISC_Class
@@ -329,87 +314,6 @@ class ISC_Class {
 			);
 
 			return apply_filters( 'isc_list_included_images_options', $included_images_options );
-		}
-
-		/**
-		 * Get the options for images that get an overlay with the source
-		 */
-		public function get_overlay_included_images_options() {
-			$included_images_options = array(
-				'default'  => array(
-					'label'       => __( 'Images in the content', 'image-source-control-isc' ),
-					'description' => sprintf(
-					// translators: %1$s is "img" and %2$s stands for "the_content" wrapped in "code" tags
-						__( 'Technically: %1$s tags within %2$s.', 'image-source-control-isc' ),
-						'<code>img</code>',
-						'<code>the_content</code>'
-					),
-					'value'       => '',
-					'coming_soon' => false,
-				),
-				'body_img' => array(
-					'label'       => __( 'Images on the whole page', 'image-source-control-isc' ),
-					'description' =>
-						__( 'Including featured image, header, sidebar, and footer.', 'image-source-control-isc' ) . ' ' .
-						sprintf(
-						// translators: %1$s is "img" and %2$s stands for "body" wrapped in "code" tags
-							__( 'Technically: %1$s tags within %2$s.', 'image-source-control-isc' ),
-							'<code>img</code>',
-							'<code>body</code>'
-						),
-					'value'       => 'body_img',
-					'is_pro'      => true,
-				),
-			);
-
-			return apply_filters( 'isc_overlay_included_images_options', $included_images_options );
-		}
-
-		/**
-		 * Get the advanced options for images that get an overlay with the source
-		 * These will be checkboxes. One can enable multiple options at once.
-		 */
-		public function get_overlay_advanced_included_images_options() {
-			$options = array(
-				'inline_style_data'  => array(
-					'label'       => __( 'Load the overlay text for inline styles', 'image-source-control-isc' ),
-					'value'       => 'inline_style_data',
-					'is_pro' => true,
-				),
-				'inline_style_show' => array(
-					'label'       => __( 'Display the overlay within HTML tags that use inline styles', 'image-source-control-isc' ),
-					'value'       => 'inline_style_show',
-					'is_pro'      => true,
-				),
-				'style_block_data'  => array(
-					'label'       => sprintf(
-						__( 'Load the overlay text for %s tags', 'image-source-control-isc' ),
-						'<code>style</code>'
-					),
-					'value'       => 'style_block_data',
-					'is_pro' => true,
-				),
-				'style_block_show' => array(
-					'label'       => sprintf(
-						__( 'Display the overlay after %s tags', 'image-source-control-isc' ),
-						'<code>style</code>'
-					),
-					'value'       => 'style_block_show',
-					'is_pro'      => true,
-				),
-			);
-
-			// push Avada Builder option as the first option
-			if ( defined( 'FUSION_BUILDER_VERSION' ) ) {
-				$avada_builder_option = [
-					'label'  => 'Avada Builder: ' . __( 'Display the overlay text for background images', 'image-source-control-isc' ),
-					'value'  => 'avada_background_overlay',
-					'is_pro' => true,
-				];
-				array_unshift( $options, $avada_builder_option );
-			}
-
-			return apply_filters( 'isc_overlay_advanced_included_images_options', $options );
 		}
 
 		/**

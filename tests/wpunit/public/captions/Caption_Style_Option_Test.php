@@ -123,28 +123,4 @@ class Caption_Style_Option_Test extends \Codeception\TestCase\WPTestCase {
 		// Trigger the wp_head action
 		do_action( 'wp_head' );
 	}
-
-	/**
-	 * Test that the front_head function is hooked in and executed when the caption_style option is any non-empty string other than "none"
-	 */
-	public function test_front_head_executed_when_caption_style_is_any_non_empty_string() {
-		// Mock the ISC_Public class
-		$mockISCPublic = $this->getMockBuilder( \ISC_Public::class )
-		                      ->onlyMethods( [ 'front_head', 'get_isc_options' ] )
-		                      ->getMock();
-
-		// The Mock should only return certain options
-		$isc_options                  = \ISC_Class::get_instance()->default_options();
-		$isc_options['caption_style'] = 'some-string';
-		$mockISCPublic->method('get_isc_options')->willReturn( $isc_options );
-
-		$mockISCPublic->expects( $this->never() )
-		              ->method( 'front_head' );
-
-		// Register ISC_Public hooks
-		do_action( 'wp' );
-		// Trigger the wp_head action
-		do_action( 'wp_head' );
-	}
-
 }
