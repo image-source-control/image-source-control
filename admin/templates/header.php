@@ -12,7 +12,7 @@
 		<h1><?php echo esc_html( $title ); ?></h1>
 	</div>
 	<div id="isc-header-links">
-		<?php if ( ! class_exists( 'ISC_Pro_Admin', false ) ) :
+		<?php if ( ! \ISC\Plugin::is_pro() ) :
 			echo ISC_Admin::get_pro_link( 'header-pro' );
 		endif; ?>
 		<?php switch ( $screen_id ) :

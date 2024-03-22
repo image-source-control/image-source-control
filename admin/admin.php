@@ -5,6 +5,7 @@
  * which is not the case for the Customizer of Block editor
  */
 
+use ISC\Plugin;
 use ISC\User;
 
 class ISC_Admin extends ISC_Class {
@@ -73,7 +74,7 @@ class ISC_Admin extends ISC_Class {
 	 */
 	public function add_links_to_plugin_page( $links ) {
 		// add link to premium.
-		if ( ! class_exists( 'ISC_Pro_Admin', false ) ) {
+		if ( ! Plugin::is_pro() ) {
 			array_unshift( $links, self::get_pro_link( 'plugin-overview' ) );
 		}
 		// settings link
@@ -265,7 +266,7 @@ class ISC_Admin extends ISC_Class {
 			return $form_fields;
 		}
 
-		if ( ! class_exists( 'ISC_Pro_Admin', false ) ) {
+		if ( ! Plugin::is_pro() ) {
 			$form_fields['isc_image_source_pro']['label'] = '';
 			$form_fields['isc_image_source_pro']['input'] = 'html';
 			$form_fields['isc_image_source_pro']['html']  = self::get_pro_link( 'attachment-edit' );
@@ -766,7 +767,7 @@ class ISC_Admin extends ISC_Class {
 	 * Render option for Elementor support
 	 */
 	public function renderfield_elementor() {
-		if ( ! class_exists( 'ISC_Pro_Admin', false ) ) {
+		if ( ! Plugin::is_pro() ) {
 			require_once ISCPATH . '/admin/templates/settings/elementor.php';
 		}
 

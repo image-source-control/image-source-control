@@ -32,6 +32,7 @@ class ComposerStaticInitdb72a6bac11cb0e6b971811c93d09a9b
         'ISC\\Feedback' => __DIR__ . '/../..' . '/includes/feedback.php',
         'ISC\\Helpers' => __DIR__ . '/../..' . '/includes/helpers.php',
         'ISC\\Newsletter' => __DIR__ . '/../..' . '/includes/newsletter.php',
+        'ISC\\Plugin' => __DIR__ . '/../..' . '/includes/plugin.php',
         'ISC\\Pro\\IPTC' => __DIR__ . '/../..' . '/pro/includes/IPTC.php',
         'ISC\\Settings\\Newsletter' => __DIR__ . '/../..' . '/includes/settings/newsletter.php',
         'ISC\\Standard_Source' => __DIR__ . '/../..' . '/includes/standard-source.php',

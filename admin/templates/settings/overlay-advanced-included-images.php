@@ -53,7 +53,7 @@
 		endif;
 		?>
 	<?php endforeach; ?>
-	<?php if ( ! class_exists( 'ISC_Pro_Admin', false ) ) : ?>
+	<?php if ( ! \ISC\Plugin::is_pro() ) : ?>
 		<p>
 			<?php echo ISC_Admin::get_pro_link( 'overlay-developer-options-pitch' ); ?>
 		</p>
