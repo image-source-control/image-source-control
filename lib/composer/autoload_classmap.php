@@ -12,6 +12,7 @@ return array(
     'ISC\\Feedback' => $baseDir . '/includes/feedback.php',
     'ISC\\Helpers' => $baseDir . '/includes/helpers.php',
     'ISC\\Newsletter' => $baseDir . '/includes/newsletter.php',
+    'ISC\\Plugin' => $baseDir . '/includes/plugin.php',
     'ISC\\Pro\\IPTC' => $baseDir . '/pro/includes/IPTC.php',
     'ISC\\Settings\\Newsletter' => $baseDir . '/includes/settings/newsletter.php',
     'ISC\\Standard_Source' => $baseDir . '/includes/standard-source.php',

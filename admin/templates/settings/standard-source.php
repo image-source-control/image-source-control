@@ -25,7 +25,7 @@
 	</label>
 	<input type="text" id="isc-custom-text" name="isc_options[standard_source_text]" value="<?php echo esc_attr( $standard_source_text ); ?>" <?php disabled( $standard_source != 'custom_text' ); ?> class="regular-text" placeholder="<?php echo esc_attr( ISC\Standard_Source::get_standard_source_text() ); ?>"/>
 	<?php do_action( 'isc_admin_settings_standard_source_options', $standard_source ); ?>
-	<?php if ( ! class_exists( 'ISC_Pro_Admin', false ) ) : ?>
+	<?php if ( ! \ISC\Plugin::is_pro() ) : ?>
 		<br/>
 		<label>
 			<input type="radio" name="isc_options[standard_source]" <?php checked( $standard_source, 'iptc' ); ?> disabled/>
@@ -35,7 +35,7 @@
 	<?php endif; ?>
 </div>
 <br/>
-<?php if ( ! class_exists( 'ISC_Pro_Admin', false ) ) : ?>
+<?php if ( ! \ISC\Plugin::is_pro() ) : ?>
 	<label>
 		<input type="checkbox" disabled="disabled">
 		<?php echo ISC_Admin::get_pro_link( 'standard-source' ); ?>
