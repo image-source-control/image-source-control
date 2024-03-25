@@ -739,7 +739,7 @@ class ISC_Public extends ISC_Class {
 		$options = $this->get_isc_options();
 
 		$global_list_path = apply_filters( 'isc_public_global_list_view_path', ISCPATH . 'public/views/global-list.php' );
-		if ( file_exists( $global_list_path ) ) {
+		if ( $global_list_path && file_exists( $global_list_path ) ) {
 			require $global_list_path;
 			$this->pagination_links( $up_limit, $before_links, $after_links, $prev_text, $next_text );
 		}
