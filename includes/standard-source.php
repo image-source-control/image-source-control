@@ -1,18 +1,13 @@
 <?php
+
+namespace ISC;
+
+use ISC_Class;
+
 /**
  * Render the standard source
  */
-namespace ISC;
-use ISC_Class;
-
 class Standard_Source {
-
-	/**
-	 * ISC options
-	 *
-	 * @var array
-	 */
-	protected static $options = null;
 
 	/**
 	 * Get the ISC options
@@ -20,18 +15,7 @@ class Standard_Source {
 	 * @return array
 	 */
 	protected static function get_options(): ?array {
-		if (self::$options === null) {
-			self::$options = ISC_Class::get_instance()->get_isc_options();
-		}
-		return self::$options;
-	}
-
-	/**
-	 * Clear class options
-	 * needed for automatic testing
-	 */
-	public static function clear_options() {
-		self::$options = null;
+		return ISC_Class::get_instance()->get_isc_options();
 	}
 
 	/**

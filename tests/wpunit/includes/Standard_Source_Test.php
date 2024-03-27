@@ -115,8 +115,6 @@ class Standard_Source_Test extends \Codeception\TestCase\WPTestCase {
 		update_post_meta( $image_id, 'isc_image_source_own', 1 );
 		// Set the standard source to author name
 		update_option( 'isc_options', [ 'standard_source' => 'author_name' ] );
-		// Clear the options cache
-		Standard_Source::clear_options();
 
 		$this->assertEquals( 'John Doe', Standard_Source::get_standard_source_text_for_attachment( $image_id ) );
 	}
