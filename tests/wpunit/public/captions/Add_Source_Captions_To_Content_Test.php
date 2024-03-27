@@ -2,7 +2,6 @@
 
 namespace ISC\Tests\WPUnit;
 
-use ISC\Standard_Source;
 use \ISC_Public;
 
 /**
