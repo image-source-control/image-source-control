@@ -83,7 +83,6 @@ class Extract_Images_From_Html_Test extends \Codeception\TestCase\WPTestCase {
 		$html     = '<img src=https://example.com/test>';
 		$expected = [];
 		$result   = $this->html_analyzer->extract_images_from_html( $html );
-		file_put_contents( WP_CONTENT_DIR . '/test.log', print_r( $result, true ) . "\n". FILE_APPEND );
 		$this->assertEquals( $expected, $result, 'extract_images_from_html did not return the correct image information' );
 	}
 
