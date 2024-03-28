@@ -146,7 +146,7 @@ class Add_Source_Captions_To_Content_Test extends \Codeception\TestCase\WPTestCa
 	 */
 	public function test_image_with_caption_style_none() {
 		// set the caption style to none
-		$isc_options                  = \ISC_Class::get_instance()->get_isc_options();
+		$isc_options                  = \ISC_Class::get_instance()->default_options();
 		$isc_options['caption_style'] = 'none';
 		update_option( 'isc_options', $isc_options );
 
@@ -154,5 +154,9 @@ class Add_Source_Captions_To_Content_Test extends \Codeception\TestCase\WPTestCa
 		$expected = '<img src="https://example.com/image-one.jpg" alt="Image" />Source: Author A';
 		$result   = $this->isc_public->add_source_captions_to_content( $html );
 		$this->assertEquals( $expected, $result, 'Image caption markup should not be shown' );
+
+		// revert the change to the default
+		$isc_options['caption_style'] = '';
+		update_option( 'isc_options', $isc_options );
 	}
 }
