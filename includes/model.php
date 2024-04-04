@@ -586,10 +586,9 @@ class ISC_Model {
 		$url          = apply_filters( 'isc_filter_url_pre_get_image_by_url', $url );
 
 		// replace certain characters that WordPress accepts in file names only to test if the URL is valid
-		// - "·" is in files names from DALL·E (OpenAI image generator)
-		$url_to_check = str_replace( [ 'DALL·E' ], 'DALLE', $url );
+		$url_to_check = esc_url( $url, [ 'http', 'https' ] );
 
-		if ( empty( $url ) || ! filter_var( $url_to_check, FILTER_VALIDATE_URL ) ) {
+		if ( empty( $url ) || $url_to_check !== $url ) {
 			return 0;
 		}
 
