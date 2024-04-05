@@ -41,7 +41,7 @@ class Caption extends Settings {
 	 */
 	public function render_field_overlay_text() {
 		$options = $this->get_isc_options();
-		require_once ISCPATH . '/admin/templates/settings/overlay-text.php';
+		require_once ISCPATH . '/admin/templates/settings/caption/overlay-text.php';
 	}
 
 	/**
@@ -52,7 +52,7 @@ class Caption extends Settings {
 		$caption_style         = $this->get_caption_style();
 		$caption_style_options = $this->get_caption_style_options();
 		require_once ISCPATH . '/admin/templates/settings/caption/style.php';
-		require_once ISCPATH . '/admin/templates/settings/overlay-position.php';
+		require_once ISCPATH . '/admin/templates/settings/caption/overlay-position.php';
 	}
 
 	/**
@@ -62,10 +62,10 @@ class Caption extends Settings {
 		$options                 = $this->get_isc_options();
 		$included_images         = ! empty( $options['overlay_included_images'] ) ? $options['overlay_included_images'] : '';
 		$included_images_options = $this->get_included_images_options();
-		require_once ISCPATH . '/admin/templates/settings/overlay-included-images.php';
+		require_once ISCPATH . '/admin/templates/settings/caption/overlay-included-images.php';
 		$checked_advanced_options = ! empty( $options['overlay_included_advanced'] ) && is_array( $options['overlay_included_advanced'] ) ? $options['overlay_included_advanced'] : [];
 		$advanced_options         = $this->get_advanced_included_images_options();
-		require_once ISCPATH . '/admin/templates/settings/overlay-advanced-included-images.php';
+		require_once ISCPATH . '/admin/templates/settings/caption/overlay-advanced-included-images.php';
 	}
 
 	/**
