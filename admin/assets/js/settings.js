@@ -60,6 +60,18 @@ jQuery( document ).ready(
 				}
 			});
 		});
+		// Add special characters to the source-pretext field by clicking on a button
+		document.querySelectorAll('#source-pretext-buttons button').forEach( function( button ) {
+			button.addEventListener('click', function() {
+				var inputField = document.getElementById('source-pretext');
+				inputField.value += this.textContent; // Use the button's content
+				inputField.focus(); // Optionally, refocus on the input field
+			});
+		});
+		// Show the buttons when the input is focused
+		document.getElementById('source-pretext').addEventListener('focus', function() {
+			document.getElementById('source-pretext-buttons').classList.remove('hidden');
+		});
 	}
 );
 

@@ -4,5 +4,9 @@
  *
  * @var array $options ISC options.
  */
+
 ?>
 <input type="text" id='source-pretext' name="isc_options[source_pretext]" value="<?php echo esc_attr( $options['source_pretext'] ); ?>" />
+<div id="source-pretext-buttons" class="hidden">
+	<button type="button">©</button>
+</div>
