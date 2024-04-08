@@ -45,4 +45,5 @@
 		endif;
 		?>
 	<?php endforeach; ?>
+	<p><a href="<?php echo esc_url( ISC_Admin::get_manual_url( 'overlay-layout' ) ); ?>" target="_blank"><?php esc_html_e( 'Manual', 'image-source-control-isc' ); ?></a></p>
 </div>
