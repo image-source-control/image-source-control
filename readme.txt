@@ -1,6 +1,6 @@
 === Image Source Control Lite – Show Image Credits and Captions ===
 Contributors: webzunft
-Tags: images, credits, captions, copyrights, attributions, photos, pictures, sources, bildquellen, bilder, fotos, bildunterschriften
+Tags: credits, captions, copyrights, attributions, image sources
 Requires at least: 5.3
 Tested up to: 6.5
 Stable tag: 2.22.0
