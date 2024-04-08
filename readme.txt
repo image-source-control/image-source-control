@@ -2,8 +2,8 @@
 Contributors: webzunft
 Tags: images, credits, captions, copyrights, attributions, photos, pictures, sources, bildquellen, bilder, fotos, bildunterschriften
 Requires at least: 5.3
-Tested up to: 6.4
-Stable tag: 2.21.0
+Tested up to: 6.5
+Stable tag: 2.22.0
 Requires PHP: 7.2
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -138,6 +138,16 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 1. Unused Images – Media Cleaner feature to safely remove unused images
 
 == Changelog ==
+
+= 2.22.0 =
+
+- Improvement: (Pro) removed the hotfix for Elementor’s Image Optimization feature after they fixed the issue on their end
+- Improvement: (Pro) added PHP translation files as supported in WP 6.5
+- Fix: (Pro) the bulk edit fields could show a wrong default value in the backend for certain options
+- Dev: (Pro) added the `isc_unused_images_per_page` filter to adjust the number of items per page in the [Unused Images list](https://imagesourcecontrol.com/features/delete-unused-images/)
+- Dev: adjusted the URL sanitization check to allow special characters in image URLs, like "©"
+- Dev: prevent a PHP deprecation warning when the `isc_public_global_list_view_path` filter returns an expected value
+- Dev: remove cached options in `Standard_Source` class to prevent caching of old options
 
 = 2.21.0 =
 
