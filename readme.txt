@@ -141,6 +141,7 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 
 = 2.22.0 =
 
+- Note about WordPress 6.5: The lightbox feature in WordPress core changed significantly and no longer supports image source overlays out of the box. I am working on a solution.
 - Improvement: (Pro) removed the hotfix for Elementor’s Image Optimization feature after they fixed the issue on their end
 - Improvement: (Pro) added PHP translation files as supported in WP 6.5
 - Fix: (Pro) the bulk edit fields could show a wrong default value in the backend for certain options
