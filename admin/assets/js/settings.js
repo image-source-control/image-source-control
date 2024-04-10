@@ -9,7 +9,7 @@ jQuery( document ).ready(
 		$( '#isc-settings-overlay-enable' ).on( 'click', function(){ isc_caption_checkstate() } );
 		$( '.isc-settings-standard-source input' ).on( 'change', isc_toggle_standard_source_text );
 		$( '#thumbnail-size-select, #use-thumbnail' ).on( 'change', function(){ isc_thumbnail_input_checkstate(); } );
-		$( '#isc-settings-caption-style' ).on( 'change', function(){ isc_toggle_caption_position(); } );
+		$( '#isc-settings-caption-style input' ).on( 'change', function(){ isc_toggle_caption_position(); } );
 
 		// Show and update preview when a position option is clicked
 		$('#isc-settings-caption-pos-options button').on( 'click', function (event) {
@@ -138,13 +138,13 @@ function isc_toggle_standard_source_text() {
  * Toggle the visibility of the position option when the caption style is changed
  */
 function isc_toggle_caption_position() {
-	var caption_style = document.getElementById( 'isc-settings-caption-style' );
+	var caption_style = document.querySelector( '#isc-settings-caption-style input:checked' );
 
 	if ( ! caption_style ) {
 		return;
 	}
 
-	if ( caption_style.checked ) {
+	if ( caption_style.value === 'none' ) {
 		document.getElementById( 'isc-settings-caption-position-options-wrapper' ).classList.add( 'hidden' );
 		// add class also to the sibling H4 element
 		document.getElementById( 'isc-settings-caption-position-options-wrapper' ).previousElementSibling.classList.add( 'hidden' );

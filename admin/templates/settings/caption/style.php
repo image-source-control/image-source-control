@@ -7,7 +7,7 @@
  */
 
 ?>
-<div class="isc-settings-highlighted">
+<div class="isc-settings-highlighted" id="isc-settings-caption-style">
 	<?php
 	foreach ( $caption_style_options as $_key => $style_options ) :
 		$value  = $style_options['value'] ?? '';
