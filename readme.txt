@@ -130,12 +130,15 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 
 == Screenshots ==
 
-1. edit image source settings in the Image block
-1. display a list with all images of your site and their sources
-1. display image source within the image
-1. basic settings to customize how to display image sources
-1. settings to manage image source licenses
+1. Display image attribution captions as an overlay above the image
+1. Display a list of all images of your site and their sources on a dedicated page
+1. Edit image source settings in the Image block
+1. Bulk-editing image sources in the Media Library
 1. Unused Images – Media Cleaner feature to safely remove unused images
+1. General settings to choose, where image sources are displayed
+1. Customizing the display of image captions as an overlay
+1. Customizing the global list of image sources
+1. Manage image usage licenses
 
 == Changelog ==
 
