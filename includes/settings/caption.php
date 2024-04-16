@@ -30,10 +30,19 @@ class Caption extends Settings {
 	public function add_settings_section() {
 
 		// source in caption
-		add_settings_section( 'isc_settings_section_overlay', '2. ' . __( 'Overlay', 'image-source-control-isc' ), '__return_false', 'isc_settings_page' );
+		add_settings_section( 'isc_settings_section_overlay', __( 'Overlay', 'image-source-control-isc' ), '__return_false', 'isc_settings_page' );
+		add_settings_field( 'source_type_overlay', __( 'Enable', 'image-source-control-isc' ), [ $this, 'render_field_source_type_overlay' ], 'isc_settings_page', 'isc_settings_section_overlay' );
 		add_settings_field( 'source_overlay', __( 'Overlay prefix', 'image-source-control-isc' ), [ $this, 'render_field_overlay_text' ], 'isc_settings_page', 'isc_settings_section_overlay' );
 		add_settings_field( 'overlay_style', __( 'Layout', 'image-source-control-isc' ), [ $this, 'render_field_overlay_style' ], 'isc_settings_page', 'isc_settings_section_overlay' );
 		add_settings_field( 'overlay_included_images', __( 'Included images', 'image-source-control-isc' ), [ $this, 'render_field_overlay_included_images' ], 'isc_settings_page', 'isc_settings_section_overlay' );
+	}
+
+	/**
+	 * Render the option to enable Overlays
+	 */
+	public function render_field_source_type_overlay() {
+		$options = $this->get_isc_options();
+		require_once ISCPATH . '/admin/templates/settings/caption/enable.php';
 	}
 
 	/**

@@ -99,20 +99,20 @@ function isc_thumbnail_input_checkstate(){
  * disable them if the Overlay position option is not enabled
  */
 function isc_caption_checkstate() {
-	var overlay_option = document.getElementById( 'isc-settings-overlay-enable' );
+	var overlay_enabled = document.getElementById( 'isc-settings-overlay-enable' );
 
-	if ( ! overlay_option ) {
+	if ( ! overlay_enabled ) {
 		return;
 	}
 	// Exclude disabled premium features from toggling their state
-	var elements = document.querySelectorAll( '.isc_settings_section_overlay input:not(.is-pro), .isc_settings_section_overlay select' );
-	if ( overlay_option.checked ) {
+	var elements = document.querySelectorAll( '.isc_settings_section_overlay .form-table tr:not(:first-of-type)' );
+	if ( overlay_enabled.checked ) {
 		Array.prototype.forEach.call( elements, function(el, i) {
-			el.removeAttribute( 'disabled' );
+			el.style.display = 'table-row';
 		} );
 	} else {
 		Array.prototype.forEach.call( elements, function(el, i) {
-			el.setAttribute( 'disabled', 'disabled' );
+			el.style.display = 'none';
 		} );
 	}
 }
