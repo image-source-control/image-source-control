@@ -385,7 +385,6 @@ class ISC_Admin extends ISC_Class {
 		// Position: How and where to display image sources
 		add_settings_section( 'isc_settings_section_source_type', __( 'Position of the image sources', 'image-source-control-isc' ), [ $this, 'render_section_position' ], 'isc_settings_page' );
 		add_settings_field( 'source_type_list', '1. ' . __( 'Per-page list', 'image-source-control-isc' ), [ $this, 'renderfield_source_type_list' ], 'isc_settings_page', 'isc_settings_section_source_type' );
-		add_settings_field( 'source_type_overlay', '2. ' . __( 'Overlay', 'image-source-control-isc' ), [ $this, 'renderfield_source_type_overlay' ], 'isc_settings_page', 'isc_settings_section_source_type' );
 		add_settings_field( 'full_list_type', '3. ' . __( 'Global list', 'image-source-control-isc' ), [ $this, 'renderfield_source_type_complete_list' ], 'isc_settings_page', 'isc_settings_section_source_type' );
 
 		// settings for sources list below content
@@ -589,14 +588,6 @@ class ISC_Admin extends ISC_Class {
 	public function renderfield_source_type_list() {
 		$options = $this->get_isc_options();
 		require_once ISCPATH . '/admin/templates/settings/source-type-list.php';
-	}
-
-	/**
-	 * Position: option to enable Overlays
-	 */
-	public function renderfield_source_type_overlay() {
-		$options = $this->get_isc_options();
-		require_once ISCPATH . '/admin/templates/settings/source-type-overlay.php';
 	}
 
 	/**
