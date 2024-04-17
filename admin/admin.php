@@ -26,9 +26,8 @@ class ISC_Admin extends ISC_Class {
 		add_action( 'admin_notices', [ $this, 'branded_admin_header' ] );
 		add_action( 'admin_notices', [ $this, 'admin_notices' ] );
 
-		// settings page
+		// backend pages
 		add_action( 'admin_menu', [ $this, 'add_menu_items' ] );
-		add_action( 'admin_init', [ $this, 'settings_init' ] );
 
 		// scripts and styles
 		add_action( 'admin_enqueue_scripts', [ $this, 'add_admin_scripts' ] );
@@ -45,6 +44,8 @@ class ISC_Admin extends ISC_Class {
 
 		// fire when an attachment is removed
 		add_action( 'delete_attachment', [ $this, 'delete_attachment' ] );
+
+		new \ISC\Settings();
 	}
 
 	/**
@@ -123,20 +124,12 @@ class ISC_Admin extends ISC_Class {
 
 	/**
 	 * Add scripts to ISC-related pages
-	 *
-	 * @param string $hook settings page hool.
-	 *
-	 * @since  1.0
-	 * @update 1.1.1
 	 */
-	public function add_admin_scripts( $hook ) {
+	public function add_admin_scripts() {
 		$screen = get_current_screen();
 
 		if ( ! isset( $screen->id ) ) {
 			return;
-		}
-		if ( $screen->id === 'settings_page_isc-settings' ) {
-			wp_enqueue_script( 'isc_settings_script', plugins_url( '/assets/js/settings.js', __FILE__ ), [], ISCVERSION, true );
 		}
 
 		if ( $screen->id === 'media_page_isc-sources' ) {
@@ -193,21 +186,6 @@ class ISC_Admin extends ISC_Class {
 				.row-actions .isc-get-pro {
 					font-weight: bold;
 					color: #F70;
-				}
-			</style>
-			<?php
-		}
-		// add style and scripts to settings page
-		if ( isset( $screen->id ) && $screen->id === 'settings_page_isc-settings' ) {
-			?>
-			<script>
-				isc_settings = {
-					baseurl: '<?php echo esc_url( ISCBASEURL ); ?>'
-				};
-			</script>
-			<style>
-				#isc-settings-caption-pos-options {
-					background: url(<?php echo esc_url( ISCBASEURL ) . 'admin/templates/settings/preview/image-for-position-preview.jpg'; ?>) no-repeat center/cover;
 				}
 			</style>
 			<?php
@@ -341,14 +319,6 @@ class ISC_Admin extends ISC_Class {
 			'isc-sources',
 			[ $this, 'render_sources_page' ]
 		);
-
-		add_options_page(
-			__( 'Image Source Control Settings', 'image-source-control-isc' ),
-			__( 'Image Sources', 'image-source-control-isc' ),
-			'edit_others_posts',
-			'isc-settings',
-			[ $this, 'render_isc_settings_page' ]
-		);
 	}
 
 	/**
@@ -371,142 +341,6 @@ class ISC_Admin extends ISC_Class {
 				$title = get_admin_page_title();
 		}
 		include ISCPATH . 'admin/templates/header.php';
-	}
-
-	/**
-	 * Settings API initialization
-	 */
-	public function settings_init() {
-		$this->upgrade_management();
-		register_setting( 'isc_options_group', 'isc_options', [ $this, 'settings_validation' ] );
-
-		new ISC\Settings\Newsletter();
-
-		// Position: How and where to display image sources
-		add_settings_section( 'isc_settings_section_source_type', __( 'Position of the image sources', 'image-source-control-isc' ), [ $this, 'render_section_position' ], 'isc_settings_page' );
-		add_settings_field( 'source_type_list', '1. ' . __( 'Per-page list', 'image-source-control-isc' ), [ $this, 'renderfield_source_type_list' ], 'isc_settings_page', 'isc_settings_section_source_type' );
-		add_settings_field( 'full_list_type', '3. ' . __( 'Global list', 'image-source-control-isc' ), [ $this, 'renderfield_source_type_complete_list' ], 'isc_settings_page', 'isc_settings_section_source_type' );
-
-		// settings for sources list below content
-		add_settings_section( 'isc_settings_section_list_below_content', '1. ' . __( 'Per-page list', 'image-source-control-isc' ), '__return_false', 'isc_settings_page' );
-		add_settings_field( 'image_list_headline', __( 'Headline', 'image-source-control-isc' ), [ $this, 'renderfield_list_headline' ], 'isc_settings_page', 'isc_settings_section_list_below_content' );
-		add_settings_field( 'below_content_included_images', __( 'Included images', 'image-source-control-isc' ), [ $this, 'renderfield_below_content_included_images' ], 'isc_settings_page', 'isc_settings_section_list_below_content' );
-
-		new ISC\Settings\Caption();
-
-		// Global list group
-		add_settings_section( 'isc_settings_section_complete_list', '3. ' . __( 'Global list', 'image-source-control-isc' ), '__return_false', 'isc_settings_page' );
-		add_settings_field( 'global_list_included_images', __( 'Included images', 'image-source-control-isc' ), [ $this, 'renderfield_global_list_included_images' ], 'isc_settings_page', 'isc_settings_section_complete_list' );
-		add_settings_field( 'images_per_page_in_list', __( 'Images per page', 'image-source-control-isc' ), [ $this, 'renderfield_images_per_page_in_list' ], 'isc_settings_page', 'isc_settings_section_complete_list' );
-		add_settings_field( 'global_list_included_data', __( 'Included data', 'image-source-control-isc' ), [ $this, 'renderfield_global_list_data' ], 'isc_settings_page', 'isc_settings_section_complete_list' );
-
-		// Licence settings group
-		add_settings_section( 'isc_settings_section_licenses', __( 'Image licenses', 'image-source-control-isc' ), '__return_false', 'isc_settings_page' );
-		add_settings_field( 'enable_licences', __( 'Enable licenses', 'image-source-control-isc' ), [ $this, 'renderfield_enable_licences' ], 'isc_settings_page', 'isc_settings_section_licenses' );
-		add_settings_field( 'licences', __( 'List of licenses', 'image-source-control-isc' ), [ $this, 'renderfield_licences' ], 'isc_settings_page', 'isc_settings_section_licenses' );
-
-		// Misc settings group
-		add_settings_section( 'isc_settings_section_misc', __( 'Miscellaneous settings', 'image-source-control-isc' ), '__return_false', 'isc_settings_page' );
-		add_settings_field( 'standard_source', __( 'Standard source', 'image-source-control-isc' ), [ $this, 'renderfield_standard_source' ], 'isc_settings_page', 'isc_settings_section_misc' );
-		add_settings_field( 'block_options', __( 'Block options', 'image-source-control-isc' ), [ $this, 'renderfield_block_options' ], 'isc_settings_page', 'isc_settings_section_misc' );
-		if ( defined( 'ELEMENTOR_VERSION' ) ) {
-			add_settings_field( 'elementor', 'Elementor', [ $this, 'renderfield_elementor' ], 'isc_settings_page', 'isc_settings_section_misc' );
-		}
-		add_settings_field( 'warning_one_source', __( 'Warn about missing sources', 'image-source-control-isc' ), [ $this, 'renderfield_warning_source_missing' ], 'isc_settings_page', 'isc_settings_section_misc' );
-		add_settings_field( 'enable_log', __( 'Debug log', 'image-source-control-isc' ), [ $this, 'renderfield_enable_log' ], 'isc_settings_page', 'isc_settings_section_misc' );
-		add_settings_field( 'remove_on_uninstall', __( 'Delete data on uninstall', 'image-source-control-isc' ), [ $this, 'renderfield_remove_on_uninstall' ], 'isc_settings_page', 'isc_settings_section_misc' );
-	}
-
-	/**
-	 * Manage data structure upgrading of outdated versions
-	 */
-	public function upgrade_management() {
-		$default_options = $this->default_options();
-
-		/**
-		 * This function checks options in database
-		 * during the admin_init hook to handle plugin's upgrade.
-		 */
-		$options = get_option( 'isc_options', $default_options );
-
-		if ( is_array( $options ) ) {
-			// version 1.7 and higher
-			if ( version_compare( '1.7', $options['version'], '>' ) ) {
-				// convert old into new settings
-				if ( isset( $options['attach_list_to_post'] ) ) {
-					$options['display_type'][] = 'list';
-				}
-				if ( isset( $options['source_on_image'] ) ) {
-					$options['display_type'][] = 'overlay';
-				}
-			}
-		} else {
-			// create options from default just in case the isc_option is stored with something other than an array in it.
-			update_option( 'isc_options', $default_options );
-			$options = $default_options;
-		}
-
-		if ( ISCVERSION !== $options['version'] ) {
-			$options            = $options + $default_options;
-			$options['version'] = ISCVERSION;
-			update_option( 'isc_options', $options );
-		}
-	}
-
-	/**
-	 * Image_control's page callback
-	 */
-	public function render_isc_settings_page() {
-		require_once ISCPATH . '/admin/templates/settings.php';
-	}
-
-	/**
-	 * Prints out all settings sections added to a particular settings page
-	 *
-	 * Copy of do_settings_sections() in WP 5.5.1 with adjustments to design each settings section in a meta box.
-	 *
-	 * @param string $page                 The slug name of the page whose settings sections you want to output.
-	 *
-	 * @global array $wp_settings_fields   Storage array of settings fields and info about their pages/sections.
-	 *
-	 * @global array $wp_settings_sections Storage array of all settings sections added to admin pages.
-	 */
-	public static function do_settings_sections( $page ) {
-		global $wp_settings_sections;
-
-		if ( ! isset( $wp_settings_sections[ $page ] ) ) {
-			return;
-		}
-
-		foreach ( (array) $wp_settings_sections[ $page ] as $section ) {
-
-			?>
-			<div class="postbox <?php echo esc_attr( $section['id'] ); ?>" id="<?php echo esc_attr( $section['id'] ); ?>">
-				<?php
-				if ( $section['title'] ) {
-					?>
-					<div class="postbox-header"><h2 class="hndle"><?php echo esc_html( $section['title'] ); ?></h2></div>
-					<?php
-				}
-
-				?>
-				<div class="inside">
-					<div class="submitbox">
-						<?php
-						if ( $section['callback'] ) {
-							call_user_func( $section['callback'], $section );
-						}
-						?>
-						<table class="form-table" role="presentation">
-							<?php
-							do_settings_fields( $page, $section['id'] );
-							?>
-						</table>
-					</div>
-				</div>
-			</div>
-			<?php
-		}
 	}
 
 	/**
@@ -573,188 +407,6 @@ class ISC_Admin extends ISC_Class {
 	 */
 	public function render_sources_page_section( $section, $title = '', $id = '' ) {
 		include ISCPATH . '/admin/templates/sources/section.php';
-	}
-
-	/**
-	 * Render the top of the Position settings section
-	 */
-	public function render_section_position() {
-		require_once ISCPATH . '/admin/templates/settings/section-position.php';
-	}
-
-	/**
-	 * Position: option to enable the Per-page list
-	 */
-	public function renderfield_source_type_list() {
-		$options = $this->get_isc_options();
-		require_once ISCPATH . '/admin/templates/settings/source-type-list.php';
-	}
-
-	/**
-	 * Position: information about how to use the complete source list
-	 */
-	public function renderfield_source_type_complete_list() {
-		require_once ISCPATH . '/admin/templates/settings/source-type-all.php';
-	}
-
-	/**
-	 * Render option to define a headline for the image list
-	 */
-	public function renderfield_list_headline() {
-		$options = $this->get_isc_options();
-		require_once ISCPATH . '/admin/templates/settings/source-list-headline.php';
-	}
-
-	/**
-	 * Render option to define which images to show on the sources list of the current page
-	 */
-	public function renderfield_below_content_included_images() {
-		$options                 = $this->get_isc_options();
-		$included_images         = ! empty( $options['list_included_images'] ) ? $options['list_included_images'] : '';
-		$included_images_options = $this->get_list_included_images_options();
-		require_once ISCPATH . '/admin/templates/settings/below-content-included-images.php';
-	}
-
-	/**
-	 * Render option to define which images should show in the global list
-	 */
-	public function renderfield_global_list_included_images() {
-		$options                 = $this->get_isc_options();
-		$included_images         = ! empty( $options['global_list_included_images'] ) ? $options['global_list_included_images'] : '';
-		$included_images_options = $this->get_global_list_included_images_options();
-		require_once ISCPATH . '/admin/templates/settings/global-list-included-images.php';
-	}
-
-	/**
-	 * Render option for the number of images per page in the Global list
-	 */
-	public function renderfield_images_per_page_in_list() {
-		$options         = $this->get_isc_options();
-		$images_per_page = isset( $options['images_per_page'] ) ? absint( $options['images_per_page'] ) : 99999;
-		require_once ISCPATH . '/admin/templates/settings/images-per-page.php';
-	}
-
-	/**
-	 * Render option to define which columns show up the global list
-	 */
-	public function renderfield_global_list_data() {
-		$options                  = $this->get_isc_options();
-		$included_columns         = ! empty( $options['global_list_included_data'] ) ? $options['global_list_included_data'] : [];
-		$included_columns_options = $this->get_global_list_included_data_options();
-		require_once ISCPATH . '/admin/templates/settings/global-list-data.php';
-	}
-
-	/**
-	 * Render option to display thumbnails in the Global list
-	 */
-	public function renderfield_thumbnail_in_list() {
-		$options = $this->get_isc_options();
-		$sizes   = [];
-
-		// convert the sizes array to match key and value
-		foreach ( $this->thumbnail_size as $_size ) {
-			$sizes[ $_size ] = $_size;
-		}
-
-		// requires WP 5.3
-		if ( function_exists( 'wp_get_registered_image_subsizes' ) ) {
-			// go through sizes we consider for thumbnails and get their current sizes as set up in WordPress
-			$wp_image_sizes = wp_get_registered_image_subsizes();
-			if ( is_array( $wp_image_sizes ) ) {
-				foreach ( $wp_image_sizes as $_name => $_sizes ) {
-					if ( isset( $sizes[ $_name ] ) ) {
-						$sizes[ $_name ] = $_sizes;
-					}
-				}
-			}
-		}
-
-		require_once ISCPATH . '/admin/templates/settings/global-list-thumbnail-enable.php';
-	}
-
-	/**
-	 * Render option to enable the license settings.
-	 */
-	public function renderfield_enable_licences() {
-		$options = $this->get_isc_options();
-		require_once ISCPATH . '/admin/templates/settings/licenses-enable.php';
-	}
-
-	/**
-	 * Render option to define the available licenses
-	 */
-	public function renderfield_licences() {
-		$options = $this->get_isc_options();
-
-		// fall back to default if field is empty
-		if ( empty( $options['licences'] ) ) {
-			// retrieve default options
-			$default = ISC_Class::get_instance()->default_options();
-			if ( ! empty( $default['licences'] ) ) {
-				$options['licences'] = $default['licences'];
-			}
-		}
-
-		require_once ISCPATH . '/admin/templates/settings/licenses.php';
-	}
-
-	/**
-	 * Render options for standard image sources
-	 */
-	public function renderfield_standard_source() {
-		$standard_source      = ISC\Standard_Source::get_standard_source();
-		$standard_source_text = ISC\Standard_Source::get_standard_source_text();
-		require_once ISCPATH . '/admin/templates/settings/standard-source.php';
-
-		do_action( 'isc_admin_settings_template_after_standard_source' );
-	}
-
-	/**
-	 * Render options for block editor support
-	 */
-	public function renderfield_block_options() {
-		$options  = $this->get_isc_options();
-		$checked  = ISC_Block_Options::enabled();
-		$disabled = apply_filters( 'isc_force_block_options', false );
-		require_once ISCPATH . '/admin/templates/settings/block-options.php';
-	}
-
-	/**
-	 * Render option for Elementor support
-	 */
-	public function renderfield_elementor() {
-		if ( ! Plugin::is_pro() ) {
-			require_once ISCPATH . '/admin/templates/settings/elementor.php';
-		}
-
-		do_action( 'isc_admin_settings_template_after_elementor' );
-	}
-
-	/**
-	 * Render the option to display a warning in the admin area if an image source is missing.
-	 */
-	public function renderfield_warning_source_missing() {
-		$options = $this->get_isc_options();
-		require_once ISCPATH . '/admin/templates/settings/warn-source-missing.php';
-	}
-
-	/**
-	 * Render the option to log image source activity in isc.log
-	 */
-	public function renderfield_enable_log() {
-		$options      = $this->get_isc_options();
-		$checked      = ! empty( $options['enable_log'] );
-		$log_file_url = ISC_Log::get_log_file_URL();
-		require_once ISCPATH . '/admin/templates/settings/log-enable.php';
-	}
-
-	/**
-	 * Render the option to remove all options and meta data when the plugin is deleted.
-	 */
-	public function renderfield_remove_on_uninstall() {
-		$options = $this->get_isc_options();
-		$checked = ! empty( $options['remove_on_uninstall'] );
-		require_once ISCPATH . '/admin/templates/settings/remove-on-uninstall.php';
 	}
 
 	/**
@@ -856,93 +508,6 @@ class ISC_Admin extends ISC_Class {
 		ISC_Storage_Model::clear_storage();
 
 		die( esc_html__( 'Storage deleted', 'image-source-control-isc' ) );
-	}
-
-	/**
-	 * Input validation function.
-	 *
-	 * @param array $input values from the admin panel.
-	 */
-	public function settings_validation( $input ) {
-		$output = $this->get_isc_options();
-		if ( ! is_array( $input['display_type'] ) ) {
-			$output['display_type'] = [];
-		} else {
-			$output['display_type'] = $input['display_type'];
-		}
-		$output['list_on_archives'] = ! empty( $input['list_on_archives'] );
-		$output['list_on_excerpts'] = ! empty( $input['list_on_excerpts'] );
-
-		$output['image_list_headline'] = isset( $input['image_list_headline'] ) ? esc_html( $input['image_list_headline'] ) : '';
-		$output['enable_licences']     = ! empty( $input['enable_licences'] );
-
-		if ( isset( $input['licences'] ) ) {
-			$output['licences'] = esc_textarea( $input['licences'] );
-		} else {
-			$output['licences'] = false;
-		}
-		$output['images_per_page'] = absint( $input['images_per_page'] );
-		if ( isset( $input['thumbnail_in_list'] ) ) {
-			$output['thumbnail_in_list'] = true;
-			if ( in_array( $input['thumbnail_size'], $this->thumbnail_size, true ) ) {
-				$output['thumbnail_size'] = $input['thumbnail_size'];
-			}
-			if ( 'custom' === $input['thumbnail_size'] ) {
-				if ( is_numeric( $input['thumbnail_width'] ) ) {
-					// Ensures that the value stored in database in a positive integer.
-					$output['thumbnail_width'] = absint( round( $input['thumbnail_width'] ) );
-				}
-				if ( is_numeric( $input['thumbnail_height'] ) ) {
-					$output['thumbnail_height'] = absint( round( $input['thumbnail_height'] ) );
-				}
-			}
-		} else {
-			$output['thumbnail_in_list'] = false;
-		}
-		$output['warning_onesource_missing'] = ! empty( $input['warning_onesource_missing'] );
-
-		// remove the debug log file when it was disabled
-		if ( isset( $output['enable_log'] ) && ! isset( $input['enable_log'] ) ) {
-			ISC_Log::delete_log_file();
-		}
-		$output['enable_log']          = ! empty( $input['enable_log'] );
-		$output['block_options']       = ! empty( $input['block_options'] );
-		$output['remove_on_uninstall'] = ! empty( $input['remove_on_uninstall'] );
-		$output['hide_list']           = ! empty( $input['hide_list'] );
-
-		$output['list_included_images']        = isset( $input['list_included_images'] ) ? esc_attr( $input['list_included_images'] ) : '';
-		$output['global_list_included_images'] = isset( $input['global_list_included_images'] ) ? esc_attr( $input['global_list_included_images'] ) : '';
-
-		/**
-		 * 2.0 moved the options to handle "own images" into "standard sources" and only offers a single choice for one of the options now
-		 * this section maps old to new settings
-		 */
-		if ( ! empty( $input['exclude_own_images'] ) ) {
-			// don’t show sources for marked images
-			$output['standard_source'] = 'exclude';
-		} elseif ( ! empty( $input['use_authorname'] ) ) {
-			// show author name
-			$output['standard_source'] = 'author_name';
-		} else {
-			$output['standard_source'] = isset( $input['standard_source'] ) ? esc_attr( $input['standard_source'] ) : 'custom_text';
-		}
-
-		// custom source text
-		if ( isset( $input['by_author_text'] ) ) {
-			$output['standard_source_text'] = esc_html( $input['by_author_text'] );
-		} else {
-			$output['standard_source_text'] = isset( $input['standard_source_text'] ) ? esc_attr( $input['standard_source_text'] ) : ISC\Standard_Source::get_standard_source_text();
-		}
-
-		// add activation date when the settings are saved for the first time
-		if ( ! array_key_exists( 'activated', $output ) ) {
-			$output['activated'] = time();
-		}
-
-		/**
-		 * Allow other developers to manipulate settings on save
-		 */
-		return apply_filters( 'isc_settings_on_save_after_validation', $output, $input );
 	}
 
 	/**

@@ -1,6 +1,6 @@
 <?php
 
-namespace ISC\Settings;
+namespace ISC\Settings\Sections;
 
 use ISC\User;
 

@@ -1,13 +1,13 @@
 <?php
 
-namespace ISC\Settings;
+namespace ISC\Settings\Sections;
 
 use ISC\Settings;
 
 /**
  * Handle caption/overlay settings
  */
-class Caption extends Settings {
+class Caption extends Settings\Section {
 
 	/**
 	 * Position of image's caption
