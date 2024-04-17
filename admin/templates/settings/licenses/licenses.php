@@ -4,6 +4,7 @@
  *
  * @var array $options ISC options.
  */
+
 ?>
 <div id="isc-settings-licenses">
 	<textarea name="isc_options[licences]"><?php echo esc_html( $options['licences'] ); ?></textarea>

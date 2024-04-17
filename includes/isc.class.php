@@ -193,7 +193,6 @@ class ISC_Class {
 			$default['thumbnail_height']          = 150;
 			$default['warning_onesource_missing'] = true;
 			$default['remove_on_uninstall']       = false;
-			$default['hide_list']                 = false;
 			$default['caption_position']          = 'top-left';
 			$default['caption_style']             = null;
 			$default['source_pretext']            = __( 'Source:', 'image-source-control-isc' );
@@ -269,105 +268,6 @@ class ISC_Class {
 				ISC_Model::update_missing_sources_transient();
 			}
 		}
-
-		/**
-		 * Get the options for included images in the sources list
-		 */
-		public function get_list_included_images_options() {
-			$included_images_options = array(
-				'default'   => array(
-					'label'       => __( 'Images in the content', 'image-source-control-isc' ),
-					'description' => sprintf(
-						// translators: %1$s is "img" and %2$s stands for "the_content" wrapped in "code" tags
-						__( 'Technically: %1$s tags within %2$s and the featured image.', 'image-source-control-isc' ),
-						'<code>img</code>',
-						'<code>the_content</code>'
-					),
-					'value'       => '',
-					'coming_soon' => false,
-				),
-				'body_img'  => array(
-					'label'       => __( 'Images on the whole page', 'image-source-control-isc' ),
-					'description' =>
-						__( 'Including header, sidebar, and footer.', 'image-source-control-isc' ) . ' ' .
-						sprintf(
-						// translators: %1$s is "img" and %2$s stands for "body" wrapped in "code" tags
-							__( 'Technically: %1$s tags within %2$s.', 'image-source-control-isc' ),
-							'<code>img</code>',
-							'<code>body</code>'
-						),
-					'value'       => 'body_img',
-					'is_pro'      => true,
-				),
-				'body_urls' => array(
-					'label'       => __( 'Any image URL', 'image-source-control-isc' ),
-					'description' =>
-						__( 'Including CSS background, JavaScript, or HTML attributes.', 'image-source-control-isc' ) . ' ' .
-						sprintf(
-						// translators: %s stands for "body" wrapped in "code" tags
-							__( 'Technically: any image URL found in %s.', 'image-source-control-isc' ),
-							'<code>html</code>'
-						),
-					'value'       => 'body_urls',
-					'is_pro'      => true,
-				),
-			);
-
-			return apply_filters( 'isc_list_included_images_options', $included_images_options );
-		}
-
-		/**
-		 * Get the options for images that appear in the global list
-		 */
-		public function get_global_list_included_images_options() {
-			$included_images_options = array(
-				'in_posts'  => array(
-					'label'       => __( 'Images in the content', 'image-source-control-isc' ),
-					'description' => __( 'Only images that are used within the post and page content.', 'image-source-control-isc' ),
-					'value'       => '',
-				),
-				'all' => array(
-					'label'       => __( 'All images', 'image-source-control-isc' ),
-					'description' => __( 'All images in the Media library, regardless of whether they are used within the post and page content or not', 'image-source-control-isc' ),
-					'value'       => 'all',
-					'is_pro'      => false,
-				),
-				'with_sources' => array(
-					'label'       => __( 'Images with sources', 'image-source-control-isc' ),
-					'description' => __( 'All images in the Media library that have an individual source or use the standard source.', 'image-source-control-isc' ),
-					'value'       => 'with_sources',
-					'is_pro'      => true,
-				),
-			);
-
-			return apply_filters( 'isc_global_list_included_images_options', $included_images_options );
-		}
-
-	/**
-	 * Get the options for which columns appear in the global list
-	 */
-	public function get_global_list_included_data_options() {
-		$included_columns_options = array(
-			'attachment_id' => array(
-				'label'       => __( 'Attachment ID', 'image-source-control-isc' ),
-				'is_pro'      => true,
-			),
-			'title' => array(
-				'label'       => __( 'Title', 'image-source-control-isc' ),
-				'is_pro'      => true,
-			),
-			'posts' => array(
-				'label'       => __( 'Attached to', 'image-source-control-isc' ),
-				'is_pro'      => true,
-			),
-			'source' => array(
-				'label'       => __( 'Source', 'image-source-control-isc' ),
-				'is_pro'      => true,
-			)
-		);
-
-		return apply_filters( 'isc_global_list_included_data_options', $included_columns_options );
-	}
 
 		/**
 		 * Get image source string before it was filtered for output

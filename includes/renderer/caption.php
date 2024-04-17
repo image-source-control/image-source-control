@@ -3,8 +3,8 @@
 namespace ISC\Renderer;
 
 use ISC\Renderer;
-use ISC_Log;
 use ISC\Standard_Source;
+use ISC_Log;
 
 /**
  * Render the caption.
@@ -96,7 +96,7 @@ class Caption extends Renderer {
 	 * @return bool
 	 */
 	public static function has_caption_style(): bool {
-		$style = \ISC\Settings\Caption::get_instance()->get_isc_options()['caption_style'];
+		$style = \ISC\Settings\Sections\Caption::get_instance()->get_isc_options()['caption_style'];
 		return $style !== 'none';
 	}
 }

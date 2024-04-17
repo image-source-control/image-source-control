@@ -5,8 +5,6 @@
  * @var array $options ISC options.
  */
 ?>
-<p><?php esc_html_e( 'A list of sources for images on the current page.', 'image-source-control-isc' ); ?></p>
-<br/>
 <div class="isc-settings-highlighted">
 <label>
 	<input type="checkbox" name="isc_options[display_type][]" value="list" <?php checked( in_array( 'list', $options['display_type'], true ), true ); ?> />
@@ -27,13 +25,13 @@
 			esc_html__( 'Place the shortcode %s anywhere in your content or widget to show the image source list.', 'image-source-control-isc' ),
 			wp_kses(
 				'<code>[isc_list]</code>',
-				array(
-					'code' => array(),
-				)
+				[
+					'code' => [],
+				]
 			)
 		);
 		?>
-		 <a href="<?php echo esc_url( ISC_Admin::get_manual_url( 'settings-per-page-list-position' ) ); ?>" target="_blank"><?php esc_html_e( 'Manual', 'image-source-control-isc' ); ?></a>
+		<a href="<?php echo esc_url( ISC_Admin::get_manual_url( 'settings-per-page-list-position' ) ); ?>" target="_blank"><?php esc_html_e( 'Manual', 'image-source-control-isc' ); ?></a>
 	</p>
 	<h4><?php esc_html_e( 'Archive pages', 'image-source-control-isc' ); ?></h4>
 	<p class="description"><?php esc_html_e( 'The following options try to place image sources within post content on post list pages like your home page or category archives.', 'image-source-control-isc' ); ?></p>
