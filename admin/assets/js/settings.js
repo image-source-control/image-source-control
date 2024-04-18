@@ -62,6 +62,24 @@ jQuery( document ).ready(
 				}
 			});
 		});
+		// close the newsletter signup box without signing up
+		$('#isc_settings_section_signup .postbox-header .dashicons-no-alt').on( 'click', function() {
+			$('#isc-signup-nl').prop( 'disabled', true );
+			$('#isc-signup-loader').removeClass('hidden');
+			$.ajax({
+				type: 'POST',
+				url: ajaxurl,
+				data: {
+					action: 'newsletter_close',
+					nonce: isc.ajaxNonce,
+				},
+				dataType: 'json',
+				success: function( response ) {
+					$('#isc_settings_section_signup').remove();
+				}
+			});
+		});
+
 		// Add special characters to the source-pretext field by clicking on a button
 		document.querySelectorAll('#source-pretext-buttons button').forEach( function( button ) {
 			button.addEventListener('click', function() {

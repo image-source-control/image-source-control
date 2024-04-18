@@ -72,6 +72,13 @@ class Newsletter {
 	}
 
 	/**
+	 * Close the newsletter box
+	 */
+	public function close() {
+		update_user_meta( get_current_user_id(), 'isc_newsletter_closed', true );
+	}
+
+	/**
 	 * Check if the user is subscribed to the newsletter
 	 *
 	 * @return bool
@@ -80,6 +87,17 @@ class Newsletter {
 		$user_id = get_current_user_id();
 
 		return ! $user_id || get_user_meta( $user_id, 'isc_newsletter_subscribed', true );
+	}
+
+	/**
+	 * Check if the user closed the newsletter box
+	 *
+	 * @return bool
+	 */
+	public function current_user_closed_signup(): bool {
+		$user_id = get_current_user_id();
+
+		return ! $user_id || get_user_meta( $user_id, 'isc_newsletter_closed', true );
 	}
 
 	/**
