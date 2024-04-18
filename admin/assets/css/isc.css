@@ -74,6 +74,7 @@
 .isc-settings-highlighted .description { margin-left: 1.7em; margin-bottom: .5em; }
 #isc-settings-licenses textarea { width: 40em; height: 7em; }
 #isc-section-wrapper .hndle { cursor: text; user-select: all; }
+#isc-section-wrapper .postbox-header .dashicons-no-alt { cursor: pointer; margin-right: 8px; }
 #thumbnail-size-select { vertical-align: baseline;}
 
 #isc-settings-caption-position-options-wrapper:not(.hidden) {
