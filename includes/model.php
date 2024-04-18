@@ -102,28 +102,23 @@ class ISC_Model {
 		foreach ( $image_ids as $id => $url ) {
 			if ( is_array( $isc_post_images ) && ! array_key_exists( $id, $isc_post_images ) ) {
 				ISC_Log::log( 'add new image: ' . $id );
-				array_push( $added_images, $id );
+				$added_images[] = $id;
 			}
 		}
 		if ( is_array( $isc_post_images ) ) {
 			foreach ( $isc_post_images as $old_id => $value ) {
-				// if (!in_array($old_id, $image_ids)) {
 				if ( ! array_key_exists( $old_id, $image_ids ) ) {
-					array_push( $removed_images, $old_id );
+					$removed_images[] = $old_id;
 					ISC_Log::log( 'remove image: ' . $old_id );
-				} else {
-					if ( ! empty( $old_id ) ) {
+				} elseif ( ! empty( $old_id ) ) {
 						$meta = get_post_meta( $old_id, 'isc_image_posts', true );
-						if ( empty( $meta ) ) {
-							self::update_post_meta( $old_id, 'isc_image_posts', [ $post_id ] );
-						} else {
-							// In case the isc_image_posts is not up to date
-							if ( is_array( $meta ) && ! in_array( $post_id, $meta ) ) {
-								array_push( $meta, $post_id );
-								$meta = array_unique( $meta );
-								self::update_post_meta( $old_id, 'isc_image_posts', $meta );
-							}
-						}
+					if ( empty( $meta ) ) {
+						self::update_post_meta( $old_id, 'isc_image_posts', [ $post_id ] );
+					} elseif ( is_array( $meta ) && ! in_array( $post_id, $meta ) ) {
+						// In case the isc_image_posts is not up to date
+						$meta[] = $post_id;
+						$meta   = array_unique( $meta );
+						self::update_post_meta( $old_id, 'isc_image_posts', $meta );
 					}
 				}
 			}
@@ -131,11 +126,11 @@ class ISC_Model {
 
 		foreach ( $added_images as $id ) {
 			$meta = get_post_meta( $id, 'isc_image_posts', true );
-			if ( ! is_array( $meta ) || $meta == [] ) {
+			if ( ! is_array( $meta ) || $meta === [] ) {
 				self::update_post_meta( $id, 'isc_image_posts', [ $post_id ] );
 			} else {
-				array_push( $meta, $post_id );
-				$meta = array_unique( $meta );
+				$meta[] = $post_id;
+				$meta   = array_unique( $meta );
 				self::update_post_meta( $id, 'isc_image_posts', $meta );
 			}
 		}
@@ -156,7 +151,7 @@ class ISC_Model {
 	/**
 	 * Retrieve images added to a post or page and save all information as a post meta value for the post
 	 *
-	 * @param integer $post_id ID of a post.
+	 * @param integer $post_id   ID of a post.
 	 * @param array   $image_ids IDs of the attachments in the content.
 	 *
 	 * @todo check for more post types that maybe should not be parsed here
@@ -191,45 +186,6 @@ class ISC_Model {
 	}
 
 	/**
-	 * Add meta values to all attachments
-	 *
-	 * @todo probably deprecated
-	 * @todo probably need to fix this when more fields are added along the way
-	 * @todo use compare => 'NOT EXISTS' when WP 3.5 is up to retrieve only values where it is not set
-	 * @todo this currently updates all empty fields; empty in this context is empty string, 0, false or not existing; add check if meta field already existed before
-	 */
-	public function add_meta_values_to_attachments() {
-		// retrieve all attachments
-		$args = [
-			'post_type'   => 'attachment',
-			'numberposts' => -1,
-			'post_status' => null,
-			'post_parent' => null,
-		];
-
-		$attachments = get_posts( $args );
-		if ( empty( $attachments ) || ! is_array( $attachments ) ) {
-			return;
-		}
-
-		$count = 0;
-		foreach ( $attachments as $_attachment ) {
-			$set = false;
-			setup_postdata( $_attachment );
-			foreach ( $this->fields as $_field ) {
-				$meta = get_post_meta( $_attachment->ID, $_field['id'], true );
-				if ( empty( $meta ) ) {
-					self::update_post_meta( $_attachment->ID, $_field['id'], $_field['default'] );
-					$set = true;
-				}
-			}
-			if ( $set ) {
-				$count++;
-			}
-		}
-	}
-
-	/**
 	 * Update attachment meta field
 	 *
 	 * @param integer $att_id attachment post ID.
@@ -259,7 +215,7 @@ class ISC_Model {
 			self::save_field( $post['ID'], 'isc_image_source', $attachment['isc_image_source'] );
 		}
 		if ( isset( $attachment['isc_image_source_url'] ) ) {
-			self::save_field( $post['ID'], 'isc_image_source_url', $this->sanitize_source_url( $attachment['isc_image_source_url'], $attachment['isc_image_source'] ) );
+			self::save_field( $post['ID'], 'isc_image_source_url', $this->sanitize_source_url( $attachment['isc_image_source_url'] ) );
 		}
 		$own = ( isset( $attachment['isc_image_source_own'] ) ) ? $attachment['isc_image_source_own'] : '';
 		self::save_field( $post['ID'], 'isc_image_source_own', $own );
@@ -274,7 +230,7 @@ class ISC_Model {
 	/**
 	 * Sanitize source URL string by removing any HTML tags
 	 *
-	 * @param string $source_url source URL string
+	 * @param string $source_url source URL string.
 	 *
 	 * @return string sanitized source URL
 	 */
@@ -285,9 +241,9 @@ class ISC_Model {
 	/**
 	 * Store attachment-related post meta values
 	 *
-	 * @param int    $att_id WP_Post ID of the attachment
-	 * @param string $key post meta key
-	 * @param mixed  $value post meta value
+	 * @param int    $att_id WP_Post ID of the attachment.
+	 * @param string $key post meta key.
+	 * @param mixed  $value post meta value.
 	 */
 	public static function save_field( $att_id, $key, $value ) {
 		if ( is_string( $value ) ) {
@@ -310,9 +266,9 @@ class ISC_Model {
 		$post = get_post( $post_id );
 
 		if ( ! isset( $post->post_type )
-			 || ! in_array( $post->post_type, get_post_types( [ 'public' => true ], 'names' ), true ) // is the post type public
-			 || $post->post_type === 'attachment'
-			 || $post->post_type === 'revision' ) {
+			|| ! in_array( $post->post_type, get_post_types( [ 'public' => true ], 'names' ), true ) // is the post type public
+			|| $post->post_type === 'attachment'
+			|| $post->post_type === 'revision' ) {
 			return false;
 		}
 
@@ -354,6 +310,8 @@ class ISC_Model {
 	/**
 	 * Remove the post_images index from a single post
 	 * namely the post meta field `isc_post_images`
+	 *
+	 * @param int $post_id Post ID.
 	 */
 	public static function clear_single_post_images_index( $post_id ) {
 		delete_post_meta( $post_id, 'isc_post_images' );
@@ -368,6 +326,7 @@ class ISC_Model {
 	public static function clear_post_images_index() {
 		global $wpdb;
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.SlowDBQuery.slow_db_query_meta_key
 		return $wpdb->delete( $wpdb->postmeta, [ 'meta_key' => 'isc_post_images' ], [ '%s' ] );
 	}
 
@@ -380,6 +339,7 @@ class ISC_Model {
 	public static function clear_image_posts_index() {
 		global $wpdb;
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.SlowDBQuery.slow_db_query_meta_key
 		return $wpdb->delete( $wpdb->postmeta, [ 'meta_key' => 'isc_image_posts' ], [ '%s' ] );
 	}
 
@@ -422,12 +382,15 @@ class ISC_Model {
 	 * @return array with attachments. Returns all attachments in the Media Library if called without additional arguments.
 	 */
 	public static function get_attachments( $args ) {
-		$args = wp_parse_args( $args, [
-			'post_type'   => 'attachment',
-			'numberposts' => -1,
-			'post_status' => null,
-			'post_parent' => null,
-		] );
+		$args = wp_parse_args(
+			$args,
+			[
+				'post_type'   => 'attachment',
+				'numberposts' => -1,
+				'post_status' => null,
+				'post_parent' => null,
+			]
+		);
 
 		return get_posts( $args );
 	}
@@ -443,6 +406,7 @@ class ISC_Model {
 			'numberposts' => self::MAX_POSTS,
 			'post_status' => null,
 			'post_parent' => null,
+			// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 			'meta_query'  => [
 				'relation' => 'OR', // Use OR to combine the conditions
 				// images with empty source string that are not using the standard source option
@@ -618,8 +582,8 @@ class ISC_Model {
 		// $types = implode( '|', ISC_Class::get_instance()->allowed_extensions );
 		// $newurl = esc_url( preg_replace( "/(-e\d+){0,1}(-\d+x\d+){0,1}\.({$types})(.*)/i", '.${3}', $url ) );
 		// this is how WordPress core is detecting changed image URLs
-		$newurl   = esc_url( preg_replace( "/-(?:\d+x\d+|scaled|rotated)\.{$ext}(.*)/i", '.' . $ext, $url ) );
-		$storage  = new ISC_Storage_Model();
+		$newurl  = esc_url( preg_replace( "/-(?:\d+x\d+|scaled|rotated)\.{$ext}(.*)/i", '.' . $ext, $url ) );
+		$storage = new ISC_Storage_Model();
 
 		// check if the URL is already in storage and if so, take it from there
 		if ( $storage->is_image_url_in_storage( $newurl ) ) {
@@ -673,7 +637,8 @@ class ISC_Model {
 		// not escaped, because escaping already happened above
 		$raw_query = "SELECT ID, guid FROM `$wpdb->posts` WHERE post_type='attachment' AND {$url_query_string} LIMIT 1";
 
-		$query   = apply_filters( 'isc_get_image_by_url_query', $raw_query, $newurl );
+		$query = apply_filters( 'isc_get_image_by_url_query', $raw_query, $newurl );
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
 		$results = $wpdb->get_results( $query );
 
 		$id   = isset( $results[0]->ID ) ? absint( $results[0]->ID ) : 0;
@@ -687,7 +652,15 @@ class ISC_Model {
 		 * @param int   $id     attachment ID or null
 		 * @param array $params array with additional, optional parameters
 		 */
-		$id = apply_filters( 'isc_filter_final_id_get_image_by_url', $id, [ 'original_url' => $original_url, 'newurl' => $newurl, 'url' => $url ] );
+		$id = apply_filters(
+			'isc_filter_final_id_get_image_by_url',
+			$id,
+			[
+				'original_url' => $original_url,
+				'newurl'       => $newurl,
+				'url'          => $url,
+			]
+		);
 
 		if ( $id ) {
 			$storage->update_post_id( $guid, $id );
@@ -737,54 +710,55 @@ class ISC_Model {
 	public static function get_posts_with_image_index(): array {
 		$post_types = get_post_types( [ 'public' => true ] );
 		// remove the attachment post type
-		$post_types = array_diff( $post_types, ['attachment'] );
-		$results = [];
+		$post_types = array_diff( $post_types, [ 'attachment' ] );
+		$results    = [];
 
 		foreach ( $post_types as $post_type ) {
 			$count_posts = wp_count_posts( $post_type );
 			$total_posts = $count_posts->publish;
 
-			$args = [
+			$args                     = [
 				'post_type'      => $post_type,
 				'posts_per_page' => self::MAX_POSTS,
 				'post_status'    => 'publish',
 				'fields'         => 'ids',
+				// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 				'meta_query'     => [
 					[
 						'key'     => 'isc_post_images',
 						'compare' => 'NOT EXISTS',
-					]
-				]
+					],
+				],
 			];
-			$query_without = new WP_Query( $args );
+			$query_without            = new WP_Query( $args );
 			$posts_without_meta_field = $query_without->post_count;
 
-			$results[$post_type] = [
-				'total_posts'          => $total_posts,
-				'without_meta_field'   => $posts_without_meta_field,
-				'with_meta_field'      => $total_posts - $posts_without_meta_field
+			$results[ $post_type ] = [
+				'total_posts'        => $total_posts,
+				'without_meta_field' => $posts_without_meta_field,
+				'with_meta_field'    => $total_posts - $posts_without_meta_field,
 			];
 		}
 
 		return $results;
 	}
 
-    /**
-     * Get the attachment’s file URL from the database
-     *
-     * @param int $image_id
-     *
-     * @return string
-     */
-    public function get_base_file_url( int $image_id ): string {
-        // load the attachment post
-        $file = get_post_meta( $image_id, '_wp_attached_file', true );
-        // get guid as fallback, e.g., _wp_attached_file can be empty for external images
-        if ( empty( $file ) ) {
-            $attachment = get_post( $image_id );
-            $file       = $attachment->guid;
-        }
+	/**
+	 * Get the attachment’s file URL from the database
+	 *
+	 * @param int $image_id Attachment ID.
+	 *
+	 * @return string
+	 */
+	public function get_base_file_url( int $image_id ): string {
+		// load the attachment post
+		$file = get_post_meta( $image_id, '_wp_attached_file', true );
+		// get guid as fallback, e.g., _wp_attached_file can be empty for external images
+		if ( empty( $file ) ) {
+			$attachment = get_post( $image_id );
+			$file       = $attachment->guid;
+		}
 
-        return $file;
-    }
+		return $file;
+	}
 }
