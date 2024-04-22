@@ -25,14 +25,15 @@ Image Source Control is your go-to solution when it comes to handling copyright-
 Choose between different credit displays:
 
 * List all image sources below the content of a specific page or place the list manually
-* Show an image caption overlay above the image
+* Show an image caption overlay above or below the image
 * Embed a complete image credit list with thumbnails on your website
 
 **Frontend Features**
 
 * Display image credits in the content, for image galleries, images added by shortcodes, and featured images
 * … see more listed under Premium features below
-* Define the layout and position of those attributions
+* Define the layout and position of the caption overlay
+* Show the image source fully, or only on click or mouseover
 * Attach the Per-page list automatically, by using a shortcode, or with a PHP function
 * Display image sources on archive pages
 * Link to the copyright holder and include a link to the image license
@@ -64,6 +65,7 @@ Check out the premium features to display the image caption overlay for featured
 * Bulk-edit image copyright information in the media library
 * Show the standard picture credit for all images without a selected source
 * [Display IPTC copyright metadata](https://imagesourcecontrol.com/blog/iptc-copyright-information-image-caption-wordpress/) in the backend and automatically as a standard source in the frontend
+* Show the full text only after a click or on mouseover on the caption overlay
 * Choose which data is displayed in the Global List
 * List only images with a proper source in the Global List
 * Show image sources for Elementor background images, images in Kadence Blocks Galleries, and Kadence Related Content Carousel
@@ -135,8 +137,8 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 1. Edit image source settings in the Image block
 1. Bulk-editing image sources in the Media Library
 1. Unused Images – Media Cleaner feature to safely remove unused images
-1. General settings to choose, where image sources are displayed
 1. Customizing the display of image captions as an overlay
+1. Customizing the list of image sources displayed under posts
 1. Customizing the global list of image sources
 1. Manage image usage licenses
 
