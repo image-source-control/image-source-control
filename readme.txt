@@ -3,7 +3,7 @@ Contributors: webzunft
 Tags: credits, captions, copyrights, attributions, image sources
 Requires at least: 5.3
 Tested up to: 6.5
-Stable tag: 2.22.0
+Stable tag: 2.23.0
 Requires PHP: 7.2
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -141,6 +141,14 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 1. Manage image usage licenses
 
 == Changelog ==
+
+= 2.23.0 =
+
+- Feature: (Pro) two new overlay behaviors: show the full caption only after a click or on mouseover
+- Improvement: rearranged the settings page for more clarity
+- Improvement: renamed the "pre-text" option for overlay text to "prefix"
+- Improvement: added a button to close the newsletter signup form
+- Dev: rewritten the code that renders and handles the settings page
 
 = 2.22.0 =
 
