@@ -147,6 +147,7 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 = 2.23.1 =
 
 - Fix: a fatal error prevented the settings page from loading fully when Elementor was enabled
+- Fix: (Pro) license activations on subsites on a multisite didn’t work reliably
 
 = 2.23.0 =
 
