@@ -51,7 +51,7 @@ class Miscellaneous extends Settings\Section {
 	 * Render option for Elementor support
 	 */
 	public function render_field_elementor() {
-		if ( ! \Plugin::is_pro() ) {
+		if ( ! \ISC\Plugin::is_pro() ) {
 			require_once ISCPATH . '/admin/templates/settings/miscellaneous/elementor.php';
 		}
 
