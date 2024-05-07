@@ -201,6 +201,21 @@ class Caption extends Settings\Section {
 			array_unshift( $options, $avada_builder_option );
 		}
 
+		// push WP Bakery option as the first option
+		if ( defined( 'WPB_VC_VERSION' ) ) {
+			$wp_bakery_option = [
+				'label'  => 'WP Bakery: ' . __( 'Display the overlay text for background images', 'image-source-control-isc' )
+					. '. ' . sprintf(
+						'<a href="%s" target="_blank">%s</a>',
+						'https://imagesourcecontrol.com/documentation/compatibility/#WPBakery_Page_Builder',
+						__( 'Manual', 'image-source-control-isc' )
+					),
+				'value'  => 'wp_bakery_background_overlay',
+				'is_pro' => true,
+			];
+			array_unshift( $options, $wp_bakery_option );
+		}
+
 		return apply_filters( 'isc_overlay_advanced_included_images_options', $options );
 	}
 

@@ -27,6 +27,10 @@
 					$_options['label'],
 					[
 						'code' => [],
+						'a'    => [
+							'href'   => [],
+							'target' => [],
+						],
 					]
 				);
 			endif;
