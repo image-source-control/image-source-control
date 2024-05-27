@@ -23,6 +23,9 @@ class ISC_Public extends ISC_Class {
 		parent::__construct();
 
 		add_action( 'wp', [ $this, 'register_hooks' ] );
+
+		// prepare the log
+		$this->prepare_log();
 	}
 
 	/**
@@ -70,6 +73,19 @@ class ISC_Public extends ISC_Class {
 		}
 
 		return apply_filters( 'isc_can_load', '__return_true' );
+	}
+
+	/**
+	 * Prepare the log file
+	 */
+	public function prepare_log() {
+		if ( ISC_Log::clear_log() ) {
+			ISC_Log::delete_log_file();
+		}
+
+		if ( ISC_Log::enabled() ) {
+			ISC_Log::log( '---' );
+		}
 	}
 
 	/**
@@ -159,9 +175,6 @@ class ISC_Public extends ISC_Class {
 	 * @return string $content
 	 */
 	public function add_sources_to_content( $content ) {
-		// create a new line in the log to separate different posts
-		ISC_Log::log( '---' );
-
 		// bail early if the content is used to create the excerpt
 		if ( doing_filter( 'get_the_excerpt' ) ) {
 			ISC_Log::log( 'skipped adding sources to the excerpt' );
@@ -199,6 +212,10 @@ class ISC_Public extends ISC_Class {
 			return $content;
 		}
 
+		if ( ISC_Log::is_type( 'extended' ) ) {
+			ISC_Log::log_stack_trace();
+		}
+
 		// create index, if it doesn’t exist, yet
 		$attachments = get_post_meta( $post->ID, 'isc_post_images', true );
 
@@ -206,7 +223,7 @@ class ISC_Public extends ISC_Class {
 		 * $attachments is an empty string if it was never set and an array if it was set
 		 * the array is empty if no images were found in the past. This prevents re-indexing as well
 		 */
-		if ( $attachments === '' ) {
+		if ( $attachments === '' || ISC_Log::ignore_caches() ) {
 			ISC_Log::log( 'isc_post_images is empty. Updating index for post ID ' . $post->ID );
 
 			// retrieve images added to a post or page and save all information as a post meta value for the post
@@ -221,7 +238,7 @@ class ISC_Public extends ISC_Class {
 			&& apply_filters( 'isc_public_add_source_captions_to_content', true ) ) {
 			$content = self::add_source_captions_to_content( $content );
 		} else {
-			ISC_Log::log( 'ISC_Public: not creating image overlays because the option is disabled for post content' );
+			ISC_Log::log( 'not creating image overlays because the option is disabled for post content' );
 		}
 		// maybe add source list
 		$content = self::add_source_list_to_content( $content );
