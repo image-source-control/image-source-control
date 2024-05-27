@@ -36,13 +36,13 @@ class Caption extends Renderer {
 	public static function get( int $image_id, array $data = [], array $args = [] ) {
 		$source = \ISC_Public::get_instance()->render_image_source_string( $image_id, $data, $args );
 		if ( ! $source ) {
-			ISC_Log::log( sprintf( 'ISC\Render\Caption::get() skipped overlay for empty sources string for ID "%s"', $image_id ) );
+			ISC_Log::log( sprintf( 'skipped overlay for empty sources string for ID "%s"', $image_id ) );
 			return '';
 		}
 
 		// don’t render the caption for own images if the admin choose not to do so
 		if ( Standard_Source::hide_standard_source_for_image( $image_id ) ) {
-			ISC_Log::log( sprintf( 'ISC\Render\Caption::get() skipped overlay for "own" image ID "%s"', $image_id ) );
+			ISC_Log::log( sprintf( 'skipped overlay for "own" image ID "%s"', $image_id ) );
 			return '';
 		}
 

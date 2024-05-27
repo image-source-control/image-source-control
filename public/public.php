@@ -36,6 +36,9 @@ class ISC_Public extends ISC_Class {
 			return;
 		}
 
+		// prepare the log
+		$this->prepare_log();
+
 		if ( ISC\Renderer\Caption::has_caption_style() ) {
 			add_action( 'wp_enqueue_scripts', [ $this, 'front_scripts' ] );
 			add_action( 'wp_head', [ $this, 'front_head' ] );
@@ -70,6 +73,19 @@ class ISC_Public extends ISC_Class {
 		}
 
 		return apply_filters( 'isc_can_load', '__return_true' );
+	}
+
+	/**
+	 * Prepare the log file
+	 */
+	public function prepare_log() {
+		if ( ISC_Log::clear_log() ) {
+			ISC_Log::delete_log_file();
+		}
+
+		if ( ISC_Log::enabled() ) {
+			ISC_Log::log( '---' );
+		}
 	}
 
 	/**
@@ -159,9 +175,6 @@ class ISC_Public extends ISC_Class {
 	 * @return string $content
 	 */
 	public function add_sources_to_content( $content ) {
-		// create a new line in the log to separate different posts
-		ISC_Log::log( '---' );
-
 		// bail early if the content is used to create the excerpt
 		if ( doing_filter( 'get_the_excerpt' ) ) {
 			ISC_Log::log( 'skipped adding sources to the excerpt' );
@@ -199,6 +212,10 @@ class ISC_Public extends ISC_Class {
 			return $content;
 		}
 
+		if ( ISC_Log::is_type( 'backtrace' ) ) {
+			ISC_Log::log_stack_trace();
+		}
+
 		// create index, if it doesn’t exist, yet
 		$attachments = get_post_meta( $post->ID, 'isc_post_images', true );
 
@@ -206,7 +223,7 @@ class ISC_Public extends ISC_Class {
 		 * $attachments is an empty string if it was never set and an array if it was set
 		 * the array is empty if no images were found in the past. This prevents re-indexing as well
 		 */
-		if ( $attachments === '' ) {
+		if ( $attachments === '' || ISC_Log::ignore_caches() ) {
 			ISC_Log::log( 'isc_post_images is empty. Updating index for post ID ' . $post->ID );
 
 			// retrieve images added to a post or page and save all information as a post meta value for the post
@@ -221,7 +238,7 @@ class ISC_Public extends ISC_Class {
 			&& apply_filters( 'isc_public_add_source_captions_to_content', true ) ) {
 			$content = self::add_source_captions_to_content( $content );
 		} else {
-			ISC_Log::log( 'ISC_Public: not creating image overlays because the option is disabled for post content' );
+			ISC_Log::log( 'not creating image overlays because the option is disabled for post content' );
 		}
 		// maybe add source list
 		$content = self::add_source_list_to_content( $content );
@@ -281,13 +298,13 @@ class ISC_Public extends ISC_Class {
 
 		foreach ( $matches as $_match ) {
 			if ( ! $_match['img_src'] ) {
-				ISC_Log::log( 'ISC_Public::add_source_captions_to_content skipped an image because src is empty' );
+				ISC_Log::log( 'skipped an image because src is empty' );
 				continue;
 			}
 			$hash = md5( $_match['inner_code'] );
 
 			if ( in_array( $hash, $replaced, true ) ) {
-				ISC_Log::log( 'ISC_Public::add_source_captions_to_content skipped an image because it appears multiple times' );
+				ISC_Log::log( 'skipped an image because it appears multiple times' );
 				continue;
 			} else {
 				$replaced[] = $hash;
@@ -298,13 +315,13 @@ class ISC_Public extends ISC_Class {
 			// if ID is still missing get the image by URL
 			if ( ! $id ) {
 				$id = ISC_Model::get_image_by_url( $_match['img_src'] );
-				ISC_Log::log( sprintf( 'ISC_Public::add_source_captions_to_content ID for source "%s": "%s"', $_match['img_src'], $id ) );
+				ISC_Log::log( sprintf( 'ID for source "%s": "%s"', $_match['img_src'], $id ) );
 			}
 
 			$source = ISC\Renderer\Caption::get( $id );
 
 			if ( ! $source ) {
-				ISC_Log::log( sprintf( 'ISC_Public::add_source_captions_to_content skipped empty sources string for ID "%s"', $id ) );
+				ISC_Log::log( sprintf( 'skipped empty sources string for ID "%s"', $id ) );
 				continue;
 			}
 
@@ -437,7 +454,7 @@ class ISC_Public extends ISC_Class {
 		// don’t do anything on REST requests since that causes issues with the block editor rendering a "post" for each image
 		// just in case, we also prevent output for "content" from attachments
 		if ( defined( 'REST_REQUEST' ) || ! isset( $post->post_type ) || 'attachment' === $post->post_type ) {
-			ISC_Log::log( 'exit list_post_attachments_with_sources() because of invalid request' );
+			ISC_Log::log( 'exit because of invalid request' );
 			return '';
 		}
 
@@ -453,7 +470,7 @@ class ISC_Public extends ISC_Class {
 		// allow developers to override the output of the sources list
 		$override = apply_filters( 'isc_sources_list_override_output', false, $post_id );
 		if ( $override ) {
-			ISC_Log::log( 'exit list_post_attachments_with_sources() because override was set' );
+			ISC_Log::log( 'exit because override was set' );
 			return $override;
 		}
 
@@ -489,7 +506,7 @@ class ISC_Public extends ISC_Class {
 			return $this->render_attachments( $atts );
 		} else {
 			// see description above.
-			ISC_Log::log( 'exit list_post_attachments_with_sources() without any images found ' );
+			ISC_Log::log( 'exit without any images found ' );
 			// allow to return result if the source list is empty.
 			return apply_filters( 'isc_source_list_empty_output', '' );
 		}
@@ -508,7 +525,7 @@ class ISC_Public extends ISC_Class {
 
 		// don't display anything, if no image sources displayed
 		if ( $attachments === [] ) {
-			ISC_Log::log( 'exit render_attachments() due to missing attachments' );
+			ISC_Log::log( 'exit due to missing attachments' );
 			return '';
 		}
 
@@ -554,11 +571,11 @@ class ISC_Public extends ISC_Class {
 	public function list_post_attachments_with_sources_shortcode( $atts = [] ) {
 		global $post;
 
-		ISC_Log::log( 'enter list_post_attachments_with_sources_shortcode() for [isc_list] shortcode' );
+		ISC_Log::log( 'enter for [isc_list] shortcode' );
 
 		// hotfix for https://github.com/webgilde/image-source-control/issues/48 to prevent loops
 		if ( defined( 'REST_REQUEST' ) ) {
-			ISC_Log::log( 'exit list_post_attachments_with_sources_shortcode() due to calling through REST_REQUEST' );
+			ISC_Log::log( 'exit due to calling through REST_REQUEST' );
 			return '';
 		}
 

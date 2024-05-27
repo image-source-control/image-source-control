@@ -72,7 +72,7 @@ class Miscellaneous extends Settings\Section {
 	public function render_field_enable_log() {
 		$options      = $this->get_isc_options();
 		$checked      = ! empty( $options['enable_log'] );
-		$log_file_url = \ISC_Log::get_log_file_URL();
+		$log_file_url = \ISC_Log::get_log_file_url();
 		require_once ISCPATH . '/admin/templates/settings/miscellaneous/log-enable.php';
 	}
 

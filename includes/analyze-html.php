@@ -81,9 +81,9 @@ class Analyze_HTML {
 		$success = preg_match( '#wp-image-(\d+)|data-id="(\d+)#is', $html, $matches_id );
 		if ( $success ) {
 			$id = $matches_id[1] ? intval( $matches_id[1] ) : intval( $matches_id[2] );
-			\ISC_Log::log( sprintf( 'ISC\Analyze_HTML:extract_image_id: found ID "%s"', $id ) );
+			\ISC_Log::log( sprintf( 'found ID "%s"', $id ) );
 		} else {
-			\ISC_Log::log( sprintf( 'ISC\Analyze_HTML:extract_image_id: no ID found for "%s"', $html ) );
+			\ISC_Log::log( sprintf( 'no ID found for "%s"', $html ) );
 		}
 
 		return $id;
@@ -105,9 +105,9 @@ class Analyze_HTML {
 		$success = preg_match( '#src="([^"]+)"#is', $html, $matches_src );
 		if ( $success ) {
 			$src = $matches_src[1];
-			\ISC_Log::log( sprintf( 'ISC\Analyze_HTML:extract_image_src: found src "%s"', $src ) );
+			\ISC_Log::log( sprintf( 'found src "%s"', $src ) );
 		} else {
-			\ISC_Log::log( sprintf( 'ISC\Analyze_HTML:extract_image_src: no src found for "%s"', $html ) );
+			\ISC_Log::log( sprintf( 'no src found for "%s"', $html ) );
 		}
 
 		return $src;
