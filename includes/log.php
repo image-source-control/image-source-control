@@ -15,12 +15,41 @@ class ISC_Log {
 	}
 
 	/**
+	 * Check the log type
+	 *
+	 * @param string $type Type of the log depth.
+	 *
+	 * @return bool
+	 */
+	public static function is_type( string $type ): bool {
+		return self::get_type() === $type;
+	}
+
+	/**
+	 * Return the log type
+	 *
+	 * Type of the log depth
+	 * - default
+	 * - content - logs the content
+	 * - backtrace - logs the function backtrace
+	 */
+	private static function get_type(): string {
+		$accepted_types = [ 'default', 'content', 'backtrace' ];
+
+		// phpcs:ignore WordPress.Security.NonceVerification
+		$isc_log = sanitize_key( wp_unslash( $_GET['isc-log'] ?? '' ) );
+
+		return in_array( $isc_log, $accepted_types, true ) ? $isc_log : 'default';
+	}
+
+	/**
 	 * Check if the log feature is enabled
 	 *
 	 * @return bool
 	 */
 	public static function enabled(): bool {
 		// true if the Debug Log option is enabled and the ?isc-log query parameter is set
+		// phpcs:ignore WordPress.Security.NonceVerification
 		return ( ! empty( ISC_Class::get_instance()->get_isc_options()['enable_log'] ) && isset( $_GET['isc-log'] ) );
 	}
 
@@ -37,9 +66,16 @@ class ISC_Log {
 			return;
 		}
 
+		// get the current function name
+		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_debug_backtrace
+		$backtrace = debug_backtrace( DEBUG_BACKTRACE_IGNORE_ARGS, 2 );
+		$method    = sprintf( '%s:%s', $backtrace[1]['class'] ?? '', $backtrace[1]['function'] );
+
+		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_print_r
 		$message = is_array( $message ) ? print_r( $message, true ) : $message;
 
-		error_log( '[' . date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ) ) . "] $message\n", 3, self::get_log_file_path() );
+		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+		error_log( '[' . date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ) ) . "] $method: $message\n", 3, self::get_log_file_path() );
 	}
 
 	/**
@@ -54,7 +90,7 @@ class ISC_Log {
 	 *
 	 * @return string
 	 */
-	public static function get_log_file_URL(): string {
+	public static function get_log_file_url(): string {
 		return ISCBASEURL . self::get_file_name();
 	}
 
@@ -65,5 +101,38 @@ class ISC_Log {
 	 */
 	public static function get_log_file_path(): string {
 		return ISCPATH . '/' . self::get_file_name();
+	}
+
+	/**
+	 * Return true if internal caches should be ignored
+	 * only works in combination with an activated log
+	 */
+	public static function ignore_caches(): bool {
+		// phpcs:ignore WordPress.Security.NonceVerification
+		return self::enabled() && isset( $_GET['isc-ignore-cache'] );
+	}
+
+	/**
+	 * Return true if the log should be cleared automatically before writing
+	 */
+	public static function clear_log(): bool {
+		// phpcs:ignore WordPress.Security.NonceVerification
+		return self::enabled() && isset( $_GET['isc-clear-log'] );
+	}
+
+	/**
+	 * Print a concise stack trace in the log
+	 */
+	public static function log_stack_trace() {
+		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_debug_backtrace
+		$backtrace = debug_backtrace( DEBUG_BACKTRACE_IGNORE_ARGS );
+
+		// remove the "args" key to reduce the output size
+		foreach ( $backtrace as $key => $trace ) {
+			unset( $backtrace[ $key ]['args'] );
+		}
+
+		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_print_r
+		self::log( 'Stack trace: ' . "\n - " . print_r( $backtrace, true ) );
 	}
 }

@@ -456,10 +456,10 @@ class ISC_Model {
 	public static function filter_image_ids( $content = '' ) {
 		$srcs = [];
 
-		ISC_Log::log( 'enter filter_image_ids() to look for image IDs within the content' );
+		ISC_Log::log( 'enter looking for image IDs within the content' );
 
 		if ( empty( $content ) ) {
-			ISC_Log::log( 'exit filter_image_ids() due to missing content' );
+			ISC_Log::log( 'exit due to missing content' );
 			return $srcs;
 		}
 
@@ -494,6 +494,14 @@ class ISC_Model {
 			$xpath       = new DOMXpath( $dom );
 			$tags_string = '//' . implode( '|//', $tags );
 			$nodes       = $xpath->query( $tags_string );
+		}
+
+		$nodes_count = count( $nodes );
+
+		ISC_Log::log( sprintf( 'found %d img tags', $nodes_count ) );
+
+		if ( ISC_Log::is_type( 'content' ) ) {
+			ISC_Log::log( sprintf( 'looked in content: %s', $content ) );
 		}
 
 		foreach ( $nodes as $node ) {
