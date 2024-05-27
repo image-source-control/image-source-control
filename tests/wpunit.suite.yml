@@ -20,3 +20,4 @@ modules:
             title: "ISC"
             plugins: ['image-source-control/isc.php']
             activatePlugins: ['image-source-control/isc.php']
+            language: en_US
