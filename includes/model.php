@@ -157,8 +157,6 @@ class ISC_Model {
 	 * @todo check for more post types that maybe should not be parsed here
 	 */
 	public static function update_post_images_meta( $post_id, $image_ids ) {
-		ISC_Log::log( 'enter update_post_images_meta()' );
-
 		// add thumbnail information
 		$thumb_id = get_post_thumbnail_id( $post_id );
 

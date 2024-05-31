@@ -216,20 +216,30 @@ class ISC_Public extends ISC_Class {
 			ISC_Log::log_stack_trace();
 		}
 
-		// create index, if it doesn’t exist, yet
-		$attachments = get_post_meta( $post->ID, 'isc_post_images', true );
+		$attachments   = '';
+		$ignore_caches = apply_filters( 'isc_add_sources_to_content_ignore_post_images_index', ISC_Log::ignore_caches() );
+
+		if ( $ignore_caches ) {
+			ISC_Log::log( 'ignoring post-image index' );
+		} else {
+			// check if a post-images index exists
+			$attachments = get_post_meta( $post->ID, 'isc_post_images', true );
+			if ( $attachments === '' ) {
+				ISC_Log::log( 'no post-images index found' );
+			} elseif ( is_array( $attachments ) ) {
+				ISC_Log::log( sprintf( 'found existing list of %d images for post ID %d', count( $attachments ), $post->ID ) );
+			}
+		}
 
 		/**
 		 * $attachments is an empty string if it was never set and an array if it was set
 		 * the array is empty if no images were found in the past. This prevents re-indexing as well
 		 */
-		if ( $attachments === '' || ISC_Log::ignore_caches() ) {
-			ISC_Log::log( 'isc_post_images is empty. Updating index for post ID ' . $post->ID );
+		if ( $attachments === '' || $ignore_caches ) {
+			ISC_Log::log( 'start updating index for post ID ' . $post->ID );
 
 			// retrieve images added to a post or page and save all information as a post meta value for the post
 			ISC_Model::update_indexes( $post->ID, $content );
-		} elseif ( is_array( $attachments ) ) {
-			ISC_Log::log( sprintf( 'found existing list of %d sources for post ID %d', count( $attachments ), $post->ID ) );
 		}
 
 		// maybe add source captions
