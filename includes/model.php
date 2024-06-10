@@ -69,7 +69,6 @@ class ISC_Model {
 	 *
 	 * @param integer $post_id ID of the target post.
 	 * @param array   $image_ids IDs of the attachments in the content.
-	 * @todo move into ISC\Image_Post_Index
 	 */
 	public static function update_image_posts_meta( $post_id, $image_ids ) {
 		ISC_Log::log( 'enter update_image_posts_meta()' );
