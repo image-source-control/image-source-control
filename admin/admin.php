@@ -38,6 +38,8 @@ class ISC_Admin extends ISC_Class {
 		add_action( 'wp_ajax_isc-image-post-relations', [ $this, 'list_image_post_relations' ] );
 		add_action( 'wp_ajax_isc-clear-index', [ $this, 'clear_index' ] );
 		add_action( 'wp_ajax_isc-clear-storage', [ $this, 'clear_storage' ] );
+		add_action( 'wp_ajax_isc-clear-image-posts-index', [ $this, 'clear_image_posts_index' ] );
+		add_action( 'wp_ajax_isc-clear-post-images-index', [ $this, 'clear_post_images_index' ] );
 
 		// add links to setting and source list to plugin page
 		add_action( 'plugin_action_links_' . ISCBASE, [ $this, 'add_links_to_plugin_page' ] );
@@ -410,9 +412,8 @@ class ISC_Admin extends ISC_Class {
 	}
 
 	/**
-	 * List image post relations (called with ajax)
-	 *
-	 * @since 1.6.1
+	 * List post-images (images associated with a specidic post ID)
+	 * Called using AJAX
 	 */
 	public function list_post_image_relations() {
 
@@ -421,6 +422,7 @@ class ISC_Admin extends ISC_Class {
 			'posts_per_page' => - 1,
 			'post_status'    => null,
 			'post_parent'    => null,
+			'post_type'	     => 'any',
 			'meta_query'     => [
 				[
 					'key' => 'isc_post_images',
@@ -508,6 +510,46 @@ class ISC_Admin extends ISC_Class {
 		ISC_Storage_Model::clear_storage();
 
 		die( esc_html__( 'Storage deleted', 'image-source-control-isc' ) );
+	}
+
+	/**
+	 * Callback to clear the isc_image_posts post meta
+	 */
+	public function clear_image_posts_index() {
+		check_ajax_referer( 'isc-admin-ajax-nonce', 'nonce' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			die( 'Wrong capabilities' );
+		}
+
+		if ( ! isset( $_POST['image_id'] ) ) {
+			die( 'No image ID given' );
+		}
+
+		$image_id = (int) $_POST['image_id'];
+		delete_post_meta( $image_id, 'isc_image_posts' );
+
+		die( 'Image-Posts index cleared' );
+	}
+
+	/**
+	 * Callback to clear the isc_post_images post meta
+	 */
+	public function clear_post_images_index() {
+		check_ajax_referer( 'isc-admin-ajax-nonce', 'nonce' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			die( 'Wrong capabilities' );
+		}
+
+		if ( ! isset( $_POST['post_id'] ) ) {
+			die( 'No post ID given' );
+		}
+
+		$post_id = (int) $_POST['post_id'];
+		delete_post_meta( $post_id, 'isc_post_images' );
+
+		die( 'Post-Images index cleared' );
 	}
 
 	/**
