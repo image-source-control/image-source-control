@@ -54,6 +54,7 @@ class ISC_Model {
 
 		$image_ids = self::filter_image_ids( $content );
 		// todo: maybe handle thumbnails here as well, the content is different, though
+		ISC_Log::log( 'updating index with image IDs ' . implode( ', ', $image_ids ) );
 
 		// retrieve images added to a post or page and save all information as a post meta value for the post
 		self::update_post_images_meta( $post_id, $image_ids );
@@ -68,6 +69,7 @@ class ISC_Model {
 	 *
 	 * @param integer $post_id ID of the target post.
 	 * @param array   $image_ids IDs of the attachments in the content.
+	 * @todo move into ISC\Image_Post_Index
 	 */
 	public static function update_image_posts_meta( $post_id, $image_ids ) {
 		ISC_Log::log( 'enter update_image_posts_meta()' );
@@ -79,16 +81,19 @@ class ISC_Model {
 		$thumb_id = get_post_thumbnail_id( $post_id );
 		if ( ! empty( $thumb_id ) ) {
 			$image_ids[ $thumb_id ] = wp_get_attachment_url( $thumb_id );
-			ISC_Log::log( 'thumbnail found with ID' . $thumb_id );
+			ISC_Log::log( 'thumbnail found with ID ' . $thumb_id );
 		}
 
 		// apply filter to image array, so other developers can add their own logic
 		$image_ids = apply_filters( 'isc_images_in_posts_simple', $image_ids, $post_id );
 
+		ISC_Log::log( 'known image IDs: ' . implode( ",\n\t", $image_ids ) );
+
 		// check if image IDs refer to an attachment post type
 		$valid_image_post_types = apply_filters( 'isc_valid_post_types', [ 'attachment' ] );
 		foreach ( $image_ids as $_id => $_url ) {
 			if ( ! in_array( get_post_type( $_id ), $valid_image_post_types, true ) ) {
+				ISC_Log::log( 'remove image due to invalid post type: ' . $_id );
 				unset( $image_ids[ $_id ] );
 			}
 		}
@@ -113,11 +118,13 @@ class ISC_Model {
 				} elseif ( ! empty( $old_id ) ) {
 						$meta = get_post_meta( $old_id, 'isc_image_posts', true );
 					if ( empty( $meta ) ) {
+						ISC_Log::log( sprintf( 'adding isc_image_posts for image %d and post %d', $old_id, $post_id ) );
 						self::update_post_meta( $old_id, 'isc_image_posts', [ $post_id ] );
 					} elseif ( is_array( $meta ) && ! in_array( $post_id, $meta ) ) {
 						// In case the isc_image_posts is not up to date
 						$meta[] = $post_id;
 						$meta   = array_unique( $meta );
+						ISC_Log::log( sprintf( 'updating isc_image_posts for image %d and posts %s', $old_id, implode( ",\n\t", $meta ) ) );
 						self::update_post_meta( $old_id, 'isc_image_posts', $meta );
 					}
 				}
@@ -127,10 +134,12 @@ class ISC_Model {
 		foreach ( $added_images as $id ) {
 			$meta = get_post_meta( $id, 'isc_image_posts', true );
 			if ( ! is_array( $meta ) || $meta === [] ) {
+				ISC_Log::log( sprintf( 'adding isc_image_posts for NEW image %d and post %d', $id, $post_id ) );
 				self::update_post_meta( $id, 'isc_image_posts', [ $post_id ] );
 			} else {
 				$meta[] = $post_id;
 				$meta   = array_unique( $meta );
+				ISC_Log::log( sprintf( 'adding isc_image_posts for NEW image %d and posts %s', $id, implode( ', ', $meta ) ) );
 				self::update_post_meta( $id, 'isc_image_posts', $meta );
 			}
 		}
@@ -142,6 +151,7 @@ class ISC_Model {
 				if ( $offset !== false ) {
 					array_splice( $image_meta, $offset, 1 );
 					$image_meta = array_unique( $image_meta );
+					ISC_Log::log( sprintf( 'updating isc_image_posts for REMOVED image %d and posts %s', $id, implode( ', ', $image_meta ) ) );
 					self::update_post_meta( $id, 'isc_image_posts', $image_meta );
 				}
 			}
@@ -168,7 +178,7 @@ class ISC_Model {
 				'src'       => wp_get_attachment_url( $thumb_id ),
 				'thumbnail' => true,
 			];
-			ISC_Log::log( 'thumbnail found with ID' . $thumb_id );
+			ISC_Log::log( 'thumbnail found with ID ' . $thumb_id );
 		}
 
 		// apply filter to image array, so other developers can add their own logic

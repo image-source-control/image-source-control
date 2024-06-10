@@ -130,5 +130,66 @@ jQuery( document ).ready(
 				);
 			}
 		);
-	}
-);
+
+		/**
+		 * Handle image-post index removal
+		 */
+		// Select the parent element that exists when the page loads since the button is added dynamically
+		const isc_image_posts_index_list = document.querySelector('#isc-image-post-relations');
+
+		isc_image_posts_index_list.addEventListener('click', function(event) {
+			if (!event.target || !event.target.matches('.isc-button-delete-image-posts-index')) {
+				return;
+			}
+
+			event.preventDefault();
+			const el = event.target;
+			var image_id = el.dataset.imageId;
+			var request = new XMLHttpRequest();
+
+			el.style.display = 'none';
+
+			request.open('POST', ajaxurl, true);
+			request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+
+			// Remove the row on success
+			request.onload = function() {
+				if (this.status >= 200 && this.status < 400) {
+					el.closest('tr').remove();
+				}
+			};
+
+			request.send('action=isc-clear-image-posts-index&nonce=' + isc.ajaxNonce + '&image_id=' + image_id);
+		});
+
+		/**
+		 * Handle post-images index removal
+		 */
+		// Select the parent element that exists when the page loads since the button is added dynamically
+		const isc_post_images_index_list = document.querySelector('#isc-post-image-relations');
+
+		isc_post_images_index_list.addEventListener('click', function(event) {
+			if (!event.target || !event.target.matches('.isc-button-delete-post-images-index')) {
+				return;
+			}
+
+			event.preventDefault();
+			const el = event.target;
+			var post_id = el.dataset.iscPostId;
+			var request = new XMLHttpRequest();
+
+			el.style.display = 'none';
+
+			request.open('POST', ajaxurl, true);
+			request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+
+			// Remove the row on success
+			request.onload = function() {
+				if (this.status >= 200 && this.status < 400) {
+					el.closest('tr').remove();
+				}
+			};
+
+			request.send('action=isc-clear-post-images-index&nonce=' + isc.ajaxNonce + '&post_id=' + post_id);
+		});
+	} );
