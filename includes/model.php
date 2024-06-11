@@ -408,38 +408,44 @@ class ISC_Model {
 	 * @return array with attachments.
 	 */
 	public static function get_attachments_with_empty_sources() {
-		$args = [
-			'post_type'   => 'attachment',
-			'numberposts' => self::MAX_POSTS,
-			'post_status' => null,
-			'post_parent' => null,
-			// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
-			'meta_query'  => [
-				'relation' => 'OR', // Use OR to combine the conditions
-				// images with empty source string that are not using the standard source option
-				[
-					'relation' => 'AND',
-					[
-						'key'     => 'isc_image_source',
-						'value'   => '',
-						'compare' => '=',
-					],
-					[
-						'key'     => 'isc_image_source_own',
-						'value'   => '1',
-						'compare' => '!=',
-					],
-				],
-				// ISC meta key is completely missing, which means that ISC has not yet seen this image anywhere
-				// or it was saved after the plugin was installed
-				[
-					'key'     => 'isc_image_source',
-					'compare' => 'NOT EXISTS',
-				],
-			],
-		];
+		global $wpdb;
 
-		return get_posts( $args );
+		$query = "SELECT wp_posts.ID, wp_posts.post_title, wp_posts.post_parent
+	        FROM {$wpdb->posts} AS wp_posts
+	        WHERE wp_posts.post_type = 'attachment'
+	          AND wp_posts.post_status = 'inherit'
+	          AND (
+	            (
+	              EXISTS (
+	                SELECT 1
+	                FROM {$wpdb->postmeta} AS wp_postmeta
+	                WHERE wp_postmeta.post_id = wp_posts.ID
+	                  AND wp_postmeta.meta_key = 'isc_image_source'
+	                  AND wp_postmeta.meta_value = ''
+	              )
+	              AND EXISTS (
+	                SELECT 1
+	                FROM {$wpdb->postmeta} AS mt1
+	                WHERE mt1.post_id = wp_posts.ID
+	                  AND mt1.meta_key = 'isc_image_source_own'
+	                  AND mt1.meta_value != '1'
+	              )
+	            )
+	            OR NOT EXISTS (
+	              SELECT 1
+	              FROM {$wpdb->postmeta} AS mt2
+	              WHERE mt2.post_id = wp_posts.ID
+	                AND mt2.meta_key = 'isc_image_source'
+	            )
+	          )
+	        GROUP BY wp_posts.ID
+	        ORDER BY wp_posts.post_date DESC
+	        LIMIT %d, %d
+	    ";
+
+		// The result of the query is already cached for a day, or until an image is added or removed.
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
+		return $wpdb->get_results( $wpdb->prepare( $query, 0, self::MAX_POSTS ) );
 	}
 
 	/**
