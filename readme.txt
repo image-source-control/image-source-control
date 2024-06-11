@@ -3,7 +3,7 @@ Contributors: webzunft
 Tags: credits, captions, copyrights, attributions, image sources
 Requires at least: 5.3
 Tested up to: 6.5
-Stable tag: 2.23.1
+Stable tag: 2.24.0
 Requires PHP: 7.2
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -100,7 +100,7 @@ You can choose to display image sources below the post content or as a small cap
 
 You can add the Per-page list manually to pages or posts via the shortcode `[isc_list]` in your content editor or a text widget.
 
-Use `[isc_list id="123]` to show the list of any post or page.
+Use `[isc_list id="123"]` to show the list of any post or page.
 
 Use the PHP code `<?php if( function_exists('isc_list') ) { isc_list(); } ?>` within your template files.
 
@@ -143,6 +143,15 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 1. Manage image usage licenses
 
 == Changelog ==
+
+= 2.24.0 =
+
+- Feature: (Pro) support for background images added by the WP Bakery page builder
+- Improvement: allow to remove individual entries from the image-posts and post-images indices on the Tools page
+- Improvement: include all page types in the post-image index list, not only posts
+- Dev: added the `isc_add_sources_to_content_ignore_post_images_index` filter to allow users to manually ignore the post-images index on all page views in case another plugin or page builder indexes the wrong content
+- Dev: speed up the query for images without sources
+- Dev: added debug log entries and log parameters
 
 = 2.23.1 =
 
