@@ -487,7 +487,7 @@ class ISC_Public extends ISC_Class {
 		$attachments      = get_post_meta( $post_id, 'isc_post_images', true );
 		$exclude_standard = Standard_Source::standard_source_is( 'exclude' );
 
-		if ( ! empty( $attachments ) ) {
+		if ( ! empty( $attachments ) && is_array( $attachments ) ) {
 			ISC_Log::log( sprintf( 'going through %d attachments', count( $attachments ) ) );
 			$atts = [];
 			foreach ( $attachments as $attachment_id => $attachment_array ) {
