@@ -3,7 +3,7 @@ Contributors: webzunft
 Tags: credits, captions, copyrights, attributions, image sources
 Requires at least: 5.3
 Tested up to: 6.5
-Stable tag: 2.24.0
+Stable tag: 2.24.1
 Requires PHP: 7.2
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -143,6 +143,10 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 1. Manage image usage licenses
 
 == Changelog ==
+
+= 2.24.1 =
+
+- Fix: a wrong format of the `isc_post_images` post meta value could cause a PHP error
 
 = 2.24.0 =
 
