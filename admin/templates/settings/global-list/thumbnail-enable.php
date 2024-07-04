@@ -4,6 +4,7 @@
  *
  * @var array $options ISC options.
  * @var array $sizes available sizes for images.
+ * @var array $sizes_labels translatable labels for the sizes.
  */
 ?>
 <label>
@@ -14,7 +15,7 @@
 	<?php foreach ( $sizes as $_name => $_sizes ) : ?>
 		<option value="<?php echo esc_html( $_name ); ?>" <?php selected( $_name, $options['thumbnail_size'] ); ?>>
 			<?php
-			echo esc_html( $_name );
+			echo isset( $sizes_labels[ $_name ] ) ? esc_html( $sizes_labels[ $_name ] ) : esc_html( $_name );
 			if ( is_array( $_sizes ) && isset( $_sizes['width'] ) && isset( $_sizes['height'] ) ) :
 				echo esc_html( sprintf( ' (%1$dx%2$d)', $_sizes['width'], $_sizes['height'] ) );
 			endif;

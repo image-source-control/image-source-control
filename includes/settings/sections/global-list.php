@@ -59,8 +59,14 @@ class Global_List extends Settings\Section {
 	 * Render option to display thumbnails in the Global list
 	 */
 	public function render_field_thumbnail_in_list() {
-		$options = $this->get_isc_options();
-		$sizes   = [];
+		$options      = $this->get_isc_options();
+		$sizes        = [];
+		$sizes_labels = [
+			'thumbnail' => _x( 'Thumbnail', 'image size label', 'image-source-control-isc' ),
+			'medium'    => _x( 'Medium', 'image size label', 'image-source-control-isc' ),
+			'large'     => _x( 'Large', 'image size label', 'image-source-control-isc' ),
+			'custom'    => _x( 'Custom', 'image size label', 'image-source-control-isc' ),
+		];
 
 		// convert the sizes array to match key and value
 		foreach ( $this->thumbnail_size as $_size ) {
