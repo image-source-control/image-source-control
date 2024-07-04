@@ -67,15 +67,12 @@ class Global_List extends Settings\Section {
 			$sizes[ $_size ] = $_size;
 		}
 
-		// requires WP 5.3
-		if ( function_exists( 'wp_get_registered_image_subsizes' ) ) {
-			// go through sizes we consider for thumbnails and get their current sizes as set up in WordPress
-			$wp_image_sizes = wp_get_registered_image_subsizes();
-			if ( is_array( $wp_image_sizes ) ) {
-				foreach ( $wp_image_sizes as $_name => $_sizes ) {
-					if ( isset( $sizes[ $_name ] ) ) {
-						$sizes[ $_name ] = $_sizes;
-					}
+		// go through sizes we consider for thumbnails and get their current sizes as set up in WordPress
+		$wp_image_sizes = wp_get_registered_image_subsizes();
+		if ( is_array( $wp_image_sizes ) ) {
+			foreach ( $wp_image_sizes as $_name => $_sizes ) {
+				if ( isset( $sizes[ $_name ] ) ) {
+					$sizes[ $_name ] = $_sizes;
 				}
 			}
 		}
