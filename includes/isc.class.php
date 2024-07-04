@@ -50,7 +50,7 @@ class ISC_Class {
 		 *
 		 * @var array available thumbnail sizes.
 		 */
-		protected $thumbnail_size = array( 'thumbnail', 'medium', 'large', 'custom' );
+		protected $thumbnail_size = [ 'thumbnail', 'medium', 'large', 'custom' ];
 
 		/**
 		 * Options saved in the db
