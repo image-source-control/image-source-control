@@ -146,6 +146,7 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 
 = 2.24.1 =
 
+- Improvement (Pro): catch more background images added by WP Bakery
 - Fix: a wrong format of the `isc_post_images` post meta value could cause a PHP error
 
 = 2.24.0 =
