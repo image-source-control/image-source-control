@@ -77,6 +77,16 @@ class Unused_Images_Test extends \Codeception\TestCase\WPTestCase {
 
 		update_post_meta( $post_four_id, 'some_temporary_meta', 'https://example.com/image-four.png' );
 
+		// the post is a revision
+		$post_five_id = $this->factory->post->create( [
+			                                              'post_title'   => 'Post with Image Five',
+			                                              'post_type'    => 'revision',
+			                                              'guid'         => 'https://example.com/post-with-image-five',
+			                                              'post_content' => 'There is some text around the image <img src="https://example.com/image-five.jpg"/> which is hopefully not removed.',
+		                                              ] );
+
+		update_post_meta( $post_five_id, 'some_temporary_meta', 'https://example.com/image-five.png' );
+
 		// image 5 is not used anywhere
 		$this->factory->post->create( [
 			'post_title' => 'Image Five',
@@ -139,5 +149,27 @@ class Unused_Images_Test extends \Codeception\TestCase\WPTestCase {
 
 		// check the actual returned post
 		$this->assertEquals( 'Post with Image One', $result->post_title );
+	}
+
+	/**
+	 * Test if search_filepath_in_post_content() ignores post revisions
+	 */
+	public function test_ignore_post_revision() {
+		$unused_images = new Unused_Images();
+		$result        = $unused_images->search_filepath_in_post_content( 'image-five' );
+
+		// returns no result
+		$this->assertCount( 0, $result );
+	}
+
+	/**
+	 * Test the search_filepath_in_postmeta() ignores post meta belonging to a "revision" post type.
+	 */
+	public function test_ignore_post_meta_in_revision() {
+		$unused_images = new Unused_Images();
+		$result        = $unused_images->search_filepath_in_postmeta( 'image-five', 5 );
+
+		// returns one result
+		$this->assertCount( 0, $result );
 	}
 }
