@@ -6,20 +6,21 @@
  * @var int $files total number of image files (including scaled versions)
  * @var int $filesize total size of all attachments
  */
-
 ?>
 <p>
 <?php
 if ( $attachment_count >= \ISC\Unused_Images::ESTIMATE_LIMIT ) {
 	printf(
-	// translators: %1$d is the number of unused attachments and %2$s their combined filesize, including the unit
-		esc_html__( 'At least %d unused image files.', 'image-source-control-isc' ),
+	// translators: %1$d is the number of unused attachments and %2$s the number of files
+		esc_html__( 'At least %1$d unused images with %2$d files.', 'image-source-control-isc' ),
+		(int) $attachment_count,
 		(int) $files
 	);
 } else {
 	printf(
-	// translators: %d is the number of unused attachments and %s their combined filesize, including the unit
-		esc_html__( '%d possibly unused image files.', 'image-source-control-isc' ),
+	// translators: %1$d is the number of unused attachments and %2$d the number of files
+		esc_html__( '%1$d possibly unused images with %1$d files.', 'image-source-control-isc' ),
+		(int) $attachment_count,
 		(int) $files
 	);
 }
