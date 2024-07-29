@@ -577,6 +577,12 @@ class ISC_Model {
 			return 0;
 		}
 
+		// ignore src strings with more than 1000 characters; these could be base24 images not hosted in WordPress
+		if ( strlen( $url ) > 1000 ) {
+			ISC_Log::log( 'exit due to URL length' );
+			return 0;
+		}
+
 		// get the file extension, e.g. "jpg"
 		$ext = pathinfo( $url, PATHINFO_EXTENSION );
 		if ( ! $ext ) {
