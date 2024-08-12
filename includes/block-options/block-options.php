@@ -85,9 +85,12 @@ class ISC_Block_Options {
 			]
 		);
 
-		// Post Types supporting the block editor.
-		$block_ready_post_types  = get_post_types_by_support( [ 'editor', 'show_in_rest' ] );
-		$block_ready_post_types += [ 'post', 'page' ];
+		// Post Types supporting the editor.
+		$post_types_with_editor = get_post_types_by_support( [ 'editor' ] );
+		// Get all post types with the REST API enabled
+		$post_types_with_block_editor = get_post_types( [ 'show_in_rest' => true ], 'names' );
+		// Get the intersection of both arrays.
+		$block_ready_post_types = array_intersect( $post_types_with_editor, $post_types_with_block_editor );
 
 		foreach ( $block_ready_post_types as $type ) {
 			// See https://developer.wordpress.org/reference/hooks/rest_after_insert_this-post_type/.
