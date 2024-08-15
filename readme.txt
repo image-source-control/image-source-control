@@ -2,7 +2,7 @@
 Contributors: webzunft
 Tags: credits, captions, copyrights, attributions, image sources
 Requires at least: 5.3
-Tested up to: 6.5
+Tested up to: 6.6
 Stable tag: 2.25.0
 Requires PHP: 7.2
 License: GPLv3 or later
