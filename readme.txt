@@ -3,7 +3,7 @@ Contributors: webzunft
 Tags: credits, captions, copyrights, attributions, image sources
 Requires at least: 5.3
 Tested up to: 6.5
-Stable tag: 2.24.1
+Stable tag: 2.25.0
 Requires PHP: 7.2
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -143,6 +143,15 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 1. Manage image usage licenses
 
 == Changelog ==
+
+= 2.25.0 =
+
+- Improvement (Pro): ignore unused images in post revisions. irrelevant options and some post meta entries
+- Improvement: block option fields work properly with custom post types
+- Improvement: list the number of [unused images](https://imagesourcecontrol.com/features/delete-unused-images/) and image files separately
+- Improvement: ignore image URLs above 1000 characters since they could be encoded images and not file paths
+- Dev: made Global List thumbnail options translatable
+- Dev: set backend-only options to autoload=false
 
 = 2.24.1 =
 
