@@ -19,7 +19,7 @@ if ( $attachment_count >= \ISC\Unused_Images::ESTIMATE_LIMIT ) {
 } else {
 	printf(
 	// translators: %1$d is the number of unused attachments and %2$d the number of files
-		esc_html__( '%1$d possibly unused images with %1$d files.', 'image-source-control-isc' ),
+		esc_html__( '%1$d possibly unused images with %2$d files.', 'image-source-control-isc' ),
 		(int) $attachment_count,
 		(int) $files
 	);
