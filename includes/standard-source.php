@@ -123,18 +123,19 @@ class Standard_Source {
 	 * @return string
 	 */
 	public static function get_standard_source_label( string $value = null ) {
-		$labels = array(
+		$labels = [
 			'exclude'     => __( 'Exclude from lists', 'image-source-control-isc' ),
 			'author_name' => __( 'Author name', 'image-source-control-isc' ),
+			'wp_caption'  => __( 'Caption', 'image-source-control-isc' ),
 			'custom_text' => __( 'Custom text', 'image-source-control-isc' ),
 			'iptc'        => __( 'IPTC meta data', 'image-source-control-isc' ),
-		);
+		];
 
 		if ( ! $value ) {
 			$value = self::get_standard_source();
 		}
 
-		return $labels[ $value ] ?? '';
+		return $labels[ $value ] ?? $value;
 	}
 
 	/**
