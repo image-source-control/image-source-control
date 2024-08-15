@@ -28,6 +28,17 @@
 	<?php if ( ! \ISC\Plugin::is_pro() ) : ?>
 		<br/>
 		<label>
+			<input type="radio" name="isc_options[standard_source]" <?php checked( $standard_source, 'wp_caption' ); ?> disabled/>
+			<?php echo ISC_Admin::get_pro_link( 'standard-source-caption' ); ?>
+			<?php esc_html_e( 'Caption', 'image-source-control-isc' ); ?>
+		</label>
+	<p class="description">
+		<?php
+		esc_html_e( 'Use the caption entered in the media library.', 'image-source-control-isc' );
+		?>
+	</p>
+		<br/>
+		<label>
 			<input type="radio" name="isc_options[standard_source]" <?php checked( $standard_source, 'iptc' ); ?> disabled/>
 			<?php echo ISC_Admin::get_pro_link( 'standard-source-iptc' ); ?>
 			<?php esc_html_e( 'IPTC meta data', 'image-source-control-isc' ); ?>
