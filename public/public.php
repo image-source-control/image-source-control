@@ -1025,9 +1025,12 @@ class ISC_Public extends ISC_Class {
 
 		// wrap link around source, if given
 		if ( '' !== $metadata['source_url'] ) {
+			$classes      = apply_filters( 'isc_public_source_url_html_classes', [], $id, $data, $args, $metadata );
+			$class_string = count( $classes ) > 0 ? ' class="' . esc_attr( implode( ' ', $classes ) ) . '"' : '';
+
 			$source = apply_filters(
 				'isc_public_source_url_html',
-				sprintf( '<a href="%2$s" target="_blank" rel="nofollow">%1$s</a>', $source, esc_url_raw( $metadata['source_url'] ) ),
+				sprintf( '<a href="%2$s" target="_blank" rel="nofollow"%3$s>%1$s</a>', $source, esc_url_raw( $metadata['source_url'] ), $class_string ),
 				$id,
 				$metadata
 			);
