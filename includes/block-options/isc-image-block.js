@@ -8,7 +8,7 @@
 	var Fragment = wp.element.Fragment;
 	var el = wp.element.createElement;
 
-	var enableSourceControlOnBlocks = ['core/image', 'core/cover', 'core/media-text', 'core/post-featured-image'];
+	var enableSourceControlOnBlocks = ['core/image', 'core/cover', 'core/media-text', 'core/post-featured-image', 'generateblocks/image'];
 
 	var licenceList = [''];
 

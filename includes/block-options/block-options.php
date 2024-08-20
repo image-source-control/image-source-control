@@ -129,7 +129,7 @@ class ISC_Block_Options {
 	 * @return void
 	 */
 	private function save_meta( $content, $post_id = 0 ) {
-		preg_match_all( '#<!-- (wp:image|wp:media-text|wp:cover|wp:post-featured-image)[^{]+({.+})#', $content, $results, PREG_SET_ORDER );
+		preg_match_all( '#<!-- (wp:image|wp:media-text|wp:cover|wp:post-featured-image|wp:generateblocks/image)[^{]+({.+})#', $content, $results, PREG_SET_ORDER );
 
 		foreach ( $results as $match ) {
 			$attributes = json_decode( $match[2], true );
