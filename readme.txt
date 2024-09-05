@@ -75,6 +75,9 @@ Check out the premium features to display the image caption overlay for featured
 * Unused Images (see below)
 * Personal email support
 
+Extended compatibility with Elementor, Avada, WP Bakery, and other page builders
+as well as with plugins like Kadence Blocks, Kadence Related Content Carousel, and Lightbox Gallery.
+
 [See Pricing](https://imagesourcecontrol.com/pricing/?utm_source=wporg&utm_medium=link&utm_campaign=pricing).
 
 **Unused Images**
@@ -143,6 +146,15 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 1. Manage image usage licenses
 
 == Changelog ==
+
+= untagged =
+
+- Feature: (Pro) search for attachment IDs in the content when looking for [unused images](https://imagesourcecontrol.com/features/delete-unused-images/). Enable this deep check feature in the plugin settings.
+- Feature: (Pro) load the WordPress caption as the standard image source
+- Feature: (Pro) compatibility with the Lightbox Gallery plugin
+- Improvement: (Pro) highlight in the deep check for unused images, whether the image URL or the attachment ID was found
+- Improvement: enable ISC fields in the Image block of the GenerateBlocks plugin
+- Fix: the displayed number of individual unused image files was the same as unused images due to a wrong variable
 
 = 2.25.0 =
 
