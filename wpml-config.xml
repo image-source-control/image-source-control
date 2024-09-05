@@ -1,0 +1,15 @@
+<wpml-config>
+  <custom-fields>
+    <custom-field action="translate">isc_image_source</custom-field>
+    <custom-field action="copy">isc_image_source_url</custom-field>
+    <custom-field action="copy">isc_image_source_own</custom-field>
+    <custom-field action="copy">isc_image_licence</custom-field>
+  </custom-fields>
+  <admin-texts>
+    <key name="isc_options">
+      <key name="image_list_headline"/>
+      <key name="source_pretext"/>
+      <key name="standard_source_text"/>
+    </key>
+  </admin-texts>
+</wpml-config>
