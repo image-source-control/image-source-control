@@ -3,7 +3,7 @@ Contributors: webzunft
 Tags: credits, captions, copyrights, attributions, image sources
 Requires at least: 5.3
 Tested up to: 6.6
-Stable tag: 2.25.0
+Stable tag: 2.26.0
 Requires PHP: 7.2
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -91,6 +91,8 @@ Premium media cleaner features to remove unused images safely.
 
 [See Pricing](https://imagesourcecontrol.com/pricing/?utm_source=wporg&utm_medium=link&utm_campaign=pricing).
 
+Btw., Image Source Control is a suitable alternative to the discontinued or closed plugins Image Credits, Credit Tracker, or FSM Custom Featured Image Caption.
+
 == Instructions ==
 
 Take a look at the [Image Source Control Documentation](https://imagesourcecontrol.com/documentation/?utm_source=wporg&utm_medium=link&utm_campaign=documentation).
@@ -147,7 +149,7 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 
 == Changelog ==
 
-= untagged =
+= 2.26.0 =
 
 - Feature: (Pro) search for attachment IDs in the content when looking for [unused images](https://imagesourcecontrol.com/features/delete-unused-images/). Enable this deep check feature in the plugin settings.
 - Feature: (Pro) load the WordPress caption as the standard image source
