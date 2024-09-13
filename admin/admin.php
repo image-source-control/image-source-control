@@ -298,6 +298,13 @@ class ISC_Admin extends ISC_Class {
 			$form_fields['isc_image_licence']['html'] = $html;
 		}
 
+		// list posts the image is used in
+		$form_fields['isc_image_usage']['input'] = 'html';
+		$form_fields['isc_image_usage']['label'] = __( 'Appearances', 'image-source-control-isc' );
+		$form_fields['isc_image_usage']['html']  = __( 'Where is this file used?', 'image-source-control-isc' );
+		// add pro link
+		$form_fields['isc_image_usage']['html'] .= ' ' . self::get_pro_link( 'media-library-usage' );
+
 		return apply_filters( 'isc_admin_attachment_form_fields', $form_fields, $post, $options );
 	}
 
