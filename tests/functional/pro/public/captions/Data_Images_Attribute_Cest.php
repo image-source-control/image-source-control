@@ -74,4 +74,29 @@ EOD,
 EOD
 		);
 	}
+
+	/**
+	 * If an element with the same HTML exists twice on the page, the source text is added to each of them once.
+	 * If two elements share the same image ID, the source text is added to each of them once.
+	 */
+	public function test_repeating_elements( \FunctionalTester $I ) {
+		$I->havePageInDatabase( [
+			'post_name'    => 'test-page',
+			'post_content' => <<<EOD
+<div data-isc-images="123"></div>
+<div data-isc-images="123"></div>
+<div data-isc-images="123" class="just-a-bit-different"></div>
+EOD,
+		] );
+
+		// Go to the page.
+		$I->amOnPage( '/test-page' );
+		// the actual HTML output, including the data attribute and the overlay code at the beginning of the DIV container
+		$I->seeInSource( <<<EOD
+<div data-isc-images="123"><span class="isc-source-text">Quelle: <a href="https://author-a.com" target="_blank" rel="nofollow">Author A</a></span></div>
+<div data-isc-images="123"><span class="isc-source-text">Quelle: <a href="https://author-a.com" target="_blank" rel="nofollow">Author A</a></span></div>
+<div data-isc-images="123" class="just-a-bit-different"><span class="isc-source-text">Quelle: <a href="https://author-a.com" target="_blank" rel="nofollow">Author A</a></span></div>
+EOD
+		);
+	}
 }
