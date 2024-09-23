@@ -524,10 +524,15 @@ class ISC_Model {
 					ISC_Log::log( sprintf( 'found class attribute "%s"', $node->attributes->getNamedItem( 'class' )->textContent ) );
 
 					if ( preg_match( '#.*wp-image-(\d+?).*#U', $node->attributes->getNamedItem( 'class' )->textContent, $matches ) ) {
-						$srcs[ intval( $matches[1] ) ] = $node->attributes->getNamedItem( 'src' )->textContent;
-						$matched                       = true;
+						// check if a src attribute exists
+						if ( $node->attributes->getNamedItem( 'src' ) !== null ) {
+							$srcs[ intval( $matches[1] ) ] = $node->attributes->getNamedItem( 'src' )->textContent;
+							$matched                       = true;
 
-						ISC_Log::log( sprintf( 'found image ID "%d" with src "%s"', intval( $matches[1] ), $srcs[ intval( $matches[1] ) ] ) );
+							ISC_Log::log( sprintf( 'found image ID "%d" with src "%s"', intval( $matches[1] ), $srcs[ intval( $matches[1] ) ] ) );
+						} else {
+							ISC_Log::log( sprintf( 'no src attribute found for image ID "%d"', intval( $matches[1] ) ) );
+						}
 					}
 				}
 				if ( ! $matched ) {

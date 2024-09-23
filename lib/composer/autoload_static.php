@@ -33,6 +33,7 @@ class ComposerStaticInitdb72a6bac11cb0e6b971811c93d09a9b
         'ISC\\Helpers' => __DIR__ . '/../..' . '/includes/helpers.php',
         'ISC\\Newsletter' => __DIR__ . '/../..' . '/includes/newsletter.php',
         'ISC\\Plugin' => __DIR__ . '/../..' . '/includes/plugin.php',
+        'ISC\\Pro\\Custom_Attribute_Processor' => __DIR__ . '/../..' . '/pro/includes/Custom_Attribute_Processor.php',
         'ISC\\Pro\\IPTC' => __DIR__ . '/../..' . '/pro/includes/IPTC.php',
         'ISC\\Renderer' => __DIR__ . '/../..' . '/includes/renderer.php',
         'ISC\\Renderer\\Caption' => __DIR__ . '/../..' . '/includes/renderer/caption.php',
