@@ -29,6 +29,9 @@ class ISC_Admin extends ISC_Class {
 		// backend pages
 		add_action( 'admin_menu', [ $this, 'add_menu_items' ] );
 
+		// hide the admin language switcher from WPML on our pages
+		add_filter( 'wpml_show_admin_language_switcher', [ $this, 'disable_wpml_admin_lang_switcher' ] );
+
 		// scripts and styles
 		add_action( 'admin_enqueue_scripts', [ $this, 'add_admin_scripts' ] );
 		add_action( 'admin_print_scripts', [ $this, 'admin_head_scripts' ] );
@@ -58,6 +61,21 @@ class ISC_Admin extends ISC_Class {
 	}
 
 	/**
+	 * Get the ISC pages
+	 *
+	 * @return array
+	 */
+	public static function get_isc_pages(): array {
+		return apply_filters(
+			'isc_admin_pages',
+			[
+				'settings_page_isc-settings',
+				'media_page_isc-sources',
+			]
+		);
+	}
+
+	/**
 	 * Check if the current WP Admin page belongs to ISC
 	 *
 	 * @return bool true if this is an ISC-related page
@@ -65,7 +83,7 @@ class ISC_Admin extends ISC_Class {
 	private static function is_isc_page() {
 		$screen = get_current_screen();
 
-		return isset( $screen->id ) && in_array( $screen->id, apply_filters( 'isc_admin_pages', [ 'settings_page_isc-settings', 'media_page_isc-sources' ] ), true );
+		return isset( $screen->id ) && in_array( $screen->id, self::get_isc_pages(), true );
 	}
 
 	/**
@@ -328,6 +346,43 @@ class ISC_Admin extends ISC_Class {
 			'isc-sources',
 			[ $this, 'render_sources_page' ]
 		);
+	}
+
+	/**
+	 * Disable the WPML language switcher on ISC pages
+	 *
+	 * @param bool $state current state.
+	 *
+	 * @return bool
+	 */
+	public function disable_wpml_admin_lang_switcher( $state ): bool {
+		// needs to run before plugins_loaded with prio 1, so our own `is_isc_page` function is not available here
+		global $pagenow;
+
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		if ( ! isset( $_GET['page'] ) ) {
+			return $state;
+		}
+
+		// settings page
+		if (
+			$pagenow === 'options-general.php'
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			&& in_array( $_GET['page'], [ 'isc-settings' ], true )
+		) {
+			$state = false;
+		}
+
+		// media pages
+		if (
+			$pagenow === 'upload.php'
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			&& in_array( $_GET['page'], [ 'isc-unused-images', 'isc-images' ], true )
+		) {
+			$state = false;
+		}
+
+		return $state;
 	}
 
 	/**
