@@ -3,8 +3,8 @@ Contributors: webzunft
 Tags: credits, captions, copyrights, attributions, image sources
 Requires at least: 5.3
 Tested up to: 6.6
-Stable tag: 2.26.0
-Requires PHP: 7.2
+Stable tag: 2.27.0
+Requires PHP: 7.4
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -62,6 +62,7 @@ Check out the premium features to display the image caption overlay for featured
 * Add multiple links to the source string
 * Manage image credits for images hosted outside the Media Library
 * Handle images without file extensions
+* Show image usage in the image details and the List view of the media library
 * Bulk-edit image copyright information in the media library
 * Show the standard picture credit for all images without a selected source
 * [Display IPTC copyright metadata](https://imagesourcecontrol.com/blog/iptc-copyright-information-image-caption-wordpress/) in the backend and automatically as a standard source in the frontend
@@ -148,6 +149,15 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 1. Manage image usage licenses
 
 == Changelog ==
+
+= 2.27.0 =
+
+- Increased the required PHP version to 7.4
+- Feature: (Pro) show a list of image appearances and usages in the media library
+- Feature: (Pro) added an optional column with appearances in the List view of the media library
+- Dev: (Pro): use the `isc_pro_public_custom_attribute_processors` filter to process non-standard HTML containing image URLs
+- Dev: (Pro) show the image source if multiple HTML tags have the same `data-isc-images` attribute
+- Fix: a PHP notice was thrown for `img` tags without a `src` attribute
 
 = 2.26.0 =
 
