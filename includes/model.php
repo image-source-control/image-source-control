@@ -37,30 +37,16 @@ class ISC_Model {
 	/**
 	 * Update the isc_image_posts and isc_post_images indexes
 	 *
-	 * @since 2.0
+	 * @depecated since October 2024
+	 *
 	 * @param integer $post_id ID of the target post.
 	 * @param string  $content content of the target post.
 	 */
 	public static function update_indexes( $post_id, $content ) {
 
-		// check if we can even save the image information
-		// abort on archive pages since some output from other plugins might be disabled here
-		if (
-			is_archive()
-			|| is_home()
-			|| ! self::can_save_image_information( $post_id ) ) {
-			return;
-		}
+		ISC_Log::log( 'function removed. Use \ISC\Indexer::update_indexes' );
 
-		$image_ids = self::filter_image_ids( $content );
-		// todo: maybe handle thumbnails here as well, the content is different, though
-		ISC_Log::log( 'updating index with image IDs ' . implode( ', ', $image_ids ) );
-
-		// retrieve images added to a post or page and save all information as a post meta value for the post
-		self::update_post_images_meta( $post_id, $image_ids );
-
-		// add the post ID to the list of posts associated with a given image
-		self::update_image_posts_meta( $post_id, $image_ids );
+		ISC\Indexer::update_indexes( $content );
 	}
 
 	/**
@@ -118,13 +104,13 @@ class ISC_Model {
 						$meta = get_post_meta( $old_id, 'isc_image_posts', true );
 					if ( empty( $meta ) ) {
 						ISC_Log::log( sprintf( 'adding isc_image_posts for image %d and post %d', $old_id, $post_id ) );
-						self::update_post_meta( $old_id, 'isc_image_posts', [ $post_id ] );
+						self::update_image_posts_meta_with_limit( $old_id, [ $post_id ] );
 					} elseif ( is_array( $meta ) && ! in_array( $post_id, $meta ) ) {
 						// In case the isc_image_posts is not up to date
 						$meta[] = $post_id;
 						$meta   = array_unique( $meta );
 						ISC_Log::log( sprintf( 'updating isc_image_posts for image %d and posts %s', $old_id, implode( ",\n\t", $meta ) ) );
-						self::update_post_meta( $old_id, 'isc_image_posts', $meta );
+						self::update_image_posts_meta_with_limit( $old_id, $meta );
 					}
 				}
 			}
@@ -134,12 +120,12 @@ class ISC_Model {
 			$meta = get_post_meta( $id, 'isc_image_posts', true );
 			if ( ! is_array( $meta ) || $meta === [] ) {
 				ISC_Log::log( sprintf( 'adding isc_image_posts for NEW image %d and post %d', $id, $post_id ) );
-				self::update_post_meta( $id, 'isc_image_posts', [ $post_id ] );
+				self::update_image_posts_meta_with_limit( $id, [ $post_id ] );
 			} else {
 				$meta[] = $post_id;
 				$meta   = array_unique( $meta );
 				ISC_Log::log( sprintf( 'adding isc_image_posts for NEW image %d and posts %s', $id, implode( ', ', $meta ) ) );
-				self::update_post_meta( $id, 'isc_image_posts', $meta );
+				self::update_image_posts_meta_with_limit( $id, $meta );
 			}
 		}
 
@@ -151,10 +137,23 @@ class ISC_Model {
 					array_splice( $image_meta, $offset, 1 );
 					$image_meta = array_unique( $image_meta );
 					ISC_Log::log( sprintf( 'updating isc_image_posts for REMOVED image %d and posts %s', $id, implode( ', ', $image_meta ) ) );
-					self::update_post_meta( $id, 'isc_image_posts', $image_meta );
+					self::update_image_posts_meta_with_limit( $id, $image_meta );
 				}
 			}
 		}
+	}
+
+	/**
+	 * Update the isc_image_posts meta field with a filtered limit
+	 *
+	 * @param integer $post_id   ID of the target post.
+	 * @param array   $image_ids IDs of the attachments in the content.
+	 */
+	public static function update_image_posts_meta_with_limit( int $post_id, array $image_ids ) {
+		// limit the number of post IDs to 10
+		$image_ids = array_slice( $image_ids, 0, apply_filters( 'isc_image_posts_meta_limit', 10 ) );
+
+		self::update_post_meta( $post_id, 'isc_image_posts', $image_ids );
 	}
 
 	/**
@@ -162,8 +161,6 @@ class ISC_Model {
 	 *
 	 * @param integer $post_id   ID of a post.
 	 * @param array   $image_ids IDs of the attachments in the content.
-	 *
-	 * @todo check for more post types that maybe should not be parsed here
 	 */
 	public static function update_post_images_meta( $post_id, $image_ids ) {
 		// add thumbnail information
@@ -261,28 +258,6 @@ class ISC_Model {
 	}
 
 	/**
-	 * Don’t save meta data for non-public post types, since those shouldn’t be visible in the frontend
-	 * ignore also attachment posts
-	 * ignore revisions
-	 *
-	 * @param integer $post_id WP_Post ID. Useful if post object is not given.
-	 */
-	private static function can_save_image_information( $post_id = null ) {
-
-		// load post
-		$post = get_post( $post_id );
-
-		if ( ! isset( $post->post_type )
-			|| ! in_array( $post->post_type, get_post_types( [ 'public' => true ], 'names' ), true ) // is the post type public
-			|| $post->post_type === 'attachment'
-			|| $post->post_type === 'revision' ) {
-			return false;
-		}
-
-		return true;
-	}
-
-	/**
 	 * Update image-post index attached to attachments when a post is updated
 	 *
 	 * @param int     $post_ID      Post ID.
@@ -292,11 +267,9 @@ class ISC_Model {
 	 * @return void
 	 */
 	public static function update_image_post_meta( $post_ID, $post_after, $post_before ) {
-		if ( ! self::can_save_image_information( $post_ID ) ) {
+		if ( ! \ISC\Indexer::can_save_image_information( $post_ID ) ) {
 			return;
 		}
-
-		// remove
 
 		$image_ids = self::filter_image_ids( $post_before->post_content );
 		$thumb_id  = get_post_thumbnail_id( $post_ID );
@@ -357,8 +330,6 @@ class ISC_Model {
 	 * @return int|false The number of rows updated, or false on error.
 	 */
 	public static function clear_index() {
-		global $wpdb;
-
 		$rows_deleted_1 = self::clear_post_images_index();
 		$rows_deleted_2 = self::clear_image_posts_index();
 
