@@ -33,7 +33,11 @@ class Global_List extends Settings\Section {
 		$options                 = $this->get_isc_options();
 		$included_images         = ! empty( $options['global_list_included_images'] ) ? $options['global_list_included_images'] : '';
 		$included_images_options = $this->get_included_images_options();
+		$indexed_images          = ! empty( $options['global_list_indexed_images'] );
+		$is_pro_enabled          = \ISC\Plugin::is_pro();
+
 		require_once ISCPATH . '/admin/templates/settings/global-list/included-images.php';
+		require_once ISCPATH . '/admin/templates/settings/global-list/indexed-images.php';
 	}
 
 	/**
