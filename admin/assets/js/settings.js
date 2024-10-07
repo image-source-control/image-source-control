@@ -12,6 +12,7 @@ jQuery( document ).ready(
 		$( '.isc-settings-standard-source input' ).on( 'change', isc_toggle_standard_source_text );
 		$( '#thumbnail-size-select, #use-thumbnail' ).on( 'change', function(){ isc_thumbnail_input_checkstate(); } );
 		$( '#isc-settings-caption-style input' ).on( 'change', function(){ isc_toggle_caption_position(); } );
+		$( '#isc-settings-global-list-indexed-images' ).on( 'change', function(){ isc_show_reindex_warning(); } );
 
 		// Show and update preview when a position option is clicked
 		$('#isc-settings-caption-pos-options button').on( 'click', function (event) {
@@ -192,4 +193,11 @@ function isc_toggle_caption_position() {
 		// remove class also from the sibling H4 element
 		document.getElementById( 'isc-settings-caption-position-options-wrapper' ).previousElementSibling.classList.remove( 'hidden' );
 	}
+}
+
+/**
+ * Toggle the visibility of the warning about a reindex when changing the Index-Images option for Global Lists
+ */
+function isc_show_reindex_warning() {
+	document.getElementById( 'isc-settings-global-list-indexed-images-warning' ).classList.remove( 'hidden' );
 }

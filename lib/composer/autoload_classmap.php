@@ -11,6 +11,7 @@ return array(
     'ISC\\Autoloader' => $baseDir . '/includes/class-autoloader.php',
     'ISC\\Feedback' => $baseDir . '/includes/feedback.php',
     'ISC\\Helpers' => $baseDir . '/includes/helpers.php',
+    'ISC\\Indexer' => $baseDir . '/includes/indexer.php',
     'ISC\\Newsletter' => $baseDir . '/includes/newsletter.php',
     'ISC\\Plugin' => $baseDir . '/includes/plugin.php',
     'ISC\\Pro\\Custom_Attribute_Processor' => $baseDir . '/pro/includes/Custom_Attribute_Processor.php',
