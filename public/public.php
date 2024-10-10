@@ -231,7 +231,19 @@ class ISC_Public extends ISC_Class {
 			}
 		}
 
+		// maybe add source captions
+		$options = $this->get_isc_options();
+		if ( ! empty( $options['display_type'] ) && is_array( $options['display_type'] ) && in_array( 'overlay', $options['display_type'], true )
+			&& apply_filters( 'isc_public_add_source_captions_to_content', true ) ) {
+			$content = self::add_source_captions_to_content( $content );
+		} else {
+			ISC_Log::log( 'not creating image overlays because the option is disabled for post content' );
+		}
+
 		/**
+		 * Indexing the content for images here after we added overlays, so that we could also count
+		 * non-images with overlays
+		 *
 		 * $attachments is an empty string if it was never set and an array if it was set
 		 * the array is empty if no images were found in the past. This prevents re-indexing as well
 		 */
@@ -242,18 +254,12 @@ class ISC_Public extends ISC_Class {
 			ISC_Model::update_indexes( $post->ID, $content );
 		}
 
-		// maybe add source captions
-		$options = $this->get_isc_options();
-		if ( ! empty( $options['display_type'] ) && is_array( $options['display_type'] ) && in_array( 'overlay', $options['display_type'], true )
-			&& apply_filters( 'isc_public_add_source_captions_to_content', true ) ) {
-			$content = self::add_source_captions_to_content( $content );
-		} else {
-			ISC_Log::log( 'not creating image overlays because the option is disabled for post content' );
-		}
+		/**
+		 * The sources list is rendered after indexing the content for images
+		 * since it is build on top of it
+		 */
 		// maybe add source list
-		$content = self::add_source_list_to_content( $content );
-
-		return $content;
+		return self::add_source_list_to_content( $content );
 	}
 
 	/**
