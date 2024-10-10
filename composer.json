@@ -42,6 +42,7 @@
     "scripts": {
         "cs": "vendor/bin/phpcs --standard=.phpcs.xml",
         "wpunit": "vendor/bin/codecept run wpunit",
-        "functional": "vendor/bin/codecept run functional"
+        "functional": "vendor/bin/codecept run functional",
+        "acceptance": "vendor/bin/codecept run acceptance"
     }
 }
