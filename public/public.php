@@ -175,17 +175,6 @@ class ISC_Public extends ISC_Class {
 	 * @return string $content
 	 */
 	public function add_sources_to_content( $content ) {
-		// bail early if the content is used to create the excerpt
-		if ( doing_filter( 'get_the_excerpt' ) ) {
-			ISC_Log::log( 'skipped adding sources to the excerpt' );
-			return $content;
-		}
-
-		// disabling the content filters while working in page builders or block editor
-		if ( wp_is_json_request() || defined( 'REST_REQUEST' ) ) {
-			ISC_Log::log( 'skipped adding sources while working in page builders' );
-			return $content;
-		}
 
 		// return if this is not the main query or within the loop
 		if ( ! self::is_main_loop() ) {
@@ -193,57 +182,17 @@ class ISC_Public extends ISC_Class {
 			return $content;
 		}
 
-		global $post;
-
-		if ( empty( $post->ID ) ) {
-			if ( isset( $_SERVER['REQUEST_URI'] ) ) {
-				ISC_Log::log( 'exit content for ' . $_SERVER['REQUEST_URI'] . ' due to missing post_id' );
-			}
-			return $content;
-		}
-
-		if ( isset( $_SERVER['REQUEST_URI'] ) ) {
-			ISC_Log::log( 'index content for ' . $_SERVER['REQUEST_URI'] . ' and post ID ' . $post->ID );
-		}
-
-		// Skip any source output or indexing if this is a page with a full source list.
-		if ( has_shortcode( $content, '[isc_list_all]' )
-			|| false !== strpos( $content, 'isc_all_image_list_box' ) ) {
-			return $content;
-		}
-
 		if ( ISC_Log::is_type( 'backtrace' ) ) {
 			ISC_Log::log_stack_trace();
 		}
 
-		$attachments   = '';
-		$ignore_caches = apply_filters( 'isc_add_sources_to_content_ignore_post_images_index', ISC_Log::ignore_caches() );
+		$options = $this->get_isc_options();
 
-		if ( $ignore_caches ) {
-			ISC_Log::log( 'ignoring post-image index' );
-		} else {
-			// check if a post-images index exists
-			$attachments = get_post_meta( $post->ID, 'isc_post_images', true );
-			if ( $attachments === '' ) {
-				ISC_Log::log( 'no post-images index found' );
-			} elseif ( is_array( $attachments ) ) {
-				ISC_Log::log( sprintf( 'found existing list of %d images for post ID %d', count( $attachments ), $post->ID ) );
-			}
-		}
-
-		/**
-		 * $attachments is an empty string if it was never set and an array if it was set
-		 * the array is empty if no images were found in the past. This prevents re-indexing as well
-		 */
-		if ( $attachments === '' || $ignore_caches ) {
-			ISC_Log::log( 'start updating index for post ID ' . $post->ID );
-
-			// retrieve images added to a post or page and save all information as a post meta value for the post
-			ISC_Model::update_indexes( $post->ID, $content );
+		if ( apply_filters( 'isc_update_indexes_in_the_content', true ) ) {
+			\ISC\Indexer::update_indexes( $content );
 		}
 
 		// maybe add source captions
-		$options = $this->get_isc_options();
 		if ( ! empty( $options['display_type'] ) && is_array( $options['display_type'] ) && in_array( 'overlay', $options['display_type'], true )
 			&& apply_filters( 'isc_public_add_source_captions_to_content', true ) ) {
 			$content = self::add_source_captions_to_content( $content );
@@ -251,9 +200,7 @@ class ISC_Public extends ISC_Class {
 			ISC_Log::log( 'not creating image overlays because the option is disabled for post content' );
 		}
 		// maybe add source list
-		$content = self::add_source_list_to_content( $content );
-
-		return $content;
+		return self::add_source_list_to_content( $content );
 	}
 
 	/**
