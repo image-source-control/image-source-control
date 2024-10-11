@@ -1,6 +1,6 @@
 <?php
 
-namespace ISC\Tests\Functional;
+namespace ISC\Tests\Functional\Includes;
 
 /**
  * Tests for ISC\Standard_Source to handle the standard source text

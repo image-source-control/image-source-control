@@ -1,13 +1,14 @@
 <?php
 
-namespace ISC\Tests\WPUnit;
+namespace ISC\Tests\WPUnit\Pro\Filters;
 
+use ISC\Tests\WPUnit\WPTestCase;
 use \ISC_Pro_Public;
 
 /**
  * Test the isc_overlay_html_source filter hook in Pro-related functions
  */
-class Overlay_HTML_Source_Pro_Test extends \Codeception\TestCase\WPTestCase {
+class Overlay_HTML_Source_Pro_Test extends WPTestCase {
 
 	/**
 	 * @var ISC_Pro_Public

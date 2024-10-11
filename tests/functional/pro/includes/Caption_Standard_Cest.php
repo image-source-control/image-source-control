@@ -1,6 +1,6 @@
 <?php
 
-namespace ISC\Tests\Functional;
+namespace ISC\Tests\Functional\Pro\Includes;
 
 /**
  * Test ISC\Pro\WP_Caption

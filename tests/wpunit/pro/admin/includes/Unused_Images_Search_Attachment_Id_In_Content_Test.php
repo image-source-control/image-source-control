@@ -1,13 +1,16 @@
 <?php
 
-namespace ISC\Pro;
+namespace ISC\Tests\WPUnit\Pro\Admin\Includes;
+
+use \ISC\Tests\WPUnit\WPTestCase;
+use \ISC\Pro\Unused_Images;
 
 require_once dirname( __FILE__, 6 ) . '/pro/admin/includes/unused-images.php';
 
 /**
  * Testing \ISC\Pro\Unused_Images::search_attachment_id_in_content()
  */
-class Unused_Images_Search_Attachment_Id_In_Content_Test extends \Codeception\TestCase\WPTestCase {
+class Unused_Images_Search_Attachment_Id_In_Content_Test extends WPTestCase {
 
 	/**
 	 * Attachment ID
