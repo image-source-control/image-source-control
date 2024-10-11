@@ -182,6 +182,9 @@ class Indexer_Test extends \Codeception\TestCase\WPTestCase {
 
 		$this->assertContains( $post->ID, $isc_image_posts1, 'Attachment 1 should have isc_image_posts meta containing the post ID.' );
 		$this->assertContains( $post->ID, $isc_image_posts2, 'Attachment 2 should have isc_image_posts meta containing the post ID.' );
+
+		wp_delete_attachment( $attachment_id1 );
+		wp_delete_attachment( $attachment_id2 );
 	}
 
 	/**
