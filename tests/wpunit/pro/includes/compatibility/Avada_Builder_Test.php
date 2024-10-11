@@ -1,11 +1,13 @@
 <?php
 
-namespace ISC\Tests\WPUnit;
+namespace ISC\Tests\WPUnit\Pro\Includes\Compatibility;
+
+use ISC\Tests\WPUnit\WPTestCase;
 
 /**
  * Test if \ISC\Pro\Compatibility\Avada_Builder:add_source_text_for_databg_attribute() converts a data-bg attribute into a caption.
  */
-class Avada_Builder_Test extends \Codeception\TestCase\WPTestCase {
+class Avada_Builder_Test extends WPTestCase {
 
 	protected $avadaBuilder;
 

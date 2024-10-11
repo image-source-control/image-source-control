@@ -1,14 +1,12 @@
 <?php
+namespace ISC\Tests\WPUnit\Pro\Admin\Includes;
+
+use \ISC\Tests\WPUnit\WPTestCase;
+
 /**
  * Test the license class
  */
-namespace ISC\Tests\WPUnit;
-
-//require_once dirname( __FILE__, 6 ) . '/pro/admin/includes/unused-images.php';
-
-//use \ISC_Pro_Admin_Unused_Images;
-
-class License_Test extends \Codeception\TestCase\WPTestCase {
+class License_Test extends WPTestCase {
 
 	private $instance;
 

@@ -1,6 +1,8 @@
 <?php
 
-namespace ISC\Tests\WPUnit;
+namespace ISC\Tests\WPUnit\Includes;
+
+use \ISC\Tests\WPUnit\WPTestCase;
 
 /**
  * Testing the ISC\Indexer class
@@ -9,7 +11,7 @@ namespace ISC\Tests\WPUnit;
 use ISC\Indexer;
 use ISC_Model;
 
-class Indexer_Test extends \Codeception\TestCase\WPTestCase {
+class Indexer_Test extends WPTestCase {
 
 	public function setUp(): void {
 		parent::setUp();

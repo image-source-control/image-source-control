@@ -1,13 +1,14 @@
 <?php
 
-use \ISC\Pro\Unused_Images;
+namespace ISC\Tests\WPUnit\Pro\Admin\Includes;
 
-include_once dirname( __FILE__, 4 ) . '/includes/Unused_Images_Test.php';
+use ISC\Pro\Unused_Images;
+use ISC\Tests\WPUnit\Includes\Unused_Images_Basic_Test;
 
 /**
  * Testing \ISC\Pro\Unused_Images::get_unused_attachments()
  */
-class Unused_Images_Get_Unused_Attachments_Test extends \ISC\Tests\WPUnit\Unused_Images_Test {
+class Unused_Images_Get_Unused_Attachments_Test extends Unused_Images_Basic_Test {
 
 	/**
 	 * Test with the filter set to "unchecked"

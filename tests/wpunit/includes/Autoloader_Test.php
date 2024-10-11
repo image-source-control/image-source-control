@@ -1,12 +1,12 @@
 <?php
+namespace ISC\Tests\WPUnit\Includes;
+
+use \ISC\Tests\WPUnit\WPTestCase;
+use ISC\Autoloader;
 /**
  * The class is responsible for locating and loading the autoloader file used in the plugin.
  */
-namespace ISC\Tests\WPUnit;
-
-use ISC\Autoloader;
-
-class Autoloader_Test extends \Codeception\TestCase\WPTestCase {
+class Autoloader_Test extends WPTestCase {
 
 	/**
 	 * Test the get_autoloader() method

@@ -1,14 +1,14 @@
 <?php
 
-namespace ISC\Tests\WPUnit;
+namespace ISC\Tests\WPUnit\Includes;
 
+use \ISC\Tests\WPUnit\WPTestCase;
 use ISC\Standard_Source;
-use phpDocumentor\Reflection\Types\Object_;
 
 /**
  * Testing the Standard_Source class
  */
-class Standard_Source_Test extends \Codeception\TestCase\WPTestCase {
+class Standard_Source_Test extends WPTestCase {
 
 	/**
 	 * User ID

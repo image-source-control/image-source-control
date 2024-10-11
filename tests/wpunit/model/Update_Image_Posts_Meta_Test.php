@@ -2,7 +2,7 @@
 
 namespace ISC\Tests\WPUnit\Model;
 
-use lucatume\WPBrowser\TestCase\WPTestCase;
+use \ISC\Tests\WPUnit\WPTestCase;
 use ISC_Model;
 
 class Update_Image_Posts_Meta_Test extends WPTestCase {
