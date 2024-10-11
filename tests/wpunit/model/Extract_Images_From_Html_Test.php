@@ -1,13 +1,14 @@
 <?php
 
-namespace ISC\Tests\WPUnit;
+namespace ISC\Tests\WPUnit\Model;
 
+use lucatume\WPBrowser\TestCase\WPTestCase;
 use \ISC\Analyze_HTML;
 
 /**
  * Test if ISC/Analyze_HTML:extract_images_from_html() works as expected.
  */
-class Extract_Images_From_Html_Test extends \Codeception\TestCase\WPTestCase {
+class Extract_Images_From_Html_Test extends WPTestCase {
 
 	/**
 	 * Helper to extract information from HTML

@@ -1,13 +1,14 @@
 <?php
 
-namespace ISC\Tests\WPUnit;
+namespace ISC\Tests\WPUnit\Model;
 
+use lucatume\WPBrowser\TestCase\WPTestCase;
 use ISC_Model;
 
 /**
  * Test if ISC_Model::get_attachments_with_empty_sources() works as expected.
  */
-class Get_Attachments_With_Empty_Sources_Test extends \Codeception\TestCase\WPTestCase {
+class Get_Attachments_With_Empty_Sources_Test extends WPTestCase {
 
 	private $attachment_ids = [];
 

@@ -1,13 +1,14 @@
 <?php
 
-namespace ISC\Tests\WPUnit;
+namespace ISC\Tests\WPUnit\Model;
 
+use lucatume\WPBrowser\TestCase\WPTestCase;
 use \ISC_Model;
 
 /**
  * Test if ISC_Model::get_base_file_name() works as expected.
  */
-class Get_Base_File_Url_Test extends \Codeception\TestCase\WPTestCase {
+class Get_Base_File_Url_Test extends WPTestCase {
 
 	public function setUp(): void {
 		parent::setUp();

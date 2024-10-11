@@ -39,6 +39,11 @@
             "public/"
         ]
     },
+    "autoload-dev": {
+        "psr-4": {
+            "ISC\\Tests\\": "tests/"
+        }
+    },
     "scripts": {
         "cs": "vendor/bin/phpcs --standard=.phpcs.xml",
         "wpunit": "vendor/bin/codecept run wpunit",

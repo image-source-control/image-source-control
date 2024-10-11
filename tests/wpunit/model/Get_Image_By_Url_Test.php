@@ -1,14 +1,15 @@
 <?php
 
-namespace ISC\Tests\WPUnit;
+namespace ISC\Tests\WPUnit\Model;
 
+use lucatume\WPBrowser\TestCase\WPTestCase;
 use \ISC_Model;
 use \ISC_Storage_Model;
 
 /**
  * Test if ISC_Model::get_image_by_url() works as expected.
  */
-class Get_Image_By_Url_Test extends \Codeception\TestCase\WPTestCase {
+class Get_Image_By_Url_Test extends WPTestCase {
 
 	public function setUp(): void {
 		parent::setUp();

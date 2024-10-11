@@ -1,13 +1,14 @@
 <?php
 
-namespace ISC\Tests\WPUnit;
+namespace ISC\Tests\WPUnit\Model;
 
+use lucatume\WPBrowser\TestCase\WPTestCase;
 use \ISC_Model;
 
 /**
  * Test if ISC_Model::sanitize_source_url_string() works as expected.
  */
-class Sanitize_Source_Url_Test extends \Codeception\TestCase\WPTestCase {
+class Sanitize_Source_Url_Test extends WPTestCase {
 
 	/**
 	 * Test if sanitize_source_url() escapes a normal URL without change.

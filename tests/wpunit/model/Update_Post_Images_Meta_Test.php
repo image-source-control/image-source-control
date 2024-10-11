@@ -1,10 +1,11 @@
 <?php
 
-namespace ISC\Tests\WPUnit;
+namespace ISC\Tests\WPUnit\Model;
 
+use lucatume\WPBrowser\TestCase\WPTestCase;
 use ISC_Model;
 
-class Update_Post_Images_Meta_Test extends \Codeception\TestCase\WPTestCase {
+class Update_Post_Images_Meta_Test extends WPTestCase {
 
 	public function setUp(): void {
 		parent::setUp();

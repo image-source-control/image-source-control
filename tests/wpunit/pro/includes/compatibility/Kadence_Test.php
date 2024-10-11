@@ -3,6 +3,7 @@
 namespace ISC\Tests\WPUnit;
 
 include_once dirname( __FILE__, 4 ) . '/model/Extract_Images_From_Html_Test.php';
+use ISC\Tests\WPUnit\Model\Extract_Images_From_Html_Test;
 /**
  * Test if ISC_Pro_Kadence provides compatibility with Kadence Blocks and Kadence Theme specific HTML.
  * This test is based on the Extract_Images_From_Html_Test class to see if all previous patters also work
