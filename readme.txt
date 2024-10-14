@@ -3,7 +3,7 @@ Contributors: webzunft
 Tags: credits, captions, copyrights, attributions, image sources
 Requires at least: 5.3
 Tested up to: 6.6
-Stable tag: 2.27.0
+Stable tag: 2.28.0
 Requires PHP: 7.4
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -151,6 +151,13 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 
 == Changelog ==
 
+= 2.28.0 =
+
+- Feature: support for WPML to [translate image sources and plugin options](https://imagesourcecontrol.com/blog/translating-image-captions-with-wpml/)
+- Improvement: (Pro) the Global List and Per-page list list non-standard images (e.g., `img` tags without `src` attribute) if they would also show an overlay
+- Dev: moved the code that looks for post-image relations into `ISC\Indexer`
+- Dev: use the `isc_image_posts_meta_limit` filter to limit the number of posts associated with a given image; default = 10
+
 = 2.27.0 =
 
 - Increased the required PHP version to 7.4
@@ -296,3 +303,9 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 - Improvement: (Pro) Disable links in overlays, e.g., when Elementor assigns a background image to `<a>` tags
 - Fix: The `<style>` block detection could sometimes cover multiple blocks and add the caption only to the last one
 - Dev: Added argument to `render_image_source_string()` that allows to disable links in the caption output
+
+== Upgrade Notice ==
+
+= 2.28.0 =
+
+Support for WPML. Show more images in the Global and Per-post List.
