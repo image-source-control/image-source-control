@@ -2,26 +2,19 @@
 <html>
 <head>
 	<script>
-		// Parse the caption_position from the GET parameters.
+		// Parse the position and pretext parameters from GET.
 		var urlParams = new URLSearchParams(window.location.search);
 		var caption_position = urlParams.get('position');
 		var caption_pretext = urlParams.get('pretext');
 
 		// Create the isc_front_data object.
-		var isc_front_data =
-		{
-			caption_position: caption_position,
-		}
+		var isc_front_data = {
+			caption_position: caption_position
+		};
 
-		var path = urlParams.get('path');
-
-		// Create a script element.
+		// Use a path relative to the current HTML file's location for including the JavaScript file.
 		var script = document.createElement('script');
-
-		// Set the src of the script element to the URL of your JavaScript file.
-		script.src = path + 'public/assets/js/captions.js';
-
-		// Append the script element to the head of the document.
+		script.src = './../../../../public/assets/js/captions.js';
 		document.head.appendChild(script);
 	</script>
 	<style>
@@ -48,7 +41,7 @@
 	<span class="isc-source-text"></span>
 </div>
 <script>
-	document.getElementById('preview_image').src = path + 'admin/templates/settings/preview/image-for-position-preview.jpg';
+	document.getElementById('preview_image').src = './../../../../admin/templates/settings/preview/image-for-position-preview.jpg';
 	document.querySelector('.isc-source-text').innerHTML = caption_pretext + 'Jane Doe';
 </script>
 </body>
