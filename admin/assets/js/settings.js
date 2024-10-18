@@ -24,7 +24,7 @@ jQuery( document ).ready(
 			$('#isc-settings-caption-position').val($(this).data('position'));
 
 			var iframe = document.createElement('iframe');
-			iframe.src = isc_settings.baseurl + 'admin/templates/settings/preview/caption-preview.html' + "?path=" + encodeURIComponent( isc_settings.baseurl ) + "&position=" + $(this).data('position') + "&pretext=" + encodeURIComponent( $('#source-pretext').val() );
+			iframe.src = isc_settings.baseurl + 'admin/templates/settings/preview/caption-preview.html' + "?position=" + $(this).data('position') + "&pretext=" + encodeURIComponent($('#source-pretext').val());
 			iframe.width = "250";
 			iframe.height = "181";
 
