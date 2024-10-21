@@ -3,7 +3,7 @@ Contributors: webzunft
 Tags: credits, captions, copyrights, attributions, image sources
 Requires at least: 5.3
 Tested up to: 6.6
-Stable tag: 2.28.0
+Stable tag: 2.28.1
 Requires PHP: 7.4
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -150,6 +150,10 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 1. Manage image usage licenses
 
 == Changelog ==
+
+= 2.28.1 =
+
+- Security: admins could execute JavaScript in a manipulated URL in the backend
 
 = 2.28.0 =
 
@@ -305,6 +309,10 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 - Dev: Added argument to `render_image_source_string()` that allows to disable links in the caption output
 
 == Upgrade Notice ==
+
+= 2.28.1 =
+
+Security: admins could execute JavaScript in a manipulated URL in the backend
 
 = 2.28.0 =
 
