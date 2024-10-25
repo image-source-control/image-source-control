@@ -13,6 +13,7 @@ class Output_Buffer_Test extends WPTestCase {
 	 */
 	protected function enable_overlay_for_body_images() {
 		$isc_options                            = \ISC_Class::get_instance()->get_isc_options();
+		$isc_options['display_type'][]          = 'overlay';
 		$isc_options['overlay_included_images'] = 'body_img';
 		update_option( 'isc_options', $isc_options );
 	}
