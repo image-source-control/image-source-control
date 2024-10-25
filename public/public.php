@@ -187,13 +187,12 @@ class ISC_Public extends ISC_Class {
 		}
 
 		// maybe add source captions
-		$options = $this->get_isc_options();
-		if ( ! empty( $options['display_type'] ) && is_array( $options['display_type'] ) && in_array( 'overlay', $options['display_type'], true )
-			&& apply_filters( 'isc_public_add_source_captions_to_content', true ) ) {
+		if ( self::captions_enabled() && apply_filters( 'isc_public_add_source_captions_to_content', true ) ) {
 			$content = self::add_source_captions_to_content( $content );
 		} else {
 			ISC_Log::log( 'not creating image overlays because the option is disabled for post content' );
 		}
+
 
 		/**
 		 * Indexing the content for images here after we added overlays, so that we could also count
@@ -321,6 +320,16 @@ class ISC_Public extends ISC_Class {
 		 * Attach follow content back
 		 */
 		return $content . $content_after;
+	}
+
+	/**
+	 * Return true if captions are enabled
+	 *
+	 * @return bool
+	 */
+	public static function captions_enabled(): bool {
+		$options = self::get_instance()->get_isc_options();
+		return ! empty( $options['display_type'] ) && is_array( $options['display_type'] ) && in_array( 'overlay', $options['display_type'], true );
 	}
 
 	/**
