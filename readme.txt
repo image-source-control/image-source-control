@@ -3,7 +3,7 @@ Contributors: webzunft
 Tags: credits, captions, copyrights, attributions, image sources
 Requires at least: 5.3
 Tested up to: 6.6
-Stable tag: 2.28.1
+Stable tag: 2.28.2
 Requires PHP: 7.4
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -150,6 +150,10 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 1. Manage image usage licenses
 
 == Changelog ==
+
+= 2.28.2 =
+
+- Fix: (Pro) prevent the caption overlay to always show when it is chosen to show for all images while the main option is disabled
 
 = 2.28.1 =
 
