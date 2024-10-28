@@ -175,6 +175,11 @@ class ISC_Public extends ISC_Class {
 	 * @return string $content
 	 */
 	public function add_sources_to_content( $content ) {
+		// return if content is empty or null (the latter being an actual issue on a user’s site likely caused by a third-party plugin using the the_content filter wrongly)
+		if ( empty( $content ) ) {
+			ISC_Log::log( 'skipped adding sources because the content was empty' );
+			return $content;
+		}
 
 		// return if this is not the main query or within the loop
 		if ( ! self::is_main_loop() ) {
@@ -192,7 +197,6 @@ class ISC_Public extends ISC_Class {
 		} else {
 			ISC_Log::log( 'not creating image overlays because the option is disabled for post content' );
 		}
-
 
 		/**
 		 * Indexing the content for images here after we added overlays, so that we could also count
