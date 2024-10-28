@@ -29,9 +29,9 @@
 				<?php
 				echo wp_kses(
 					$_options['description'],
-					array(
-						'code' => array(),
-					)
+					[
+						'code' => [],
+					]
 				);
 				?>
 		</p>

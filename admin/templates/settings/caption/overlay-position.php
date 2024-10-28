@@ -9,10 +9,10 @@
 <div id="isc-settings-caption-position-options-wrapper">
 	<div id="isc-settings-caption-pos-options">
 		<?php
-		foreach ( $this->caption_position as $position) {
-			$selected = $options['caption_position'] === $position ? ' selected' : '';
-			$extraClass = $position === 'center' ? ' center' : '';
-			echo "<button type='button' class='$selected$extraClass' data-position='$position'><span></span></button>";
+		foreach ( $this->caption_position as $position ) {
+			$selected    = $options['caption_position'] === $position ? ' selected' : '';
+			$extra_class = $position === 'center' ? ' center' : '';
+			echo "<button type='button' class='$selected$extra_class' data-position='$position'><span></span></button>";
 		}
 		?>
 	</div>
