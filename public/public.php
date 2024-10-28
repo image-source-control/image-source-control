@@ -651,10 +651,8 @@ class ISC_Public extends ISC_Class {
 					// only list published posts
 					if ( get_post_status( $data ) === 'publish' ) {
 						$usage_data_array[] = sprintf(
-								// translators: %1$s is a URL, %2$s is the title of an image, %3$s is the link text.
-							__( '<li><a href="%1$s" title="View %2$s">%3$s</a></li>', 'image-source-control-isc' ),
+							'<li><a href="%1$s">%2$s</a></li>',
 							esc_url( get_permalink( $data ) ),
-							esc_attr( get_the_title( $data ) ),
 							esc_html( get_the_title( $data ) )
 						);
 					}

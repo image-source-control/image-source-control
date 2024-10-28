@@ -185,7 +185,8 @@ class ISC_Block_Options {
 			'isc/image-block',
 			plugin_dir_url( __FILE__ ) . 'isc-image-block.js',
 			$dependencies,
-			true
+			true,
+			false
 		);
 
 		$plugin_options = ISC_Class::get_instance()->get_isc_options();
