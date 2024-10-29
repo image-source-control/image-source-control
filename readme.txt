@@ -151,6 +151,10 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 
 == Changelog ==
 
+= untagged =
+
+- Dev: hardened code against the_content being set to `null` by other plugins
+
 = 2.28.2 =
 
 - Fix: (Pro) prevent the caption overlay to always show when it is chosen to show for all images while the main option is disabled
