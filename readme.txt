@@ -18,7 +18,9 @@ Do you want to give back to photographers and illustrators by adding image credi
 
 Or are you a creator yourself and want to show information on the picture licenses for your image gallery under which publishers can use or purchase your work?
 
-Image Source Control is your go-to solution when it comes to handling copyright-protected photos and illustrations.
+Image Source Control is your go-to solution when it comes to **handling copyright-protected photos and delete unused images**.
+
+[Documentation](https://imagesourcecontrol.com/documentation/?utm_source=wporg&utm_medium=link&utm_campaign=wp-linkbar-documentation) | [Support](https://wordpress.org/support/plugin/image-source-control-isc/) | [Premium Features](https://imagesourcecontrol.com/unlock-isc/?utm_source=wporg&utm_medium=link&utm_campaign=wp-linkbar-pro) | [Delete Unused Images](https://imagesourcecontrol.com/features/delete-unused-images/?utm_source=wporg&utm_medium=link&utm_campaign=wp-linkbar-delete)
 
 **Image Credit layouts**
 
