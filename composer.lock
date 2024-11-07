@@ -1264,16 +1264,16 @@
         },
         {
             "name": "lucatume/wp-browser",
-            "version": "3.7.6",
+            "version": "3.7.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/lucatume/wp-browser.git",
-                "reference": "6e2b9eeee273f919c9f9146b8757c2249891a2e4"
+                "reference": "66187489f5c218b6800af270106de3fc7963903a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/lucatume/wp-browser/zipball/6e2b9eeee273f919c9f9146b8757c2249891a2e4",
-                "reference": "6e2b9eeee273f919c9f9146b8757c2249891a2e4",
+                "url": "https://api.github.com/repos/lucatume/wp-browser/zipball/66187489f5c218b6800af270106de3fc7963903a",
+                "reference": "66187489f5c218b6800af270106de3fc7963903a",
                 "shasum": ""
             },
             "require": {
@@ -1349,7 +1349,7 @@
             ],
             "support": {
                 "issues": "https://github.com/lucatume/wp-browser/issues",
-                "source": "https://github.com/lucatume/wp-browser/tree/3.7.6"
+                "source": "https://github.com/lucatume/wp-browser/tree/3.7.7"
             },
             "funding": [
                 {
@@ -1357,7 +1357,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-10-18T14:21:00+00:00"
+            "time": "2024-11-04T08:17:30+00:00"
         },
         {
             "name": "myclabs/deep-copy",
@@ -3743,16 +3743,16 @@
         },
         {
             "name": "symfony/console",
-            "version": "v5.4.45",
+            "version": "v5.4.46",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "108d436c2af470858bdaba3257baab3a74172017"
+                "reference": "fb0d4760e7147d81ab4d9e2d57d56268261b4e4e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/108d436c2af470858bdaba3257baab3a74172017",
-                "reference": "108d436c2af470858bdaba3257baab3a74172017",
+                "url": "https://api.github.com/repos/symfony/console/zipball/fb0d4760e7147d81ab4d9e2d57d56268261b4e4e",
+                "reference": "fb0d4760e7147d81ab4d9e2d57d56268261b4e4e",
                 "shasum": ""
             },
             "require": {
@@ -3822,7 +3822,7 @@
                 "terminal"
             ],
             "support": {
-                "source": "https://github.com/symfony/console/tree/v5.4.45"
+                "source": "https://github.com/symfony/console/tree/v5.4.46"
             },
             "funding": [
                 {
@@ -3838,7 +3838,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-10-08T07:27:17+00:00"
+            "time": "2024-11-05T14:17:06+00:00"
         },
         {
             "name": "symfony/css-selector",
@@ -5328,5 +5328,5 @@
     "prefer-lowest": false,
     "platform": [],
     "platform-dev": [],
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.3.0"
 }
