@@ -93,8 +93,6 @@ class ISC_Class {
 		 * Setup registers filters and actions.
 		 */
 		public function __construct() {
-			// load all plugin options
-			$this->options       = $this->get_isc_options();
 			self::$instance      = $this;
 			$this->model         = new ISC_Model();
 			$this->html_analyzer = new ISC\Analyze_HTML();
@@ -217,7 +215,9 @@ class ISC_Class {
 		 * @return string[]
 		 */
 		public function get_isc_options() {
-			return get_option( 'isc_options', $this->default_options() );
+			$this->options = get_option( 'isc_options', $this->default_options() );
+
+			return $this->options;
 		}
 
 		/**
