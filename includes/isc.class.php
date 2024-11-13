@@ -9,41 +9,41 @@ class ISC_Class {
 		 *
 		 * @var array option fields.
 		 */
-		protected $fields = array(
-			'image_source'     => array(
+		protected $fields = [
+			'image_source'     => [
 				'id'      => 'isc_image_source',
 				'default' => '',
-			),
-			'image_source_url' => array(
+			],
+			'image_source_url' => [
 				'id'      => 'isc_image_source_url',
 				'default' => '',
-			),
-			'image_source_own' => array(
+			],
+			'image_source_own' => [
 				'id'      => 'isc_image_source_own',
 				'default' => '',
-			),
-			'image_posts'      => array(
+			],
+			'image_posts'      => [
 				'id'      => 'isc_image_posts',
-				'default' => array(),
-			),
-			'image_licence'    => array(
+				'default' => [],
+			],
+			'image_licence'    => [
 				'id'      => 'isc_image_licence',
 				'default' => '',
-			),
-		);
+			],
+		];
 
 		/**
 		 * Allowed image file types/extensions
 		 *
 		 * @var array allowed image extensions.
 		 */
-		public $allowed_extensions = array(
+		public $allowed_extensions = [
 			'jpg',
 			'png',
 			'gif',
 			'jpeg',
 			'webp',
-		);
+		];
 
 		/**
 		 * Thumbnail size in list of all images.
@@ -57,7 +57,7 @@ class ISC_Class {
 		 *
 		 * @var array plugin options.
 		 */
-		protected $options = array();
+		protected $options = [];
 
 		/**
 		 * Instance of ISC_Class.
@@ -94,45 +94,45 @@ class ISC_Class {
 		 */
 		public function __construct() {
 			// load all plugin options
-			$this->options  = $this->get_isc_options();
-			self::$instance = $this;
-			$this->model    = new ISC_Model();
-			$this->html_analyzer = new ISC\Analyze_HTML;
+			$this->options       = $this->get_isc_options();
+			self::$instance      = $this;
+			$this->model         = new ISC_Model();
+			$this->html_analyzer = new ISC\Analyze_HTML();
 
 			/**
 			 * Register actions to update missing sources checks each time attachments’ post meta is updated
 			 *
 			 * See the "updated_post_meta" action hook
 			 */
-			add_action( 'updated_post_meta', array( $this, 'maybe_update_attachment_post_meta' ), 10, 3 );
+			add_action( 'updated_post_meta', [ $this, 'maybe_update_attachment_post_meta' ], 10, 3 );
 
 			/**
 			 * Register actions to update missing sources checks each time attachments’ post meta is added
 			 *
 			 * See the "added_post_meta" action hook
 			 */
-			add_action( 'added_post_meta', array( $this, 'maybe_update_attachment_post_meta' ), 10, 3 );
+			add_action( 'added_post_meta', [ $this, 'maybe_update_attachment_post_meta' ], 10, 3 );
 
 			/**
 			 * Register actions to update missing sources when an attachment was added
 			 */
-			add_action( 'add_attachment', array( 'ISC_Model', 'update_missing_sources_transient' ) );
+			add_action( 'add_attachment', [ 'ISC_Model', 'update_missing_sources_transient' ] );
 
 			/**
 			 * Register an action to update missing sources when an attachment was deleted
 			 */
-			add_action( 'deleted_post', array( 'ISC_Model', 'update_missing_sources_transient' ) );
+			add_action( 'deleted_post', [ 'ISC_Model', 'update_missing_sources_transient' ] );
 
 			/**
 			 * Clear post-image index whenever the content of a single post is updated
 			 * this could force reindexing the post after adding or removing image sources
 			 */
-			add_action( 'wp_insert_post', array( 'ISC_Model', 'clear_single_post_images_index' ) );
+			add_action( 'wp_insert_post', [ 'ISC_Model', 'clear_single_post_images_index' ] );
 
 			/**
 			 * Fire when a post or page was updated
 			 */
-			add_action( 'post_updated', array( 'ISC_Model', 'update_image_post_meta' ), 10, 3 );
+			add_action( 'post_updated', [ 'ISC_Model', 'update_image_post_meta' ], 10, 3 );
 		}
 
 		/**
@@ -146,7 +146,7 @@ class ISC_Class {
 		 * @return array with image src uri-s
 		 */
 		public function filter_src_attributes( $content = '' ) {
-			$srcs = array();
+			$srcs = [];
 			if ( empty( $content ) ) {
 				return $srcs;
 			}
@@ -181,12 +181,12 @@ class ISC_Class {
 		 */
 		public function default_options() {
 			include ISCPATH . 'includes/default-licenses.php';
-			$default['display_type']              = array( 'list' );
+			$default['display_type']              = [ 'list' ];
 			$default['list_on_archives']          = false;
 			$default['list_on_excerpts']          = false;
 			$default['image_list_headline']       = __( 'image sources', 'image-source-control-isc' );
 			$default['version']                   = ISCVERSION;
-			$default['images_per_page']			  = 99999;
+			$default['images_per_page']           = 99999;
 			$default['thumbnail_in_list']         = false;
 			$default['thumbnail_size']            = 'thumbnail';
 			$default['thumbnail_width']           = 150;
@@ -237,18 +237,18 @@ class ISC_Class {
 				return false;
 			}
 			// create the array with licence => url
-			$new_licences = array();
+			$new_licences = [];
 			foreach ( $licences_array as $_licence ) {
 				if ( trim( $_licence ) !== '' ) {
 					$temp                     = explode( '|', $_licence );
-					$new_licences[ $temp[0] ] = array();
+					$new_licences[ $temp[0] ] = [];
 					if ( isset( $temp[1] ) ) {
 						$new_licences[ $temp[0] ]['url'] = esc_url( $temp[1] );
 					}
 				}
 			}
 
-			if ( $new_licences === array() ) {
+			if ( $new_licences === [] ) {
 				return false;
 			} else {
 				return $new_licences;
@@ -264,7 +264,7 @@ class ISC_Class {
 		 * @param string $meta_key    Metadata key.
 		 */
 		public function maybe_update_attachment_post_meta( $meta_id, $object_id, $meta_key ) {
-			if ( in_array( $meta_key, array( 'isc_image_source_own', 'isc_image_source' ), true ) ) {
+			if ( in_array( $meta_key, [ 'isc_image_source_own', 'isc_image_source' ], true ) ) {
 				ISC_Model::update_missing_sources_transient();
 			}
 		}
