@@ -1,9 +1,9 @@
 === Image Source Control Lite – Show Image Credits and Captions ===
 Contributors: webzunft
 Tags: credits, captions, copyrights, attributions, image sources
-Requires at least: 5.3
-Tested up to: 6.6
-Stable tag: 2.28.2
+Requires at least: 6.0
+Tested up to: 6.7
+Stable tag: 2.29.0
 Requires PHP: 7.4
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -153,9 +153,13 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 
 == Changelog ==
 
-= untagged =
+= 2.29.0 =
 
+- Increased the required WordPress version to 6.0
+- Improvement: (Pro) added Swiss and Austrian localizations
+- Fix: a warning was thrown in WordPress 6.7 about text domains loaded too early
 - Dev: hardened code against the_content being set to `null` by other plugins
+- Dev: various code style improvements
 
 = 2.28.2 =
 
