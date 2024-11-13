@@ -8,22 +8,7 @@ class ISC_Block_Options {
 	 * Construct an instance of ISC_Block_Options
 	 */
 	public function __construct() {
-		add_action( 'plugins_loaded', [ $this, 'plugins_loaded' ] );
-	}
-
-	/**
-	 * Register hooks
-	 */
-	public function plugins_loaded() {
-		if ( ! function_exists( 'register_block_type' ) || ! self::enabled() ) {
-			// if block options are disabled, at least add a link to the media library where one can adjust the source
-			add_action( 'enqueue_block_editor_assets', [ $this, 'edit_link_assets' ] );
-			return;
-		}
-
-		add_action( 'enqueue_block_editor_assets', [ $this, 'editor_assets' ] );
 		add_action( 'init', [ $this, 'init' ] );
-		add_action( 'update_option', [ $this, 'widgets_update_option' ], 10, 3 );
 	}
 
 	/**
@@ -48,6 +33,15 @@ class ISC_Block_Options {
 	 * @return void
 	 */
 	public function init() {
+		if ( ! function_exists( 'register_block_type' ) || ! self::enabled() ) {
+			// if block options are disabled, at least add a link to the media library where one can adjust the source
+			add_action( 'enqueue_block_editor_assets', [ $this, 'edit_link_assets' ] );
+			return;
+		}
+
+		add_action( 'enqueue_block_editor_assets', [ $this, 'editor_assets' ] );
+		add_action( 'update_option', [ $this, 'widgets_update_option' ], 10, 3 );
+
 		register_post_meta(
 			'attachment',
 			'isc_image_source',
