@@ -46,8 +46,6 @@ if ( is_admin() ) {
 	// include frontend functions.
 	new ISC_Public();
 	require_once ISCPATH . 'includes/functions.php';
-} else {
-	new ISC_Class();
 }
 
 if ( ! class_exists( 'ISC_Pro_Model', false ) && file_exists( ISCPATH . 'pro/isc-pro.php' ) ) {

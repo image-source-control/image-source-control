@@ -2,8 +2,8 @@
 
 namespace ISC\Tests\WPUnit\Model;
 
-use \ISC\Tests\WPUnit\WPTestCase;
-use \ISC\Analyze_HTML;
+use ISC\Image_Sources\Analyze_HTML;
+use ISC\Tests\WPUnit\WPTestCase;
 
 /**
  * Test if ISC/Analyze_HTML:extract_images_from_html() works as expected.

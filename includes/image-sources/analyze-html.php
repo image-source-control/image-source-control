@@ -1,8 +1,10 @@
 <?php
+
+namespace ISC\Image_Sources;
+
 /**
  * Analyze chunks of HTML
  */
-namespace ISC;
 class Analyze_HTML {
 
 	/**

@@ -1,14 +1,15 @@
 <?php
+
+use ISC\Plugin;
+use ISC\User;
+use ISC\Image_Sources\Image_Sources;
+
 /**
  * Handles everything displayed in WP Admin
  * storing updated information is not part of this class since it is only included if is_admin() returns true
  * which is not the case for the Customizer of Block editor
  */
-
-use ISC\Plugin;
-use ISC\User;
-
-class ISC_Admin extends ISC_Class {
+class ISC_Admin extends Image_Sources {
 
 	/**
 	 * Initiate admin functions
@@ -120,7 +121,7 @@ class ISC_Admin extends ISC_Class {
 	public function admin_notices() {
 
 		// only check, if check-option was enabled
-		$options = $this->get_isc_options();
+		$options = $this->get_options();
 		// skip the warning on the image sources screen since the list shows up there
 		$screen = get_current_screen();
 		if ( empty( $options['warning_onesource_missing'] )
@@ -272,7 +273,7 @@ class ISC_Admin extends ISC_Class {
 
 		// add input field for source
 		$form_fields['isc_image_source']['label'] = __( 'Image Source', 'image-source-control-isc' );
-		$form_fields['isc_image_source']['value'] = ISC_Class::get_image_source_text( $post->ID );
+		$form_fields['isc_image_source']['value'] = Image_Sources::get_image_source_text( $post->ID );
 		$form_fields['isc_image_source']['helps'] = __( 'Include the image source here.', 'image-source-control-isc' );
 
 		// add checkbox to mark as your own image
@@ -297,11 +298,11 @@ class ISC_Admin extends ISC_Class {
 
 		// add input field for source url
 		$form_fields['isc_image_source_url']['label'] = __( 'Image Source URL', 'image-source-control-isc' );
-		$form_fields['isc_image_source_url']['value'] = ISC_Class::get_image_source_url( $post->ID );
+		$form_fields['isc_image_source_url']['value'] = Image_Sources::get_image_source_url( $post->ID );
 		$form_fields['isc_image_source_url']['helps'] = __( 'URL to link the source text to.', 'image-source-control-isc' );
 
 		// add input field for license, if enabled
-		$options  = $this->get_isc_options();
+		$options  = $this->get_options();
 		$licences = $this->licences_text_to_array( $options['licences'] );
 		if ( $options['enable_licences'] && $licences ) {
 			$form_fields['isc_image_licence']['input'] = 'html';
@@ -310,7 +311,7 @@ class ISC_Admin extends ISC_Class {
 			$html                                      = '<select name="attachments[' . $post->ID . '][isc_image_licence]" id="attachments[' . $post->ID . '][isc_image_licence]">';
 			$html                                     .= '<option value="">--</option>';
 			foreach ( $licences as $_licence_name => $_licence_data ) {
-				$html .= '<option value="' . $_licence_name . '" ' . selected( ISC_Class::get_image_license( $post->ID ), $_licence_name, false ) . '>' . $_licence_name . '</option>';
+				$html .= '<option value="' . $_licence_name . '" ' . selected( Image_Sources::get_image_license( $post->ID ), $_licence_name, false ) . '>' . $_licence_name . '</option>';
 			}
 			$html                                    .= '</select>';
 			$form_fields['isc_image_licence']['html'] = $html;
@@ -330,7 +331,7 @@ class ISC_Admin extends ISC_Class {
 	 * Create the menu pages for ISC with access for editors and higher roles
 	 */
 	public function add_menu_items() {
-		$options = $this->get_isc_options();
+		$options = $this->get_options();
 		if ( empty( $options['warning_onesource_missing'] ) ) {
 			$notice_alert = '';
 		} else {

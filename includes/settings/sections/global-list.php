@@ -3,6 +3,7 @@
 namespace ISC\Settings\Sections;
 
 use ISC\Settings;
+use ISC\Image_Sources\Image_Sources;
 
 /**
  * Handle settings for page-list image source displays
@@ -30,7 +31,7 @@ class Global_List extends Settings\Section {
 	 * Render option to define which images should show in the global list
 	 */
 	public function render_field_global_list_included_images() {
-		$options                 = $this->get_isc_options();
+		$options                 = $this->get_options();
 		$included_images         = ! empty( $options['global_list_included_images'] ) ? $options['global_list_included_images'] : '';
 		$included_images_options = $this->get_included_images_options();
 		$indexed_images          = ! empty( $options['global_list_indexed_images'] );
@@ -44,7 +45,7 @@ class Global_List extends Settings\Section {
 	 * Render option for the number of images per page in the Global list
 	 */
 	public function render_field_images_per_page_in_list() {
-		$options         = $this->get_isc_options();
+		$options         = $this->get_options();
 		$images_per_page = isset( $options['images_per_page'] ) ? absint( $options['images_per_page'] ) : 99999;
 		require_once ISCPATH . '/admin/templates/settings/global-list/images-per-page.php';
 	}
@@ -53,7 +54,7 @@ class Global_List extends Settings\Section {
 	 * Render option to define which columns show up the global list
 	 */
 	public function render_field_global_list_data() {
-		$options                  = $this->get_isc_options();
+		$options                  = $this->get_options();
 		$included_columns         = ! empty( $options['global_list_included_data'] ) ? $options['global_list_included_data'] : [];
 		$included_columns_options = $this->get_included_data_options();
 		require_once ISCPATH . '/admin/templates/settings/global-list/data.php';
@@ -63,7 +64,7 @@ class Global_List extends Settings\Section {
 	 * Render option to display thumbnails in the Global list
 	 */
 	public function render_field_thumbnail_in_list() {
-		$options      = $this->get_isc_options();
+		$options      = $this->get_options();
 		$sizes        = [];
 		$sizes_labels = [
 			'thumbnail' => _x( 'Thumbnail', 'image size label', 'image-source-control-isc' ),
@@ -73,7 +74,7 @@ class Global_List extends Settings\Section {
 		];
 
 		// convert the sizes array to match key and value
-		foreach ( $this->thumbnail_size as $_size ) {
+		foreach ( Image_Sources::get_thumbnail_sizes() as $_size ) {
 			$sizes[ $_size ] = $_size;
 		}
 

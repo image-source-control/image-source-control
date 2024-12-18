@@ -41,7 +41,7 @@ class Caption extends Settings\Section {
 	 * Render the option to enable Overlays
 	 */
 	public function render_field_source_type_overlay() {
-		$options = $this->get_isc_options();
+		$options = $this->get_options();
 		require_once ISCPATH . '/admin/templates/settings/caption/enable.php';
 	}
 
@@ -49,7 +49,7 @@ class Caption extends Settings\Section {
 	 * Render option for the text preceding the source.
 	 */
 	public function render_field_overlay_text() {
-		$options = $this->get_isc_options();
+		$options = $this->get_options();
 		require_once ISCPATH . '/admin/templates/settings/caption/overlay-text.php';
 	}
 
@@ -57,7 +57,7 @@ class Caption extends Settings\Section {
 	 * Render option for the style of the overlay
 	 */
 	public function render_field_overlay_style() {
-		$options               = $this->get_isc_options();
+		$options               = $this->get_options();
 		$caption_style         = $this->get_caption_style();
 		$caption_style_options = $this->get_caption_style_options();
 		require_once ISCPATH . '/admin/templates/settings/caption/style.php';
@@ -68,7 +68,7 @@ class Caption extends Settings\Section {
 	 * Render option to define which images should show the overlay
 	 */
 	public function render_field_overlay_included_images() {
-		$options                 = $this->get_isc_options();
+		$options                 = $this->get_options();
 		$included_images         = ! empty( $options['overlay_included_images'] ) ? $options['overlay_included_images'] : '';
 		$included_images_options = $this->get_included_images_options();
 		require_once ISCPATH . '/admin/templates/settings/caption/overlay-included-images.php';
@@ -83,7 +83,7 @@ class Caption extends Settings\Section {
 	 * @return string
 	 */
 	public function get_caption_style(): string {
-		$options = $this->get_isc_options();
+		$options = $this->get_options();
 		return ! empty( $options['caption_style'] ) ? $options['caption_style'] : 'fulltext';
 	}
 

@@ -3,6 +3,8 @@
  * Integration with the Block editor
  */
 
+use ISC\Plugin;
+
 class ISC_Block_Options {
 	/**
 	 * Construct an instance of ISC_Block_Options
@@ -17,7 +19,7 @@ class ISC_Block_Options {
 	 * @return bool
 	 */
 	public static function enabled(): bool {
-		$options = ISC_Class::get_instance()->get_isc_options();
+		$options = Plugin::get_options();
 		// if settings don’t exist, block options are enabled by default
 		if ( ! array_key_exists( 'block_options', $options )
 			|| $options['block_options']
@@ -183,7 +185,7 @@ class ISC_Block_Options {
 			false
 		);
 
-		$plugin_options = ISC_Class::get_instance()->get_isc_options();
+		$plugin_options = ISC\Plugin::get_options();
 
 		global $post, $pagenow;
 

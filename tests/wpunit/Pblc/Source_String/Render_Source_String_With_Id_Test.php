@@ -2,8 +2,9 @@
 
 namespace ISC\Tests\WPUnit\Pblc\Source_String;
 
+use ISC\Plugin;
 use ISC\Tests\WPUnit\WPTestCase;
-use \ISC_Public;
+use ISC_Public;
 
 /**
  * Test if ISC_Public::render_image_source_string() renders the image source string correctly
@@ -91,7 +92,7 @@ class Render_Source_String_With_Id_Test extends WPTestCase {
 	 */
 	public function test_render_image_source_string_with_known_license() {
 		// activate licenses
-		$isc_options                            = \ISC_Class::get_instance()->get_isc_options();
+		$isc_options                    = Plugin::get_options();
 		$isc_options['enable_licences'] = true;
 		update_option( 'isc_options', $isc_options );
 
@@ -108,7 +109,7 @@ class Render_Source_String_With_Id_Test extends WPTestCase {
 	 */
 	public function test_render_image_source_string_with_unknown_license() {
 		// activate licenses
-		$isc_options                            = \ISC_Class::get_instance()->get_isc_options();
+		$isc_options                    = Plugin::get_options();
 		$isc_options['enable_licences'] = true;
 		update_option( 'isc_options', $isc_options );
 

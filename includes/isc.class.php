@@ -1,4 +1,7 @@
 <?php
+
+use ISC\Image_Sources\Analyze_HTML;
+
 /**
  * Main controller of ISC
  */
@@ -85,7 +88,7 @@ class ISC_Class {
 		/**
 		 * Helper to extract information from HTML
 		 *
-		 * @var ISC\Analyze_HTML
+		 * @var Analyze_HTML
 		 */
 		public $html_analyzer;
 
@@ -95,7 +98,7 @@ class ISC_Class {
 		public function __construct() {
 			self::$instance      = $this;
 			$this->model         = new ISC_Model();
-			$this->html_analyzer = new ISC\Analyze_HTML();
+			$this->html_analyzer = new Analyze_HTML();
 
 			/**
 			 * Register actions to update missing sources checks each time attachments’ post meta is updated

@@ -96,7 +96,7 @@ class Caption extends Renderer {
 	 * @return bool
 	 */
 	public static function has_caption_style(): bool {
-		$style = \ISC\Settings\Sections\Caption::get_instance()->get_isc_options()['caption_style'];
+		$style = self::get_options()['caption_style'];
 		return $style !== 'none';
 	}
 }
