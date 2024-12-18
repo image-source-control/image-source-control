@@ -3,6 +3,7 @@
 namespace ISC\Tests\WPUnit\Pblc\Captions;
 
 use ISC\Tests\WPUnit\WPTestCase;
+use ISC\Plugin;
 
 /**
  * Test if the functions front_scripts and front_head are hooked in/out based on the caption_style option
@@ -17,112 +18,69 @@ class Caption_Style_Option_Test extends WPTestCase {
 	/**
 	 * Setup the test environment
 	 */
-	public function setUp(): void {
-		// Before each test, set the default options
-		$this->options = \ISC_Public::get_instance()->default_options();
+	protected function setUp(): void {
+		parent::setUp();
+		// Reset the wp_scripts global
+		global $wp_scripts;
+		$wp_scripts = null;
 	}
 
 	/**
-	 * Test that the front_scripts function is hooked in and executed when the caption_style option is an empty string
+	 * Test if the frontend scripts and head output are based on the caption_style option
+	 *
+	 * @dataProvider captionStyleProvider
 	 */
-	public function test_front_scripts_executed_when_caption_style_is_empty() {
-		// Mock the ISC_Public class
-		$mockISCPublic = $this->getMockBuilder( \ISC_Public::class )
-		                      ->onlyMethods( [ 'front_scripts', 'get_isc_options' ] )
-		                      ->getMock();
+	public function test_script_and_head_output_based_on_caption_style( $caption_style, $should_enqueue, $expected_in_head ) {
+		global $wp_scripts;
 
-		// The Mock should only return certain options
-		$isc_options                  = \ISC_Class::get_instance()->default_options();
-		$isc_options['caption_style'] = '';
-		$mockISCPublic->method('get_isc_options')->willReturn( $isc_options );
+		$this->setCaptionStyle($caption_style);
+		$head_content = $this->runHooksAndCaptureHead();
 
-		$mockISCPublic->expects( $this->once() )
-		              ->method( 'front_scripts' );
+		if ( $should_enqueue ) {
+			$this->assertContains( 'isc_caption', $wp_scripts->queue, 'Script should be enqueued' );
+		} else {
+			$this->assertNotContains( 'isc_caption', $wp_scripts->queue, 'Script should not be enqueued' );
+		}
 
-		// Call the register_hooks method
-		$mockISCPublic->register_hooks();
+		if ( $expected_in_head ) {
+			$this->assertStringContainsString( 'var isc_front_data', $head_content, 'Frontend data should be printed' );
+		} else {
+			$this->assertStringNotContainsString( 'var isc_front_data', $head_content, 'Frontend data should not be printed' );
+		}
+	}
 
-		// Register ISC_Public hooks
+	/**
+	 * Iterate over different caption style options
+	 *
+	 * @return array[]
+	 */
+	public function captionStyleProvider() {
+		return [
+			'empty style'     => [ '', true, true ],
+			'random style'    => [ 'oujdo98', true, true ],
+			'none style'      => [ 'none', false, false ],
+		];
+	}
+
+	protected function setCaptionStyle( $style ) {
+		$options = Plugin::default_options();
+		$options['caption_style'] = $style;
+		update_option( 'isc_options', $options );
+	}
+
+	protected function runHooksAndCaptureHead() {
 		do_action( 'wp' );
-		// Trigger the wp_enqueue_scripts action
 		do_action( 'wp_enqueue_scripts' );
-	}
-
-	/**
-	 * Test that the front_head function is hooked in and executed when the caption_style option is an empty string
-	 */
-	public function test_front_head_executed_when_caption_style_is_empty() {
-		// Mock the ISC_Public class
-		$mockISCPublic = $this->getMockBuilder( \ISC_Public::class )
-		                      ->onlyMethods( [ 'front_head', 'get_isc_options' ] )
-		                      ->getMock();
-
-		// The Mock should only return certain options
-		$isc_options                  = \ISC_Class::get_instance()->default_options();
-		$isc_options['caption_style'] = '';
-		$mockISCPublic->method('get_isc_options')->willReturn( $isc_options );
-
-		$mockISCPublic->expects( $this->once() )
-		              ->method( 'front_head' );
-
-		// Call the register_hooks method
-		$mockISCPublic->register_hooks();
-
-		// Register ISC_Public hooks
-		do_action( 'wp' );
-		// Trigger the wp_head action
+		ob_start();
 		do_action( 'wp_head' );
+		return ob_get_clean();
 	}
 
-	/**
-	 * Test that the front_scripts function is not executed when the caption_style option is "none"
-	 */
-	public function test_front_scripts_not_executed_when_caption_style_is_none() {
-		// Mock the ISC_Public class
-		$mockISCPublic = $this->getMockBuilder( \ISC_Public::class )
-		                      ->onlyMethods( [ 'front_scripts', 'get_isc_options' ] )
-		                      ->getMock();
-
-		// The Mock should only return certain options
-		$isc_options                  = \ISC_Class::get_instance()->default_options();
-		$isc_options['caption_style'] = 'none';
-		$mockISCPublic->method('get_isc_options')->willReturn( $isc_options );
-
-		$mockISCPublic->expects( $this->never() )
-		              ->method( 'front_scripts' );
-
-		// Call the register_hooks method
-		$mockISCPublic->register_hooks();
-
-		// Register ISC_Public hooks
-		do_action( 'wp' );
-		// Trigger the wp_enqueue_scripts action
-		do_action( 'wp_enqueue_scripts' );
-	}
-
-	/**
-	 * Test that the front_head function is not executed when the caption_style option is "none"
-	 */
-	public function test_front_head_not_executed_when_caption_style_is_none() {
-		// Mock the ISC_Public class
-		$mockISCPublic = $this->getMockBuilder( \ISC_Public::class )
-		                      ->onlyMethods( [ 'front_head', 'get_isc_options' ] )
-		                      ->getMock();
-
-		// The Mock should only return certain options
-		$isc_options                  = \ISC_Class::get_instance()->default_options();
-		$isc_options['caption_style'] = 'none';
-		$mockISCPublic->method('get_isc_options')->willReturn( $isc_options );
-
-		$mockISCPublic->expects( $this->never() )
-		              ->method( 'front_head' );
-
-		// Call the register_hooks method
-		$mockISCPublic->register_hooks();
-
-		// Register ISC_Public hooks
-		do_action( 'wp' );
-		// Trigger the wp_head action
-		do_action( 'wp_head' );
+	protected function tearDown(): void {
+		delete_option( 'isc_options' );
+		// Reset the wp_scripts global
+		global $wp_scripts;
+		$wp_scripts = null;
+		parent::tearDown();
 	}
 }

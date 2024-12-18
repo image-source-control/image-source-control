@@ -3,6 +3,7 @@
 namespace ISC\Tests\WPUnit\Pro\Pblc;
 
 use ISC\Tests\WPUnit\WPTestCase;
+use ISC\Plugin;
 
 /**
  * Test output buffering in ISC_Pro_Public
@@ -12,7 +13,7 @@ class Output_Buffer_Test extends WPTestCase {
 	 * Helper function to enable the overlay for images in the whole body
 	 */
 	protected function enable_overlay_for_body_images() {
-		$isc_options                            = \ISC_Class::get_instance()->get_isc_options();
+		$isc_options                            = Plugin::get_options();
 		$isc_options['display_type'][]          = 'overlay';
 		$isc_options['overlay_included_images'] = 'body_img';
 		update_option( 'isc_options', $isc_options );

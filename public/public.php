@@ -7,7 +7,7 @@ use ISC\Standard_Source;
  *
  * @todo move frontend-only functions from general class here
  */
-class ISC_Public extends ISC_Class {
+class ISC_Public extends \ISC\Image_Sources\Image_Sources {
 
 	/**
 	 * Instance of ISC_Public
@@ -38,6 +38,7 @@ class ISC_Public extends ISC_Class {
 
 		// prepare the log
 		$this->prepare_log();
+
 
 		if ( ISC\Renderer\Caption::has_caption_style() ) {
 			add_action( 'wp_enqueue_scripts', [ $this, 'front_scripts' ] );
@@ -139,7 +140,7 @@ class ISC_Public extends ISC_Class {
 			return;
 		}
 
-		$options = $this->get_isc_options();
+		$options = $this->get_options();
 		?>
 			<script>
 			/* <![CDATA[ */
@@ -332,7 +333,7 @@ class ISC_Public extends ISC_Class {
 	 * @return bool
 	 */
 	public static function captions_enabled(): bool {
-		$options = self::get_instance()->get_isc_options();
+		$options = self::get_instance()->get_options();
 		return ! empty( $options['display_type'] ) && is_array( $options['display_type'] ) && in_array( 'overlay', $options['display_type'], true );
 	}
 
@@ -368,7 +369,7 @@ class ISC_Public extends ISC_Class {
 	public function excerpt_filter( $excerpt ) {
 
 		// display inline sources
-		$options = $this->get_isc_options();
+		$options = $this->get_options();
 		$post    = get_post();
 
 		if ( empty( $options['list_on_excerpts'] ) ) {
@@ -391,7 +392,7 @@ class ISC_Public extends ISC_Class {
 			return $block_content;
 		}
 
-		$options = $this->get_isc_options();
+		$options = $this->get_options();
 		if ( empty( $options['list_on_excerpts'] ) ) {
 			return $block_content;
 		}
@@ -507,7 +508,7 @@ class ISC_Public extends ISC_Class {
 			return '';
 		}
 
-		$options  = $this->get_isc_options();
+		$options  = $this->get_options();
 		$headline = $options['image_list_headline'];
 
 		ob_start();
@@ -574,7 +575,7 @@ class ISC_Public extends ISC_Class {
 	 * @return string
 	 */
 	public function list_all_post_attachments_sources_shortcode( $atts = [] ) {
-		$options = $this->get_isc_options();
+		$options = $this->get_options();
 
 		$a = shortcode_atts(
 			[
@@ -717,7 +718,7 @@ class ISC_Public extends ISC_Class {
 		if ( ! is_array( $atts ) || $atts === [] ) {
 			return;
 		}
-		$options = $this->get_isc_options();
+		$options = $this->get_options();
 
 		$global_list_path = apply_filters( 'isc_public_global_list_view_path', ISCPATH . 'public/views/global-list.php' );
 		if ( $global_list_path && file_exists( $global_list_path ) ) {
@@ -734,7 +735,7 @@ class ISC_Public extends ISC_Class {
 	 * @param int $attachment_id attachment ID.
 	 */
 	public function render_global_list_thumbnail( $attachment_id ) {
-		$options = $this->get_isc_options();
+		$options = $this->get_options();
 
 		if ( 'custom' !== $options['thumbnail_size'] ) {
 			$thumbnail = wp_get_attachment_image( $attachment_id, $options['thumbnail_size'] );
@@ -966,7 +967,7 @@ class ISC_Public extends ISC_Class {
 			return false;
 		}
 
-		$options             = $this->get_isc_options();
+		$options             = $this->get_options();
 		$metadata['source']  = $data['source'] ?? self::get_image_source_text( $id );
 		$metadata['own']     = $data['own'] ?? Standard_Source::use_standard_source( $id );
 		$metadata['licence'] = $data['licence'] ?? self::get_image_license( $id );
@@ -1025,7 +1026,7 @@ class ISC_Public extends ISC_Class {
 	 * @return bool true if the source list can be added to the content
 	 */
 	public function can_add_list_to_content() {
-		$options = $this->get_isc_options();
+		$options = $this->get_options();
 
 		/**
 		 * Tests:

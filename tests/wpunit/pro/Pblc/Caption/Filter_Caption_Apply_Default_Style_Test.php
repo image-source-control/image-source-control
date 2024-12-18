@@ -3,7 +3,7 @@
 namespace ISC\Tests\WPUnit\Pro\Pblc\Caption;
 
 use ISC\Tests\WPUnit\WPTestCase;
-use \ISC_Public;
+use ISC\Plugin;
 
 /**
  * Test if the isc_caption_apply_default_style filter hook reacts when a pro caption style is used
@@ -13,7 +13,7 @@ class Filter_Caption_Apply_Default_Style_Test extends WPTestCase {
 	 * Test the filter in ISC\Pro\Caption::use_default_caption_style() for the hover caption layout
 	 */
 	public function test_use_default_caption_style_hover() {
-		$options = ISC_Public::get_instance()->default_options();
+		$options = Plugin::default_options();
 		$options['caption_style'] = 'hover';
 		update_option( 'isc_options', $options );
 
@@ -25,7 +25,7 @@ class Filter_Caption_Apply_Default_Style_Test extends WPTestCase {
 	 * Test the filter in ISC\Pro\Caption::use_default_caption_style() for the click caption layout
 	 */
 	public function test_use_default_caption_style_click() {
-		$options = ISC_Public::get_instance()->default_options();
+		$options = Plugin::default_options();
 		$options['caption_style'] = 'click';
 		update_option( 'isc_options', $options );
 

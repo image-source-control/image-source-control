@@ -3,7 +3,8 @@
 namespace ISC\Tests\WPUnit\Pblc\Captions;
 
 use ISC\Tests\WPUnit\WPTestCase;
-use \ISC_Public;
+use ISC_Public;
+use ISC\Plugin;
 
 /**
  * Test ISC_Public::add_source_captions_to_content()
@@ -132,7 +133,7 @@ class Add_Source_Captions_To_Content_Test extends WPTestCase {
 	 */
 	public function test_image_without_pretext() {
 		// empty the pretext
-		$isc_options                   = \ISC_Class::get_instance()->get_isc_options();
+		$isc_options                   = Plugin::get_options();
 		$isc_options['source_pretext'] = '';
 		update_option( 'isc_options', $isc_options );
 
@@ -147,7 +148,7 @@ class Add_Source_Captions_To_Content_Test extends WPTestCase {
 	 */
 	public function test_image_with_caption_style_none() {
 		// set the caption style to none
-		$isc_options                  = \ISC_Class::get_instance()->default_options();
+		$isc_options                  = Plugin::default_options();
 		$isc_options['caption_style'] = 'none';
 		update_option( 'isc_options', $isc_options );
 

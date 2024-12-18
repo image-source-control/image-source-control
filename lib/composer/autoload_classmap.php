@@ -7,10 +7,11 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
-    'ISC\\Analyze_HTML' => $baseDir . '/includes/analyze-html.php',
     'ISC\\Autoloader' => $baseDir . '/includes/class-autoloader.php',
     'ISC\\Feedback' => $baseDir . '/includes/feedback.php',
     'ISC\\Helpers' => $baseDir . '/includes/helpers.php',
+    'ISC\\Image_Sources\\Analyze_HTML' => $baseDir . '/includes/image-sources/analyze-html.php',
+    'ISC\\Image_Sources\\Image_Sources' => $baseDir . '/includes/image-sources/image-sources.php',
     'ISC\\Indexer' => $baseDir . '/includes/indexer.php',
     'ISC\\Newsletter' => $baseDir . '/includes/newsletter.php',
     'ISC\\Plugin' => $baseDir . '/includes/plugin.php',

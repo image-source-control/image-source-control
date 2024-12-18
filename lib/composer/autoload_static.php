@@ -27,10 +27,11 @@ class ComposerStaticInitdb72a6bac11cb0e6b971811c93d09a9b
 
     public static $classMap = array (
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
-        'ISC\\Analyze_HTML' => __DIR__ . '/../..' . '/includes/analyze-html.php',
         'ISC\\Autoloader' => __DIR__ . '/../..' . '/includes/class-autoloader.php',
         'ISC\\Feedback' => __DIR__ . '/../..' . '/includes/feedback.php',
         'ISC\\Helpers' => __DIR__ . '/../..' . '/includes/helpers.php',
+        'ISC\\Image_Sources\\Analyze_HTML' => __DIR__ . '/../..' . '/includes/image-sources/analyze-html.php',
+        'ISC\\Image_Sources\\Image_Sources' => __DIR__ . '/../..' . '/includes/image-sources/image-sources.php',
         'ISC\\Indexer' => __DIR__ . '/../..' . '/includes/indexer.php',
         'ISC\\Newsletter' => __DIR__ . '/../..' . '/includes/newsletter.php',
         'ISC\\Plugin' => __DIR__ . '/../..' . '/includes/plugin.php',

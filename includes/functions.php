@@ -10,7 +10,7 @@
  * @param integer $post_id post id.
  */
 function isc_list( $post_id = 0 ) {
-	echo ISC_Class::get_instance()->list_post_attachments_with_sources( $post_id );
+	echo \ISC\Image_Sources\Image_Sources::get_instance()->list_post_attachments_with_sources( $post_id );
 }
 
 /**
@@ -20,7 +20,7 @@ function isc_list( $post_id = 0 ) {
  * @param integer $attachment_id id of the image.
  */
 function isc_image_source( $attachment_id = 0 ) {
-	echo ISC_Class::get_instance()->render_image_source_string( $attachment_id );
+	echo \ISC\Image_Sources\Image_Sources::get_instance()->render_image_source_string( $attachment_id );
 }
 
 /**
@@ -38,5 +38,5 @@ function isc_thumbnail_source( int $post_id = 0 ) {
 		$post_id = $post->ID;
 	}
 
-	echo ISC_Class::get_instance()->get_thumbnail_source_string( $post_id );
+	echo \ISC\Image_Sources\Image_Sources::get_instance()->get_thumbnail_source_string( $post_id );
 }
