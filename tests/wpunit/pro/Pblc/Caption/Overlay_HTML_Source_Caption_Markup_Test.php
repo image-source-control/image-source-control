@@ -4,7 +4,7 @@ namespace ISC\Tests\WPUnit\Pro\Pblc\Caption;
 
 use ISC\Tests\WPUnit\WPTestCase;
 use ISC_Public;
-use ISC\Plugin;
+use ISC\Options;
 
 /**
  * Test the isc_overlay_html_source filter hook with pro caption layouts
@@ -48,7 +48,7 @@ class Overlay_HTML_Source_Caption_Markup_Test extends WPTestCase {
 		$this->assertEquals( $expected, $result );
 
 		// switch to hover style
-		$options = Plugin::default_options();
+		$options = Options::default_options();
 		$options['caption_style'] = 'hover';
 		update_option( 'isc_options', $options );
 
@@ -68,7 +68,7 @@ class Overlay_HTML_Source_Caption_Markup_Test extends WPTestCase {
 		$this->assertEquals( $expected, $result );
 
 		// switch to hover style
-		$options = Plugin::default_options();
+		$options = Options::default_options();
 		$options['caption_style'] = 'click';
 		update_option( 'isc_options', $options );
 

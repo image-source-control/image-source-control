@@ -3,7 +3,7 @@
 namespace ISC\Tests\WPUnit\Pro\Pblc\Caption;
 
 use ISC\Tests\WPUnit\WPTestCase;
-use ISC\Plugin;
+use ISC\Options;
 
 /**
  * Test if ISC\Pro\Caption::add_caption_css() prints the correct footer CSS
@@ -16,7 +16,7 @@ class Add_Footer_CSS_Test_WIP extends WPTestCase {
 	 * Test for the hover caption layout
 	 */
 	public function test_add_caption_style_hover() {
-		$options = Plugin::default_options();
+		$options = Options::default_options();
 		$options['caption_style'] = 'hover';
 		update_option( 'isc_options', $options );
 
@@ -32,7 +32,7 @@ class Add_Footer_CSS_Test_WIP extends WPTestCase {
 	 * Test for the click caption layout
 	 */
 	public function test_add_caption_style_click() {
-		$options = Plugin::default_options();
+		$options = Options::default_options();
 		$options['caption_style'] = 'click';
 		update_option( 'isc_options', $options );
 

@@ -98,7 +98,7 @@ class Settings {
 	 * Manage data structure upgrading of outdated versions
 	 */
 	public function upgrade_settings() {
-		$default_options = Plugin::default_options();
+		$default_options = Options::default_options();
 
 		/**
 		 * This function checks options in database
