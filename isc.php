@@ -48,6 +48,9 @@ if ( is_admin() ) {
 	require_once ISCPATH . 'includes/functions.php';
 }
 
+// deprecated. Added here for backward compatibility. Will be removed in future versions.
+new ISC_Class();
+
 if ( ! class_exists( 'ISC_Pro_Model', false ) && file_exists( ISCPATH . 'pro/isc-pro.php' ) ) {
 	require_once ISCPATH . 'pro/isc-pro.php';
 }

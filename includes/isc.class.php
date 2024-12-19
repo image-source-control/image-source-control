@@ -4,6 +4,8 @@ use ISC\Image_Sources\Analyze_HTML;
 
 /**
  * Main controller of ISC
+ *
+ * @deprecated since 3.0.0 Use ISC\Image_Sources\Image_Sources or ISC\Plugin instead
  */
 class ISC_Class {
 
@@ -99,80 +101,6 @@ class ISC_Class {
 			self::$instance      = $this;
 			$this->model         = new ISC_Model();
 			$this->html_analyzer = new Analyze_HTML();
-
-			/**
-			 * Register actions to update missing sources checks each time attachments’ post meta is updated
-			 *
-			 * See the "updated_post_meta" action hook
-			 */
-			add_action( 'updated_post_meta', [ $this, 'maybe_update_attachment_post_meta' ], 10, 3 );
-
-			/**
-			 * Register actions to update missing sources checks each time attachments’ post meta is added
-			 *
-			 * See the "added_post_meta" action hook
-			 */
-			add_action( 'added_post_meta', [ $this, 'maybe_update_attachment_post_meta' ], 10, 3 );
-
-			/**
-			 * Register actions to update missing sources when an attachment was added
-			 */
-			add_action( 'add_attachment', [ 'ISC_Model', 'update_missing_sources_transient' ] );
-
-			/**
-			 * Register an action to update missing sources when an attachment was deleted
-			 */
-			add_action( 'deleted_post', [ 'ISC_Model', 'update_missing_sources_transient' ] );
-
-			/**
-			 * Clear post-image index whenever the content of a single post is updated
-			 * this could force reindexing the post after adding or removing image sources
-			 */
-			add_action( 'wp_insert_post', [ 'ISC_Model', 'clear_single_post_images_index' ] );
-
-			/**
-			 * Fire when a post or page was updated
-			 */
-			add_action( 'post_updated', [ 'ISC_Model', 'update_image_post_meta' ], 10, 3 );
-		}
-
-		/**
-		 * Filter image src attribute from text
-		 *
-		 * @since 1.1
-		 * @updated 1.1.3
-		 * @deprecated since 1.9 use filter_image_ids instead
-		 *
-		 * @param string $content post content.
-		 * @return array with image src uri-s
-		 */
-		public function filter_src_attributes( $content = '' ) {
-			$srcs = [];
-			if ( empty( $content ) ) {
-				return $srcs;
-			}
-
-			// parse HTML with DOM
-			$dom = new DOMDocument();
-
-			libxml_use_internal_errors( true );
-			if ( function_exists( 'mb_convert_encoding' ) ) {
-				$content = mb_convert_encoding( $content, 'HTML-ENTITIES', 'UTF-8' );
-			}
-			$dom->loadHTML( $content );
-
-			// Prevents from sending E_WARNINGs notice (Outputs are forbidden during activation)
-			libxml_clear_errors();
-
-			foreach ( $dom->getElementsByTagName( 'img' ) as $node ) {
-				if ( isset( $node->attributes ) ) {
-					if ( null !== $node->attributes->getNamedItem( 'src' ) ) {
-						$srcs[] = $node->attributes->getNamedItem( 'src' )->textContent;
-					}
-				}
-			}
-
-			return $srcs;
 		}
 
 		/**
@@ -181,6 +109,8 @@ class ISC_Class {
 		 * @return string[]
 		 */
 		public function default_options() {
+			_deprecated_function( __METHOD__, '3.0.0', 'ISC\Plugin::default_options' );
+
 			include ISCPATH . 'includes/default-licenses.php';
 			$default['display_type']              = [ 'list' ];
 			$default['list_on_archives']          = false;
@@ -218,6 +148,8 @@ class ISC_Class {
 		 * @return string[]
 		 */
 		public function get_isc_options() {
+			_deprecated_function( __METHOD__, '3.0.0', 'ISC\Plugin::get_options' );
+
 			$this->options = get_option( 'isc_options', $this->default_options() );
 
 			return $this->options;
@@ -231,6 +163,8 @@ class ISC_Class {
 		 * @since 1.3.5
 		 */
 		public function licences_text_to_array( $licences = '' ) {
+			_deprecated_function( __METHOD__, '3.0.0', 'ISC\Image_Sources\Image_Sources::license_text_to_array' );
+
 			if ( $licences === '' ) {
 				return false;
 			}
@@ -267,6 +201,8 @@ class ISC_Class {
 		 * @param string $meta_key    Metadata key.
 		 */
 		public function maybe_update_attachment_post_meta( $meta_id, $object_id, $meta_key ) {
+			_deprecated_function( __METHOD__, '3.0.0', 'ISC\Image_Sources\Image_Sources::maybe_update_attachment_post_meta' );
+
 			if ( in_array( $meta_key, [ 'isc_image_source_own', 'isc_image_source' ], true ) ) {
 				ISC_Model::update_missing_sources_transient();
 			}
@@ -279,6 +215,8 @@ class ISC_Class {
 		 * @return string
 		 */
 		public static function get_image_source_text( $attachment_id ) {
+			_deprecated_function( __METHOD__, '3.0.0', 'ISC\Image_Sources\Image_Sources::get_image_source_text' );
+
 			return apply_filters(
 				'isc_raw_attachment_get_source',
 				get_post_meta( $attachment_id, 'isc_image_source', true ),
@@ -293,6 +231,8 @@ class ISC_Class {
 		 * @return string
 		 */
 		public static function get_image_source_url( $attachment_id ) {
+			_deprecated_function( __METHOD__, '3.0.0', 'ISC\Image_Sources\Image_Sources::get_image_source_url' );
+
 			return apply_filters(
 				'isc_raw_attachment_get_source_url',
 				get_post_meta( $attachment_id, 'isc_image_source_url', true ),
@@ -307,6 +247,8 @@ class ISC_Class {
 		 * @return string
 		 */
 		public static function get_image_license( $attachment_id ) {
+			_deprecated_function( __METHOD__, '3.0.0', 'ISC\Image_Sources\Image_Sources::get_image_license' );
+
 			return apply_filters(
 				'isc_raw_attachment_get_license',
 				get_post_meta( $attachment_id, 'isc_image_licence', true ),
@@ -321,6 +263,8 @@ class ISC_Class {
 		 * @return string
 		 */
 		public static function get_image_title( $attachment_id ) {
+			_deprecated_function( __METHOD__, '3.0.0', 'ISC\Image_Sources\Image_Sources::get_image_title' );
+
 			return apply_filters(
 				'isc_raw_attachment_title',
 				get_the_title( $attachment_id ),

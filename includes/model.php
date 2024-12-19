@@ -582,9 +582,6 @@ class ISC_Model {
 		 * - "scaled" or "rotated"
 		 * - additional query vars
 		 */
-		// this was my original approach without "scaled" and "rotated"
-		// $types = implode( '|', ISC_Class::get_instance()->allowed_extensions );
-		// $newurl = esc_url( preg_replace( "/(-e\d+){0,1}(-\d+x\d+){0,1}\.({$types})(.*)/i", '.${3}', $url ) );
 		// this is how WordPress core is detecting changed image URLs
 		$newurl  = esc_url( preg_replace( "/-(?:\d+x\d+|scaled|rotated)\.{$ext}(.*)/i", '.' . $ext, $url ) );
 		$storage = new ISC_Storage_Model();
