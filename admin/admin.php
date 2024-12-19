@@ -2,6 +2,8 @@
 
 namespace ISC;
 
+use ISC\Image_Sources\Image_Sources_Admin_Scripts;
+
 /**
  * Initialize WP Admin
  */
@@ -32,6 +34,7 @@ class Admin {
 	 * Load additional admin classes and modules
 	 */
 	public function load_modules() {
+		new \ISC\Admin\Admin_Scripts();
 		new \ISC\Image_Sources\Admin();
 
 		new \ISC\Feedback();

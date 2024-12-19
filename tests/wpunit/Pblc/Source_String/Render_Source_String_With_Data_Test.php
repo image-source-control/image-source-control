@@ -43,7 +43,7 @@ class Render_Source_String_With_Data_Test extends WPTestCase {
 	 */
 	public function test_render_image_source_string_with_known_license() {
 		// activate licenses
-		$isc_options                            = Options::get_options();
+		$isc_options                    = Options::get_options();
 		$isc_options['enable_licences'] = true;
 		update_option( 'isc_options', $isc_options );
 
