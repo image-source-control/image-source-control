@@ -1005,7 +1005,7 @@ class ISC_Public extends \ISC\Image_Sources\Image_Sources {
 
 		// add license if enabled
 		if ( $options['enable_licences'] && isset( $metadata['licence'] ) && $metadata['licence'] ) {
-			$licences = $this->licences_text_to_array( $options['licences'] );
+			$licences = \ISC\Image_Sources\Utils::licences_text_to_array( $options['licences'] );
 			if ( ! isset( $args['disable-links'] ) && isset( $licences[ $metadata['licence'] ]['url'] ) ) {
 				$licence_url = $licences[ $metadata['licence'] ]['url'];
 			}

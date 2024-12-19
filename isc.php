@@ -41,7 +41,7 @@ require_once ISCPATH . 'includes/class-autoloader.php';
 \ISC\Autoloader::get()->initialize();
 
 if ( is_admin() ) {
-	new ISC_Admin();
+	new ISC\Admin();
 } elseif ( ! is_admin() && ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) ) {
 	// include frontend functions.
 	new ISC_Public();

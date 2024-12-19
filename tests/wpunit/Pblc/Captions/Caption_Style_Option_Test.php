@@ -3,7 +3,7 @@
 namespace ISC\Tests\WPUnit\Pblc\Captions;
 
 use ISC\Tests\WPUnit\WPTestCase;
-use ISC\Plugin;
+use ISC\Options;
 
 /**
  * Test if the functions front_scripts and front_head are hooked in/out based on the caption_style option
@@ -63,7 +63,7 @@ class Caption_Style_Option_Test extends WPTestCase {
 	}
 
 	protected function setCaptionStyle( $style ) {
-		$options = Plugin::default_options();
+		$options = Options::default_options();
 		$options['caption_style'] = $style;
 		update_option( 'isc_options', $options );
 	}

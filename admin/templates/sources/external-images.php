@@ -22,7 +22,7 @@
 			<td style="width: 60%;"><a href="<?php echo esc_url( $image_url ); ?>" rel="noopener noreferrer"><?php echo esc_url( $image_url ); ?></a></td>
 			<td>
 				<?php
-				if ( ! \ISC\Plugin::is_pro() ) : echo ISC_Admin::get_pro_link( 'external-sources' ); endif;
+				if ( ! \ISC\Plugin::is_pro() ) : echo ISC\Admin_Utils::get_pro_link( 'external-sources' ); endif;
 				do_action( 'isc_admin_sources_storage_table_source_row', $_image_url );
 				?>
 			</td>

@@ -4,7 +4,7 @@ namespace ISC\Tests\WPUnit\Pblc\Source_String;
 
 use ISC\Tests\WPUnit\WPTestCase;
 use ISC_Public;
-use ISC\Plugin;
+use ISC\Options;
 
 /**
  * Test if ISC_Public::render_image_source_string() renders the image source string correctly
@@ -50,7 +50,7 @@ class Render_Source_String_With_Id_Disable_Link_Test extends WPTestCase {
 	 */
 	public function test_render_image_source_string_with_known_license() {
 		// activate licenses
-		$isc_options                    = Plugin::get_options();
+		$isc_options                    = Options::get_options();
 		$isc_options['enable_licences'] = true;
 		update_option( 'isc_options', $isc_options );
 

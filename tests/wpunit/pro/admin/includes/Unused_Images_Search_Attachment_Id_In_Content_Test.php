@@ -4,7 +4,7 @@ namespace ISC\Tests\WPUnit\Pro\Admin\Includes;
 
 use ISC\Tests\WPUnit\WPTestCase;
 use ISC\Pro\Unused_Images;
-use ISC\Plugin;
+use ISC\Options;
 
 require_once dirname( __FILE__, 6 ) . '/pro/admin/includes/unused-images.php';
 
@@ -50,7 +50,7 @@ class Unused_Images_Search_Attachment_Id_In_Content_Test extends WPTestCase {
 	 */
 	public function test_attachment_id_in_content() {
 		// enable the "ID in content" option
-		$isc_options                                 = Plugin::get_options();
+		$isc_options                                 = Options::get_options();
 		$isc_options['unused_images']['deep_checks'] = [ 'ID in content' ];
 		update_option( 'isc_options', $isc_options );
 
@@ -68,7 +68,7 @@ class Unused_Images_Search_Attachment_Id_In_Content_Test extends WPTestCase {
 	 */
 	public function test_attachment_id_in_content_not_enabled() {
 		// disable the "ID in content" option
-		$isc_options                                 = Plugin::get_options();
+		$isc_options                                 = Options::get_options();
 		$isc_options['unused_images']['deep_checks'] = [];
 		update_option( 'isc_options', $isc_options );
 
@@ -84,7 +84,7 @@ class Unused_Images_Search_Attachment_Id_In_Content_Test extends WPTestCase {
 	 */
 	public function test_attachment_id_in_content_wrong_pattern() {
 		// enable the "ID in content" option
-		$isc_options                                 = Plugin::get_options();
+		$isc_options                                 = Options::get_options();
 		$isc_options['unused_images']['deep_checks'] = [ 'ID in content' ];
 		update_option( 'isc_options', $isc_options );
 

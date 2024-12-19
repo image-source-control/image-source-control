@@ -4,7 +4,7 @@ namespace ISC\Tests\WPUnit\Pro\Filters;
 
 use ISC\Tests\WPUnit\WPTestCase;
 use ISC_Pro_Public;
-use ISC\Plugin;
+use ISC\Options;
 
 /**
  * Test the isc_overlay_html_source filter hook in Pro-related functions
@@ -62,7 +62,7 @@ class Overlay_HTML_Source_Pro_Test extends WPTestCase {
 	 */
 	public function test_add_captions_to_style_blocks() {
 		// enable the option to display the caption in the style blocks
-		$options = Plugin::get_options();
+		$options = Options::get_options();
 		$options['overlay_included_images'] = 'body_img';
 		$options['overlay_included_advanced'][] = 'style_block_show';
 		update_option( 'isc_options', $options );
