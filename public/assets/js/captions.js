@@ -76,6 +76,11 @@ function isc_update_caption_position( el ) {
 		return;
 	}
 
+	// reset any previously set positioning to get natural dimensions
+	caption.style.position = 'absolute';
+	caption.style.left = '0';
+	caption.style.top = '0';
+
 	let att = el.querySelector( 'img' );
 	let is_fallback = false;
 	// fall back to the current main container to get the width and height, if no image was found. This could be a background image defined in CSS
@@ -150,9 +155,18 @@ function isc_update_caption_position( el ) {
  * @source http://youmightnotneedjquery.com/
  */
 function ISCouterWidth(el) {
-	let style = getComputedStyle( el );
+	// Force the caption to fit its content
+	el.style.width = 'auto';
+	let style = getComputedStyle(el);
 
-	return el.offsetWidth + parseInt( style.marginLeft ) + parseInt( style.marginRight );
+	// Get the natural width of the content
+	const naturalWidth = el.getBoundingClientRect().width;
+	const margins = parseInt(style.marginLeft) + parseInt(style.marginRight);
+
+	// Store this width as a data attribute to maintain consistency
+	el.dataset.naturalWidth = naturalWidth;
+
+	return naturalWidth + margins;
 }
 
 /**
