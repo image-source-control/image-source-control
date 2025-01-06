@@ -3,7 +3,7 @@ Contributors: webzunft
 Tags: credits, captions, copyrights, attributions, image sources
 Requires at least: 6.0
 Tested up to: 6.7
-Stable tag: 2.29.0
+Stable tag: 2.29.1
 Requires PHP: 7.4
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -222,112 +222,11 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 - Dev: speed up the query for images without sources
 - Dev: added debug log entries and log parameters
 
-= 2.23.1 =
-
-- Fix: a fatal error prevented the settings page from loading fully when Elementor was enabled
-- Fix: (Pro) license activations on subsites on a multisite didn’t work reliably
-
-= 2.23.0 =
-
-- Feature: (Pro) two new overlay behaviors: show the full caption only after a click or on mouseover
-- Improvement: rearranged the settings page for more clarity
-- Improvement: renamed the "pre-text" option for overlay text to "prefix"
-- Improvement: added a button to close the newsletter signup form
-- Dev: rewritten the code that renders and handles the settings page
-
-= 2.22.0 =
-
-- Note about WordPress 6.5: The lightbox feature in WordPress core changed significantly and no longer supports image source overlays out of the box. I am working on a solution.
-- Improvement: (Pro) removed the hotfix for Elementor’s Image Optimization feature after they fixed the issue on their end
-- Improvement: (Pro) added PHP translation files as supported in WP 6.5
-- Fix: (Pro) the bulk edit fields could show a wrong default value in the backend for certain options
-- Dev: (Pro) added the `isc_unused_images_per_page` filter to adjust the number of items per page in the [Unused Images list](https://imagesourcecontrol.com/features/delete-unused-images/)
-- Dev: adjusted the URL sanitization check to allow special characters in image URLs, like "©"
-- Dev: prevent a PHP deprecation warning when the `isc_public_global_list_view_path` filter returns an expected value
-- Dev: remove cached options in `Standard_Source` class to prevent caching of old options
-
-= 2.21.0 =
-
-- Improvement: (Pro) the bulk edit options are visually more compact now
-- Improvement: (Pro) Elementor: disable the Image Optimization module in Elementor when checking images in the whole content. This module is known for conflicting with many plugins and in review by the Elementor team
-- Improvement: (Pro) Avada: recognize the `data-preload-img` attribute for Avada background images
-- Improvement: (Pro) add a link to some words in the image source, but not to words at the end of the caption
-- Improvement: show a feedback form when disabling the plugin
-- Fix: (Pro) comma-separated URLs in the bulk edit fields were wrongly sanitized
-- Fix: the image source fields in the media edit page disappeared when saving the page
-- Fix: labels in the block editor were not translated
-- Fix: newsletter subscription returned an error for subscribed users
-- Dev: `ISC_Block_Options` threw a PHP warning due to an early hook
-- Dev: introduced `ISC\User` to gather user-based helper functions
-- Dev: add an output buffer handle to better analyze a conflict with other output buffers
-
-= 2.20.1 =
-
-- Fix: image source fields for image blocks in the site editor threw a JavaScript error
-- Dev: resolved a PHP 8.2 encoding warning
-- Dev: improved code style in the caption frontend script
-
-= 2.20.0 =
-
-- Improvement: (Pro) the deep check for image usages looks for attachment IDs in options, e.g., to find site logos
-- Fix: unused images table layout was shifted for non-English backends
-- Dev: added a helper class for utility functions
-- Dev: use a custom unserialize function to prevent object injection
-
-= 2.19.0 =
-
-- Feature: (Pro) show caption overlay for [Avada Builder background images](https://imagesourcecontrol.com/documentation/compatibility/#Avada_Builder)
-- Improvement: the check for unused images became faster and more reliable by excluding non-images
-- Improvement: updated the uninstall script to remove recently added data when the plugin is deleted
-- Improvement: (Pro) allow editors to use the bulk edit feature for image sources
-- Improvement: (Pro) introduced pagination for the list of unused images
-- Improvement: (Pro) bulk selecting enabled for checking unused images and deleting them
-- Improvement: (Pro) introduced various filters to the list of unused images
-- Fix: a possible empty post ID for the excerpt block caused a PHP warning
-- Fix: (Pro) a PHP warning appeared when an unused image was associated with a deleted post
-- Dev: introducing the ISC\Unused_Images class with improvements to unused images code
-- Dev: (Pro) use WP_List_Table when displaying the Unused Images list
-
-= 2.18.1 =
-
-- Improvement: show a hint about where to edit image sources in the block editor, depending on The Block Options settings
-- Fix: the Global List didn’t show any images when _Miscellaneous settings > Standard source > Exclude from lists_ was enabled
-
-= 2.18.0 =
-
-- Feature (Pro): show the IPTC copyright or credit meta information as a standard source. See this [blog post](https://imagesourcecontrol.com/blog/iptc-copyright-information-image-caption-wordpress/)
-- Feature (Pro): authors now see the IPTC copyright and credit meta information in the backend and can copy it to the image source field with one click
-- Feature (Pro): the standard source appears as a placeholder in the image source field in media list overview, when no individual source is entered
-- Fix: pre-select the "custom text" standard source option when the plugin options weren’t saved yet to reflect how this state behaves in the frontend
-- Dev: added an autoloader for plugin classes
-- Dev: move all features related to the standard source into ISC\Standard_Source
-- Dev: replace the `isc_raw_attachment_use_standard_source` and `isc_public_attachment_use_standard_source` with the `isc_use_standard_source_for_attachment` filter
-- Dev: added the `isc_can_load` filter to allow developers to disable ISC on certain pages in the frontend
-- Dev: added the `isc_force_block_options` filter hook to enable ISC fields in the block options and media modal in the block editor at the same time
-
-= 2.17.1 =
-
-- Improvement: create a unique name for the log file
-- Improvement: show the overlay caption in the bottom left in the lightbox (added in WordPress 6.4) where the current position doesn’t show up
-
-= 2.17.0 =
-
-- Improvement: detect images file names generated by DALL·E
-- Improvement: (Pro) support for [background images for the Group block](https://imagesourcecontrol.com/blog/group-block-background-image/) in WordPress 6.4
-
-= 2.16.0 =
-
-- Feature (Pro): Unused Images feature to help clean up the media library
-- Improvement: combine images without sources and with empty sources in the "Images without sources" list on the Tools page instead of having two separate tables
-
-= 2.15.0 =
-
-- Improvement: (Pro) Support for dynamic background images in Elementor templates, e.g., featured images
-- Improvement: (Pro) Disable links in overlays, e.g., when Elementor assigns a background image to `<a>` tags
-- Fix: The `<style>` block detection could sometimes cover multiple blocks and add the caption only to the last one
-- Dev: Added argument to `render_image_source_string()` that allows to disable links in the caption output
-
 == Upgrade Notice ==
+
+= 2.29.1 =
+
+Security: Limit the pretext for the caption preview in the backend to text only to prevent XSS attacks with manipulated links that could be executed by admin users
 
 = 2.28.1 =
 
