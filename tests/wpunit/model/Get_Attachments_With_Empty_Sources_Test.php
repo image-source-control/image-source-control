@@ -68,4 +68,33 @@ class Get_Attachments_With_Empty_Sources_Test extends WPTestCase {
 		$attachments            = ISC_Model::get_attachments_with_empty_sources();
 		$this->assertNotEmpty( $attachments, 'Expected some attachments to match criteria (missing isc_image_source) but none did.' );
 	}
+
+	/**
+	 * Attachment with 'isc_image_source_own' set to '1' and no other value are not counted as empty sources.
+	 *
+	 * @return void
+	 */
+	public function testWithAttachmentsOwnSetToOne() {
+		$this->createAttachmentWithMeta( 'isc_image_source_own', '1' );
+		$attachments = ISC_Model::get_attachments_with_empty_sources();
+
+		// Assert that the attachment is NOT in the results
+		$this->assertEmpty( $attachments, 'Expected no attachments to match criteria but some did.' );
+	}
+
+	/**
+	 * Attachment with 'isc_image_source_own' set to non-standard values are counted as empty sources.
+	 *
+	 * @return void
+	 */
+	public function testWithAttachmentsOwnSetToNonStandardValues() {
+		$non_standard_values = [ '2', 'yes', 'no', 'true', 'false', 'null', 'NaN' ];
+
+		foreach ( $non_standard_values as $value ) {
+			$this->createAttachmentWithMeta( 'isc_image_source_own', $value );
+			$attachments = ISC_Model::get_attachments_with_empty_sources();
+		}
+		// Assert that there are 7 attachments in the results
+		$this->assertCount( 7, $attachments, 'Expected 7 attachments to match criteria but ' . count( $attachments ) . ' did.' );
+	}
 }
