@@ -381,12 +381,21 @@ class ISC_Model {
 	public static function get_attachments_with_empty_sources() {
 		global $wpdb;
 
+		/**
+		 * Using EXISTS instead of LEFT JOINs resulted in much faster queries and helped caching the results.
+		 */
 		$query = "SELECT wp_posts.ID, wp_posts.post_title, wp_posts.post_parent
 	        FROM {$wpdb->posts} AS wp_posts
 	        WHERE wp_posts.post_type = 'attachment'
 	          AND wp_posts.post_status = 'inherit'
+	          AND NOT EXISTS (
+	                SELECT 1
+	                FROM {$wpdb->postmeta} AS mt1
+	                WHERE mt1.post_id = wp_posts.ID
+	                  AND mt1.meta_key = 'isc_image_source_own'
+	                  AND mt1.meta_value = '1'
+	              )
 	          AND (
-	            (
 	              EXISTS (
 	                SELECT 1
 	                FROM {$wpdb->postmeta} AS wp_postmeta
@@ -394,14 +403,6 @@ class ISC_Model {
 	                  AND wp_postmeta.meta_key = 'isc_image_source'
 	                  AND wp_postmeta.meta_value = ''
 	              )
-	              AND EXISTS (
-	                SELECT 1
-	                FROM {$wpdb->postmeta} AS mt1
-	                WHERE mt1.post_id = wp_posts.ID
-	                  AND mt1.meta_key = 'isc_image_source_own'
-	                  AND mt1.meta_value != '1'
-	              )
-	            )
 	            OR NOT EXISTS (
 	              SELECT 1
 	              FROM {$wpdb->postmeta} AS mt2
@@ -409,8 +410,7 @@ class ISC_Model {
 	                AND mt2.meta_key = 'isc_image_source'
 	            )
 	          )
-	        GROUP BY wp_posts.ID
-	        ORDER BY wp_posts.post_date DESC
+	        ORDER BY wp_posts.ID DESC
 	        LIMIT %d, %d
 	    ";
 
