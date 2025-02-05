@@ -38,6 +38,7 @@ return array(
     'ISC\\Settings\\Sections\\Miscellaneous' => $baseDir . '/includes/settings/sections/miscellaneous.php',
     'ISC\\Settings\\Sections\\Newsletter' => $baseDir . '/includes/settings/sections/newsletter.php',
     'ISC\\Settings\\Sections\\Page_List' => $baseDir . '/includes/settings/sections/page-list.php',
+    'ISC\\Settings\\Sections\\Plugin_Options' => $baseDir . '/includes/settings/sections/plugin-options.php',
     'ISC\\Standard_Source' => $baseDir . '/includes/standard-source.php',
     'ISC\\Unused_Images' => $baseDir . '/includes/unused-images.php',
     'ISC\\User' => $baseDir . '/includes/user.php',
