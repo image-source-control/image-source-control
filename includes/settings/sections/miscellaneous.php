@@ -5,7 +5,7 @@ namespace ISC\Settings\Sections;
 use ISC\Settings;
 
 /**
- * Handle settings for licenses
+ * Handle settings for miscellaneous options
  */
 class Miscellaneous extends Settings\Section {
 
@@ -22,7 +22,6 @@ class Miscellaneous extends Settings\Section {
 		}
 		add_settings_field( 'warning_one_source', __( 'Warn about missing sources', 'image-source-control-isc' ), [ $this, 'render_field_warning_source_missing' ], 'isc_settings_page', 'isc_settings_section_misc' );
 		add_settings_field( 'enable_log', __( 'Debug log', 'image-source-control-isc' ), [ $this, 'render_field_enable_log' ], 'isc_settings_page', 'isc_settings_section_misc' );
-		add_settings_field( 'remove_on_uninstall', __( 'Delete data on uninstall', 'image-source-control-isc' ), [ $this, 'render_field_remove_on_uninstall' ], 'isc_settings_page', 'isc_settings_section_misc' );
 	}
 
 
@@ -77,15 +76,6 @@ class Miscellaneous extends Settings\Section {
 	}
 
 	/**
-	 * Render the option to remove all options and meta data when the plugin is deleted.
-	 */
-	public function render_field_remove_on_uninstall() {
-		$options = $this->get_options();
-		$checked = ! empty( $options['remove_on_uninstall'] );
-		require_once ISCPATH . '/admin/templates/settings/miscellaneous/remove-on-uninstall.php';
-	}
-
-	/**
 	 * Validate settings
 	 *
 	 * @param array $output output data.
@@ -101,9 +91,8 @@ class Miscellaneous extends Settings\Section {
 		if ( isset( $output['enable_log'] ) && ! isset( $input['enable_log'] ) ) {
 			\ISC_Log::delete_log_file();
 		}
-		$output['enable_log']          = ! empty( $input['enable_log'] );
-		$output['block_options']       = ! empty( $input['block_options'] );
-		$output['remove_on_uninstall'] = ! empty( $input['remove_on_uninstall'] );
+		$output['enable_log']    = ! empty( $input['enable_log'] );
+		$output['block_options'] = ! empty( $input['block_options'] );
 
 		/**
 		 * 2.0 moved the options to handle "own images" into "standard sources" and only offers a single choice for one of the options now
