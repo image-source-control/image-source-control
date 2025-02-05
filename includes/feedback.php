@@ -4,7 +4,6 @@ namespace ISC;
 
 use ISC\User;
 use WP_User;
-use ISC_Class;
 
 /**
  * Handle feedback voluntarily sent on deactivation
@@ -122,7 +121,7 @@ class Feedback {
 
 		$feedback['email'] = ! array_key_exists( 'isc-feedback-reply-email', $data ) || ! is_email( $data['isc-feedback-reply-email'] ) ? '' : trim( $data['isc-feedback-reply-email'] );
 
-		$options               = ISC_Class::get_instance()->get_isc_options();
+		$options               = Plugin::get_options();
 		$feedback['activated'] = isset( $options['activated'] ) ? gmdate( 'd.m.Y', $options['activated'] ) : '–';
 
 		return $feedback;

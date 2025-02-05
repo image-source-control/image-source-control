@@ -31,7 +31,7 @@
 			)
 		);
 		?>
-		<a href="<?php echo esc_url( ISC_Admin::get_manual_url( 'settings-per-page-list-position' ) ); ?>" target="_blank"><?php esc_html_e( 'Manual', 'image-source-control-isc' ); ?></a>
+		<a href="<?php echo esc_url( ISC\Admin_Utils::get_manual_url( 'settings-per-page-list-position' ) ); ?>" target="_blank"><?php esc_html_e( 'Manual', 'image-source-control-isc' ); ?></a>
 	</p>
 	<h4><?php esc_html_e( 'Archive pages', 'image-source-control-isc' ); ?></h4>
 	<p class="description"><?php esc_html_e( 'The following options try to place image sources within post content on post list pages like your home page or category archives.', 'image-source-control-isc' ); ?></p>

@@ -29,7 +29,7 @@
 		<br/>
 		<label>
 			<input type="radio" name="isc_options[standard_source]" <?php checked( $standard_source, 'wp_caption' ); ?> disabled/>
-			<?php echo ISC_Admin::get_pro_link( 'standard-source-caption' ); ?>
+			<?php echo ISC\Admin_Utils::get_pro_link( 'standard-source-caption' ); ?>
 			<?php esc_html_e( 'Caption', 'image-source-control-isc' ); ?>
 		</label>
 	<p class="description">
@@ -40,7 +40,7 @@
 		<br/>
 		<label>
 			<input type="radio" name="isc_options[standard_source]" <?php checked( $standard_source, 'iptc' ); ?> disabled/>
-			<?php echo ISC_Admin::get_pro_link( 'standard-source-iptc' ); ?>
+			<?php echo ISC\Admin_Utils::get_pro_link( 'standard-source-iptc' ); ?>
 			<?php esc_html_e( 'IPTC meta data', 'image-source-control-isc' ); ?>
 		</label>
 	<?php endif; ?>
@@ -49,7 +49,7 @@
 <?php if ( ! \ISC\Plugin::is_pro() ) : ?>
 	<label>
 		<input type="checkbox" disabled="disabled">
-		<?php echo ISC_Admin::get_pro_link( 'standard-source' ); ?>
+		<?php echo ISC\Admin_Utils::get_pro_link( 'standard-source' ); ?>
 		<?php esc_html_e( 'Show the standard source for all images that don’t have a source.', 'image-source-control-isc' ); ?>
 	</label>
 <?php endif; ?>

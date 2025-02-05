@@ -21,7 +21,7 @@
 			<?php
 			if ( $is_pro ) :
 				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-				echo ISC_Admin::get_pro_link( 'overlay-' . esc_html( $style_options['label'] ) );
+				echo ISC\Admin_Utils::get_pro_link( 'overlay-' . esc_html( $style_options['label'] ) );
 			endif;
 			?>
 			<?php echo isset( $style_options['label'] ) ? esc_html( $style_options['label'] ) : ''; ?>
@@ -45,5 +45,5 @@
 		endif;
 		?>
 	<?php endforeach; ?>
-	<p><a href="<?php echo esc_url( ISC_Admin::get_manual_url( 'overlay-layout' ) ); ?>" target="_blank"><?php esc_html_e( 'Manual', 'image-source-control-isc' ); ?></a></p>
+	<p><a href="<?php echo esc_url( ISC\Admin_Utils::get_manual_url( 'overlay-layout' ) ); ?>" target="_blank"><?php esc_html_e( 'Manual', 'image-source-control-isc' ); ?></a></p>
 </div>

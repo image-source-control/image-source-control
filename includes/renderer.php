@@ -2,8 +2,6 @@
 
 namespace ISC;
 
-use ISC_Class;
-
 /**
  * Main renderer class
  */
@@ -15,6 +13,6 @@ class Renderer {
 	 * @return array
 	 */
 	protected static function get_options(): ?array {
-		return ISC_Class::get_instance()->get_isc_options();
+		return Plugin::get_options();
 	}
 }

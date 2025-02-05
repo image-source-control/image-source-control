@@ -3,16 +3,21 @@
  */
 jQuery( document ).ready(
 	function($) {
+		// Initial setup
 		isc_thumbnail_input_checkstate();
 		isc_caption_checkstate();
 		isc_licenses_checkstate();
 		isc_toggle_caption_position();
+		isc_toggle_module_sections();
+
+		// Event handlers
 		$( '#isc-settings-overlay-enable' ).on( 'click', function(){ isc_caption_checkstate() } );
 		$( '#isc-settings-licenses-enable' ).on( 'click', function(){ isc_licenses_checkstate() } );
 		$( '.isc-settings-standard-source input' ).on( 'change', isc_toggle_standard_source_text );
 		$( '#thumbnail-size-select, #use-thumbnail' ).on( 'change', function(){ isc_thumbnail_input_checkstate(); } );
 		$( '#isc-settings-caption-style input' ).on( 'change', function(){ isc_toggle_caption_position(); } );
 		$( '#isc-settings-global-list-indexed-images' ).on( 'change', function(){ isc_show_reindex_warning(); } );
+		$('#isc-settings-plugin-modules input[type="checkbox"]').on('change', function() { isc_toggle_module_sections(); });
 
 		// Show and update preview when a position option is clicked
 		$('#isc-settings-caption-pos-options button').on( 'click', function (event) {
@@ -95,6 +100,28 @@ jQuery( document ).ready(
 		});
 	}
 );
+
+/**
+ * Toggle visibility of module-related sections based on checkbox states
+ */
+function isc_toggle_module_sections() {
+	Object.entries( isc.moduleSections ).forEach(([module, sections]) => {
+		const checkbox = document.querySelector(`#isc-settings-plugin-modules input[value="${module}"]`);
+		if (checkbox) {
+			sections.forEach(sectionId => {
+				const sectionElement = document.getElementById(sectionId);
+				const section = sectionElement ? sectionElement.querySelector('.inside') : null;
+				if (section) {
+					if (checkbox.checked) {
+						section.classList.remove('hidden');
+					} else {
+						section.classList.add('hidden');
+					}
+				}
+			});
+		}
+	});
+}
 
 /**
  * Toggle the state of the thumbnail size options

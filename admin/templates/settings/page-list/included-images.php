@@ -18,7 +18,7 @@
 				<?php checked( $included_images, $value ); ?>
 				<?php echo $is_pro ? 'disabled="disabled"' : ''; ?>
 			/>
-			<?php if ( $is_pro ) : echo ISC_Admin::get_pro_link( 'page-list-' . sanitize_title( $_options['label'] ) ); endif; ?>
+			<?php if ( $is_pro ) : echo ISC\Admin_Utils::get_pro_link( 'page-list-' . sanitize_title( $_options['label'] ) ); endif; ?>
 			<?php echo isset( $_options['label'] ) ? esc_html( $_options['label'] ) : ''; ?>
 		</label>
 			<?php

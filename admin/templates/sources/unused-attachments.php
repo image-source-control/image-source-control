@@ -37,7 +37,7 @@ if ( $filesize > 1000000 ) {
 <?php
 if ( ! \ISC\Plugin::is_pro() ) :
 	?>
-	<a href="<?php echo esc_url( ISC_Admin::get_isc_localized_website_url( 'l/_unused-images', 'z/_ungenutzte-bilder', 'unused-images' ) ); ?>" target="_blank" class="button button-primary"><?php esc_html_e( 'Clean up unused images', 'image-source-control-isc' ); ?> (Pro)</a>
+	<a href="<?php echo esc_url( ISC\Admin_Utils::get_isc_localized_website_url( 'l/_unused-images', 'z/_ungenutzte-bilder', 'unused-images' ) ); ?>" target="_blank" class="button button-primary"><?php esc_html_e( 'Clean up unused images', 'image-source-control-isc' ); ?> (Pro)</a>
 	<?php
 else :
 	?>

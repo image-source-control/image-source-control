@@ -17,7 +17,7 @@
 			<?php
 			if ( ! $is_pro_enabled ) :
 				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-				echo ISC_Admin::get_pro_link( 'global-list-indexed-images' );
+				echo ISC\Admin_Utils::get_pro_link( 'global-list-indexed-images' );
 endif;
 			?>
 			<?php esc_html_e( 'Index images outside the content', 'image-source-control-isc' ); ?>

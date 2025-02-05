@@ -30,7 +30,7 @@ class Page_List extends Settings\Section {
 	 * Render the options to enable the Per-page list
 	 */
 	public function render_field_source_type_list() {
-		$options = $this->get_isc_options();
+		$options = $this->get_options();
 		require_once ISCPATH . '/admin/templates/settings/page-list/enable.php';
 	}
 
@@ -38,7 +38,7 @@ class Page_List extends Settings\Section {
 	 * Render option to define a headline for the image list
 	 */
 	public function render_field_list_headline() {
-		$options = $this->get_isc_options();
+		$options = $this->get_options();
 		require_once ISCPATH . '/admin/templates/settings/page-list/headline.php';
 	}
 
@@ -46,7 +46,7 @@ class Page_List extends Settings\Section {
 	 * Render option to define which images to show on the sources list of the current page
 	 */
 	public function render_field_below_content_included_images() {
-		$options                 = $this->get_isc_options();
+		$options                 = $this->get_options();
 		$included_images         = ! empty( $options['list_included_images'] ) ? $options['list_included_images'] : '';
 		$included_images_options = $this->get_included_images_options();
 		require_once ISCPATH . '/admin/templates/settings/page-list/included-images.php';

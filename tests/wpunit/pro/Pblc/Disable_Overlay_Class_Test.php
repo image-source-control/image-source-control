@@ -2,8 +2,8 @@
 
 namespace ISC\Tests\WPUnit\Pro\Pblc;
 
+use ISC\Image_Sources\Analyze_HTML;
 use ISC\Tests\WPUnit\WPTestCase;
-use \ISC\Analyze_HTML;
 
 /**
  * Test if ISC_Pro_Public::remove_overlay_from_isc_disable_overlay_class() removes images with the isc-disable-overlay class from the content.

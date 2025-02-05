@@ -22,7 +22,7 @@ class Licenses extends Settings\Section {
 	 * Render option to enable the license settings.
 	 */
 	public function render_field_enable_licences() {
-		$options = $this->get_isc_options();
+		$options = $this->get_options();
 		require_once ISCPATH . '/admin/templates/settings/licenses/enable.php';
 	}
 
@@ -30,12 +30,12 @@ class Licenses extends Settings\Section {
 	 * Render option to define the available licenses
 	 */
 	public function render_field_licences() {
-		$options = $this->get_isc_options();
+		$options = $this->get_options();
 
 		// fall back to default if field is empty
 		if ( empty( $options['licences'] ) ) {
 			// retrieve default options
-			$default = \ISC_Class::get_instance()->default_options();
+			$default = \ISC\Options::default_options();
 			if ( ! empty( $default['licences'] ) ) {
 				$options['licences'] = $default['licences'];
 			}

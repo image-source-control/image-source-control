@@ -2,12 +2,12 @@
 
 namespace ISC\Settings;
 
-use ISC_Class;
+use ISC\Plugin;
 
 /**
  * Main settings class
  */
-class Section extends ISC_Class {
+class Section {
 
 	/**
 	 * Constructor
@@ -35,5 +35,12 @@ class Section extends ISC_Class {
 	 */
 	public function validate_settings( array $output, array $input ): array {
 		return $output;
+	}
+
+	/**
+	 * Get the ISC options
+	 */
+	protected function get_options() {
+		return Plugin::get_options();
 	}
 }

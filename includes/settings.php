@@ -2,8 +2,6 @@
 
 namespace ISC;
 
-use ISC_Class;
-
 /**
  * Render the settings page
  */
@@ -27,6 +25,7 @@ class Settings {
 		register_setting( 'isc_options_group', 'isc_options', [ $this, 'settings_validation' ] );
 
 		new \ISC\Settings\Sections\Newsletter();
+		new \ISC\Settings\Sections\Plugin_Options();
 		new \ISC\Settings\Sections\Caption();
 		new \ISC\Settings\Sections\Page_List();
 		new \ISC\Settings\Sections\Global_List();
@@ -100,7 +99,7 @@ class Settings {
 	 * Manage data structure upgrading of outdated versions
 	 */
 	public function upgrade_settings() {
-		$default_options = ISC_Class::get_instance()->default_options();
+		$default_options = Options::default_options();
 
 		/**
 		 * This function checks options in database
@@ -138,7 +137,7 @@ class Settings {
 	 * @param array $input values from the admin panel.
 	 */
 	public function settings_validation( $input ) {
-		$output = ISC_Class::get_instance()->get_isc_options();
+		$output = Plugin::get_options();
 
 		// the display_type option array is split between various sections, so best to validate it here
 		if ( ! is_array( $input['display_type'] ) ) {

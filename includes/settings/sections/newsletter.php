@@ -50,7 +50,7 @@ class Newsletter {
 	 */
 	public function render_settings_section() {
 		$email      = sanitize_email( User::get_email() );
-		$signup_url = \ISC_Admin::get_isc_localized_website_url( 'newsletter', 'newsletter', 'newsletter' );
+		$signup_url = \ISC\Admin_Utils::get_isc_localized_website_url( 'newsletter', 'newsletter', 'newsletter' );
 
 		require_once ISCPATH . 'admin/templates/settings/newsletter.php';
 	}

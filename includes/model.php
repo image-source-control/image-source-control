@@ -1,5 +1,6 @@
 <?php
 
+use ISC\Image_Sources\Image_Sources;
 /**
  * Logic to get and store sources
  */
@@ -568,7 +569,7 @@ class ISC_Model {
 			} else {
 				return 0;
 			}
-		} elseif ( ! in_array( $ext, ISC_Class::get_instance()->allowed_extensions, true ) ) {
+		} elseif ( ! in_array( $ext, Image_Sources::get_instance()->allowed_extensions, true ) ) {
 			// a valid image extension is required, if an extension is given
 			ISC_Log::log( 'exit get_image_by_url() due to invalid image extension' );
 			return 0;
@@ -581,9 +582,6 @@ class ISC_Model {
 		 * - "scaled" or "rotated"
 		 * - additional query vars
 		 */
-		// this was my original approach without "scaled" and "rotated"
-		// $types = implode( '|', ISC_Class::get_instance()->allowed_extensions );
-		// $newurl = esc_url( preg_replace( "/(-e\d+){0,1}(-\d+x\d+){0,1}\.({$types})(.*)/i", '.${3}', $url ) );
 		// this is how WordPress core is detecting changed image URLs
 		$newurl  = esc_url( preg_replace( "/-(?:\d+x\d+|scaled|rotated)\.{$ext}(.*)/i", '.' . $ext, $url ) );
 		$storage = new ISC_Storage_Model();

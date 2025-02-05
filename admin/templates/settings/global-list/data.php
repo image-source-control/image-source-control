@@ -23,7 +23,7 @@
 			<?php
 			if ( $is_pro ) :
 				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-				echo ISC_Admin::get_pro_link( 'global-list-' . sanitize_title( $_options['label'] ) );
+				echo ISC\Admin_Utils::get_pro_link( 'global-list-' . sanitize_title( $_options['label'] ) );
 endif;
 			?>
 			<?php echo isset( $_options['label'] ) ? esc_html( $_options['label'] ) : ''; ?>

@@ -41,14 +41,15 @@ require_once ISCPATH . 'includes/class-autoloader.php';
 \ISC\Autoloader::get()->initialize();
 
 if ( is_admin() ) {
-	new ISC_Admin();
+	new ISC\Admin();
 } elseif ( ! is_admin() && ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) ) {
 	// include frontend functions.
 	new ISC_Public();
 	require_once ISCPATH . 'includes/functions.php';
-} else {
-	new ISC_Class();
 }
+
+// deprecated. Added here for backward compatibility. Will be removed in future versions.
+new ISC_Class();
 
 if ( ! class_exists( 'ISC_Pro_Model', false ) && file_exists( ISCPATH . 'pro/isc-pro.php' ) ) {
 	require_once ISCPATH . 'pro/isc-pro.php';
