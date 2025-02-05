@@ -57,9 +57,22 @@ class Admin_Scripts {
 			}
 		</style>
 		<?php
-		// add nonce to all pages
+		// Define the base modules array
 		$params = [
-			'ajaxNonce' => wp_create_nonce( 'isc-admin-ajax-nonce' ),
+			'ajaxNonce'      => wp_create_nonce( 'isc-admin-ajax-nonce' ),
+			// Allow other plugins to modify the modules
+			'moduleSections' => apply_filters(
+				'isc_settings_plugin_modules_related_sections',
+				[
+					'image_sources' => [
+						'isc_settings_section_overlay',
+						'isc_settings_section_list_below_content',
+						'isc_settings_section_complete_list',
+						'isc_settings_section_licenses',
+						'isc_settings_section_misc',
+					],
+				]
+			),
 		];
 		wp_localize_script( 'jquery', 'isc', $params );
 	}

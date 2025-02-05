@@ -58,6 +58,7 @@ class ComposerStaticInitdb72a6bac11cb0e6b971811c93d09a9b
         'ISC\\Settings\\Sections\\Miscellaneous' => __DIR__ . '/../..' . '/includes/settings/sections/miscellaneous.php',
         'ISC\\Settings\\Sections\\Newsletter' => __DIR__ . '/../..' . '/includes/settings/sections/newsletter.php',
         'ISC\\Settings\\Sections\\Page_List' => __DIR__ . '/../..' . '/includes/settings/sections/page-list.php',
+        'ISC\\Settings\\Sections\\Plugin_Options' => __DIR__ . '/../..' . '/includes/settings/sections/plugin-options.php',
         'ISC\\Standard_Source' => __DIR__ . '/../..' . '/includes/standard-source.php',
         'ISC\\Unused_Images' => __DIR__ . '/../..' . '/includes/unused-images.php',
         'ISC\\User' => __DIR__ . '/../..' . '/includes/user.php',
