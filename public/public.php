@@ -32,13 +32,12 @@ class ISC_Public extends \ISC\Image_Sources\Image_Sources {
 		// register the shortcode for the global list. Since this shortcode has to be placed manually and is normally only used once, checking if ISC is disabled on cetain pages doesn’t make sense
 		add_shortcode( 'isc_list_all', [ $this, 'list_all_post_attachments_sources_shortcode' ] );
 
-		if ( ! self::can_load_isc() ) {
+		if ( ! self::can_load_image_sources() ) {
 			return;
 		}
 
 		// prepare the log
 		$this->prepare_log();
-
 
 		if ( ISC\Renderer\Caption::has_caption_style() ) {
 			add_action( 'wp_enqueue_scripts', [ $this, 'front_scripts' ] );
@@ -58,7 +57,7 @@ class ISC_Public extends \ISC\Image_Sources\Image_Sources {
 	 *
 	 * @return bool
 	 */
-	public static function can_load_isc() {
+	public static function can_load_image_sources() {
 
 		$post_id = get_the_ID();
 
@@ -73,7 +72,7 @@ class ISC_Public extends \ISC\Image_Sources\Image_Sources {
 			return false;
 		}
 
-		return apply_filters( 'isc_can_load', '__return_true' );
+		return apply_filters( 'isc_can_load', ISC\Plugin::is_module_enabled( 'image_sources' ) );
 	}
 
 	/**

@@ -35,6 +35,10 @@ class ISC_Block_Options {
 	 * @return void
 	 */
 	public function init() {
+		if ( ! Plugin::is_module_enabled( 'image_sources' ) ) {
+			return;
+		}
+
 		if ( ! function_exists( 'register_block_type' ) || ! self::enabled() ) {
 			// if block options are disabled, at least add a link to the media library where one can adjust the source
 			add_action( 'enqueue_block_editor_assets', [ $this, 'edit_link_assets' ] );
