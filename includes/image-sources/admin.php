@@ -20,6 +20,7 @@ class Admin {
 		new Admin_Fields();
 		new Admin_Notices();
 		new Admin_Ajax();
+		new Admin_Media_Library_Filters();
 
 		// fire when an attachment is removed
 		add_action( 'delete_attachment', [ $this, 'delete_attachment' ] );
