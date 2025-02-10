@@ -5,15 +5,18 @@
  * @var array $attachments list of attachments without source information
  */
 ?>
-<?php if( count( $attachments ) >= ISC_Model::MAX_POSTS ) : ?>
-	<p><?php
+<?php if ( count( $attachments ) >= ISC_Model::MAX_POSTS ) : ?>
+	<p>
+	<?php
 		printf(
 			// translators: %d is the number of entries in the following table
 			esc_html__( 'The list only shows the last %d images.', 'image-source-control-isc' ),
-			ISC_Model::MAX_POSTS
-		); ?>
+			(int) ISC_Model::MAX_POSTS
+		);
+	?>
 	</p>
 <?php endif; ?>
+<a class="button button-secondary" href="<?php echo esc_url( admin_url( 'upload.php?mode=list&isc_filter=without_source' ) ); ?>"><?php esc_html_e( 'Bulk edit missing sources', 'image-source-control-isc' ); ?></a>
 <table class="widefat striped isc-table" style="width: 80%;" >
 	<thead>
 		<tr>
@@ -35,8 +38,8 @@
 			<a href="<?php echo esc_url( get_edit_post_link( $_attachment->post_parent ) ); ?>" title="<?php esc_html_e( 'show parent post’s edit page', 'image-source-control-isc' ); ?>"><?php echo esc_html( get_the_title( $_attachment->post_parent ) ); ?></a>
 			<?php
 else :
-esc_html_e( 'no connection', 'image-source-control-isc' );
-?>
+	esc_html_e( 'no connection', 'image-source-control-isc' );
+	?>
 <?php endif; ?></td></tr>
 	<?php endforeach; ?>
 </tbody>
