@@ -30,6 +30,11 @@ class Image_Sources_Admin_Scripts {
 			wp_enqueue_script( 'isc_sources_script', ISCBASEURL . '/admin/assets/js/sources.js', [], ISCVERSION, true );
 		}
 
+		// check if we are on the media library page with list view
+		if ( Admin_Utils::is_media_library_list_view_page() ) {
+			return;
+		}
+
 		if ( in_array( $screen->id, [ 'upload', 'widgets', 'customize' ], true ) ) {
 			wp_enqueue_script( 'isc_attachment_compat', ISCBASEURL . '/admin/assets/js/wp.media.view.AttachmentCompat.js', [ 'media-upload' ], ISCVERSION, true );
 		}
