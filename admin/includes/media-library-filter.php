@@ -2,6 +2,8 @@
 
 namespace ISC\Admin;
 
+use ISC\Admin_Utils;
+
 /**
  * Add a filter field to the Media Library view.
  */
@@ -18,7 +20,7 @@ class Media_Library_Filter {
 	 * Add a filter to the Media Library list view.
 	 */
 	public function add_media_library_filter() {
-		self::is_media_library_list_view_page();
+		Admin_Utils::is_media_library_list_view_page();
 
 		$filters = apply_filters( 'isc_admin_media_library_filters', [] );
 
@@ -30,28 +32,5 @@ class Media_Library_Filter {
 		$filter_current = isset( $_GET['isc_filter'] ) ? sanitize_text_field( wp_unslash( $_GET['isc_filter'] ) ) : '';
 
 		include ISCPATH . '/admin/templates/media-library-filter.php';
-	}
-
-	/**
-	 * Return true if we are on the media library page in list view
-	 *
-	 * @return bool
-	 */
-	public static function is_media_library_list_view_page(): bool {
-		if ( ! is_admin() || ! function_exists( 'get_current_screen' ) ) {
-			return false;
-		}
-
-		$screen = get_current_screen();
-		if ( ! isset( $screen->id ) || $screen->id !== 'upload' ) {
-			return false;
-		}
-
-		// don’t show this in grid mode
-		if ( 'list' !== get_user_option( 'media_library_mode' ) ) {
-			return false;
-		}
-
-		return true;
 	}
 }

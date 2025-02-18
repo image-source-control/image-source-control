@@ -2,7 +2,7 @@
 
 namespace ISC\Image_Sources;
 
-use ISC\Admin\Media_Library_Filter;
+use ISC\Admin_Utils;
 
 /**
  * Handle filters in the Media Library
@@ -44,7 +44,7 @@ class Admin_Media_Library_Filters {
 	 * @param \WP_Query $query The current query.
 	 */
 	public function filter_media_library( \WP_Query $query ) {
-		Media_Library_Filter::is_media_library_list_view_page();
+		Admin_Utils::is_media_library_list_view_page();
 
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$filter = isset( $_GET['isc_filter'] ) ? sanitize_text_field( wp_unslash( $_GET['isc_filter'] ) ) : '';
@@ -125,7 +125,7 @@ class Admin_Media_Library_Filters {
 	 * Display an admin notice if the Image Sources column is not enabled in list view.
 	 */
 	public function check_and_display_admin_notice() {
-		Media_Library_Filter::is_media_library_list_view_page();
+		Admin_Utils::is_media_library_list_view_page();
 
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$filter = isset( $_GET['isc_filter'] ) ? sanitize_text_field( wp_unslash( $_GET['isc_filter'] ) ) : '';

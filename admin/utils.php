@@ -33,6 +33,29 @@ trait Admin_Utils {
 	}
 
 	/**
+	 * Return true if we are on the media library page in list view
+	 *
+	 * @return bool
+	 */
+	public static function is_media_library_list_view_page(): bool {
+		if ( ! is_admin() || ! function_exists( 'get_current_screen' ) ) {
+			return false;
+		}
+
+		$screen = get_current_screen();
+		if ( ! isset( $screen->id ) || $screen->id !== 'upload' ) {
+			return false;
+		}
+
+		// don’t show this in grid mode
+		if ( 'list' !== get_user_option( 'media_library_mode' ) ) {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
 	 * Get URL to the ISC website by site language
 	 *
 	 * @param string $url_param    Default parameter added to the main URL, leading to https://imagesourceocontrol.com/.
