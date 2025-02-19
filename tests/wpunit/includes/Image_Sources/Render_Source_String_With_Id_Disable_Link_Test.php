@@ -1,10 +1,10 @@
 <?php
 
-namespace ISC\Tests\WPUnit\Pblc\Source_String;
+namespace ISC\Tests\WPUnit\Includes\Image_Sources;
 
-use ISC\Tests\WPUnit\WPTestCase;
-use ISC_Public;
+use ISC\Image_Sources\Renderer\Image_Source_String;
 use ISC\Options;
+use ISC\Tests\WPUnit\WPTestCase;
 
 /**
  * Test if ISC_Public::render_image_source_string() renders the image source string correctly
@@ -22,8 +22,6 @@ class Render_Source_String_With_Id_Disable_Link_Test extends WPTestCase {
 	private $image_id;
 
 	protected function setUp(): void {
-		$this->iscPublic = new ISC_Public();
-
 		$this->image_id = $this->factory()->post->create( [
 			                                          'post_title' => 'Image One',
 			                                          'post_type'  => 'attachment',
@@ -41,7 +39,7 @@ class Render_Source_String_With_Id_Disable_Link_Test extends WPTestCase {
 	public function test_render_image_source_string_with_source_url() {
 		$this->assertEquals(
 			'Author A',
-			$this->iscPublic->render_image_source_string( $this->image_id, [], [ 'disable-links' => true ] )
+			Image_Source_String::get( $this->image_id, [], [ 'disable-links' => true ] )
 		);
 	}
 
@@ -58,7 +56,7 @@ class Render_Source_String_With_Id_Disable_Link_Test extends WPTestCase {
 
 		$this->assertEquals(
 			'Author A | CC BY-NC-ND 4.0 International',
-		    $this->iscPublic->render_image_source_string( $this->image_id, [], [ 'disable-links' => true ] )
+			Image_Source_String::get( $this->image_id, [], [ 'disable-links' => true ] )
 		);
 	}
 }

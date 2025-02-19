@@ -1,6 +1,6 @@
 <?php
 
-namespace ISC;
+namespace ISC\Image_Sources;
 
 /**
  * Main renderer class
@@ -13,6 +13,6 @@ class Renderer {
 	 * @return array
 	 */
 	protected static function get_options(): ?array {
-		return Plugin::get_options();
+		return \ISC\Plugin::get_options();
 	}
 }
