@@ -153,12 +153,27 @@ class Image_Sources {
 	}
 
 	/**
-	 * Get image source string before it was filtered for output
+	 * Get image source string for public output
 	 *
 	 * @param int $attachment_id attachment ID.
 	 * @return string
 	 */
 	public static function get_image_source_text( $attachment_id ) {
+		return apply_filters(
+			'isc_public_attachment_get_source',
+			trim(
+				get_post_meta( $attachment_id, 'isc_image_source', true )
+			)
+		);
+	}
+
+	/**
+	 * Get image source string before it was filtered for output
+	 *
+	 * @param int $attachment_id attachment ID.
+	 * @return string
+	 */
+	public static function get_image_source_text_raw( $attachment_id ) {
 		return apply_filters(
 			'isc_raw_attachment_get_source',
 			get_post_meta( $attachment_id, 'isc_image_source', true ),
