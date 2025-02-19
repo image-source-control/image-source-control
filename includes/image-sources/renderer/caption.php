@@ -1,8 +1,8 @@
 <?php
 
-namespace ISC\Renderer;
+namespace ISC\Image_Sources\Renderer;
 
-use ISC\Renderer;
+use ISC\Image_Sources\Renderer;
 use ISC\Standard_Source;
 use ISC_Log;
 
@@ -34,7 +34,7 @@ class Caption extends Renderer {
 	 * @return string
 	 */
 	public static function get( int $image_id, array $data = [], array $args = [] ) {
-		$source = \ISC_Public::get_instance()->render_image_source_string( $image_id, $data, $args );
+		$source = Image_Source_String::get( $image_id, $data, $args );
 		if ( ! $source ) {
 			ISC_Log::log( sprintf( 'skipped overlay for empty sources string for ID "%s"', $image_id ) );
 			return '';
