@@ -22,25 +22,10 @@ class Image_Source_String extends Renderer {
 	}
 
 	/**
-	 * Render caption string / markup
-	 * including the style wrapper, if enabled in the plugin settings
-	 *
-	 * @param int      $image_id id of the image.
-	 * @param string[] $data     metadata.
-	 * @param array    $args     additional arguments
-	 *                           use "disable-links" = (any value), to disable any working links.
-	 *                           use "styled" = false to disable the style wrapper.
-	 *
-	 * @return string
-	 */
-	/**
 	 * Render source string of single image by its id
 	 *  this only returns the string with source and license (and urls),
 	 *  but no wrapping, because the string is used in a lot of functions
 	 *  (e.g. image source list where title is prepended)
-	 *
-	 * @updated 1.5 wrapped source into source url
-	 * @updated 2.4 accept metadata as an argument
 	 *
 	 * @param int|string $image_id   id of the image.
 	 * @param string[]   $data metadata.
