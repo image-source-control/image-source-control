@@ -57,6 +57,7 @@ trait Admin_Utils {
 
 	/**
 	 * Get URL to the ISC website by site language
+	 * If the URL param contains an anchor, the anchor will be added after the UTM part
 	 *
 	 * @param string $url_param    Default parameter added to the main URL, leading to https://imagesourceocontrol.com/.
 	 * @param string $url_param_de Parameter added to the main URL for German backends, leading to https://imagesourceocontrol.de/.
@@ -66,12 +67,27 @@ trait Admin_Utils {
 	 */
 	public static function get_isc_localized_website_url( string $url_param, string $url_param_de, string $utm_campaign ) {
 		if ( User::has_german_backend() ) {
+			if ( strpos( $url_param_de, '#' ) !== false ) {
+				$anchor       = substr( $url_param_de, strpos( $url_param_de, '#' ) );
+				$url_param_de = substr( $url_param_de, 0, strpos( $url_param_de, '#' ) );
+			}
 			$url = 'https://imagesourcecontrol.de/' . $url_param_de;
 		} else {
+			if ( strpos( $url_param, '#' ) !== false ) {
+				$anchor    = substr( $url_param, strpos( $url_param, '#' ) );
+				$url_param = substr( $url_param, 0, strpos( $url_param, '#' ) );
+			}
 			$url = 'https://imagesourcecontrol.com/' . $url_param;
 		}
 
-		return esc_url( $url . '?utm_source=isc-plugin&utm_medium=link&utm_campaign=' . $utm_campaign );
+		$url .= '?utm_source=isc-plugin&utm_medium=link&utm_campaign=' . $utm_campaign;
+
+		// add the anchor to the URL
+		if ( isset( $anchor ) ) {
+			$url .= $anchor;
+		}
+
+		return esc_url( $url );
 	}
 
 	/**
