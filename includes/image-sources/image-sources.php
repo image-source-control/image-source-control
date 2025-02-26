@@ -48,6 +48,7 @@ class Image_Sources {
 		'gif',
 		'jpeg',
 		'webp',
+		'avif',
 	];
 
 	/**
