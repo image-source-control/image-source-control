@@ -22,12 +22,15 @@ class Indexer {
 			return;
 		}
 
+		global $post;
+
 		// Skip indexing if this is a page with a Global list.
 		if ( has_shortcode( $content, '[isc_list_all]' ) || false !== strpos( $content, 'isc_all_image_list_box' ) ) {
+			// an empty isc_post_images meta value is used to indicate that the post was already indexed
+			ISC_Model::update_post_images_meta( $post->ID, [] );
 			return;
 		}
 
-		global $post;
 		$attachments = self::get_attachments_for_index( $post->ID );
 
 		/**
