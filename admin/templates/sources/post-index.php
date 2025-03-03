@@ -51,3 +51,5 @@
 	<br/><?php esc_html_e( 'The index is rebuilt automatically when a page with images on it is visited in the frontend.', 'image-source-control-isc' ); ?></p>
 <div id="isc-clear-index-feedback"></div>
 <hr/>
+<?php
+do_action( 'isc_admin_sources_after_post_index_section' );

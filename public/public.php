@@ -219,7 +219,7 @@ class ISC_Public extends \ISC\Image_Sources\Image_Sources {
 	 *
 	 * @return bool true if we are currently on something that could be called the "main loop"
 	 */
-	private static function is_main_loop() {
+	public static function is_main_loop() {
 
 		// Exception: Oxygen builder, where `is_the_loop()` is false
 		if ( defined( 'CT_VERSION' ) && defined( 'CT_FW_PATH' ) ) {

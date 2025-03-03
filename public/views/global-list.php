@@ -22,7 +22,7 @@
 		<tbody>
 		<?php foreach ( $atts as $id => $data ) : ?>
 			<?php
-			$source = $this->render_image_source_string( $id );
+			$source = ISC\Image_Sources\Renderer\Image_Source_String::get( $id );
 			?>
 			<tr>
 				<?php

@@ -31,14 +31,26 @@ class Indexer {
 			return;
 		}
 
-		$attachments = self::get_attachments_for_index( $post->ID );
-
 		/**
-		 * $attachments is an empty string if it was never set and an array if it was set
-		 * the array is empty if no images were found in the past. This prevents re-indexing as well
+		 * Triggered before updating the indexes.
+		 * Useful to run code with the index even though the Image Source already have an index
+		 *
+		 * @param int $post->ID Post ID.
+		 * @param string $content Post content.
 		 */
-		if ( $attachments !== '' ) {
-			return;
+		do_action( 'isc_before_update_indexes', $post->ID, $content );
+
+		// ignore existing indexes if the bot is running
+		if ( ! self::is_index_bot() ) {
+			$attachments = self::get_attachments_for_index( $post->ID );
+
+			/**
+			 * $attachments is an empty string if it was never set and an array if it was set
+			 * the array is empty if no images were found in the past. This prevents re-indexing as well
+			 */
+			if ( $attachments !== '' ) {
+				return;
+			}
 		}
 
 		ISC_Log::log( 'start updating index for post ID ' . $post->ID );
@@ -61,6 +73,15 @@ class Indexer {
 
 		// add the post ID to the list of posts associated with a given image
 		ISC_Model::update_image_posts_meta( $post->ID, $image_ids );
+
+		/**
+		 * Triggered after updating the indexes.
+		 *
+		 * @param int $post->ID Post ID.
+		 * @param string $content Post content.
+		 * @param array $image_ids Image IDs found in the content.
+		 */
+		do_action( 'isc_after_update_indexes', $post->ID, $content, $image_ids );
 	}
 
 
@@ -144,5 +165,13 @@ class Indexer {
 		}
 
 		return true;
+	}
+
+	/**
+	 * Return true if the current user agent is the index bot
+	 */
+	public static function is_index_bot(): bool {
+		$user_agent = isset( $_SERVER['HTTP_USER_AGENT'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ) : '';
+		return strpos( $user_agent, 'ISC Index Bot' ) !== false;
 	}
 }
