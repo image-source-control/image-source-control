@@ -26,4 +26,9 @@ if ( ! empty( $options['remove_on_uninstall'] ) ) {
 
 	// delete user meta
 	delete_metadata( 'user', null, 'isc_newsletter_subscribed', '', true );
+
+	// drop the index table
+	$table_name = $wpdb->prefix . 'isc_index';
+	// phpcs:ignore
+	$wpdb->query( "DROP TABLE IF EXISTS $table_name" );
 }
