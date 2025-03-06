@@ -3,7 +3,7 @@ Contributors: webzunft
 Tags: credits, captions, copyrights, attributions, image sources
 Requires at least: 6.0
 Tested up to: 6.7
-Stable tag: 2.29.1
+Stable tag: 3.0.0
 Requires PHP: 7.4
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -152,6 +152,21 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 1. Manage image usage licenses
 
 == Changelog ==
+
+= 3.0.0 =
+
+3.0 rewrites a lot of classes mainly to split features into modules. Developers who used any classes and methods directly should test their code.
+
+- Feature: You can now switch off modules you don’t need (Image Sources, Unused Images)
+- Feature: (Pro) Run the [full-content indexer](https://imagesourcecontrol.com/documentation/#unused-images) to identify all images in the content. This improves compatibility with page builders and plugins that add images to the content dynamically and is useful for either Image Sources and Unused Images
+- Feature: (Pro) New column with the image source preview to the Media Library list view
+- Feature: New filter to list only images without sources in the Media Library list view for quickly adding missing images
+- Feature: Added support for AVIF files
+- Improvement: The list of images without sources now ignores images that have the standard source set
+- Improvement: (Pro) Show the image path in the list of Unused Images
+- Fix: Prevented a JavaScript console error in the list view
+- Fix: Pages using the Global List shortcode were not counted in the page index stats
+- Dev: Deprecated `ISC_Class`
 
 = 2.29.1 =
 
