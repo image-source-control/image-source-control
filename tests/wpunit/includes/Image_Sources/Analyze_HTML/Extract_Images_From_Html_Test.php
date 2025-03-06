@@ -1,6 +1,6 @@
 <?php
 
-namespace ISC\Tests\WPUnit\Model;
+namespace ISC\Tests\WPUnit\Includes\Image_Sources\Analyze_HTML;
 
 use ISC\Image_Sources\Analyze_HTML;
 use ISC\Tests\WPUnit\WPTestCase;
