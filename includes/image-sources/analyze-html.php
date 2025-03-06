@@ -167,7 +167,7 @@ class Analyze_HTML {
 		// merge matches from both conditions and remove empty ones
 		$urls = array_filter( array_merge( $matches[1], $matches[6] ) );
 		// remove duplicate URLs
-		return array_unique( $urls );
+		return array_values( array_unique( $urls ) );
 	}
 
 	/**
@@ -196,15 +196,18 @@ class Analyze_HTML {
 		 * - Followed by one or more non-whitespace characters (non-greedy)
 		 * - Ending with a dot and one of the allowed extensions (case-insensitive)
 		 * - Optionally followed by a query string
-		 * - The URL is expected to end before a closing quote or whitespace.
+		 * - The URL is expected to be wrapped in either:
+		 * -- single or double quotes
+		 * -- whitespace
+		 * -- brackets "()"
 		 */
-		$pattern = '#https?://\S+?\.(?:' . $types . ')(?:\?\S*)?(?=["\'\s])#i';
+		$pattern = '#https?://\S+?\.(?:' . $types . ')(?:\?\S*)?(?=["\'\s\)])#i';
 
 		preg_match_all( $pattern, $html, $matches );
 
 		if ( ! empty( $matches[0] ) ) {
 			// Remove duplicate URLs.
-			$urls = array_unique( $matches[0] );
+			return array_values( array_unique( $matches[0] ) );
 		}
 
 		return $urls;
