@@ -239,6 +239,10 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 
 == Upgrade Notice ==
 
+= 3.0.0 =
+
+3.0 rewrites a lot of classes mainly to split features into modules. Developers who used any classes and methods directly should test their code.
+
 = 2.29.1 =
 
 Security: Limit the pretext for the caption preview in the backend to text only to prevent XSS attacks with manipulated links that could be executed by admin users
