@@ -5,7 +5,7 @@ namespace ISC;
 /**
  * Admin Utils
  */
-trait Admin_Utils {
+class Admin_Utils {
 	/**
 	 * Get the ISC pages
 	 *

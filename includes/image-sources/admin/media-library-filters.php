@@ -2,7 +2,7 @@
 
 namespace ISC\Image_Sources;
 
-use ISC\Admin_Utils;
+use \ISC\Admin_Utils;
 
 /**
  * Handle filters in the Media Library
@@ -136,7 +136,7 @@ class Admin_Media_Library_Filters {
 			// add pro link
 			if ( ! \ISC\Plugin::is_pro() ) {
 				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-				echo '<p>' . \ISC\Admin_Utils::get_pro_link( 'media-library-missing-image-sources-column-notice' ) . '</p>';
+				echo '<p>' . Admin_Utils::get_pro_link( 'media-library-missing-image-sources-column-notice' ) . '</p>';
 			}
 			echo '</div>';
 		}

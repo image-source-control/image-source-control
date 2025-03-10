@@ -3,13 +3,13 @@
 namespace ISC\Image_Sources;
 
 use ISC\Plugin;
+use \ISC\Admin_Utils;
 
 /**
  * Add fields for the image sources to the backend
  */
 class Admin_Fields {
 	use \ISC\Options;
-	use \ISC\Admin_Utils;
 
 	/**
 	 * Constructor
@@ -56,7 +56,7 @@ class Admin_Fields {
 		if ( ! Plugin::is_pro() ) {
 			$form_fields['isc_image_source_pro']['label'] = '';
 			$form_fields['isc_image_source_pro']['input'] = 'html';
-			$form_fields['isc_image_source_pro']['html']  = self::get_pro_link( 'attachment-edit' );
+			$form_fields['isc_image_source_pro']['html']  = Admin_Utils::get_pro_link( 'attachment-edit' );
 		}
 
 		// add input field for source
@@ -110,7 +110,7 @@ class Admin_Fields {
 		$form_fields['isc_image_usage']['label'] = __( 'Appearances', 'image-source-control-isc' );
 		$form_fields['isc_image_usage']['html']  = __( 'Where is this file used?', 'image-source-control-isc' );
 		// add pro link
-		$form_fields['isc_image_usage']['html'] .= ' ' . self::get_pro_link( 'media-library-usage' );
+		$form_fields['isc_image_usage']['html'] .= ' ' . Admin_Utils::get_pro_link( 'media-library-usage' );
 
 		return apply_filters( 'isc_admin_attachment_form_fields', $form_fields, $post, $options );
 	}
