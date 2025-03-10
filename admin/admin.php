@@ -13,7 +13,7 @@ class Admin {
 	 */
 	public function __construct() {
 		// load more admin-related classes
-		add_action( 'plugins_loaded', [ $this, 'load_modules' ] );
+		add_action( 'init', [ $this, 'load_modules' ] );
 
 		// ISC page header
 		add_action( 'admin_notices', [ $this, 'branded_admin_header' ] );
