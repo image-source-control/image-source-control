@@ -3,7 +3,7 @@ Contributors: webzunft
 Tags: credits, captions, copyrights, attributions, image sources
 Requires at least: 6.0
 Tested up to: 6.7
-Stable tag: 3.1.1
+Stable tag: 3.1.2
 Requires PHP: 7.4
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -152,6 +152,10 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 1. Manage image usage licenses
 
 == Changelog ==
+
+= 3.1.2 =
+
+- Fix: Indexer not loading due to changed screen ID
 
 = 3.1.1 =
 
