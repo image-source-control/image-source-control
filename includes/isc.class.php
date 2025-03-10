@@ -111,7 +111,7 @@ class ISC_Class {
 		public function default_options() {
 			_deprecated_function( __METHOD__, '3.0.0', 'ISC\Options::default_options' );
 
-			return ISC\Options::default_options();
+			return ISC\Plugin::default_options();
 		}
 
 		/**

@@ -2,12 +2,13 @@
 
 namespace ISC\Admin;
 
-use ISC\Admin_Utils;
+use \ISC\Admin_Utils;
 
 /**
  * Add general admin scripts
  */
 class Admin_Scripts {
+
 	/**
 	 * Constructor
 	 */

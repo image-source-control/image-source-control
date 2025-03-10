@@ -6,6 +6,8 @@ namespace ISC;
  * Plugin class
  */
 class Plugin {
+	use Options;
+
 	/**
 	 * Check if this is the pro version
 	 *
@@ -16,15 +18,6 @@ class Plugin {
 	}
 
 	/**
-	 * Returns isc_options if it exists, returns the default options otherwise.
-	 *
-	 * @return array
-	 */
-	public static function get_options() {
-		return Options::get_options();
-	}
-
-	/**
 	 * Return true if the mentioned module is enabled
 	 *
 	 * @param string $module module name.
@@ -32,7 +25,7 @@ class Plugin {
 	 * @return bool
 	 */
 	public static function is_module_enabled( string $module ) {
-		$options = Options::get_options();
+		$options = self::get_options();
 
 		// all modules are enabled by default; i.e., when the option is not set
 		if ( ! isset( $options['modules'] ) ) {

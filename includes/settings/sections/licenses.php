@@ -35,7 +35,7 @@ class Licenses extends Settings\Section {
 		// fall back to default if field is empty
 		if ( empty( $options['licences'] ) ) {
 			// retrieve default options
-			$default = \ISC\Options::default_options();
+			$default = \ISC\Plugin::default_options();
 			if ( ! empty( $default['licences'] ) ) {
 				$options['licences'] = $default['licences'];
 			}
