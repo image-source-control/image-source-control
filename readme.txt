@@ -3,7 +3,7 @@ Contributors: webzunft
 Tags: credits, captions, copyrights, attributions, image sources
 Requires at least: 6.0
 Tested up to: 6.7
-Stable tag: 3.1.0
+Stable tag: 3.1.1
 Requires PHP: 7.4
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -153,6 +153,10 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 
 == Changelog ==
 
+= 3.1.1 =
+
+- Fix: PHP notices for traits in PHP 8.1
+
 = 3.1.0 =
 
 - Improvement: (Pro) Captions are now working by default for image URLs stored outside the `src` attribute, which is often the case when using lazy loading.
@@ -187,76 +191,8 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 - Dev: hardened code against the_content being set to `null` by other plugins
 - Dev: various code style improvements
 
-= 2.28.2 =
-
-- Fix: (Pro) prevent the caption overlay to always show when it is chosen to show for all images while the main option is disabled
-
-= 2.28.1 =
-
-- Security: admins could execute JavaScript in a manipulated URL in the backend
-
-= 2.28.0 =
-
-- Feature: support for WPML to [translate image sources and plugin options](https://imagesourcecontrol.com/blog/translating-image-captions-with-wpml/)
-- Improvement: (Pro) the Global List and Per-page list list non-standard images (e.g., `img` tags without `src` attribute) if they would also show an overlay
-- Dev: moved the code that looks for post-image relations into `ISC\Indexer`
-- Dev: use the `isc_image_posts_meta_limit` filter to limit the number of posts associated with a given image; default = 10
-
-= 2.27.0 =
-
-- Increased the required PHP version to 7.4
-- Feature: (Pro) show a list of image appearances and usages in the media library
-- Feature: (Pro) added an optional column with appearances in the List view of the media library
-- Dev: (Pro): use the `isc_pro_public_custom_attribute_processors` filter to process non-standard HTML containing image URLs
-- Dev: (Pro) show the image source if multiple HTML tags have the same `data-isc-images` attribute
-- Fix: a PHP notice was thrown for `img` tags without a `src` attribute
-
-= 2.26.0 =
-
-- Feature: (Pro) search for attachment IDs in the content when looking for [unused images](https://imagesourcecontrol.com/features/delete-unused-images/). Enable this deep check feature in the plugin settings.
-- Feature: (Pro) load the WordPress caption as the standard image source
-- Feature: (Pro) compatibility with the Lightbox Gallery plugin
-- Improvement: (Pro) highlight in the deep check for unused images, whether the image URL or the attachment ID was found
-- Improvement: enable ISC fields in the Image block of the GenerateBlocks plugin
-- Fix: the displayed number of individual unused image files was the same as unused images due to a wrong variable
-
-= 2.25.0 =
-
-- Improvement (Pro): ignore unused images in post revisions. irrelevant options and some post meta entries
-- Improvement: block option fields work properly with custom post types
-- Improvement: list the number of [unused images](https://imagesourcecontrol.com/features/delete-unused-images/) and image files separately
-- Improvement: ignore image URLs above 1000 characters since they could be encoded images and not file paths
-- Dev: made Global List thumbnail options translatable
-- Dev: set backend-only options to autoload=false
-
-= 2.24.1 =
-
-- Improvement (Pro): catch more background images added by WP Bakery
-- Fix: a wrong format of the `isc_post_images` post meta value could cause a PHP error
-
-= 2.24.0 =
-
-- Feature: (Pro) support for background images added by the WP Bakery page builder
-- Improvement: allow to remove individual entries from the image-posts and post-images indices on the Tools page
-- Improvement: include all page types in the post-image index list, not only posts
-- Dev: added the `isc_add_sources_to_content_ignore_post_images_index` filter to allow users to manually ignore the post-images index on all page views in case another plugin or page builder indexes the wrong content
-- Dev: speed up the query for images without sources
-- Dev: added debug log entries and log parameters
-
 == Upgrade Notice ==
 
 = 3.0.0 =
 
 3.0 rewrites a lot of classes mainly to split features into modules. Developers who used any classes and methods directly should test their code.
-
-= 2.29.1 =
-
-Security: Limit the pretext for the caption preview in the backend to text only to prevent XSS attacks with manipulated links that could be executed by admin users
-
-= 2.28.1 =
-
-Security: admins could execute JavaScript in a manipulated URL in the backend
-
-= 2.28.0 =
-
-Support for WPML. Show more images in the Global and Per-post List.
