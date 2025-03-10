@@ -3,7 +3,7 @@ Contributors: webzunft
 Tags: credits, captions, copyrights, attributions, image sources
 Requires at least: 6.0
 Tested up to: 6.7
-Stable tag: 3.0.0
+Stable tag: 3.1.0
 Requires PHP: 7.4
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -152,6 +152,12 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 1. Manage image usage licenses
 
 == Changelog ==
+
+= 3.1.0 =
+
+- Improvement: (Pro) Captions are now working by default for image URLs stored outside the `src` attribute, which is often the case when using lazy loading.
+- Improvement: (Pro) The indexer now works with cached frontends.
+- Fix: (Pro) The IPTC options were disabled when deactivating the Unused Images module
 
 = 3.0.0 =
 
