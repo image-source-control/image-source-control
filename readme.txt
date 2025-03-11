@@ -153,6 +153,10 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 
 == Changelog ==
 
+= untagged =
+
+- Fix: The filter “Images with sources” in the Media Library list view was not working correctly
+
 = 3.1.2 =
 
 - Fix: Indexer not loading due to changed screen ID
