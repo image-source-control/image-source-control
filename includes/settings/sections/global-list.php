@@ -161,7 +161,7 @@ class Global_List extends Settings\Section {
 
 		if ( ! empty( $input['thumbnail_in_list'] ) ) {
 			$output['thumbnail_in_list'] = true;
-			if ( in_array( $input['thumbnail_size'], $this->thumbnail_size, true ) ) {
+			if ( in_array( $input['thumbnail_size'], Image_Sources::get_thumbnail_sizes(), true ) ) {
 				$output['thumbnail_size'] = $input['thumbnail_size'];
 			}
 			if ( 'custom' === $input['thumbnail_size'] ) {

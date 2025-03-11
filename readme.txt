@@ -160,6 +160,7 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 = 3.1.2 =
 
 - Fix: Indexer not loading due to changed screen ID
+- Fix: PHP warning when saving the Global List settings in PHP 8.2
 
 = 3.1.1 =
 
