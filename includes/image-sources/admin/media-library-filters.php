@@ -55,8 +55,8 @@ class Admin_Media_Library_Filters {
 				[
 					'relation' => 'OR',
 					[
-						'key'     => 'isc_image_source_own',
-						'compare' => 'EXISTS',
+						'key'   => 'isc_image_source_own',
+						'value' => '1',
 					],
 					[
 						'relation' => 'AND',
