@@ -1,10 +1,10 @@
 <?php
-/**
- * Integration with the Block editor
- */
 
 use ISC\Plugin;
 
+/**
+ * Integration with the Block editor
+ */
 class ISC_Block_Options {
 	/**
 	 * Construct an instance of ISC_Block_Options
