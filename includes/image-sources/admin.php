@@ -2,14 +2,11 @@
 
 namespace ISC\Image_Sources;
 
-use \ISC\Admin_Utils;
-
 /**
  * Admin features for image sources
  */
 class Admin {
 	use \ISC\Options;
-	use Utils;
 
 	/**
 	 * Initiate admin functions

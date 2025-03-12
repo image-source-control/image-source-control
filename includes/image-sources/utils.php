@@ -5,7 +5,7 @@ namespace ISC\Image_Sources;
 /**
  * Image Sources Utils
  */
-trait Utils {
+class Utils {
 	/**
 	 * Transform the licenses from the options textfield into an array
 	 *
