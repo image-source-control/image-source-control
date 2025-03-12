@@ -3,7 +3,7 @@ Contributors: webzunft
 Tags: credits, captions, copyrights, attributions, image sources
 Requires at least: 6.0
 Tested up to: 6.7
-Stable tag: 3.1.2
+Stable tag: 3.1.3
 Requires PHP: 7.4
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -153,9 +153,11 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 
 == Changelog ==
 
-= untagged =
+= 3.1.3 =
 
 - Fix: The filter “Images with sources” in the Media Library list view was not working correctly
+- Fix: early loaded text domains caused a PHP warning
+- Fix: A missed trait caused a warning in PHP 8.2
 
 = 3.1.2 =
 
