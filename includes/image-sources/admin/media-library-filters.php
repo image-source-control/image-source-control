@@ -118,7 +118,7 @@ class Admin_Media_Library_Filters {
 		$option         = "manage{$screen->id}columnshidden";
 		$hidden_columns = get_user_option( $option, $user->ID );
 
-		return ! in_array( 'isc_fields', $hidden_columns, true );
+		return ! in_array( 'isc_fields', is_array( $hidden_columns ) ? $hidden_columns : [], true );
 	}
 
 	/**
