@@ -10,34 +10,6 @@ use ISC_Model;
  */
 class Image_Sources {
 	/**
-	 * Define default meta fields
-	 *
-	 * @var array option fields.
-	 */
-	protected $fields = [
-		'image_source'     => [
-			'id'      => 'isc_image_source',
-			'default' => '',
-		],
-		'image_source_url' => [
-			'id'      => 'isc_image_source_url',
-			'default' => '',
-		],
-		'image_source_own' => [
-			'id'      => 'isc_image_source_own',
-			'default' => '',
-		],
-		'image_posts'      => [
-			'id'      => 'isc_image_posts',
-			'default' => [],
-		],
-		'image_licence'    => [
-			'id'      => 'isc_image_licence',
-			'default' => '',
-		],
-	];
-
-	/**
 	 * Allowed image file types/extensions
 	 *
 	 * @var array allowed image extensions.
