@@ -5,13 +5,13 @@ namespace ISC\Image_Sources;
 /**
  * Admin features for image sources
  */
-class Admin {
-	use \ISC\Options;
-
+class Admin extends Image_Sources {
 	/**
 	 * Initiate admin functions
 	 */
 	public function __construct() {
+		parent::__construct();
+
 		// load components
 		new Image_Sources_Admin_Scripts();
 		new Admin_Menu();
