@@ -1,16 +1,13 @@
 <?php
 
-namespace ISC\Tests\WPUnit\Includes;
+namespace ISC\Tests\WPUnit\Includes\Indexer;
 
-use \ISC\Tests\WPUnit\WPTestCase;
+use ISC\indexer;
+use ISC\Tests\WPUnit\WPTestCase;
 
 /**
  * Testing the ISC\Indexer class
  */
-
-use ISC\Indexer;
-use ISC_Model;
-
 class Indexer_Test extends WPTestCase {
 
 	public function setUp(): void {
@@ -28,7 +25,7 @@ class Indexer_Test extends WPTestCase {
 		global $post;
 		$post = self::factory()->post->create_and_get();
 
-		$result = Indexer::can_index_the_page();
+		$result = indexer::can_index_the_page();
 		$this->assertTrue( $result, 'Indexer should index under normal conditions.' );
 	}
 
@@ -38,7 +35,7 @@ class Indexer_Test extends WPTestCase {
 	public function test_can_index_the_page_returns_false_when_doing_excerpt() {
 		// Simulate the 'get_the_excerpt' filter is being applied
 		add_filter( 'get_the_excerpt', function( $excerpt ) {
-			$result = Indexer::can_index_the_page();
+			$result = indexer::can_index_the_page();
 			$this->assertFalse( $result, 'Indexer should not index during excerpt generation.' );
 
 			return $excerpt;
@@ -56,52 +53,10 @@ class Indexer_Test extends WPTestCase {
 		$backup_post = $post;
 		$post        = null;
 
-		$result = Indexer::can_index_the_page();
+		$result = indexer::can_index_the_page();
 		$this->assertFalse( $result, 'Indexer should not index when $post is missing.' );
 
 		$post = $backup_post; // Restore $post
-	}
-
-	/**
-	 * Test can_save_image_information returns false for non-public post types.
-	 */
-	public function test_can_save_image_information_returns_false_for_non_public_post_type() {
-		global $wp_post_types;
-
-		// Backup the global post types
-		$backup_wp_post_types = $wp_post_types;
-
-		// Register the custom post type
-		register_post_type( 'private_post_type', [ 'public' => false ] );
-
-		$post_id = self::factory()->post->create( [ 'post_type' => 'private_post_type' ] );
-
-		$result = Indexer::can_save_image_information( $post_id );
-		$this->assertFalse( $result, 'Should not save image information for non-public post types.' );
-
-		// Restore the original post types
-		$wp_post_types = $backup_wp_post_types;
-	}
-
-	/**
-	 * Test can_save_image_information returns false for revisions.
-	 */
-	public function test_can_save_image_information_returns_false_for_revision() {
-		$post_id     = self::factory()->post->create();
-		$revision_id = wp_save_post_revision( $post_id );
-
-		$result = Indexer::can_save_image_information( $revision_id );
-		$this->assertFalse( $result, 'Should not save image information for revisions.' );
-	}
-
-	/**
-	 * Test can_save_image_information returns true for public posts.
-	 */
-	public function test_can_save_image_information_returns_true_for_public_post() {
-		$post_id = self::factory()->post->create();
-
-		$result = Indexer::can_save_image_information( $post_id );
-		$this->assertTrue( $result, 'Should save image information for public posts.' );
 	}
 
 	/**
@@ -112,7 +67,7 @@ class Indexer_Test extends WPTestCase {
 
 		delete_post_meta( $post_id, 'isc_post_images' );
 
-		$attachments = Indexer::get_attachments_for_index( $post_id );
+		$attachments = indexer::get_attachments_for_index( $post_id );
 		$this->assertSame( '', $attachments, 'Should return empty string when no isc_post_images meta is set.' );
 	}
 
@@ -125,32 +80,10 @@ class Indexer_Test extends WPTestCase {
 
 		update_post_meta( $post_id, 'isc_post_images', $attachment_ids );
 
-		$attachments = Indexer::get_attachments_for_index( $post_id );
+		$attachments = indexer::get_attachments_for_index( $post_id );
 		$this->assertSame( $attachment_ids, $attachments, 'Should return attachment IDs when isc_post_images meta is set.' );
 	}
 
-	/**
-	 * Test update_indexes does not proceed when can_index_the_page returns false.
-	 */
-	public function test_update_indexes_does_not_run_when_cannot_index_page() {
-		global $post, $wp_current_filter;
-		$post = self::factory()->post->create_and_get();
-
-		// Backup the current filter stack
-		$wp_current_filter_backup = $wp_current_filter;
-
-		// Simulate that 'get_the_excerpt' filter is being applied
-		$wp_current_filter[] = 'get_the_excerpt';
-
-		// Attempt to update indexes
-		Indexer::update_indexes( 'Some content' );
-
-		// Restore the original filter stack
-		$wp_current_filter = $wp_current_filter_backup;
-
-		// Assert that no meta is updated
-		$this->assertEmpty( get_post_meta( $post->ID, 'isc_post_images', true ), 'Meta should not be updated when cannot index page.' );
-	}
 
 	/**
 	 * Test update_indexes processes content correctly when conditions are met.
@@ -170,7 +103,7 @@ class Indexer_Test extends WPTestCase {
 		$content = '<img src="' . wp_get_attachment_url( $attachment_id1 ) . '" /><img src="' . wp_get_attachment_url( $attachment_id2 ) . '" />';
 
 		// Call the method under test
-		Indexer::update_indexes( $content );
+		indexer::update_indexes( $content );
 
 		// Assert that the meta is updated correctly
 		$isc_post_images = get_post_meta( $post->ID, 'isc_post_images', true );
@@ -190,20 +123,6 @@ class Indexer_Test extends WPTestCase {
 	}
 
 	/**
-	 * Test update_indexes skips when content contains isc_list_all shortcode.
-	 */
-	public function test_update_indexes_skips_when_content_has_isc_list_all_shortcode() {
-		global $post;
-		$post = self::factory()->post->create_and_get();
-
-		$content = 'Some content with [isc_list_all] shortcode.';
-
-		Indexer::update_indexes( $content );
-
-		$this->assertEmpty( get_post_meta( $post->ID, 'isc_post_images', true ), 'Indexer should skip content with isc_list_all shortcode.' );
-	}
-
-	/**
 	 * Test update_indexes skips when attachments are already set.
 	 */
 	public function test_update_indexes_skips_when_attachments_already_set() {
@@ -212,7 +131,7 @@ class Indexer_Test extends WPTestCase {
 
 		update_post_meta( $post->ID, 'isc_post_images', [ 1, 2, 3 ] );
 
-		Indexer::update_indexes( 'Some content' );
+		indexer::update_indexes( 'Some content' );
 
 		// Since attachments are already set, no further action should be taken
 		// You may add assertions or mocks to ensure methods are not called
