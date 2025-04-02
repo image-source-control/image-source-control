@@ -2,6 +2,7 @@
 
 namespace ISC;
 
+use ISC\Image_Sources\Post_Meta;
 use ISC_Log, ISC_Model;
 
 /**
@@ -10,9 +11,10 @@ use ISC_Log, ISC_Model;
 class Indexer {
 
 	/**
-	 * Handle index updates
+	 * Handle index updates on frontend visit after a post save.
+	 * Compares pre-save state with current render and updates indexes.
 	 *
-	 * @param string $content content of the target post.
+	 * @param string $content Rendered content of the target post.
 	 *
 	 * @return void
 	 */
@@ -26,8 +28,13 @@ class Indexer {
 
 		// Skip indexing if this is a page with a Global list.
 		if ( has_shortcode( $content, '[isc_list_all]' ) || false !== strpos( $content, 'isc_all_image_list_box' ) ) {
-			// an empty isc_post_images meta value is used to indicate that the post was already indexed
-			ISC_Model::update_post_images_meta( $post->ID, [] );
+			// Ensure no temporary meta is left behind if user adds shortcode later.
+			Post_Meta::cleanup_after_reindex( $post->ID ); // Use the cleanup method
+			// An empty isc_post_images meta value indicates the post was indexed (or intentionally skipped).
+			if ( get_post_meta( $post->ID, Post_Meta::POST_IMAGE_META_KEY, true ) === '' ) {
+				Post_Meta::update_post_image_index( $post->ID, [] );
+			}
+			ISC_Log::log( sprintf( 'Exiting update_indexes for post %d: Global list page.', $post->ID ) );
 			return;
 		}
 
@@ -49,41 +56,88 @@ class Indexer {
 			 * the array is empty if no images were found in the past. This prevents re-indexing as well
 			 */
 			if ( $attachments !== '' ) {
+				// Remove the temporary data since we are not updating the index
+				Post_Meta::cleanup_after_reindex( $post->ID );
 				return;
 			}
 		}
 
-		ISC_Log::log( 'start updating index for post ID ' . $post->ID );
+		ISC_Log::log( 'Start updating index for post ID ' . $post->ID );
 
-		// check if we can even save the image information
-		// abort on archive pages since some output from other plugins might be disabled here
-		if (
-			is_archive()
-			|| is_home()
-			|| ! self::can_save_image_information( $post->ID ) ) {
+		// Check if we can even save the image information
+		// Abort on archive pages, home, or unsupported post types
+		if ( is_archive() || is_home() || ! self::can_save_image_information( $post->ID ) ) {
+			ISC_Log::log( sprintf( 'Exiting update_indexes for post %d: Cannot save image information (archive/home/post type).', $post->ID ) );
+			// Clean up temporary meta if we abort here
+			Post_Meta::cleanup_after_reindex( $post->ID );
 			return;
 		}
 
-		$image_ids = ISC_Model::filter_image_ids( $content );
+		// 1. Get the state before the last update(s).
+		$old_indexed_data = Post_Meta::get_pre_update_state( $post->ID );
 
-		ISC_Log::log( 'updating index with image IDs ' . implode( ', ', $image_ids ) );
+		// 2. Get the image IDs from the currently rendered content.
+		// Call filter_image_ids only ONCE here.
+		$new_rendered_ids = ISC_Model::filter_image_ids( $content );
 
-		// retrieve images added to a post or page and save all information as a post meta value for the post
-		ISC_Model::update_post_images_meta( $post->ID, $image_ids );
+		$thumb_id = get_post_thumbnail_id( $post->ID );
+		if ( ! empty( $thumb_id ) && ! isset( $new_rendered_ids[ $thumb_id ] ) ) {
+			// Add thumbnail to the list if it's not already there from content parsing.
+			// The value structure should match what filter_image_ids returns,
+			// though sync_image_post_associations only cares about the keys.
+			// The 'thumbnail' flag itself is added later in update_post_image_index.
+			$thumb_url = wp_get_attachment_url( $thumb_id );
+			if ( $thumb_url ) {
+				$new_rendered_ids[ $thumb_id ] = [ 'src' => $thumb_url ];
+				ISC_Log::log( sprintf( 'Added thumbnail ID %d to new_rendered_ids for post %d.', $thumb_id, $post->ID ) );
+			}
+		}
 
-		// add the post ID to the list of posts associated with a given image
-		ISC_Model::update_image_posts_meta( $post->ID, $image_ids );
+		// Allows developers to modify the list before synchronization.
+		$new_rendered_ids = apply_filters( 'isc_images_in_posts_simple', $new_rendered_ids, $post->ID );
+		if ( has_filter( 'isc_images_in_posts_simple' ) ) {
+			ISC_Log::log( sprintf( 'Post %d - new_rendered_ids after isc_images_in_posts_simple filter ran: %s', $post->ID, ! empty( $new_rendered_ids ) ? implode( ', ', array_keys( $new_rendered_ids ) ) : 'Empty' ) );
+		}
+
+		// Check if image IDs refer to a valid post type (default: 'attachment').
+		$valid_image_post_types = apply_filters( 'isc_valid_post_types', [ 'attachment' ] );
+		if ( ! empty( $new_rendered_ids ) ) { // Avoid errors if array is empty
+			foreach ( $new_rendered_ids as $_id => $_data ) {
+				// Ensure ID is numeric before checking post type
+				if ( ! is_numeric( $_id ) || $_id <= 0 ) {
+					// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_print_r
+					ISC_Log::log( sprintf( 'Removing invalid image ID %s from index for post %d.', print_r( $_id, true ), $post->ID ) );
+					unset( $new_rendered_ids[ $_id ] );
+					continue;
+				}
+				$post_type = get_post_type( (int) $_id );
+				if ( ! $post_type || ! in_array( $post_type, $valid_image_post_types, true ) ) {
+					ISC_Log::log( sprintf( 'Removing image ID %d (type: %s) due to invalid post type for post %d.', $_id, $post_type ? $post_type : 'unknown', $post->ID ) );
+					unset( $new_rendered_ids[ $_id ] );
+				}
+			}
+		}
+
+		// 3. Sync the image->post associations based on comparison.
+		// This handles adding/removing $post->ID from individual image's isc_image_posts meta.
+		Post_Meta::sync_image_post_associations( $post->ID, $old_indexed_data, $new_rendered_ids );
+
+		// 4. Update the main post->image index ('isc_post_images') with the current state.
+		// This saves the $new_rendered_ids to the post's meta.
+		Post_Meta::update_post_image_index( $post->ID, $new_rendered_ids );
+
+		// 5. Clean up the temporary meta key.
+		Post_Meta::cleanup_after_reindex( $post->ID );
 
 		/**
 		 * Triggered after updating the indexes.
 		 *
-		 * @param int $post->ID Post ID.
-		 * @param string $content Post content.
-		 * @param array $image_ids Image IDs found in the content.
+		 * @param int    $post_id          Post ID.
+		 * @param string $content          Post content.
+		 * @param array  $new_rendered_ids Image IDs found in the content ([id => data]).
 		 */
-		do_action( 'isc_after_update_indexes', $post->ID, $content, $image_ids );
+		do_action( 'isc_after_update_indexes', $post->ID, $content, $new_rendered_ids );
 	}
-
 
 	/**
 	 * Return the attachments array used for indexing image-post relations
@@ -172,6 +226,10 @@ class Indexer {
 	 */
 	public static function is_index_bot(): bool {
 		$user_agent = isset( $_SERVER['HTTP_USER_AGENT'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ) : '';
-		return strpos( $user_agent, 'ISC Index Bot' ) !== false;
+		// Check the user agent first
+		$is_bot = strpos( $user_agent, 'ISC Index Bot' ) !== false;
+
+		// Apply a filter to allow overriding the result, passing the original check result
+		return apply_filters( 'isc_is_index_bot', $is_bot );
 	}
 }

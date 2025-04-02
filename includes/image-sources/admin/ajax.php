@@ -156,7 +156,7 @@ class Admin_Ajax {
 		}
 
 		$post_id = (int) $_POST['post_id'];
-		delete_post_meta( $post_id, 'isc_post_images' );
+		Post_Meta::clear_single_post_images_index( $post_id );
 
 		die( 'Post-Images index cleared' );
 	}

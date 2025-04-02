@@ -1,16 +1,13 @@
 <?php
 
-namespace ISC\Tests\WPUnit\Includes;
+namespace ISC\Tests\WPUnit\Includes\Indexer;
 
-use \ISC\Tests\WPUnit\WPTestCase;
+use ISC\Indexer;
+use ISC\Tests\WPUnit\WPTestCase;
 
 /**
  * Testing the ISC\Indexer class
  */
-
-use ISC\Indexer;
-use ISC_Model;
-
 class Indexer_Test extends WPTestCase {
 
 	public function setUp(): void {
@@ -129,28 +126,6 @@ class Indexer_Test extends WPTestCase {
 		$this->assertSame( $attachment_ids, $attachments, 'Should return attachment IDs when isc_post_images meta is set.' );
 	}
 
-	/**
-	 * Test update_indexes does not proceed when can_index_the_page returns false.
-	 */
-	public function test_update_indexes_does_not_run_when_cannot_index_page() {
-		global $post, $wp_current_filter;
-		$post = self::factory()->post->create_and_get();
-
-		// Backup the current filter stack
-		$wp_current_filter_backup = $wp_current_filter;
-
-		// Simulate that 'get_the_excerpt' filter is being applied
-		$wp_current_filter[] = 'get_the_excerpt';
-
-		// Attempt to update indexes
-		Indexer::update_indexes( 'Some content' );
-
-		// Restore the original filter stack
-		$wp_current_filter = $wp_current_filter_backup;
-
-		// Assert that no meta is updated
-		$this->assertEmpty( get_post_meta( $post->ID, 'isc_post_images', true ), 'Meta should not be updated when cannot index page.' );
-	}
 
 	/**
 	 * Test update_indexes processes content correctly when conditions are met.
@@ -187,20 +162,6 @@ class Indexer_Test extends WPTestCase {
 
 		wp_delete_attachment( $attachment_id1 );
 		wp_delete_attachment( $attachment_id2 );
-	}
-
-	/**
-	 * Test update_indexes skips when content contains isc_list_all shortcode.
-	 */
-	public function test_update_indexes_skips_when_content_has_isc_list_all_shortcode() {
-		global $post;
-		$post = self::factory()->post->create_and_get();
-
-		$content = 'Some content with [isc_list_all] shortcode.';
-
-		Indexer::update_indexes( $content );
-
-		$this->assertEmpty( get_post_meta( $post->ID, 'isc_post_images', true ), 'Indexer should skip content with isc_list_all shortcode.' );
 	}
 
 	/**

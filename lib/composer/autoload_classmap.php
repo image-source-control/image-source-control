@@ -23,6 +23,7 @@ return array(
     'ISC\\Image_Sources\\Analyze_HTML' => $baseDir . '/includes/image-sources/analyze-html.php',
     'ISC\\Image_Sources\\Image_Sources' => $baseDir . '/includes/image-sources/image-sources.php',
     'ISC\\Image_Sources\\Image_Sources_Admin_Scripts' => $baseDir . '/includes/image-sources/admin/scripts.php',
+    'ISC\\Image_Sources\\Post_Meta' => $baseDir . '/includes/image-sources/post-meta.php',
     'ISC\\Image_Sources\\Renderer' => $baseDir . '/includes/image-sources/renderer.php',
     'ISC\\Image_Sources\\Renderer\\Caption' => $baseDir . '/includes/image-sources/renderer/caption.php',
     'ISC\\Image_Sources\\Renderer\\Image_Source_String' => $baseDir . '/includes/image-sources/renderer/image-source-string.php',
