@@ -1,11 +1,14 @@
 <?php
 
-namespace ISC\Tests\WPUnit\Model;
+namespace ISC\Tests\WPUnit\Includes\Indexer\Post_Meta;
 
-use \ISC\Tests\WPUnit\WPTestCase;
-use ISC_Model;
+use ISC\Image_Sources\Post_Meta;
+use ISC\Tests\WPUnit\WPTestCase;
 
-class Update_Post_Images_Meta_Test extends WPTestCase {
+/**
+ * Test ISC\Image_Sources\Post_Meta:update_post_images_meta method.
+ */
+class Post_Meta_Update_Post_Images_Meta_Test extends WPTestCase {
 
 	public function setUp(): void {
 		parent::setUp();
@@ -39,7 +42,7 @@ class Update_Post_Images_Meta_Test extends WPTestCase {
 		];
 
 		// Call the method under test
-		ISC_Model::update_post_images_meta( $post_id, $image_ids );
+		Post_Meta::update_post_images_meta( $post_id, $image_ids );
 
 		// Verify that the post meta 'isc_post_images' is updated correctly
 		$isc_post_images = get_post_meta( $post_id, 'isc_post_images', true );
@@ -88,7 +91,7 @@ class Update_Post_Images_Meta_Test extends WPTestCase {
 		}, 10, 2 );
 
 		// Call the method under test
-		ISC_Model::update_post_images_meta( $post_id, $image_ids );
+		Post_Meta::update_post_images_meta( $post_id, $image_ids );
 
 		// Remove the filter to avoid affecting other tests
 		remove_all_filters( 'isc_images_in_posts' );
@@ -124,7 +127,7 @@ class Update_Post_Images_Meta_Test extends WPTestCase {
 		$image_ids = [];
 
 		// Call the method under test
-		ISC_Model::update_post_images_meta( $post_id, $image_ids );
+		Post_Meta::update_post_images_meta( $post_id, $image_ids );
 
 		// Verify that the post meta 'isc_post_images' includes the thumbnail
 		$isc_post_images = get_post_meta( $post_id, 'isc_post_images', true );
@@ -172,7 +175,7 @@ class Update_Post_Images_Meta_Test extends WPTestCase {
 		}, 10, 3 );
 
 		// Call the method under test
-		ISC_Model::update_post_images_meta( $post_id, $image_ids );
+		Post_Meta::update_post_images_meta( $post_id, $image_ids );
 
 		// Remove the action to avoid affecting other tests
 		remove_all_actions( 'isc_update_post_meta' );
