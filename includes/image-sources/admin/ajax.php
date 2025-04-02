@@ -2,6 +2,8 @@
 
 namespace ISC\Image_Sources;
 
+use ISC\Image_Sources\Post_Meta\Image_Posts_Meta;
+use ISC\Image_Sources\Post_Meta\Post_Images_Meta;
 use ISC_Model;
 
 /**
@@ -157,7 +159,7 @@ class Admin_Ajax {
 		}
 
 		$image_id = (int) $_POST['image_id'];
-		delete_post_meta( $image_id, 'isc_image_posts' );
+		Image_Posts_Meta::delete( $image_id );
 
 		die( 'Image-Posts index cleared' );
 	}
@@ -177,7 +179,7 @@ class Admin_Ajax {
 		}
 
 		$post_id = (int) $_POST['post_id'];
-		delete_post_meta( $post_id, 'isc_post_images' );
+		Post_Images_Meta::delete( $post_id );
 
 		die( 'Post-Images index cleared' );
 	}

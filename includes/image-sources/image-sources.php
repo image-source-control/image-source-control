@@ -100,15 +100,10 @@ class Image_Sources {
 		add_action( 'deleted_post', [ 'ISC_Model', 'update_missing_sources_transient' ] );
 
 		/**
-		 * Clear post-image index whenever the content of a single post is updated
+		 * Clear post-image index whenever the content of a single post is updated and move the content to a temporary post meta
 		 * this could force reindexing the post after adding or removing image sources
 		 */
-		add_action( 'wp_insert_post', [ 'ISC_Model', 'clear_single_post_images_index' ] );
-
-		/**
-		 * Fire when a post or page was updated
-		 */
-		add_action( 'post_updated', [ 'ISC_Model', 'update_image_post_meta' ], 10, 3 );
+		add_action( 'wp_insert_post', [ '\ISC\indexer', 'prepare_for_reindex' ] );
 	}
 
 	/**
