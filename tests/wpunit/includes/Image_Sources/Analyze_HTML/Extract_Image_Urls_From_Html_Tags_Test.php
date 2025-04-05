@@ -95,13 +95,24 @@ class Extract_Image_Urls_From_Html_Tags_Test extends WPTestCase {
 	}
 
 	/**
-	 * Test with image URLs in srcset attribute
+	 * Test with image URLs in src and srcset attribute
 	 */
-	public function test_srcset_attribute() {
+	public function test_src_and_srcset_attribute() {
 		$html     = '<img src="https://example.com/image.jpg" srcset="https://example.com/image-small.jpg 300w, https://example.com/image-large.jpg 1200w">';
 		$expected = [ 'https://example.com/image.jpg' ];
 		$result   = Analyze_HTML::extract_image_urls_from_html_tags( $html );
-		$this->assertEquals( $expected, $result, 'extract_image_urls_from_html_tags should not extract URLs from srcset attribute' );
+		$this->assertEquals( $expected, $result, 'extract_image_urls_from_html_tags should not extract URLs from srcset attribute if they follow a valid src attribute' );
+	}
+
+	/**
+	 * Test with image URLs in srcset attribute
+	 * Return the first URL
+	 */
+	public function test_srcset_attribute() {
+		$html     = '<img srcset="https://example.com/image-small.jpg 300w, https://example.com/image-large.jpg 1200w">';
+		$expected = [ 'https://example.com/image-small.jpg' ];
+		$result   = Analyze_HTML::extract_image_urls_from_html_tags( $html );
+		$this->assertEquals( $expected, $result, 'extract_image_urls_from_html_tags should extract the first URL from srcset attribute' );
 	}
 
 	/**
@@ -209,5 +220,49 @@ class Extract_Image_Urls_From_Html_Tags_Test extends WPTestCase {
 		$expected = ['data:base'];
 		$result   = Analyze_HTML::extract_image_urls_from_html_tags( $html );
 		$this->assertEquals( $expected, $result, 'extract_image_urls_from_html_tags should not extract URLs with non-image extensions' );
+	}
+
+	/**
+	 * Test extracting image URLs from a nested HTML structure with various attributes.
+	 *
+	 * This tests a structure like: div[data-thumb] > a[href] > img[src][data-src][data-large_image]
+	 * It expects to find URLs from:
+	 * - The `src` attribute of the `img` tag.
+	 * - Attributes outside the `img` tag (like `data-thumb` and `href`) if their value ends with an allowed extension.
+	 * It should *not* find URLs from other data attributes within the `img` tag (`data-src`, `data-large_image`)
+	 * when the `src` attribute is present, due to the regex matching behavior.
+	 */
+	public function test_extract_urls_from_nested_html_with_various_attributes() {
+		$html = '
+        <div 
+          data-thumb="http://example.com/thumb.png" 
+          class="image-container" 
+        >
+          <a href="http://example.com/link-to-large.png">
+            <img 
+              src="http://example.com/main-image.png" 
+              data-src="http://example.com/data-src-image.png"
+              data-large_image="http://example.com/large-image.png"
+              alt="Test Image" 
+            />
+          </a>
+        </div>
+        ';
+		// URLs expected based on the function's actual behavior:
+		// - href found by general URL pattern (ends in .png)
+		// - src found by specific img tag pattern
+		// - data-thumb found by general URL pattern (ends in .png)
+		$expected = [
+			'http://example.com/link-to-large.png', // from href
+			'http://example.com/main-image.png',    // from src
+			'http://example.com/thumb.png',         // from data-thumb
+		];
+		$result = Analyze_HTML::extract_image_urls_from_html_tags( $html );
+
+		// Sort arrays to ensure order doesn't affect comparison as extraction order might vary
+		sort( $expected );
+		sort( $result );
+
+		$this->assertEquals( $expected, $result, 'Failed to extract expected URLs from nested HTML with various attributes' );
 	}
 }
