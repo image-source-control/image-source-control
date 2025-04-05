@@ -154,4 +154,101 @@ class Get_Image_By_Url_Test extends WPTestCase {
 		$result = ISC_Model::get_image_by_url( 'https://example.com/wp-content/uploads/DALL·E.png' );
 		$this->assertEquals( $image_id, $result );
 	}
+
+	/**
+	 * Test cropped image with usage of a backup resized version
+	 * When using the WordPress image editor to crop an image, the cropped version is overriding the original image.
+	 * E.g.,
+	 * - original image: https://example.com/wp-content/uploads/image.png
+	 * - cropped image: https://example.com/wp-content/uploads/image-e123123123123.png
+	 * The original resized versions are still available on the server to restore them.
+	 * E.g.,
+	 * - original resized version: https://example.com/wp-content/uploads/image-300x200.jpg
+	 * While the newly cropped version also has resized versions:
+	 * In the database, these old sizes are stored in _wp_attachment_backup_sizes
+	 * E.g.,
+	 * - cropped resized version: https://example.com/wp-content/uploads/image-e123123123123-300x200.jpg
+	 *
+	 * The old resized versions can theoretically still be used in the content.
+	 * The challenge now is to trace them back to the cropped image.
+	 *
+	 * Luckily, the wp_posts.guid value still contains the URL of the original image instead of the cropped one.
+	 *
+	 * get_image_by_url() should be able to find the image ID also for the old resized versions.
+	 */
+	public function test_find_image_id_for_old_resized_images_after_cropping() {
+		// if guid would be image-to-be-cropped-e1743778144168.png, then this test would fail, but WordPress keeps the original URL
+		$image_id = wp_insert_attachment( [
+			                                  'guid'      => 'https://example.com/wp-content/uploads/image-to-be-cropped.png',
+			                                  'post_type' => 'attachment',
+		                                  ] );
+
+		// add a _wp_attached_file meta value with the cropped version
+		update_post_meta( $image_id, '_wp_attached_file', 'image-to-be-cropped-e1743778144168.png' );
+
+		// shouldn’t be relevant, but good to see the difference
+		update_post_meta( $image_id, '_wp_attachment_metadata', [
+			'width'    => 1190,
+			'height'   => 535,
+			'file'     => '2025/03/image-to-be-cropped-e1743778144168.png',
+			'filesize' => 856338,
+			'sizes'    => [
+				'medium' => [
+					'file'      => 'image-to-be-cropped-e1743778144168-300x135.png',
+					'width'     => 300,
+					'height'    => 135,
+					'mime-type' => 'image/png',
+					'filesize'  => 82755,
+				],
+				'large' => [
+					'file'      => 'image-to-be-cropped-e1743778144168-1024x460.png',
+					'width'     => 1024,
+					'height'    => 460,
+					'mime-type' => 'image/png',
+					'filesize'  => 642430,
+				],
+				'thumbnail' => [
+					'file'      => 'image-to-be-cropped-e1743778144168-150x150.png',
+					'width'     => 150,
+					'height'    => 150,
+					'mime-type' => 'image/png',
+					'filesize'  => 52461,
+				],
+			],
+		] );
+
+		// add a _wp_attachment_backup_sizes meta value
+		update_post_meta( $image_id, '_wp_attachment_backup_sizes', [
+			'full-orig' => [
+				'width'    => 1344,
+				'height'   => 768,
+				'filesize' => 1105673,
+				'file'     => 'image-to-be-cropped.png',
+			],
+			'thumbnail-orig' => [
+				'file'      => 'image-to-be-cropped-150x150.png',
+				'width'     => 150,
+				'height'    => 150,
+				'mime-type' => 'image/png',
+				'filesize'  => 49640,
+			],
+			'medium-orig' => [
+				'file'      => 'image-to-be-cropped-300x171.png',
+				'width'     => 300,
+				'height'    => 171,
+				'mime-type' => 'image/png',
+				'filesize'  => 97343,
+			],
+			'large-orig' => [
+				'file'      => 'image-to-be-cropped-1024x585.png',
+				'width'     => 1024,
+				'height'    => 585,
+				'mime-type' => 'image/png',
+				'filesize'  => 770043,
+			],
+		] );
+
+		$result = ISC_Model::get_image_by_url( 'https://example.com/wp-content/uploads/image-to-be-cropped-150x150.png' );
+		$this->assertEquals( $image_id, $result, 'Image ID should be found for the old resized version' );
+	}
 }

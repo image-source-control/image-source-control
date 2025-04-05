@@ -119,7 +119,15 @@ class Analyze_HTML {
 
 	/**
 	 * Extract image URLs from HTML.
-	 * One image URL per HTML tag will be found.
+	 * One image URL per HTML attribute will be found.
+	 *
+	 * Limitations:
+	 * - retrieves the first valid image URL from any HTML tag
+	 * - if an IMG tag has a SRC attribute with a valid image URL, all other tags with valid URLs are ignored
+	 * - technically, one could generate tags with different images from the Media Library, e.g., having a differently cut URL in a data-attribute
+	 *  that then shows dynamically using JavaScript
+	 *  this would cause one of the images not being listed with a source or a used image
+	 *  since I haven’t seen that in the wild, this case is deliberately ignored
 	 *
 	 * @param string $html Any HTML code.
 	 * @return array List of image URLs.
