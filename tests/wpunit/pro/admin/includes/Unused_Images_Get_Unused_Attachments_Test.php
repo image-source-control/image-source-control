@@ -3,12 +3,25 @@
 namespace ISC\Tests\WPUnit\Pro\Admin\Includes;
 
 use ISC\Pro\Unused_Images;
-use ISC\Tests\WPUnit\Includes\Unused_Images_Basic_Test;
+use ISC\Pro\Indexer\Index_Table;
+use ISC\Tests\WPUnit\WPTestCase;
 
 /**
  * Testing \ISC\Pro\Unused_Images::get_unused_attachments()
  */
-class Unused_Images_Get_Unused_Attachments_Test extends Unused_Images_Basic_Test {
+class Unused_Images_Get_Unused_Attachments_Test extends WPTestCase {
+
+	private array $attachment_ids = [];
+
+	/**
+	 * Set up the test environment.
+	 */
+	public function setUp(): void {
+		parent::setUp();
+
+		// Set up the attachments
+		$this->setUpAttachments();
+	}
 
 	/**
 	 * Set the images_only setting.
@@ -22,117 +35,177 @@ class Unused_Images_Get_Unused_Attachments_Test extends Unused_Images_Basic_Test
 	}
 
 	/**
-	 * Create an attachment with a specific mime type.
-	 *
-	 * @param string $mime
-	 * @return int
+	 * Set up a base set of attachments used across tests.
 	 */
-	private function createAttachmentWithMime( string $mime ): int {
-		$att_id = $this->factory->attachment->create( [
-			                                              'post_mime_type' => $mime,
-			                                              'post_type'      => 'attachment',
-		                                              ] );
-
-		$this->attachment_ids[] = $att_id;
-		return $att_id;
+	private function setUpAttachments(): void {
+		$this->attachment_ids[] = $this->createAttachmentWithMime( 'image/jpeg', 'Unused Image 1' );
+		$this->attachment_ids[] = $this->createAttachmentWithMime( 'image/jpeg', 'Unused Image 2' );
+		$this->attachment_ids[] = $this->createAttachmentWithMime( 'image/jpeg', 'Unused Image 3' );
 	}
 
 	/**
-	 * Test with the filter set to "unchecked"
+	 * Create an attachment with optional title and mime type.
+	 *
+	 * @param string $mime
+	 * @param string|null $title
+	 * @return int
+	 */
+	private function createAttachmentWithMime( string $mime, string $title = null ): int {
+		$args = [
+			'post_mime_type' => $mime,
+			'post_type'      => 'attachment',
+		];
+		if ( $title ) {
+			$args['post_title'] = $title;
+		}
+
+		return $this->factory->attachment->create( $args );
+	}
+
+	/**
+	 * Test that get_unused_attachments returns the expected number of attachments in the default state
+	 */
+	public function test_get_unused_attachments() {
+		$unused_attachments = Unused_Images::get_unused_attachments();
+		$this->assertCount( 3, $unused_attachments, 'Expected 3 unused attachments' );
+
+		foreach ( $this->attachment_ids as $attachment_id ) {
+			$this->assertContains( $attachment_id, array_map('intval', wp_list_pluck( $unused_attachments, 'ID')), 'Attachment ID not found in unused attachments' );
+		}
+	}
+
+	/**
+	 * Test that get_unused_attachments returns an empty array when no attachments are present
+	 */
+	public function test_image_used_as_featured_image_is_excluded() {
+		$this->assertCount( 3, Unused_Images::get_unused_attachments(), 'Expected 3 unused attachments' );
+
+		// add the first image as a featured image to a post
+		$post_id = $this->factory->post->create();
+		add_post_meta( $post_id, '_thumbnail_id', $this->attachment_ids[0] );
+
+		// check that the image is now excluded from the unused attachments
+		$ids = array_map( 'intval', wp_list_pluck( Unused_Images::get_unused_attachments(), 'ID' ) );
+		$this->assertCount( 2, $ids, 'Expected 2 unused attachments' );
+		$this->assertNotContains( $this->attachment_ids[0], $ids, 'Image used as featured image should be excluded');
+	}
+
+	/**
+	 * Test that get_unused_attachments returns the expected number of attachments when filtered for unchecked
 	 */
 	public function test_filter_unchecked() {
-		parent::setUpAttachments();
-
-		// get the attachments without a filter
 		$unused_attachments = Unused_Images::get_unused_attachments();
+		$this->assertCount( 3, $unused_attachments, 'Expected 3 attachments before adding isc_possible_usages' );
 
-		// check if the attachments are correct
-		$this->assertCount( 3, $unused_attachments );
-
-		// setting the post meta data means that the image was already checked
 		add_post_meta( $this->attachment_ids[0], 'isc_possible_usages', '', true );
 
-		$unused_attachments = Unused_Images::get_unused_attachments( [ 'filter' => 'unchecked' ] );
-
-		// check if the attachments are correct
-		$this->assertCount( 2, $unused_attachments );
+		$unchecked_attachments = Unused_Images::get_unused_attachments( [ 'filter' => 'unchecked' ] );
+		$this->assertCount( 2, $unchecked_attachments, 'Expected 2 unchecked attachments after marking one as checked' );
 
 		delete_post_meta( $this->attachment_ids[0], 'isc_possible_usages' );
 	}
 
 	/**
-	 * Test with the filter set to "unused"
+	 * Test that get_unused_attachments returns the expected number of attachments when filtered for unused
+	 * "unused" means that the image was checked and the isc_possible_usages post meta exists as an empty array
 	 */
 	public function test_filter_unused() {
-		parent::setUpAttachments();
-
-		// get the attachments without a filter
-		$unused_attachments = Unused_Images::get_unused_attachments();
-
-		// check if the attachments are correct
-		$this->assertCount( 3, $unused_attachments );
+		$unused_attachments = Unused_Images::get_unused_attachments( [ 'filter' => 'unused' ] );
+		$this->assertCount( 0, $unused_attachments, 'Expected no attachments as "unused" before adding isc_possible_usages' );
 
 		add_post_meta( $this->attachment_ids[0], 'isc_possible_usages', [], true );
 
-		$unused_attachments = Unused_Images::get_unused_attachments( [ 'filter' => 'unused' ] );
-
-		// only one attachment should match
-		$this->assertCount( 1, $unused_attachments );
+		$results = Unused_Images::get_unused_attachments( [ 'filter' => 'unused' ] );
+		$this->assertCount( 1, $results, 'Only 1 image should have a:0:{} usage and no other uses' );
 	}
 
 	/**
-	 * Test: when images_only is disabled, non-image attachments are included.
+	 * Test the index table
+	 *
+	 * @return void
+	 */
+	public function test_index_table() {
+		$unused_attachments = Unused_Images::get_unused_attachments();
+		$this->assertCount( 3, $unused_attachments, 'Expected 3 attachments before adding something to the index table' );
+
+		$index_table = new Index_Table();
+		$index_table->insert_or_update( 123, $this->attachment_ids[0], 'content' );
+		$index_table->insert_or_update( 123, $this->attachment_ids[1], 'content' );
+
+		$results = Unused_Images::get_unused_attachments();
+		$this->assertCount( 1, $results, 'Only 1 image is unused' );
+
+		// Iterate through the attachment IDs to check if they are in the array of unused attachments
+		$ids = array_map( 'intval', wp_list_pluck( Unused_Images::get_unused_attachments(), 'ID' ) );
+		$this->assertNotContains( $this->attachment_ids[0], $ids, 'Image 1 should be unused');
+		$this->assertNotContains( $this->attachment_ids[1], $ids, 'Image 2 should be unused');
+		$this->assertContains( $this->attachment_ids[2], $ids, 'Image 3 should be used');
+	}
+
+
+	/**
+	 * Test that get_unused_attachments returns the expected number of attachments, including PDFs, when images_only is not set
 	 */
 	public function test_images_only_disabled_includes_all_mime_types() {
-		$this->setImagesOnly( false );
+		$this->assertCount( 3, Unused_Images::get_unused_attachments(), '3 images are unused at this point' );
 
-		// Create one image and one non-image attachment
-		$image_id = $this->createAttachmentWithMime( 'image/png' );
 		$doc_id   = $this->createAttachmentWithMime( 'application/pdf' );
 
 		$results = Unused_Images::get_unused_attachments();
-		$ids     = wp_list_pluck( $results, 'ID' );
+		$ids = array_map( 'intval', wp_list_pluck( $results, 'ID') );
 
-		$this->assertContains( $image_id, $ids, 'Expected image to be in unused attachments' );
-		$this->assertContains( $doc_id, $ids, 'Expected document to be in unused attachments' );
+		$this->assertCount( 4, $results, '4 media files are unused at this point' );
+		$this->assertContains( $doc_id, $ids );
 	}
 
 	/**
-	 * Test: when images_only is enabled, non-image attachments are excluded.
+	 * Test that get_unused_attachments returns the expected number of attachments when images_only is enabled
 	 */
 	public function test_images_only_enabled_excludes_non_images() {
 		$this->setImagesOnly( true );
 
-		// Create one image and one non-image attachment
-		$image_id = $this->createAttachmentWithMime( 'image/jpeg' );
-		$doc_id   = $this->createAttachmentWithMime( 'application/pdf' );
+		$this->assertCount( 3, Unused_Images::get_unused_attachments(), '3 images are unused at this point' );
+
+		$image_id = $this->createAttachmentWithMime( 'image/webp' );
+		$doc_id = $this->createAttachmentWithMime( 'application/pdf' );
+
+		$this->assertCount( 4, Unused_Images::get_unused_attachments(), '4 images are unused at this point. Other types are ignored' );
 
 		$results = Unused_Images::get_unused_attachments();
-		$ids     = wp_list_pluck( $results, 'ID' );
+		$ids = array_map( 'intval', wp_list_pluck($results, 'ID') );
 
-		$this->assertContains( $image_id, $ids, 'Expected image to be in unused attachments' );
-		$this->assertNotContains( $doc_id, $ids, 'Expected non-image to be excluded when images_only is enabled' );
+		$this->assertContains( $image_id, $ids );
+		$this->assertNotContains( $doc_id, $ids );
 	}
 
 	/**
-	 * Test: images_only enabled + filter "unchecked".
+	 * Test that get_unused_attachments can handle a specific attachment ID
 	 */
-	public function test_images_only_enabled_with_filter_unchecked() {
-		$this->setImagesOnly( true );
+	public function test_get_unused_attachments_with_attachment_id() {
+		$attachment_id = $this->attachment_ids[0];
 
-		// Create one image and one non-image
-		$image_id = $this->createAttachmentWithMime( 'image/webp' );
-		$doc_id   = $this->createAttachmentWithMime( 'application/pdf' );
+		$unused_attachments = Unused_Images::get_unused_attachments( [ 'attachment_id' => $attachment_id ] );
+		$this->assertCount( 1, $unused_attachments, 'Expected 1 unused attachment' );
 
-		// Mark both as already checked
-		add_post_meta( $doc_id, 'isc_possible_usages', '' );
-		add_post_meta( $image_id, 'isc_possible_usages', '' );
+		$ids = array_map( 'intval', wp_list_pluck( $unused_attachments, 'ID' ) );
+		$this->assertContains( $attachment_id, $ids, 'Attachment ID not found in unused attachments' );
+	}
 
-		// Should return nothing because both are considered checked
-		$results = Unused_Images::get_unused_attachments( [ 'filter' => 'unchecked' ] );
-		$this->assertEmpty( $results, 'No attachments should match unchecked if all were checked' );
+	/**
+	 * Test that get_unused_attachments can handle a specific attachment ID if that attachment is used
+	 * When attachment_id is set, it should override the other filters and also return used attachments
+	 */
+	public function test_get_unused_attachments_with_used_attachment_id() {
+		$attachment_id = $this->attachment_ids[0];
 
-		delete_post_meta( $doc_id, 'isc_possible_usages' );
-		delete_post_meta( $image_id, 'isc_possible_usages' );
+		// add the image as a featured image to a post
+		$post_id = $this->factory->post->create();
+		add_post_meta( $post_id, '_thumbnail_id', $attachment_id );
+
+		$unused_attachments = Unused_Images::get_unused_attachments( [ 'attachment_id' => $attachment_id ] );
+		$this->assertCount( 1, $unused_attachments, 'Expected 1 attachment because the attachment_id parameter overrides other filters' );
+
+		$ids = array_map( 'intval', wp_list_pluck( $unused_attachments, 'ID' ) );
+		$this->assertContains( $attachment_id, $ids, 'Attachment ID should not be found in unused attachments' );
 	}
 }
