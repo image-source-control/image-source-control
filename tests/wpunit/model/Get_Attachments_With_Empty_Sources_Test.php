@@ -41,6 +41,23 @@ class Get_Attachments_With_Empty_Sources_Test extends WPTestCase {
 		return $attachment_id;
 	}
 
+	private function createAttachmentWithMime( $mime_type = 'image/jpeg' ) {
+		// Create an attachment with a specific mime type
+		$attachment_id = self::factory()->attachment->create( [
+			                                                      'post_mime_type' => $mime_type,
+			                                                      'post_type'      => 'attachment',
+		                                                      ] );
+		$this->attachment_ids[] = $attachment_id;
+
+		return $attachment_id;
+	}
+
+	private function setImagesOnly( bool $enabled ) {
+		$options = \ISC\Plugin::get_options();
+		$options['images_only'] = $enabled;
+		update_option( 'isc_options', $options );
+	}
+
 	public function testWithNoAttachments() {
 		$attachments = ISC_Model::get_attachments_with_empty_sources();
 		$this->assertEmpty( $attachments, 'Expected no attachments but some were found.' );
@@ -96,5 +113,51 @@ class Get_Attachments_With_Empty_Sources_Test extends WPTestCase {
 		}
 		// Assert that there are 7 attachments in the results
 		$this->assertCount( 7, $attachments, 'Expected 7 attachments to match criteria but ' . count( $attachments ) . ' did.' );
+	}
+
+	/**
+	 * Only image attachments should be returned when images_only is enabled.
+	 */
+	public function testOnlyImagesReturnedWhenImagesOnlyEnabled() {
+		$this->setImagesOnly( true );
+
+		// Image with missing meta (included)
+		$this->createAttachmentWithMime( 'image/png' );
+
+		// Non-image with missing meta (excluded)
+		$this->createAttachmentWithMime( 'application/pdf' );
+
+		$attachments = ISC_Model::get_attachments_with_empty_sources();
+		$this->assertCount( 1, $attachments, 'Only image attachment should be included when images_only is enabled.' );
+	}
+
+	/**
+	 * Non-image attachments should also be returned when images_only is disabled.
+	 */
+	public function testNonImagesIncludedWhenImagesOnlyDisabled() {
+		$this->setImagesOnly( false );
+
+		$this->createAttachmentWithMime( 'image/png' );
+		$this->createAttachmentWithMime( 'application/pdf' );
+
+		$attachments = ISC_Model::get_attachments_with_empty_sources();
+		$this->assertCount( 2, $attachments, 'Both image and non-image attachments should be included when images_only is disabled.' );
+	}
+
+	/**
+	 * When images_only is enabled, only images should match even with meta values given.
+	 */
+	public function testMixedAttachmentsWithImagesOnlyEnabled() {
+		$this->setImagesOnly( true );
+
+		$img = $this->createAttachmentWithMime( 'image/jpeg' );
+		$doc = $this->createAttachmentWithMime( 'application/pdf' );
+
+		update_post_meta( $img, 'isc_image_source_own', 'no' );
+		update_post_meta( $doc, 'isc_image_source_own', 'no' );
+
+		$attachments = ISC_Model::get_attachments_with_empty_sources();
+		$this->assertCount( 1, $attachments, 'Only the image should be returned when images_only is enabled.' );
+		$this->assertEquals( $img, $attachments[0]->ID );
 	}
 }
