@@ -28,6 +28,7 @@ return array(
     'ISC\\Image_Sources\\Renderer\\Image_Source_String' => $baseDir . '/includes/image-sources/renderer/image-source-string.php',
     'ISC\\Image_Sources\\Utils' => $baseDir . '/includes/image-sources/utils.php',
     'ISC\\Indexer' => $baseDir . '/includes/indexer.php',
+    'ISC\\Media_Type_Checker' => $baseDir . '/includes/media-type-checker.php',
     'ISC\\Newsletter' => $baseDir . '/includes/newsletter.php',
     'ISC\\Options' => $baseDir . '/includes/options.php',
     'ISC\\Plugin' => $baseDir . '/includes/plugin.php',

@@ -200,6 +200,11 @@ class ISC_Model {
 			return;
 		}
 
+		// check for valid mime type
+		if ( ! \ISC\Media_Type_Checker::should_process_attachment( $att_id ) ) {
+			return;
+		}
+
 		foreach ( $this->fields as $field ) {
 			self::update_post_meta( $att_id, $field['id'], $field['default'] );
 		}
@@ -382,13 +387,19 @@ class ISC_Model {
 	public static function get_attachments_with_empty_sources() {
 		global $wpdb;
 
+		$where_clause = "wp_posts.post_type = 'attachment' AND wp_posts.post_status = 'inherit'";
+
+		// Add image type check if images_only is enabled
+		if ( \ISC\Media_Type_Checker::enabled_images_only_option() ) {
+			$where_clause .= " AND wp_posts.post_mime_type LIKE 'image/%'";
+		}
+
 		/**
 		 * Using EXISTS instead of LEFT JOINs resulted in much faster queries and helped caching the results.
 		 */
 		$query = "SELECT wp_posts.ID, wp_posts.post_title, wp_posts.post_parent
 	        FROM {$wpdb->posts} AS wp_posts
-	        WHERE wp_posts.post_type = 'attachment'
-	          AND wp_posts.post_status = 'inherit'
+	        WHERE {$where_clause}
 	          AND NOT EXISTS (
 	                SELECT 1
 	                FROM {$wpdb->postmeta} AS mt1
@@ -417,7 +428,16 @@ class ISC_Model {
 
 		// The result of the query is already cached for a day, or until an image is added or removed.
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
-		return $wpdb->get_results( $wpdb->prepare( $query, 0, self::MAX_POSTS ) );
+		$attachments = $wpdb->get_results( $wpdb->prepare( $query, 0, self::MAX_POSTS ) );
+
+		$count = count( $attachments );
+
+		// update the transient if the number of results differ
+		if ( $count !== (int) get_transient( 'isc-show-missing-sources-warning' ) ) {
+			set_transient( 'isc-show-missing-sources-warning', $count, DAY_IN_SECONDS );
+		}
+
+		return $attachments;
 	}
 
 	/**
