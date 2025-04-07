@@ -22,14 +22,14 @@ class Admin_Fields {
 	/**
 	 * Add custom field to attachment
 	 *
-	 * @param array  $form_fields field fields.
-	 * @param object $post        post object.
+	 * @param array    $form_fields field fields.
+	 * @param \WP_Post $post        post object.
 	 *
 	 * @return array with form fields
 	 */
 	public function add_isc_fields( $form_fields, $post ) {
 		// Check if we should process this attachment based on settings
-		if ( ! \ISC\Media_Type_Checker::should_process_attachment( $post->ID ) ) {
+		if ( ! \ISC\Media_Type_Checker::should_process_attachment( $post ) ) {
 			return $form_fields;
 		}
 

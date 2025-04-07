@@ -629,7 +629,7 @@ class ISC_Public extends \ISC\Image_Sources\Image_Sources {
 
 		foreach ( $attachments as $_attachment ) {
 			// skip non-images if option is selected
-			if ( ! \ISC\Media_Type_Checker::should_process_attachment( $_attachment->ID ) ) {
+			if ( ! \ISC\Media_Type_Checker::should_process_attachment( $_attachment ) ) {
 				ISC_Log::log( sprintf( 'skipped image %d because it is not an image', $_attachment->ID ) );
 				continue;
 			}
