@@ -782,4 +782,46 @@ class ISC_Model {
 
 		return $file;
 	}
+
+	/**
+	 * Remove all plugin meta from non-image attachments
+	 *
+	 * @todo add a filter to allow other plugins to remove their meta keys
+	 * @todo maybe move to a new Post_Meta class
+	 *
+	 * @return void
+	 */
+	public static function remove_plugin_meta_from_non_images() {
+		// The meta keys used by ISC that should be removed from non-images
+		// @todo add a filter to allow other plugins to remove their meta keys
+		$isc_meta_keys = [
+			'isc_image_source',
+			'isc_image_source_url',
+			'isc_image_license',
+			'isc_image_source_own',
+			'isc_image_posts',
+			'isc_possible_usages',
+			'isc_possible_usages_last_check',
+		];
+
+		$attachments = get_posts(
+			[
+				'post_type'      => 'attachment',
+				'post_status'    => 'inherit',
+				'posts_per_page' => -1,
+			]
+		);
+
+		if ( empty( $attachments ) ) {
+			return;
+		}
+
+		foreach ( $attachments as $attachment ) {
+			if ( ! \ISC\Media_Type_Checker::is_image( $attachment ) ) {
+				foreach ( $isc_meta_keys as $meta_key ) {
+					delete_post_meta( $attachment->ID, $meta_key );
+				}
+			}
+		}
+	}
 }

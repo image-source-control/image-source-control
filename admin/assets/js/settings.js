@@ -19,7 +19,9 @@ jQuery( document ).ready(
 		$( '#isc-settings-global-list-indexed-images' ).on( 'change', function(){ isc_show_reindex_warning(); } );
 		$( '#isc-settings-plugin-modules input[type="checkbox"]').on('change', function() { isc_toggle_module_sections(); });
 		$( '#isc-settings-plugin-images-only' ).on( 'change', function() {
+			const enabled = this.checked;
 			$( '#isc-settings-plugin-images-only-indexer' ).toggleClass( 'hidden' );
+			$( '#isc-settings-plugin-images-only-cleanup-wrapper' ).toggleClass( 'hidden', !enabled );
 		});
 
 		// Show and update preview when a position option is clicked

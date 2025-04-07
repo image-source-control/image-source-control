@@ -67,6 +67,14 @@ class Plugin_Options extends Settings\Section {
 		$output['images_only']         = ! empty( $input['images_only'] );
 		$output['remove_on_uninstall'] = ! empty( $input['remove_on_uninstall'] );
 
+		// Cleanup meta data for non-images
+		if (
+			! empty( $input['images_only'] ) &&
+			! empty( $input['images_only_cleanup'] )
+		) {
+			\ISC_Model::remove_plugin_meta_from_non_images();
+		}
+
 		return $output;
 	}
 

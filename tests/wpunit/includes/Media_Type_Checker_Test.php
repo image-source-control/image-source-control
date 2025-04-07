@@ -111,4 +111,32 @@ class Media_Type_Checker_Test extends WPTestCase {
 
 		$this->assertTrue( $result, 'should_process_attachment should return true for non-attachment post types if Images-only isn’t enabled' );
 	}
+
+	/**
+	 * Test should_process_attachment accepts a WP_Post object for an image
+	 */
+	public function test_should_process_attachment_image_object_with_images_only() {
+		$options = \ISC\Plugin::get_options();
+		$options['images_only'] = true;
+		update_option( 'isc_options', $options );
+
+		$image_post = get_post( $this->image_id );
+		$result = Media_Type_Checker::should_process_attachment( $image_post );
+
+		$this->assertTrue( $result, 'should_process_attachment should return true for image post object when images_only is enabled' );
+	}
+
+	/**
+	 * Test should_process_attachment accepts a WP_Post object for a non-image
+	 */
+	public function test_should_process_attachment_document_object_with_images_only() {
+		$options = \ISC\Plugin::get_options();
+		$options['images_only'] = true;
+		update_option( 'isc_options', $options );
+
+		$doc_post = get_post( $this->document_id );
+		$result = Media_Type_Checker::should_process_attachment( $doc_post );
+
+		$this->assertFalse( $result, 'should_process_attachment should return false for document post object when images_only is enabled' );
+	}
 } 
