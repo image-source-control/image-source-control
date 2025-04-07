@@ -48,6 +48,7 @@ class ComposerStaticInitdb72a6bac11cb0e6b971811c93d09a9b
         'ISC\\Image_Sources\\Renderer\\Image_Source_String' => __DIR__ . '/../..' . '/includes/image-sources/renderer/image-source-string.php',
         'ISC\\Image_Sources\\Utils' => __DIR__ . '/../..' . '/includes/image-sources/utils.php',
         'ISC\\Indexer' => __DIR__ . '/../..' . '/includes/indexer.php',
+        'ISC\\Media_Type_Checker' => __DIR__ . '/../..' . '/includes/media-type-checker.php',
         'ISC\\Newsletter' => __DIR__ . '/../..' . '/includes/newsletter.php',
         'ISC\\Options' => __DIR__ . '/../..' . '/includes/options.php',
         'ISC\\Plugin' => __DIR__ . '/../..' . '/includes/plugin.php',

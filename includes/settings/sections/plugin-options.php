@@ -16,6 +16,7 @@ class Plugin_Options extends Settings\Section {
 		// Misc settings group
 		add_settings_section( 'isc_settings_section_plugin', __( 'Plugin options', 'image-source-control-isc' ), '__return_false', 'isc_settings_page' );
 		add_settings_field( 'modules', __( 'Modules', 'image-source-control-isc' ), [ $this, 'render_field_modules' ], 'isc_settings_page', 'isc_settings_section_plugin' );
+		add_settings_field( 'images_only', __( 'Images only', 'image-source-control-isc' ), [ $this, 'render_field_images_only' ], 'isc_settings_page', 'isc_settings_section_plugin' );
 		add_settings_field( 'remove_on_uninstall', __( 'Delete data on uninstall', 'image-source-control-isc' ), [ $this, 'render_field_remove_on_uninstall' ], 'isc_settings_page', 'isc_settings_section_plugin' );
 	}
 
@@ -36,6 +37,15 @@ class Plugin_Options extends Settings\Section {
 	}
 
 	/**
+	 * Render the option to restrict functionality to images only.
+	 */
+	public function render_field_images_only() {
+		$options = $this->get_options();
+		$checked = ! empty( $options['images_only'] );
+		require_once ISCPATH . '/admin/templates/settings/plugin/images-only.php';
+	}
+
+	/**
 	 * Render the option to remove all options and meta data when the plugin is deleted.
 	 */
 	public function render_field_remove_on_uninstall() {
@@ -53,8 +63,8 @@ class Plugin_Options extends Settings\Section {
 	 * @return array $output
 	 */
 	public function validate_settings( array $output, array $input ): array {
-
 		$output['modules']             = ( isset( $input['modules'] ) && is_array( $input['modules'] ) ) ? $input['modules'] : [];
+		$output['images_only']         = ! empty( $input['images_only'] );
 		$output['remove_on_uninstall'] = ! empty( $input['remove_on_uninstall'] );
 
 		return $output;

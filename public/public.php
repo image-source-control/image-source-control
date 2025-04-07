@@ -628,6 +628,12 @@ class ISC_Public extends \ISC\Image_Sources\Image_Sources {
 		$connected_atts = [];
 
 		foreach ( $attachments as $_attachment ) {
+			// skip non-images if option is selected
+			if ( ! \ISC\Media_Type_Checker::should_process_attachment( $_attachment->ID ) ) {
+				ISC_Log::log( sprintf( 'skipped image %d because it is not an image', $_attachment->ID ) );
+				continue;
+			}
+
 			$connected_atts[ $_attachment->ID ]['source']   = self::get_image_source_text_raw( $_attachment->ID );
 			$connected_atts[ $_attachment->ID ]['standard'] = Standard_Source::use_standard_source( $_attachment->ID );
 			// jump to next element if the standard source is set to be excluded from the source list

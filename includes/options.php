@@ -83,6 +83,7 @@ GFDL GNU Free Documentation License 1.3|https://www.gnu.org/licenses/fdl-1.3.htm
 		$default['enable_log']                = false;
 		$default['standard_source']           = 'custom_text';
 		$default['standard_source_text']      = '';
+		$default['images_only']               = false;
 
 		/**
 		 * Allow manipulating defaults for plugin settings
