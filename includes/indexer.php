@@ -232,7 +232,12 @@ class Indexer {
 		// Check the user agent first
 		$is_bot = strpos( $user_agent, 'ISC Index Bot' ) !== false;
 
-		// Apply a filter to allow overriding the result, passing the original check result
+		/**
+		 * Apply a filter to allow overriding the result, passing the original check result
+		 *
+		 * @param bool $is_bot The result of the initial check.
+		 * @return bool The final result after applying the filter.
+		 */
 		return apply_filters( 'isc_is_index_bot', $is_bot );
 	}
 
@@ -350,4 +355,22 @@ class Indexer {
 
 		return false;
 	}
+
+	/**
+	 * Handle post deletion and clean up image-post associations.
+	 *
+	 * @param int $post_id Post ID.
+	 */
+	public static function handle_post_deletion( int $post_id ): void {
+		$images = Post_Images_Meta::get( $post_id );
+		if ( is_array( $images ) ) {
+			foreach ( array_keys( $images ) as $image_id ) {
+				Image_Posts_Meta::remove_image_post_association( (int) $image_id, $post_id );
+			}
+		}
+
+		// Clean up the isc_post_images meta too
+		Post_Images_Meta::delete( $post_id );
+	}
+
 }

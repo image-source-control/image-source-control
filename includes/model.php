@@ -570,9 +570,9 @@ class ISC_Model {
 	 * @param string $key     post meta key.
 	 * @param mixed  $value   value of the post meta information.
 	 *
-	 * @return void
+	 * @return bool|int
 	 */
-	public static function update_post_meta( int $post_id, string $key, $value ): void {
+	public static function update_post_meta( int $post_id, string $key, $value ) {
 		/**
 		 * Run when any post meta information is stored by ISC
 		 *
@@ -584,7 +584,7 @@ class ISC_Model {
 		 */
 		do_action( 'isc_update_post_meta', $post_id, $key, $value );
 
-		update_post_meta( $post_id, $key, $value );
+		return update_post_meta( $post_id, $key, $value );
 	}
 
 	/**
@@ -652,8 +652,6 @@ class ISC_Model {
 	/**
 	 * Remove all plugin meta from non-image attachments
 	 *
-	 * @todo add a filter to allow other plugins to remove their meta keys
-	 *
 	 * @return void
 	 */
 	public static function remove_plugin_meta_from_non_images() {
@@ -667,6 +665,13 @@ class ISC_Model {
 			'isc_possible_usages',
 			'isc_possible_usages_last_check',
 		];
+
+		/**
+		 * Filter the meta keys to be removed from non-image attachments
+		 *
+		 * @param array $isc_meta_keys The meta keys to be removed from non-image attachments.
+		 */
+		apply_filters( 'isc_cleanup_non_image_meta_keys', $isc_meta_keys );
 
 		$attachments = get_posts(
 			[

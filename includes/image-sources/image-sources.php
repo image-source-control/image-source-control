@@ -100,6 +100,12 @@ class Image_Sources {
 		add_action( 'deleted_post', [ 'ISC_Model', 'update_missing_sources_transient' ] );
 
 		/**
+		 * Update index when a post is deleted or moved into trash
+		 */
+		add_action( 'before_delete_post', [ '\ISC\Indexer', 'handle_post_deletion' ] );
+		add_action( 'wp_trash_post', [ '\ISC\Indexer', 'handle_post_deletion' ] );
+
+		/**
 		 * Clear post-image index whenever the content of a single post is updated and move the content to a temporary post meta
 		 * this could force reindexing the post after adding or removing image sources
 		 */
