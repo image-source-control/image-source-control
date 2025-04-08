@@ -47,7 +47,7 @@ class Post_Images_Meta_Test extends WPTestCase {
 		$attachment_id2 = self::factory()->attachment->create_upload_object( codecept_data_dir( 'test-image2.jpg' ), $post_id );
 
 		// Set one of the attachments as the post thumbnail
-		set_post_thumbnail( $post_id, $attachment_id1 );
+		set_post_thumbnail( $post1_id, $attachment_id1 );
 
 		// Simulate the $image_ids array as it would be before calling update_post_images_meta
 		$image_ids = [
@@ -94,6 +94,7 @@ class Post_Images_Meta_Test extends WPTestCase {
 				'thumbnail' => false,
 			],
 		];
+		git
 
 		// Add a filter to modify $image_ids
 		add_filter( 'isc_images_in_posts', function( $image_ids, $post_id ) {
