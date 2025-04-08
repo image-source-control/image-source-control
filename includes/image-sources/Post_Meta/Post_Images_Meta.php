@@ -21,6 +21,11 @@ class Post_Images_Meta {
 	 */
 	public static function get( $post_id ) {
 		$value = get_post_meta( $post_id, self::META_KEY, true );
+
+		if ( $value === false ) {
+			ISC_Log::log( sprintf( 'Error getting %s for post %d', self::META_KEY, $post_id ) );
+		}
+
 		return is_array( $value ) ? $value : '';
 	}
 
@@ -29,9 +34,18 @@ class Post_Images_Meta {
 	 *
 	 * @param int   $post_id Post ID.
 	 * @param array $value   The new value to set.
+	 *
+	 * @return bool|int
 	 */
 	public static function update( $post_id, $value ) {
-		ISC_Model::update_post_meta( $post_id, self::META_KEY, $value );
+		$return = ISC_Model::update_post_meta( $post_id, self::META_KEY, $value );
+
+		// Log on error
+		if ( $return === false ) {
+			ISC_Log::log( sprintf( 'Error updating %s for post %d', self::META_KEY, $post_id ) );
+		}
+
+		return $return;
 	}
 
 	/**
@@ -39,10 +53,16 @@ class Post_Images_Meta {
 	 *
 	 * @param int $post_id Post ID.
 	 *
-	 * @return void
+	 * @return bool
 	 */
-	public static function delete( $post_id ) {
-		delete_post_meta( $post_id, self::META_KEY );
+	public static function delete( $post_id ): bool {
+		$return = delete_post_meta( $post_id, self::META_KEY );
+
+		if ( $return === false ) {
+			ISC_Log::log( sprintf( 'Error deleting %s for post %d', self::META_KEY, $post_id ) );
+		}
+
+		return $return;
 	}
 
 	/**

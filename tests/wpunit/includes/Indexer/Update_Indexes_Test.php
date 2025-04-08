@@ -483,4 +483,35 @@ class Indexer_Update_Indexes_Test extends WPTestCase {
 		$this->assertIsArray( $isc_image_posts_original, 'isc_image_posts on the original image should be an array.' );
 		$this->assertContains( $post->ID, $isc_image_posts_original, "The isc_image_posts meta for the original content image should still contain the post ID." );
 	}
+
+	/**
+	 * Test that isc_image_posts is updated when a post is deleted.
+	 */
+	public function test_image_post_associations_are_removed_when_post_is_deleted() {
+		global $post;
+		$post = self::factory()->post->create_and_get();
+
+		// Create and attach an image
+		$attachment_id = self::factory()->attachment->create_upload_object(
+			codecept_data_dir( 'test-image1.jpg' ), $post->ID
+		);
+
+		// Simulate post content with the image
+		$content = '<img src="' . wp_get_attachment_url( $attachment_id ) . '" />';
+		indexer::update_indexes( $content );
+
+		// Confirm the attachment is associated with the post
+		$image_posts_meta = Image_Posts_Meta::get( $attachment_id );
+		$this->assertContains( $post->ID, $image_posts_meta, 'Image should be associated with post before deletion.' );
+
+		// Delete the post
+		wp_delete_post( $post->ID, true ); // true = force delete (bypass trash), triggers the deleted_post action hook
+
+		// Re-fetch the meta
+		$image_posts_meta_after = Image_Posts_Meta::get( $attachment_id );
+
+		// Assert the association is removed
+		$this->assertIsArray( $image_posts_meta_after );
+		$this->assertNotContains( $post->ID, $image_posts_meta_after, 'Image association should be removed after post deletion.' );
+	}
 }
