@@ -21,3 +21,12 @@ printf(
 	</p>
 <button id="isc-clear-storage" class="button button-secondary"><?php esc_html_e( 'clear storage', 'image-source-control-isc' ); ?></button>
 <div id="isc-clear-storage-feedback"></div>
+<?php
+// if the WordPress debug mode is enabled, show the button to dump the storage
+if ( $storage_size > 0 && defined( 'WP_DEBUG' ) && WP_DEBUG ) :
+	?>
+	<br/>
+	<button id="isc-show-storage" class="button button-secondary"><?php esc_html_e( 'show storage', 'image-source-control-isc' ); ?></button>
+	<pre id="isc-show-storage-output"></pre>
+	<?php
+endif; ?>

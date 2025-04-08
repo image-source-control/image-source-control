@@ -17,6 +17,7 @@ class Admin_Ajax {
 		add_action( 'wp_ajax_isc-post-image-relations', [ $this, 'list_post_image_relations' ] );
 		add_action( 'wp_ajax_isc-image-post-relations', [ $this, 'list_image_post_relations' ] );
 		add_action( 'wp_ajax_isc-clear-index', [ $this, 'clear_index' ] );
+		add_action( 'wp_ajax_isc-show-storage', [ $this, 'show_storage' ] );
 		add_action( 'wp_ajax_isc-clear-storage', [ $this, 'clear_storage' ] );
 		add_action( 'wp_ajax_isc-clear-image-posts-index', [ $this, 'clear_image_posts_index' ] );
 		add_action( 'wp_ajax_isc-clear-post-images-index', [ $this, 'clear_post_images_index' ] );
@@ -104,6 +105,26 @@ class Admin_Ajax {
 				(int) ISC_Model::clear_index()
 			)
 		);
+	}
+
+	/**
+	 * Show the storage array for debugging
+	 */
+	public function show_storage() {
+		check_ajax_referer( 'isc-admin-ajax-nonce', 'nonce' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			die( 'Wrong capabilities' );
+		}
+
+		$storage_model = new \ISC_Storage_Model();
+		$images        = $storage_model->get_storage();
+
+		// We are in debug mode, so it is fine to just output the content
+		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_print_r
+		print_r( $images );
+
+		die();
 	}
 
 	/**
