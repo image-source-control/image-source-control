@@ -101,6 +101,35 @@ jQuery( document ).ready(
 				);
 			}
 		);
+		// show frontend storage
+		$( '#isc-show-storage' ).on(
+			'click',
+			function(){
+				// disable the button
+				var button      = this;
+				button.disabled = true;
+
+				$.ajax(
+					{
+						type: 'POST',
+						url: ajaxurl,
+						data: {
+							action: 'isc-show-storage',
+							nonce: isc.ajaxNonce,
+						},
+						success:function(data, textStatus, XMLHttpRequest){
+							// display return messages
+							$( '#isc-show-storage-output' ).html( data );
+							button.disabled = false;
+						},
+						error: function(MLHttpRequest, textStatus, errorThrown){
+							$( '#isc-show-storage-output' ).html( errorThrown );
+							button.disabled = false;
+						}
+					}
+				);
+			}
+		);
 		// clear frontend storage
 		$( '#isc-clear-storage' ).on(
 			'click',
