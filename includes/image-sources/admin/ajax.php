@@ -159,9 +159,13 @@ class Admin_Ajax {
 		}
 
 		$image_id = (int) $_POST['image_id'];
-		Image_Posts_Meta::delete( $image_id );
+		$deleted  = Image_Posts_Meta::delete( $image_id );
 
-		die( 'Image-Posts index cleared' );
+		if ( $deleted ) {
+			wp_send_json_success( 'Image-Posts index cleared' );
+		} else {
+			wp_send_json_success( 'Image-Posts index cleared (or did not exist)' );
+		}
 	}
 
 	/**
@@ -179,8 +183,12 @@ class Admin_Ajax {
 		}
 
 		$post_id = (int) $_POST['post_id'];
-		Post_Images_Meta::delete( $post_id );
+		$deleted = Post_Images_Meta::delete( $post_id );
 
-		die( 'Post-Images index cleared' );
+		if ( $deleted ) {
+			wp_send_json_success( 'Post-Images index cleared' );
+		} else {
+			wp_send_json_success( 'Post-Images index cleared (or did not exist)' );
+		}
 	}
 }

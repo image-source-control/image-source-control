@@ -17,7 +17,7 @@ class Post_Images_Meta {
 	 *
 	 * @param int $post_id Post ID.
 	 *
-	 * @return array|string The post images meta value, or false if not found.
+	 * @return array|string The post images meta value, or empty string if not found.
 	 */
 	public static function get( $post_id ) {
 		$value = get_post_meta( $post_id, self::META_KEY, true );
@@ -79,12 +79,23 @@ class Post_Images_Meta {
 	}
 
 	/**
-	 * Retrieve images added to a post or page and save all information as a post meta value for the post
+	 * Updates the post meta index mapping a specific post to the images it contains.
 	 *
-	 * @param integer $post_id   ID of a post.
-	 * @param array   $image_ids IDs of the attachments in the content.
+	 * This method processes an array of image IDs found within a post's content,
+	 * automatically includes the post's featured image (thumbnail), applies the
+	 * `isc_images_in_posts` filter for extensibility, and then saves the final
+	 * structured array to the post's meta field isc_post_images.
+	 * The saved array maps image IDs to their data,
+	 * including a flag indicating if an image is the featured image.
+	 *
+	 * @param int   $post_id   The ID of the post whose image index is being updated.
+	 * @param array $image_ids An array mapping image attachment IDs found in the post's
+	 *                         content to their data (e.g., ['src' => '...']).
+	 *                         Example: [ 123 => ['src' => 'url1'], 456 => ['src' => 'url2'] ]
+	 *                         The featured image ID will be added or updated automatically.
+	 * @return void
 	 */
-	public static function update_images_in_posts( int $post_id, $image_ids ) {
+	public static function update_images_in_posts( int $post_id, array $image_ids ) {
 		// add thumbnail information
 		$thumb_id = get_post_thumbnail_id( $post_id );
 

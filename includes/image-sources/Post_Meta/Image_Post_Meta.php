@@ -17,7 +17,7 @@ class Image_Posts_Meta {
 	 *
 	 * @param int $post_id Post ID.
 	 *
-	 * @return array|string The post images meta value, or false if not found.
+	 * @return array|false The post images meta value, or empty string if not found.
 	 */
 	public static function get( $post_id ) {
 		$value = get_post_meta( $post_id, self::META_KEY, true );
