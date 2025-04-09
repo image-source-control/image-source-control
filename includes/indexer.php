@@ -96,7 +96,12 @@ class Indexer {
 			}
 		}
 
-		// Allows developers to modify the list before synchronization.
+		/**
+		 * Allows developers to modify the list before synchronization.
+		 *
+		 * @return array $new_rendered_ids Image IDs found in the content ([id => data]).
+		 *               id is expected to be numeric and the attachment post type
+		 */
 		$new_rendered_ids = apply_filters( 'isc_images_in_posts_simple', $new_rendered_ids, $post->ID );
 		if ( has_filter( 'isc_images_in_posts_simple' ) ) {
 			ISC_Log::log( sprintf( 'Post %d - new_rendered_ids after isc_images_in_posts_simple filter ran: %s', $post->ID, ! empty( $new_rendered_ids ) ? implode( ', ', array_keys( $new_rendered_ids ) ) : 'Empty' ) );

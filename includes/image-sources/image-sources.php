@@ -109,7 +109,7 @@ class Image_Sources {
 		 * Clear post-image index whenever the content of a single post is updated and move the content to a temporary post meta
 		 * this could force reindexing the post after adding or removing image sources
 		 */
-		add_action( 'wp_insert_post', [ '\ISC\indexer', 'prepare_for_reindex' ] );
+		add_action( 'wp_insert_post', [ '\ISC\Indexer', 'prepare_for_reindex' ] );
 	}
 
 	/**
