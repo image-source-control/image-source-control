@@ -179,12 +179,12 @@ class ISC_Model {
 	 * Remove all image-post relations
 	 * this concerns the post meta fields `isc_image_posts` and `isc_post_images`
 	 *
-	 * @moved since April 2025
+	 * @deprecated since April 2025
 	 *
-	 * @return int|false The number of rows updated, or false on error.
+	 * @return bool True if the option was removed
 	 */
-	public static function clear_index() {
-		ISC_Log::log( 'function moved. \ISC\Image_Sources\Post_Meta::clear_index' );
+	public static function clear_index(): bool {
+		ISC_Log::log( 'function moved. \ISC\Indexer::clear_index' );
 
 		return Indexer::clear_index();
 	}

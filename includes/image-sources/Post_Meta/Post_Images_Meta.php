@@ -69,13 +69,10 @@ class Post_Images_Meta {
 	 * Remove post_images index
 	 * namely the post meta field `isc_post_images`
 	 *
-	 * @return int|false The number of rows updated, or false on error.
+	 * @return bool True on success, false on failure.
 	 */
-	public static function delete_all() {
-		global $wpdb;
-
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.SlowDBQuery.slow_db_query_meta_key
-		return $wpdb->delete( $wpdb->postmeta, [ 'meta_key' => self::META_KEY ], [ '%s' ] );
+	public static function delete_all(): bool {
+		return delete_post_meta_by_key( self::META_KEY );
 	}
 
 	/**

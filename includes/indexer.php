@@ -348,17 +348,10 @@ class Indexer {
 	 * Remove all image-post relations
 	 * this concerns the post meta fields `isc_image_posts` and `isc_post_images`
 	 *
-	 * @return int|false The number of rows updated, or false on error.
+	 * @return bool True on success, false on failure.
 	 */
-	public static function clear_index() {
-		$rows_deleted_1 = Post_Images_Meta::delete_all();
-		$rows_deleted_2 = Image_Posts_Meta::delete_all();
-
-		if ( $rows_deleted_1 !== false && $rows_deleted_2 !== false ) {
-			return $rows_deleted_1 + $rows_deleted_2;
-		}
-
-		return false;
+	public static function clear_index(): bool {
+		return Post_Images_Meta::delete_all() && Image_Posts_Meta::delete_all();
 	}
 
 	/**

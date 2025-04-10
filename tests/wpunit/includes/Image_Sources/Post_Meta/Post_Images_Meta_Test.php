@@ -265,13 +265,9 @@ class Post_Images_Meta_Test extends WPTestCase {
 		$this->assertNotEmpty( Post_Images_Meta::get( $post_id_1 ) );
 		$this->assertNotEmpty( Post_Images_Meta::get( $post_id_2 ) );
 
-		$deleted_rows = Post_Images_Meta::delete_all();
+		$deleted = Post_Images_Meta::delete_all();
 
-		// Clear meta cache because we're bypassing WordPress with $wpdb->delete
-		wp_cache_delete( $post_id_1, 'post_meta' );
-		wp_cache_delete( $post_id_2, 'post_meta' );
-
-		$this->assertGreaterThanOrEqual( 2, $deleted_rows );
+		$this->assertTrue( $deleted );
 		$this->assertEmpty( Post_Images_Meta::get( $post_id_1 ), 'Post 1 meta should be empty' );
 		$this->assertEmpty( Post_Images_Meta::get( $post_id_2 ), 'Post 2 meta should be empty' );
 	}

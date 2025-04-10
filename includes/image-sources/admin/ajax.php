@@ -4,7 +4,6 @@ namespace ISC\Image_Sources;
 
 use ISC\Image_Sources\Post_Meta\Image_Posts_Meta;
 use ISC\Image_Sources\Post_Meta\Post_Images_Meta;
-use ISC_Model;
 
 /**
  * Handle AJAX calls
@@ -100,13 +99,11 @@ class Admin_Ajax {
 			die( 'Wrong capabilities' );
 		}
 
-		die(
-			sprintf(
-			// translators: %d is the number of deleted entries
-				esc_html__( '%d entries deleted', 'image-source-control-isc' ),
-				(int) ISC_Model::clear_index()
-			)
-		);
+		if ( \ISC\Indexer::clear_index() ) {
+			wp_send_json_success( esc_html__( 'Index cleared', 'image-source-control-isc' ) );
+		} else {
+			wp_send_json_error( 'Error' );
+		}
 	}
 
 	/**
