@@ -9,13 +9,14 @@ if ( ! empty( $options['remove_on_uninstall'] ) ) {
 	global $wpdb;
 
 	// delete post meta fields
-	$wpdb->delete( $wpdb->postmeta, array( 'meta_key' => 'isc_post_images' ), array( '%s' ) );
-	$wpdb->delete( $wpdb->postmeta, array( 'meta_key' => 'isc_image_posts' ), array( '%s' ) );
-	$wpdb->delete( $wpdb->postmeta, array( 'meta_key' => 'isc_image_source' ), array( '%s' ) );
-	$wpdb->delete( $wpdb->postmeta, array( 'meta_key' => 'isc_image_source_own' ), array( '%s' ) );
-	$wpdb->delete( $wpdb->postmeta, array( 'meta_key' => 'isc_image_source_url' ), array( '%s' ) );
-	$wpdb->delete( $wpdb->postmeta, array( 'meta_key' => 'isc_possible_usages' ), array( '%s' ) );
-	$wpdb->delete( $wpdb->postmeta, array( 'meta_key' => 'isc_possible_usages_last_check' ), array( '%s' ) );
+	delete_post_meta_by_key( 'isc_post_images' );
+	delete_post_meta_by_key( 'isc_image_posts' );
+	delete_post_meta_by_key( 'isc_image_source' );
+	delete_post_meta_by_key( 'isc_image_source_own' );
+	delete_post_meta_by_key( 'isc_image_source_url' );
+	delete_post_meta_by_key( 'isc_possible_usages' );
+	delete_post_meta_by_key( 'isc_possible_usages_last_check' );
+	delete_post_meta_by_key( 'isc_post_images_before_update' );
 
 	// delete main plugin options
 	delete_option( 'isc_options' );

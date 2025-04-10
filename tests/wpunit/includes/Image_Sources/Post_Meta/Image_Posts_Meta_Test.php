@@ -54,10 +54,7 @@ class Image_Posts_Meta_Test extends WPTestCase {
 
 		$deleted = Image_Posts_Meta::delete_all();
 
-		wp_cache_delete( $image_id_1, 'post_meta' );
-		wp_cache_delete( $image_id_2, 'post_meta' );
-
-		$this->assertGreaterThanOrEqual( 2, $deleted );
+		$this->assertTrue( $deleted );
 		$this->assertEmpty( Image_Posts_Meta::get( $image_id_1 ) );
 		$this->assertEmpty( Image_Posts_Meta::get( $image_id_2 ) );
 	}
