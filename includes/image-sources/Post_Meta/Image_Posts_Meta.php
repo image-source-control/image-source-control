@@ -15,15 +15,15 @@ class Image_Posts_Meta {
 	/**
 	 * Getter
 	 *
-	 * @param int $post_id Post ID.
+	 * @param int $image_id Attachment post ID.
 	 *
 	 * @return array|false The post images meta value, or empty string if not found.
 	 */
-	public static function get( $post_id ) {
-		$value = get_post_meta( $post_id, self::META_KEY, true );
+	public static function get( $image_id ) {
+		$value = get_post_meta( $image_id, self::META_KEY, true );
 
 		if ( $value === false ) {
-			ISC_Log::log( sprintf( 'Error getting %s for post %d', self::META_KEY, $post_id ) );
+			ISC_Log::log( sprintf( 'Error getting %s for post %d', self::META_KEY, $image_id ) );
 		}
 
 		return is_array( $value ) ? $value : '';
@@ -32,17 +32,17 @@ class Image_Posts_Meta {
 	/**
 	 * Updater – also sets a new value
 	 *
-	 * @param int   $post_id Post ID.
+	 * @param int   $image_id Attachment post ID.
 	 * @param array $value   The new value to set.
 	 *
 	 * @return bool|int
 	 */
-	public static function update( $post_id, $value ) {
-		$return = ISC_Model::update_post_meta( $post_id, self::META_KEY, $value );
+	public static function update( $image_id, $value ) {
+		$return = ISC_Model::update_post_meta( $image_id, self::META_KEY, $value );
 
 		// Log on error
 		if ( $return === false ) {
-			ISC_Log::log( sprintf( 'Error updating %s for post %d', self::META_KEY, $post_id ) );
+			ISC_Log::log( sprintf( 'Error updating %s for post %d', self::META_KEY, $image_id ) );
 		}
 
 		return $return;
@@ -51,15 +51,15 @@ class Image_Posts_Meta {
 	/**
 	 * Delete the post-images meta value
 	 *
-	 * @param int $post_id Post ID.
+	 * @param int $image_id Attachment post ID.
 	 *
 	 * @return bool
 	 */
-	public static function delete( $post_id ): bool {
-		$return = delete_post_meta( $post_id, self::META_KEY );
+	public static function delete( $image_id ): bool {
+		$return = delete_post_meta( $image_id, self::META_KEY );
 
 		if ( $return === false ) {
-			ISC_Log::log( sprintf( 'Error deleting %s for post %d', self::META_KEY, $post_id ) );
+			ISC_Log::log( sprintf( 'Error deleting %s for post %d', self::META_KEY, $image_id ) );
 		}
 
 		return $return;
@@ -81,14 +81,14 @@ class Image_Posts_Meta {
 	/**
 	 * Update the isc_image_posts meta field with a filtered limit
 	 *
-	 * @param integer $post_id   ID of the target post.
-	 * @param array   $image_ids IDs of the attachments in the content.
+	 * @param integer $image_id   ID of the image.
+	 * @param array   $post_ids IDs of the posts in which the image appears in.
 	 */
-	public static function update_image_posts_meta_with_limit( int $post_id, array $image_ids ) {
+	public static function update_image_posts_meta_with_limit( int $image_id, array $post_ids ) {
 		// limit the number of post IDs to 10
-		$image_ids = array_slice( $image_ids, 0, apply_filters( 'isc_image_posts_meta_limit', 10 ) );
+		$post_ids = array_slice( $post_ids, 0, apply_filters( 'isc_image_posts_meta_limit', 10 ) );
 
-		self::update( $post_id, $image_ids );
+		self::update( $image_id, $post_ids );
 	}
 
 	/**
@@ -126,7 +126,7 @@ class Image_Posts_Meta {
 			return;
 		}
 
-		$meta = get_post_meta( $image_id, self::META_KEY, true );
+		$meta = self::get( $image_id );
 		if ( is_array( $meta ) ) {
 			$offset = array_search( $post_id, $meta, true );
 			if ( $offset !== false ) {
