@@ -42,6 +42,6 @@
 <p class="hidden" id="isc-settings-plugin-images-only-cleanup-wrapper">
 	<label>
 		<input type="checkbox" name="isc_options[images_only_cleanup]" value="1" />
-		<?php esc_html_e( 'Remove all plugin data from non-image files after saving.', 'image-source-control-isc' ); ?>
+		<?php esc_html_e( 'Remove all data from non-image files.', 'image-source-control-isc' ); ?>
 	</label>
 </p>
