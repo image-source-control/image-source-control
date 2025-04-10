@@ -91,7 +91,7 @@ class Indexer {
 			// The 'thumbnail' flag itself is added later in Post_Meta\Post_Images_Meta::update_images_in_posts.
 			$thumb_url = wp_get_attachment_url( $thumb_id );
 			if ( $thumb_url ) {
-				$new_rendered_ids[ $thumb_id ] = [ 'src' => $thumb_url ];
+				$new_rendered_ids[ $thumb_id ] = [ $thumb_url ];
 				ISC_Log::log( sprintf( 'Added thumbnail ID %d to new_rendered_ids for post %d.', $thumb_id, $post->ID ) );
 			}
 		}
