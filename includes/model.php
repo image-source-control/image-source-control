@@ -24,8 +24,6 @@ class ISC_Model {
 	 * Setup registers filters and actions.
 	 */
 	public function __construct() {
-		// attachment field handling
-		add_action( 'add_attachment', [ $this, 'attachment_added' ], 10, 2 );
 		add_filter( 'attachment_fields_to_save', [ $this, 'isc_fields_save' ], 10, 2 );
 	}
 
@@ -65,26 +63,6 @@ class ISC_Model {
 	public static function update_image_posts_meta( $post_id, $image_ids ) {
 
 		ISC_Log::log( 'function removed. \ISC\Indexer::update_indexes covers most of it now' );
-	}
-
-	/**
-	 * Update attachment meta field
-	 *
-	 * @param integer $att_id attachment post ID.
-	 */
-	public function attachment_added( $att_id ) {
-		if ( ! isset( $this->fields ) ) {
-			return;
-		}
-
-		// check for valid mime type
-		if ( ! \ISC\Media_Type_Checker::should_process_attachment( $att_id ) ) {
-			return;
-		}
-
-		foreach ( $this->fields as $field ) {
-			self::update_post_meta( $att_id, $field['id'], $field['default'] );
-		}
 	}
 
 	/**
