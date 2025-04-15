@@ -84,6 +84,54 @@ class Indexer_Test extends WPTestCase {
 		$this->assertSame( $attachment_ids, $attachments, 'Should return attachment IDs when isc_post_images meta is set.' );
 	}
 
+	/**
+	 * Test if reindexing in get_attachments_for_index can be prevented by setting
+	 * the isc_add_sources_to_content_ignore_post_images_index filter to true
+	 * while the meta does not exist.
+	 */
+	public function test_get_attachments_for_index_returns_empty_when_filter_active_and_no_meta() {
+		$post_id = self::factory()->post->create();
+
+		// Ensure no meta exists
+		delete_post_meta( $post_id, 'isc_post_images' );
+
+		// Activate the filter
+		add_filter( 'isc_add_sources_to_content_ignore_post_images_index', '__return_true' );
+
+		$attachments = indexer::get_attachments_for_index( $post_id );
+
+		// Remove the filter immediately after use within the test
+		remove_filter( 'isc_add_sources_to_content_ignore_post_images_index', '__return_true' );
+
+		$this->assertSame( '', $attachments, 'Should return empty string when filter is active, even if meta does not exist.' );
+	}
+
+	/**
+	 * Test if reindexing in get_attachments_for_index can be prevented by setting
+	 * the isc_add_sources_to_content_ignore_post_images_index filter to true
+	 * while the meta exists.
+     */
+	public function test_get_attachments_for_index_returns_empty_when_filter_active_and_meta_exists() {
+		$post_id        = self::factory()->post->create();
+		$attachment_ids = [ 1, 2, 3 ];
+
+		// Set the meta
+		update_post_meta( $post_id, 'isc_post_images', $attachment_ids );
+
+		// Activate the filter
+		add_filter( 'isc_add_sources_to_content_ignore_post_images_index', '__return_true' );
+
+		$attachments = indexer::get_attachments_for_index( $post_id );
+
+		// Remove the filter immediately after use within the test
+		remove_filter( 'isc_add_sources_to_content_ignore_post_images_index', '__return_true' );
+
+		$this->assertSame( '', $attachments, 'Should return empty string when filter is active, even if meta exists.' );
+
+		// Optional: Verify the meta still exists to be sure it wasn't accidentally deleted
+		$meta_after = get_post_meta( $post_id, 'isc_post_images', true );
+		$this->assertSame( $attachment_ids, $meta_after, 'Meta should still exist after the call when filter was active.' );
+	}
 
 	/**
 	 * Test update_indexes processes content correctly when conditions are met.
