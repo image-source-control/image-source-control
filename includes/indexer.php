@@ -30,7 +30,7 @@ class Indexer {
 		global $post;
 
 		// Skip indexing if this is a page with a Global list.
-		if ( has_shortcode( $content, '[isc_list_all]' ) || false !== strpos( $content, 'isc_all_image_list_box' ) ) {
+		if ( self::is_global_list_page( $content ) ) {
 			// Ensure no temporary meta is left behind if user adds shortcode later.
 			self::cleanup_after_reindex( $post->ID ); // Use the cleanup method
 			// An empty isc_post_images meta value indicates the post was indexed (or intentionally skipped).
@@ -371,4 +371,13 @@ class Indexer {
 		Post_Images_Meta::delete( $post_id );
 	}
 
+	/**
+	 * Return true if the content indicates that this is a page with the Global List on it
+	 *
+	 * @param string $content The content to check.
+	 * @return bool True if the content contains the Global List shortcode or class, false otherwise.
+	 */
+	public static function is_global_list_page( $content ): bool {
+		return has_shortcode( $content, '[isc_list_all]' ) || false !== strpos( $content, 'isc_all_image_list_box' );
+	}
 }

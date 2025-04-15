@@ -181,6 +181,11 @@ class ISC_Public extends \ISC\Image_Sources\Image_Sources {
 			return $content;
 		}
 
+		if ( ISC\Indexer::is_global_list_page( $content ) ) {
+			ISC_Log::log( 'skipped adding sources because the content contains the Global List' );
+			return $content;
+		}
+
 		// return if this is not the main query or within the loop
 		if ( ! self::is_main_loop() ) {
 			ISC_Log::log( 'skipped adding sources because the content was loaded outside the main loop' );
