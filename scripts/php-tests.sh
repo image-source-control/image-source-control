@@ -57,8 +57,17 @@ fi
 run_suite () {
   local bin="$1"
   local version="$2"
-  echo -e "\n▶︎  ${suite}  •  PHP ${version}"
+
+  printf "\n▶︎  %s  •  PHP %s\n" "$suite" "$version"
+
+  # ❶ Erwartete Version für die Tests bereitstellen
+  export ISC_EXPECT_PHP_VERSION="$version"
+
+  # ❷ Tests ausführen (‑‑debug optional)
   "$bin" vendor/bin/codecept run "$suite"
+
+  # ❸ Aufräumen, damit die Variable nicht zur nächsten Version „durchblutet“
+  unset ISC_EXPECT_PHP_VERSION
 }
 
 if ((${#VERSIONS_TO_RUN[@]})); then
