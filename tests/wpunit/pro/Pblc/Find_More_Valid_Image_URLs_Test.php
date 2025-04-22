@@ -26,7 +26,8 @@ class Find_More_Valid_Image_URLs_Test extends WPTestCase {
 		remove_all_filters('isc_extract_images_from_html');
 
 		// Add the Pro function to the filter.
-		add_filter( 'isc_extract_images_from_html', [ 'ISC_Pro_Public', 'find_more_valid_image_urls' ], 10 );
+		$pro_class = new \ISC_Pro_Public();
+		add_filter( 'isc_extract_images_from_html', [ $pro_class, 'find_more_valid_image_urls' ], 10 );
 
 		$this->html_analyzer = new Analyze_HTML();
 	}
