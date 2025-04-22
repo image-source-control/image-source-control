@@ -38,7 +38,8 @@ class Disable_Overlay_Class_Test extends WPTestCase {
 			],
 		];
 		// run the filter ISC_Pro_Public::remove_overlay_from_isc_disable_overlay_class() manually
-		add_filter( 'isc_extract_images_from_html', [ 'ISC_Pro_Public', 'remove_overlay_from_isc_disable_overlay_class' ], 10 );
+		$pro_public = new \ISC_Pro_Public();
+		add_filter( 'isc_extract_images_from_html', [ $pro_public, 'remove_overlay_from_isc_disable_overlay_class' ], 10 );
 		$actual = $this->html_analyzer->extract_images_from_html( $markup );
 		$this->assertEquals( $expected, $actual );
 	}

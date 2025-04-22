@@ -13,9 +13,10 @@ class Kadence_Test extends Extract_Images_From_Html_Test {
 	public function setUp(): void {
 		parent::setUp();
 		// adjust the general regular expression to also search for DIVs between the image and the link tag.
-		add_filter( 'isc_public_caption_regex', [ 'ISC_Pro_Compatibility_Kadence', 'public_caption_regex' ] );
+		$kadence_class = new \ISC_Pro_Compatibility_Kadence();
+		add_filter( 'isc_public_caption_regex', [ $kadence_class, 'public_caption_regex' ] );
 		// filter the matches from the regular expression to apply some fixes.
-		add_filter( 'isc_extract_images_from_html', [ 'ISC_Pro_Compatibility_Kadence', 'filter_matches' ], 10, 2 );
+		add_filter( 'isc_extract_images_from_html', [ $kadence_class, 'filter_matches' ], 10, 2 );
 	}
 
 	/**
@@ -85,7 +86,8 @@ class Kadence_Test extends Extract_Images_From_Html_Test {
 			],
 		];
 		// run the filter ISC_Pro_Public::remove_overlay_from_isc_disable_overlay_class() manually
-		add_filter( 'isc_extract_images_from_html', [ 'ISC_Pro_Public', 'remove_overlay_from_isc_disable_overlay_class' ], 10 );
+		$pro_public = new \ISC_Pro_Public();
+		add_filter( 'isc_extract_images_from_html', [ $pro_public, 'remove_overlay_from_isc_disable_overlay_class' ], 10 );
 		$actual = $this->html_analyzer->extract_images_from_html( $markup );
 		$this->assertEquals( $expected, $actual );
 	}
