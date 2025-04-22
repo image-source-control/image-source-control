@@ -46,8 +46,13 @@
     },
     "scripts": {
         "cs": "vendor/bin/phpcs --standard=.phpcs.xml",
-        "wpunit": "vendor/bin/codecept run wpunit",
-        "functional": "vendor/bin/codecept run functional",
-        "acceptance": "vendor/bin/codecept run acceptance"
+        "wpunit": "./scripts/php-tests.sh wpunit",
+        "functional": "./scripts/php-tests.sh functional",
+        "acceptance": "./scripts/php-tests.sh acceptance"
+    },
+    "scripts-descriptions": {
+        "wpunit":     "wpunit test suite (phpall = alle PHP‑Versionen)",
+        "functional": "functional test suite (phpall = alle PHP‑Versionen)",
+        "acceptance": "acceptance test suite (phpall = alle PHP‑Versionen)"
     }
 }
