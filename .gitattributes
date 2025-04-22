@@ -9,3 +9,4 @@ tests/ export-ignore
 package*json export-ignore
 .changelog/ export-ignore
 build-image-source-control.php export-ignore
+scripts/ export-ignore
