@@ -467,7 +467,6 @@ class Indexer_Update_Indexes_Test extends WPTestCase {
 
 		// 1. Verify the post's 'isc_post_images' meta contains the image added by the filter
 		$isc_post_images = get_post_meta( $post->ID, Post_Images_Meta::META_KEY, true );
-		file_put_contents( WP_CONTENT_DIR . '/test.log', print_r( $isc_post_images, true ) . "\n", FILE_APPEND );
 		$this->assertIsArray( $isc_post_images, 'isc_post_images should be an array.' );
 		$this->assertArrayHasKey( $img_added_by_filter['id'], $isc_post_images, 'isc_post_images should contain the ID added by the filter.' );
 		// Also check the original image is still there
