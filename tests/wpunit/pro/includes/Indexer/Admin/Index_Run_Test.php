@@ -2,8 +2,8 @@
 
 namespace ISC\Tests\WPUnit\Pro\Includes\Indexer\Admin;
 
-use ISC\Tests\WPUnit\WPTestCase;
 use ISC\Pro\Indexer\Index_Run;
+use ISC\Tests\WPUnit\WPTestCase;
 
 /**
  * Class Index_Run_Test

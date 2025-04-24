@@ -24,6 +24,24 @@ class Unused_Images_Get_Unused_Attachments_Test extends WPTestCase {
 	}
 
 	/**
+	 * Clean up after each test.
+	 */
+	public function tearDown(): void {
+		global $post;
+
+		// Explicitly delete the option set in tests
+		delete_option( 'isc_options' );
+
+		// Clean up meta for the current global post if it exists
+		if ( isset( $post->ID ) ) {
+			delete_post_meta( $post->ID, \ISC\Image_Sources\Post_Meta\Post_Images_Meta::META_KEY );
+			delete_post_meta( $post->ID, \ISC\Indexer::BEFORE_UPDATE_META_KEY );
+		}
+
+		parent::tearDown();
+	}
+
+	/**
 	 * Set the images_only setting.
 	 *
 	 * @param bool $enabled
@@ -101,8 +119,6 @@ class Unused_Images_Get_Unused_Attachments_Test extends WPTestCase {
 
 		$unchecked_attachments = Unused_Images::get_unused_attachments( [ 'filter' => 'unchecked' ] );
 		$this->assertCount( 2, $unchecked_attachments, 'Expected 2 unchecked attachments after marking one as checked' );
-
-		delete_post_meta( $this->attachment_ids[0], 'isc_possible_usages' );
 	}
 
 	/**
@@ -137,9 +153,10 @@ class Unused_Images_Get_Unused_Attachments_Test extends WPTestCase {
 
 		// Iterate through the attachment IDs to check if they are in the array of unused attachments
 		$ids = array_map( 'intval', wp_list_pluck( Unused_Images::get_unused_attachments(), 'ID' ) );
-		$this->assertNotContains( $this->attachment_ids[0], $ids, 'Image 1 should be unused');
-		$this->assertNotContains( $this->attachment_ids[1], $ids, 'Image 2 should be unused');
-		$this->assertContains( $this->attachment_ids[2], $ids, 'Image 3 should be used');
+		// Corrected assertions based on the expected outcome (only $this->attachment_ids[2] should be unused)
+		$this->assertNotContains( $this->attachment_ids[0], $ids, 'Image 1 should be used');
+		$this->assertNotContains( $this->attachment_ids[1], $ids, 'Image 2 should be used');
+		$this->assertContains( $this->attachment_ids[2], $ids, 'Image 3 should be unused');
 	}
 
 
@@ -206,6 +223,6 @@ class Unused_Images_Get_Unused_Attachments_Test extends WPTestCase {
 		$this->assertCount( 1, $unused_attachments, 'Expected 1 attachment because the attachment_id parameter overrides other filters' );
 
 		$ids = array_map( 'intval', wp_list_pluck( $unused_attachments, 'ID' ) );
-		$this->assertContains( $attachment_id, $ids, 'Attachment ID should not be found in unused attachments' );
+		$this->assertContains( $attachment_id, $ids, 'Attachment ID should be found when specifically requested');
 	}
 }
