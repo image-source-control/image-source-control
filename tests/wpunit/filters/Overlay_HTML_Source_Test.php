@@ -22,6 +22,13 @@ class Overlay_HTML_Source_Test extends WPTestCase {
 	 */
 	private $image_id;
 
+	/**
+	 * Holds the closure for the isc_overlay_html_source filter.
+	 *
+	 * @var \Closure|null
+	 */
+	private $overlay_html_source_filter_closure = null;
+
 	public function setUp(): void {
 		parent::setUp();
 
@@ -37,6 +44,18 @@ class Overlay_HTML_Source_Test extends WPTestCase {
 	}
 
 	/**
+	 * Clean up after each test.
+	 */
+	protected function tearDown(): void {
+		// Remove the filter added in test_add_source_captions_to_content
+		if ( $this->overlay_html_source_filter_closure ) {
+			remove_filter( 'isc_overlay_html_source', $this->overlay_html_source_filter_closure );
+		}
+
+		parent::tearDown();
+	}
+
+	/**
 	 * Test the filter in ISC_Public::add_source_captions_to_content()
 	 */
 	public function test_add_source_captions_to_content() {
@@ -47,9 +66,11 @@ class Overlay_HTML_Source_Test extends WPTestCase {
 		$this->assertEquals( $expected, $result );
 
 		// replace "span" with "div" the caption HTML
-		add_filter( 'isc_overlay_html_source', function( $source ) {
+		// Store the closure so we can remove it in tearDown
+		$this->overlay_html_source_filter_closure = function( $source ) {
 			return str_replace( 'span', 'div', $source );
-		} );
+		};
+		add_filter( 'isc_overlay_html_source', $this->overlay_html_source_filter_closure );
 
 		$expected = '<span id="isc_attachment_' . $this->image_id . '" class="isc-source "><img src="https://example.com/image-one.jpg" alt="Image" /><div class="isc-source-text">Source: Author A</div></span>';
 		$result   = $this->isc_public->add_source_captions_to_content( $html );
