@@ -5,8 +5,6 @@ namespace ISC\Tests\WPUnit\Pro\Admin\Includes;
 use ISC\Tests\WPUnit\WPTestCase;
 use ISC\Pro\Unused_Images;
 
-require_once dirname( __FILE__, 6 ) . '/pro/includes/unused-images/admin/unused-images.php';
-
 /**
  * Testing \ISC\Pro\Unused_Images::search_attachment_id_in_options()
  */

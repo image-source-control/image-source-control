@@ -6,8 +6,6 @@ use ISC\Tests\WPUnit\WPTestCase;
 use ISC\Pro\Unused_Images;
 use ISC\Options;
 
-require_once dirname( __FILE__, 6 ) . '/pro/includes/unused-images/admin/unused-images.php';
-
 /**
  * Testing \ISC\Pro\Unused_Images::search_attachment_id_in_content()
  */
@@ -28,10 +26,10 @@ class Unused_Images_Search_Attachment_Id_In_Content_Test extends WPTestCase {
 	private $post_id;
 
 	/**
-	 * Prepare the test environment
+	 * Prepare the test environment before each test method.
 	 */
-	public function _before() {
-		parent::_before();
+	public function setUp(): void {
+		parent::setUp();
 
 		// main image ID
 		$this->attachment_id = rand( 10000, 99999 );
@@ -42,6 +40,15 @@ class Unused_Images_Search_Attachment_Id_In_Content_Test extends WPTestCase {
 				'post_content' => 'Some content with image="' . $this->attachment_id . '" in it',
 			]
 		);
+	}
+
+	/**
+	 * Clean up after each test.
+	 */
+	public function tearDown(): void {
+		delete_option( 'isc_options' );
+
+		parent::tearDown();
 	}
 
 	/**

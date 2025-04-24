@@ -10,9 +10,26 @@ class License_Test extends WPTestCase {
 
 	private $instance;
 
-	protected function _before() {
-		parent::_before();
+	/**
+	 * Set up the test environment before each test method.
+	 */
+	public function setUp(): void {
+		parent::setUp();
 		$this->instance = new \ISC\Pro\Admin\License();
+	}
+
+	/**
+	 * Clean up after each test.
+	 */
+	public function tearDown(): void {
+		delete_option( 'isc_license' );
+		delete_option( 'isc_license_status' );
+		delete_option( 'isc_license_expires' );
+
+		// Reset the instance if needed, though PHPUnit creates a new instance per test.
+		$this->instance = null;
+
+		parent::tearDown();
 	}
 
 	/**
