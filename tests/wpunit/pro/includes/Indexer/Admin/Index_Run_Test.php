@@ -31,18 +31,6 @@ class Index_Run_Test extends WPTestCase {
 		$property   = $reflection->getProperty( 'batch_size' );
 		$property->setAccessible( true );
 		$property->setValue( $this->indexer_run, 2 ); // Set batch size to 2 for tests
-
-		// Explicitly delete all posts to ensure a clean slate for this test
-		// This is a more robust way to guarantee no published public posts exist
-		$all_post_ids = get_posts( [
-			                           'post_type'      => 'any',
-			                           'post_status'    => 'any',
-			                           'posts_per_page' => -1,
-			                           'fields'         => 'ids',
-		                           ] );
-		foreach ( $all_post_ids as $post_id ) {
-			wp_delete_post( $post_id, true ); // Use true to force delete
-		}
 	}
 
 	/**
