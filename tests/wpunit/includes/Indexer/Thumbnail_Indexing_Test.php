@@ -155,10 +155,6 @@ class Thumbnail_Indexing_Test extends WPTestCase {
 		// Assert post's index now contains both images, thumbnail has flag
 		$isc_post_images = get_post_meta( $post->ID, Post_Images_Meta::META_KEY, true );
 		$this->assertIsArray( $isc_post_images );
-
-		file_put_contents( WP_CONTENT_DIR . '/test.log', print_r( $isc_post_images, true ) . "\n", FILE_APPEND );
-
-
 		$this->assertArrayHasKey( $img1['id'], $isc_post_images, 'Post index should still contain content image ID.' );
 		$this->assertArrayHasKey( $thumb['id'], $isc_post_images, 'Post index should now contain thumbnail ID.' );
 		$this->assertCount( 2, $isc_post_images );
