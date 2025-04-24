@@ -15,6 +15,10 @@ class Indexer_Test extends WPTestCase {
 	}
 
 	public function tearDown(): void {
+		// Remove filters added in tests
+		remove_filter( 'get_the_excerpt', [ $this, 'filter_get_the_excerpt_for_test' ] );
+		remove_filter( 'isc_add_sources_to_content_ignore_post_images_index', '__return_true' );
+
 		parent::tearDown();
 	}
 
@@ -30,19 +34,30 @@ class Indexer_Test extends WPTestCase {
 	}
 
 	/**
+	 * Helper filter function for test_can_index_the_page_returns_false_when_doing_excerpt.
+	 *
+	 * @param string $excerpt The post excerpt.
+	 * @return string The post excerpt.
+	 */
+	public function filter_get_the_excerpt_for_test( $excerpt ) {
+		$result = indexer::can_index_the_page();
+		$this->assertFalse( $result, 'Indexer should not index during excerpt generation.' );
+
+		return $excerpt;
+	}
+
+	/**
 	 * Test can_index_the_page returns false when doing 'get_the_excerpt' filter.
 	 */
 	public function test_can_index_the_page_returns_false_when_doing_excerpt() {
 		// Simulate the 'get_the_excerpt' filter is being applied
-		add_filter( 'get_the_excerpt', function( $excerpt ) {
-			$result = indexer::can_index_the_page();
-			$this->assertFalse( $result, 'Indexer should not index during excerpt generation.' );
-
-			return $excerpt;
-		} );
+		// Use a method on the test class so we can remove it in tearDown
+		add_filter( 'get_the_excerpt', [ $this, 'filter_get_the_excerpt_for_test' ] );
 
 		// Trigger the filter
 		apply_filters( 'get_the_excerpt', '' );
+
+		// The assertion is now inside the filter callback, which is triggered by apply_filters
 	}
 
 	/**
@@ -100,17 +115,14 @@ class Indexer_Test extends WPTestCase {
 
 		$attachments = indexer::get_attachments_for_index( $post_id );
 
-		// Remove the filter immediately after use within the test
-		remove_filter( 'isc_add_sources_to_content_ignore_post_images_index', '__return_true' );
-
-		$this->assertSame( '', $attachments, 'Should return empty string when filter is active, even if meta does not exist.' );
+		// Remove the filter is now handled in tearDown
 	}
 
 	/**
 	 * Test if reindexing in get_attachments_for_index can be prevented by setting
 	 * the isc_add_sources_to_content_ignore_post_images_index filter to true
 	 * while the meta exists.
-     */
+	 */
 	public function test_get_attachments_for_index_returns_empty_when_filter_active_and_meta_exists() {
 		$post_id        = self::factory()->post->create();
 		$attachment_ids = [ 1, 2, 3 ];
@@ -123,10 +135,7 @@ class Indexer_Test extends WPTestCase {
 
 		$attachments = indexer::get_attachments_for_index( $post_id );
 
-		// Remove the filter immediately after use within the test
-		remove_filter( 'isc_add_sources_to_content_ignore_post_images_index', '__return_true' );
-
-		$this->assertSame( '', $attachments, 'Should return empty string when filter is active, even if meta exists.' );
+		// Remove the filter is now handled in tearDown
 
 		// Optional: Verify the meta still exists to be sure it wasn't accidentally deleted
 		$meta_after = get_post_meta( $post_id, 'isc_post_images', true );

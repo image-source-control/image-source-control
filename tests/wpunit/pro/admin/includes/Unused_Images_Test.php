@@ -6,6 +6,7 @@ use ISC\Tests\WPUnit\WPTestCase;
 use ISC\Pro\Unused_Images;
 
 require_once dirname( __FILE__, 6 ) . '/pro/includes/unused-images/admin/unused-images.php';
+
 class Unused_Images_Test extends WPTestCase {
 
 	/**
@@ -95,6 +96,17 @@ class Unused_Images_Test extends WPTestCase {
 			'post_type'  => 'attachment',
 			'guid'       => 'https://example.com/image-five.png',
 		] );
+	}
+
+	/**
+	 * Clean up after each test.
+	 */
+	protected function tearDown(): void {
+		// Clean up options modified in setUp
+		delete_option( 'some_temporary_option' );
+
+		// Call parent tearDown to handle database transaction rollback etc.
+		parent::tearDown();
 	}
 
 	/**
