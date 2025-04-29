@@ -3,7 +3,7 @@ Contributors: webzunft
 Tags: credits, captions, copyrights, attributions, image sources
 Requires at least: 6.0
 Tested up to: 6.8
-Stable tag: 3.1.4
+Stable tag: 3.2.0
 Requires PHP: 7.4
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -47,6 +47,8 @@ Choose between different credit displays:
 * Quickly assign a centrally defined source to any image and choose three options: hide image sources for these images, show a specific source (e.g., your name), or the uploader’s name
 * Warn about missing image sources
 * Manage, display, and link available licenses
+* Enable the features for any files in the media library or for images only
+* Filter the media library list by images with or without sources
 
 **Featured Image Caption**
 
@@ -60,12 +62,14 @@ Check out the premium features to display the image caption overlay for featured
 
 [Check out all features of Image Source Control](https://imagesourcecontrol.com/?utm_source=wporg&utm_medium=link&utm_campaign=all-features).
 
+* The Indexer looks for all images in all published content in one go
 * List credits for images outside the content
 * Add multiple links to the source string
 * Manage image credits for images hosted outside the Media Library
 * Handle images without file extensions
 * Show image usage in the image details and the List view of the media library
 * Bulk-edit image copyright information in the media library
+* Preview image credits in the media library
 * Show the standard picture credit for all images without a selected source
 * [Display IPTC copyright metadata](https://imagesourcecontrol.com/blog/iptc-copyright-information-image-caption-wordpress/) in the backend and automatically as a standard source in the frontend
 * Show the full text only after a click or on mouseover on the caption overlay
@@ -79,7 +83,7 @@ Check out the premium features to display the image caption overlay for featured
 * Personal email support
 
 Extended compatibility with Elementor, Avada, WP Bakery, and other page builders
-as well as with plugins like Kadence Blocks, Kadence Related Content Carousel, and Lightbox Gallery.
+as well as with plugins like WPML, Kadence Blocks, Kadence Related Content Carousel, and Lightbox Gallery.
 
 [See Pricing](https://imagesourcecontrol.com/pricing/?utm_source=wporg&utm_medium=link&utm_campaign=pricing).
 
@@ -150,8 +154,31 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 1. Customizing the list of image sources displayed under posts
 1. Customizing the global list of image sources
 1. Manage image usage licenses
+1. The Indexer searches for all images in published content
 
 == Changelog ==
+
+= 3.2.0 =
+
+- Feature: You can use the option “Images only” to disable features for non-images in the media library, e.g., PDF files
+- Improvement: When authors change content, ISC now looks for removed or new images at the next visit of that page in the frontend. This highly improved compatibility with page builders and dynamic content like shortcodes.
+- Improvement: When WP_DEBUG is enabled, show a button to list the content of the internal storage on the Tools page
+- Improvement: Removes image source output on pages with the Global List on it
+- Improvement (Pro): Ignores image URLs in `href` attributes when looking for image sources
+- Improvement (Pro): Clears the URL storage when the Indexer runs. This can help with issues when a site was migrated to another URL
+- Improvement (Pro): Extends ignored options for unused images
+- Improvement (Pro): The column with image sources forms in the Media Library list view only shows if the user has the permission to edit any image information
+- Improvement (Pro): The forms to edit image sources in the Media Library list view only show if the user has the permission to edit information for that given image
+- Improvement (Pro): The Indexer for Unused Images now works with posts translated by WPML
+- Fix: Removes old index information when the last image in a post is removed
+- Fix (Pro): Some reserved characters in URLs caused (e.g., `&`) the bulk edit fields for images sources in the media library to be cut off
+- Dev: Extracts post meta handling (`isc_image_posts`, `isc_post_images`) into dedicated classes.
+- Dev (Pro): Disable image source form fields in the Media Library list view when submitting the filter form to prevent broken URLs. This is related to a compatibility issue caused by a third-party setup
+- Dev (Pro): The Indexer now works in batches to prevent timeouts on large sites when Query Monitor is installed
+- Dev (Pro): Pages with the Global List shortcode are now ignored by the Indexer.
+- Dev: Adds cleanup routines for meta data for deleted and trashed posts.
+- Dev: Replace some direct DB calls with WP functions
+- Updates German translation
 
 = 3.1.4 =
 
