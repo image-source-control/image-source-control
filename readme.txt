@@ -98,7 +98,7 @@ Premium media cleaner features to remove unused images safely.
 
 [See Pricing](https://imagesourcecontrol.com/pricing/?utm_source=wporg&utm_medium=link&utm_campaign=pricing).
 
-Btw., Image Source Control is a suitable alternative to the discontinued or closed plugins Image Credits, Credit Tracker, or FSM Custom Featured Image Caption.
+Btw., Image Source Control is a suitable alternative to the discontinued or closed plugins Image Credits, [Credit Tracker](https://imagesourcecontrol.com/blog/credit-tracker/?utm_source=wporg&utm_medium=link&utm_campaign=credit-tracker), or FSM Custom Featured Image Caption.
 
 == Instructions ==
 
