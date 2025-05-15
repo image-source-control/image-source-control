@@ -56,6 +56,7 @@ class ComposerStaticInitdb72a6bac11cb0e6b971811c93d09a9b
         'ISC\\Plugin' => __DIR__ . '/../..' . '/includes/plugin.php',
         'ISC\\Pro\\Custom_Attribute_Processor' => __DIR__ . '/../..' . '/pro/includes/Custom_Attribute_Processor.php',
         'ISC\\Pro\\IPTC' => __DIR__ . '/../..' . '/pro/includes/IPTC.php',
+        'ISC\\Pro\\List_Layout_Details' => __DIR__ . '/../..' . '/pro/includes/List_Layout_Details.php',
         'ISC\\Settings' => __DIR__ . '/../..' . '/includes/settings.php',
         'ISC\\Settings\\Section' => __DIR__ . '/../..' . '/includes/settings/section.php',
         'ISC\\Settings\\Sections\\Caption' => __DIR__ . '/../..' . '/includes/settings/sections/caption.php',

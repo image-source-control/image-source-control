@@ -36,6 +36,7 @@ return array(
     'ISC\\Plugin' => $baseDir . '/includes/plugin.php',
     'ISC\\Pro\\Custom_Attribute_Processor' => $baseDir . '/pro/includes/Custom_Attribute_Processor.php',
     'ISC\\Pro\\IPTC' => $baseDir . '/pro/includes/IPTC.php',
+    'ISC\\Pro\\List_Layout_Details' => $baseDir . '/pro/includes/List_Layout_Details.php',
     'ISC\\Settings' => $baseDir . '/includes/settings.php',
     'ISC\\Settings\\Section' => $baseDir . '/includes/settings/section.php',
     'ISC\\Settings\\Sections\\Caption' => $baseDir . '/includes/settings/sections/caption.php',

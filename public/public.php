@@ -512,13 +512,9 @@ class ISC_Public extends \ISC\Image_Sources\Image_Sources {
 			return '';
 		}
 
-		$options  = $this->get_options();
-		$headline = $options['image_list_headline'];
-
 		ob_start();
 
 		?>
-			<p class="isc_image_list_title"><?php echo esc_html( $headline ); ?></p>
 			<ul class="isc_image_list">
 		<?php
 
@@ -946,14 +942,26 @@ class ISC_Public extends \ISC\Image_Sources\Image_Sources {
 	 * dedicated to displaying an empty box as well so don’t add more visible elements
 	 *
 	 * @param string $content content of the source box, i.e., list of sources.
+	 * @param bool   $create_placeholder if true, create a placeholder box without content.
 	 */
-	public function render_image_source_box( $content = null ) {
+	public function render_image_source_box( string $content = '', bool $create_placeholder = false ): string {
+		$options  = $this->get_options();
+		$headline = $options['image_list_headline'];
+
 		ob_start();
 		require ISCPATH . 'public/views/image-source-box.php';
 
 		ISC_Log::log( 'finished creating image source box' );
 
-		return ob_get_clean();
+		/**
+		 * Filter: isc_render_image_source_box
+		 * allow to modify the output of the image source box
+		 *
+		 * @param string $content content of the source box.
+		 * @param string $headline headline of the source box.
+		 * @param bool   $create_placeholder if true, create a placeholder box without content.
+		 */
+		return apply_filters( 'isc_render_image_source_box', ob_get_clean(), $content, $headline, $create_placeholder );
 	}
 
 	/**

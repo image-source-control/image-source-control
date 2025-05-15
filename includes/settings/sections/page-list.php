@@ -16,6 +16,7 @@ class Page_List extends Settings\Section {
 		add_settings_section( 'isc_settings_section_list_below_content', __( 'Per-page list', 'image-source-control-isc' ), [ $this, 'render_settings_section' ], 'isc_settings_page' );
 		add_settings_field( 'source_type_list', __( 'Enable', 'image-source-control-isc' ), [ $this, 'render_field_source_type_list' ], 'isc_settings_page', 'isc_settings_section_list_below_content' );
 		add_settings_field( 'image_list_headline', __( 'Headline', 'image-source-control-isc' ), [ $this, 'render_field_list_headline' ], 'isc_settings_page', 'isc_settings_section_list_below_content' );
+		add_settings_field( 'list_layout', __( 'Layout', 'image-source-control-isc' ), [ $this, 'render_field_list_layout' ], 'isc_settings_page', 'isc_settings_section_list_below_content' );
 		add_settings_field( 'below_content_included_images', __( 'Included images', 'image-source-control-isc' ), [ $this, 'render_field_below_content_included_images' ], 'isc_settings_page', 'isc_settings_section_list_below_content' );
 	}
 
@@ -40,6 +41,16 @@ class Page_List extends Settings\Section {
 	public function render_field_list_headline() {
 		$options = $this->get_options();
 		require_once ISCPATH . '/admin/templates/settings/page-list/headline.php';
+	}
+
+	/**
+	 * Render option to define the layout of the image list
+	 */
+	public function render_field_list_layout() {
+		$options             = $this->get_options();
+		$list_layout_details = ! empty( ( $options['list_layout'] ?? [] )['details'] ?? false );
+		$is_pro_enabled      = \ISC\Plugin::is_pro();
+		require_once ISCPATH . '/admin/templates/settings/page-list/layout.php';
 	}
 
 	/**
