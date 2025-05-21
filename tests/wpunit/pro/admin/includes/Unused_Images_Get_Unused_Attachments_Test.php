@@ -225,4 +225,19 @@ class Unused_Images_Get_Unused_Attachments_Test extends WPTestCase {
 		$ids = array_map( 'intval', wp_list_pluck( $unused_attachments, 'ID' ) );
 		$this->assertContains( $attachment_id, $ids, 'Attachment ID should be found when specifically requested');
 	}
+
+	/**
+	 * Test that the site icon is excluded from the unused attachments
+	 */
+	public function test_get_unused_attachments_excludes_site_icon() {
+		update_option( 'site_icon', $this->attachment_ids[0] );
+
+		$unused_attachments = Unused_Images::get_unused_attachments();
+
+		$returned_ids = array_map( 'intval', wp_list_pluck( $unused_attachments, 'ID' ) );
+
+		$this->assertNotContains( $this->attachment_ids[0], $returned_ids, 'site_icon should not be among unused images' );
+		$this->assertContains( $this->attachment_ids[1], $returned_ids, 'Image 2 should be among unused images' );
+		$this->assertCount( 2, $returned_ids, 'Only 2 images should be considered unused' );
+	}
 }
