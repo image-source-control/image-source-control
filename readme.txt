@@ -163,7 +163,16 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 
 == Changelog ==
 
+= untagged =
+
+- Feature (Pro): Layout option to collapse the Per-page list below the content by default and only open it on click
+- Improvement (Pro): Consider the site_icon image as "used" and don’t list it under Unused Images
+- Dev (Pro): Improved handling nested output buffer calls to prevent issues with other plugins; here it was WPBakery
+- Dev (Pro): Use the `isc_unused_images_ids_considered_used` filter to add IDs of images that should not show as unused images
+
 = 3.2.0 =
+
+April 29th, 2025
 
 - Feature: You can use the option “Images only” to disable features for non-images in the media library, e.g., PDF files
 - Improvement: When authors change content, ISC now looks for removed or new images at the next visit of that page in the frontend. This highly improved compatibility with page builders and dynamic content like shortcodes.
