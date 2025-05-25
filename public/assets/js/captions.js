@@ -261,9 +261,6 @@ function isc_setup_mutation_observer() {
 		const targetNode = document.querySelector(selector);
 		if ( targetNode ) {
 			observer.observe( targetNode, { childList: true, subtree: true } );
-			// console.log(`ISC MutationObserver: Observing element matching selector "${selector}".`);
-		} else {
-			// console.warn(`ISC MutationObserver: Target element not found for selector: "${selector}".`);
 		}
 	} );
 }

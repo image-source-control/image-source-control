@@ -136,7 +136,7 @@ class ISC_Public extends \ISC\Image_Sources\Image_Sources {
 		];
 
 		/**
-		 * Filter: isc_public_caption_options
+		 * Filter: isc_public_caption_script_options
 		 *
 		 * @param array $front_data The data to be localized.
 		 * @param array $options The options array.
