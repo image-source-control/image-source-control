@@ -27,10 +27,7 @@ function ISCready(){
 			const captions = document.querySelectorAll( '.isc-source .isc-source-text' );
 			const l        = captions.length;
 			for ( let i = 0; i < l; i++ ) {
-				captions[i].setAttribute( "style", `position: absolute; font-size: ${ISC_FONT_SIZE}; background-color: ${ISC_BACKGROUND_COLOR}; color: ${ISC_TEXT_COLOR}; opacity: ${ISC_OPACITY}; padding: ${ISC_PADDING}; text-shadow: none; display: ${ISC_DISPLAY}` );
-				// Some themes handle the bottom padding of the attachment's div with the caption text (which is in between
-				// the image and the bottom border) not with the div itself. The following line set the padding on the bottom equal to the top.
-				captions[i].style.paddingBottom = window.getComputedStyle( captions[i] )['padding-top'];
+				isc_update_caption_style( captions[i] );
 				// position the parent element (.isc-source)
 				isc_update_caption_position( captions[i].parentNode );
 			}
@@ -52,7 +49,42 @@ function ISCready(){
 		window.addEventListener( 'resize', function() {
 			isc_update_captions_positions();
 		} );
+
+		/**
+		 * Monitor DOM changes to update captions
+		 */
+		isc_setup_mutation_observer();
 };
+
+/**
+ * Iterate through all image source captions and set basic CSS style
+ *
+ * This can be used to add styles to dynamically added captions, e.g., by AJAX calls
+ */
+function isc_update_captions_styles() {
+	const captions = document.querySelectorAll( '.isc-source .isc-source-text' );
+	const l        = captions.length;
+	for ( let i = 0; i < l; i++ ) {
+		isc_update_caption_style( captions[i] );
+	}
+}
+
+/**
+ * Add basic CSS to a single image source caption
+ *
+ * @param caption image source caption that needs positioning
+ */
+function isc_update_caption_style( caption ) {
+	// bail if the element already has a style attribute
+	if ( caption.hasAttribute( 'style' ) ) {
+		return;
+	}
+
+	caption.setAttribute( "style", `position: absolute; font-size: ${ISC_FONT_SIZE}; background-color: ${ISC_BACKGROUND_COLOR}; color: ${ISC_TEXT_COLOR}; opacity: ${ISC_OPACITY}; padding: ${ISC_PADDING}; text-shadow: none; display: ${ISC_DISPLAY}` );
+	// Some themes handle the bottom padding of the attachment's div with the caption text (which is in between
+	// the image and the bottom border) not with the div itself. The following line set the padding on the bottom equal to the top.
+	caption.style.paddingBottom = window.getComputedStyle( caption )['padding-top'];
+}
 
 /**
  * Iterate through image source captions and set their position on the screen
@@ -178,4 +210,60 @@ function ISCouterHeight(el) {
 	let style = getComputedStyle( el );
 
 	return el.offsetHeight + parseInt( style.marginTop ) + parseInt( style.marginBottom );
+}
+
+/**
+ * Sets up the MutationObserver to watch for dynamically added captions.
+ */
+function isc_setup_mutation_observer() {
+	// Get selectors for elements to observe from PHP, default to an empty array
+	const elementsToObserveSelectors = isc_front_data.observe_elements_selectors || [];
+
+	if ( elementsToObserveSelectors.length === 0 ) {
+		return; // Do nothing if no selectors are provided
+	}
+
+	const observer = new MutationObserver( ( mutationsList, observerInstance) => {
+		let newCaptionsDetected = false;
+		for ( const mutation of mutationsList ) {
+			// We are interested in mutations where nodes were added.
+			if ( mutation.type === 'childList' && mutation.addedNodes.length > 0 ) {
+				// Iterate through each node that was added.
+				// An AJAX response might add multiple sibling elements at once.
+				for ( const addedNode of mutation.addedNodes ) {
+					// We only operate on actual HTML elements.
+					if ( addedNode.nodeType === Node.ELEMENT_NODE ) {
+						// Check for the presence of the caption text
+						if ( addedNode.querySelector( '.isc-source .isc-source-text' ) ) {
+							newCaptionsDetected = true;
+							// Found what we're looking for, no need to check further
+							// added nodes in this particular mutation.
+							break;
+						}
+					}
+				}
+			}
+			// If we've detected new captions in any of the mutations,
+			// we can stop checking the rest of the mutations.
+			if ( newCaptionsDetected ) {
+				break;
+			}
+		}
+
+		if ( newCaptionsDetected ) {
+			console.log('ISC MutationObserver: New captions detected. Updating styles and positions.');
+			isc_update_captions_styles();
+			isc_update_captions_positions();
+		}
+	});
+
+	elementsToObserveSelectors.forEach( selector => {
+		const targetNode = document.querySelector(selector);
+		if ( targetNode ) {
+			observer.observe( targetNode, { childList: true, subtree: true } );
+			// console.log(`ISC MutationObserver: Observing element matching selector "${selector}".`);
+		} else {
+			// console.warn(`ISC MutationObserver: Target element not found for selector: "${selector}".`);
+		}
+	} );
 }

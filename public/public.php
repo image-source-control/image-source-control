@@ -128,11 +128,31 @@ class ISC_Public extends \ISC\Image_Sources\Image_Sources {
 		}
 		// inject in footer as we can only reliably position captions when the DOM is fully loaded
 		wp_enqueue_script( 'isc_caption', plugins_url( '/assets/js/captions.js', __FILE__ ), null, ISCVERSION, true );
+
+		$options = $this->get_options();
+
+		$front_data = [
+			'caption_position' => isset( $options['caption_position'] ) ? esc_html( $options['caption_position'] ) : '',
+		];
+
+		/**
+		 * Filter: isc_public_caption_options
+		 *
+		 * @param array $front_data The data to be localized.
+		 * @param array $options The options array.
+		 */
+		$filtered_front_data = apply_filters( 'isc_public_caption_script_options', $front_data, $options );
+
+		wp_localize_script(
+			'isc_caption',
+			'isc_front_data',
+			$filtered_front_data
+		);
 	}
 
-			/**
-			 * Front-end scripts in <head /> section.
-			 */
+	/**
+	 * Front-end scripts in <head /> section.
+	 */
 	public function front_head() {
 		// don’t add the script on AMP pages
 		if ( self::is_amp() ) {
@@ -141,14 +161,6 @@ class ISC_Public extends \ISC\Image_Sources\Image_Sources {
 
 		$options = $this->get_options();
 		?>
-			<script>
-			/* <![CDATA[ */
-				var isc_front_data =
-				{
-					caption_position : '<?php echo esc_html( $options['caption_position'] ); ?>',
-				}
-			/* ]]> */
-			</script>
 			<style>
 				.isc-source { position: relative; display: inline-block; line-height: initial; }
 				.wp-block-cover .isc-source { position: static; }
