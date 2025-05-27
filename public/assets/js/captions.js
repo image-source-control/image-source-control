@@ -6,15 +6,19 @@ if ( document.readyState !== 'loading' ) {
 }
 
 // Use values from isc_front_data if available, otherwise use default values
-const ISC_FONT_SIZE                 = isc_front_data.font_size || '0.9em';
-const ISC_BACKGROUND_COLOR          = isc_front_data.background_color || '#333';
-const ISC_TEXT_COLOR                = isc_front_data.text_color || '#fff';
-const ISC_OPACITY                   = isc_front_data.opacity || 0.70;
-const ISC_PADDING                   = isc_front_data.padding || '0 0.15em';
-const ISC_DISPLAY                   = isc_front_data.display || 'block';
 const ISC_Z_INDEX                   = isc_front_data.z_index || '9999';
 const ISC_CAPTION_HORIZONTAL_MARGIN = isc_front_data.caption_horizontal_margin || 5;
 const ISC_CAPTION_VERTICAL_MARGIN   = isc_front_data.caption_vertical_margin || 5;
+const ISC_STYLE_STRING = (() => {
+	const styles = isc_front_data.caption_style || {};
+	let styleString = '';
+
+	for ( const [property, value] of Object.entries(styles) ) {
+		styleString += `${property}: ${value}; `;
+	}
+
+	return styleString.trim();
+})();
 
 /**
  * Initialize ISC after the DOM was loaded
@@ -80,7 +84,7 @@ function isc_update_caption_style( caption ) {
 		return;
 	}
 
-	caption.setAttribute( "style", `position: absolute; font-size: ${ISC_FONT_SIZE}; background-color: ${ISC_BACKGROUND_COLOR}; color: ${ISC_TEXT_COLOR}; opacity: ${ISC_OPACITY}; padding: ${ISC_PADDING}; text-shadow: none; display: ${ISC_DISPLAY}` );
+	caption.setAttribute( "style", ISC_STYLE_STRING );
 	// Some themes handle the bottom padding of the attachment's div with the caption text (which is in between
 	// the image and the bottom border) not with the div itself. The following line set the padding on the bottom equal to the top.
 	caption.style.paddingBottom = window.getComputedStyle( caption )['padding-top'];

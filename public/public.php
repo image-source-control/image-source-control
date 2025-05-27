@@ -131,8 +131,27 @@ class ISC_Public extends \ISC\Image_Sources\Image_Sources {
 
 		$options = $this->get_options();
 
+		$caption_style = [
+			'position'         => 'absolute',
+			'font-size'        => '0.9em',
+			'background-color' => '#333',
+			'color'            => '#fff',
+			'opacity'          => '0.70',
+			'padding'          => '0 0.15em',
+			'text-shadow'      => 'none',
+			'display'          => 'block',
+		];
+
 		$front_data = [
 			'caption_position' => isset( $options['caption_position'] ) ? esc_html( $options['caption_position'] ) : '',
+			/**
+			 * Filter: isc_public_caption_default_style
+			 * Allows to change the default caption style.
+			 *
+			 * @param array $caption_style The default caption style.
+			 * @param array $options The options array.
+			 */
+			'caption_style'    => apply_filters( 'isc_public_caption_default_style', $caption_style, $options ),
 		];
 
 		/**
