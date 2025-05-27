@@ -48,7 +48,8 @@
         "cs": "vendor/bin/phpcs --standard=.phpcs.xml",
         "wpunit": "./scripts/php-tests.sh wpunit",
         "functional": "./scripts/php-tests.sh functional",
-        "acceptance": "./scripts/php-tests.sh acceptance"
+        "acceptance": "./scripts/php-tests.sh acceptance",
+        "js-minify": "php scripts/minify-js.php"
     },
     "scripts-descriptions": {
         "wpunit":     "wpunit test suite (phpall = alle PHP‑Versionen)",

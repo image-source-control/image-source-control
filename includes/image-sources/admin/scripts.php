@@ -3,6 +3,7 @@
 namespace ISC\Image_Sources;
 
 use ISC\Admin_Utils;
+use ISC\Helpers;
 
 /**
  * Add the admin menu items für Image Sources features
@@ -27,7 +28,7 @@ class Image_Sources_Admin_Scripts {
 		}
 
 		if ( $screen->id === 'media_page_isc-sources' ) {
-			wp_enqueue_script( 'isc_sources_script', ISCBASEURL . '/admin/assets/js/sources.js', [], ISCVERSION, true );
+			Helpers::enqueue_script( 'isc_sources_script', 'admin/assets/js/sources.js' );
 		}
 
 		// check if we are on the media library page with list view
@@ -36,7 +37,7 @@ class Image_Sources_Admin_Scripts {
 		}
 
 		if ( in_array( $screen->id, [ 'upload', 'widgets', 'customize' ], true ) ) {
-			wp_enqueue_script( 'isc_attachment_compat', ISCBASEURL . '/admin/assets/js/wp.media.view.AttachmentCompat.js', [ 'media-upload' ], ISCVERSION, true );
+			Helpers::enqueue_script( 'isc_attachment_compat', 'admin/assets/js/wp.media.view.AttachmentCompat.js', [ 'media-upload' ] );
 		}
 	}
 

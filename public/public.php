@@ -1,6 +1,7 @@
 <?php
 
 use ISC\Standard_Source;
+use ISC\Helpers;
 
 /**
  * Handles all frontend facing functionalities
@@ -127,7 +128,7 @@ class ISC_Public extends \ISC\Image_Sources\Image_Sources {
 			return;
 		}
 		// inject in footer as we can only reliably position captions when the DOM is fully loaded
-		wp_enqueue_script( 'isc_caption', plugins_url( '/assets/js/captions.js', __FILE__ ), null, ISCVERSION, true );
+		Helpers::enqueue_script( 'isc_caption', 'public/assets/js/captions.js' );
 
 		$options = $this->get_options();
 
