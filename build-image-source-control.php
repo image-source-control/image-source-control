@@ -3,6 +3,9 @@
  * Create a --no-dev distribution with composer and move the autoloader files to /lib
  */
 
+// Minify JavaScript files that have changed
+exec( 'php scripts/minify-changed-js.php' );
+
 // Define paths
 $pluginComposerJson = __DIR__ . '/composer.json';
 
@@ -10,8 +13,7 @@ $pluginComposerJson = __DIR__ . '/composer.json';
 function runComposerInstallNoDev( $composerJsonPath ) {
 	$currentDir = getcwd();
 	chdir( dirname( $composerJsonPath ) );
-	//
-	exec( 'composer install --no-dev --optimize-autoloader' );
+		exec( 'composer install --no-dev --optimize-autoloader' );
 	chdir( $currentDir );
 }
 
@@ -19,8 +21,7 @@ function runComposerInstallNoDev( $composerJsonPath ) {
 function runComposerInstallDev( $composerJsonPath ) {
 	$currentDir = getcwd();
 	chdir( dirname( $composerJsonPath ) );
-	//
-	exec( 'composer install' );
+		exec( 'composer install' );
 	chdir( $currentDir );
 	echo "Returned back to dev setup.\n";
 }
@@ -46,8 +47,8 @@ $srcAutoload = __DIR__ . '/vendor/autoload.php';
 
 // Copy the main autoloader file
 if ( ! file_exists( $srcAutoload ) || ! copy( $srcAutoload, __DIR__ . '/lib/autoload.php' ) ) {
-	error_log( "Failed to copy autoloader.php file" );
-	exit( "Failed to copy autoloader file." );
+	error_log( 'Failed to copy autoloader.php file' );
+	exit( 'Failed to copy autoloader file.' );
 }
 
 // Begin to copy all files from the composer directory
@@ -58,7 +59,7 @@ $dir             = opendir( $srcComposerDir );
 
 $blacklist = [ 'installed.php' ];  // Files to not copy
 while ( false !== ( $file = readdir( $dir ) ) ) {
-	if ( $file != '.' && $file != '..' && ! in_array( $file, $blacklist ) ) {
+	if ( $file !== '.' && $file !== '..' && ! in_array( $file, $blacklist ) ) {
 		copy( $srcComposerDir . '/' . $file, $destComposerDir . '/' . $file );
 	}
 }

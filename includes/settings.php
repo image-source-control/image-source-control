@@ -69,7 +69,7 @@ class Settings {
 		$screen = get_current_screen();
 
 		if ( isset( $screen->id ) && $screen->id === 'settings_page_isc-settings' ) {
-			wp_enqueue_script( 'isc_settings_script', ISCBASEURL . '/admin/assets/js/settings.js', [], ISCVERSION, true );
+			Helpers::enqueue_script( 'isc_settings_script', 'admin/assets/js/settings.js' );
 		}
 	}
 

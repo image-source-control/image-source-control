@@ -1,6 +1,7 @@
 <?php
 
 use ISC\Plugin;
+use ISC\Helpers;
 
 /**
  * Integration with the Block editor
@@ -176,17 +177,15 @@ class ISC_Block_Options {
 	public function editor_assets() {
 		$dependencies = [ 'jquery', 'wp-api', 'lodash', 'wp-blocks', 'wp-element', 'wp-i18n' ];
 		$screen       = get_current_screen();
-		wp_enqueue_script( 'isc_attachment_compat', trailingslashit( ISCBASEURL ) . 'admin/assets/js/wp.media.view.AttachmentCompat.js', [ 'media-upload' ], ISCVERSION, true );
+		Helpers::enqueue_script( 'isc_attachment_compat', 'admin/assets/js/wp.media.view.AttachmentCompat.js', [ 'media-upload' ] );
 
 		if ( $screen && isset( $screen->base ) && $screen->base !== 'widgets' ) {
 			$dependencies[] = 'wp-editor';
 		}
-		wp_register_script(
+		Helpers::register_script(
 			'isc/image-block',
-			plugin_dir_url( __FILE__ ) . 'isc-image-block.js',
+			'includes/block-options/isc-image-block.js',
 			$dependencies,
-			true,
-			false
 		);
 
 		$plugin_options = ISC\Plugin::get_options();
@@ -203,23 +202,18 @@ class ISC_Block_Options {
 			// Add all our data as a variable in an inline script.
 			wp_add_inline_script( 'isc/image-block', 'var iscData = ' . wp_json_encode( $isc_data ) . ';', 'before' );
 		}
+		// separated from register_script since wp_add_inline_script needs a working handle
 		wp_enqueue_script( 'isc/image-block' );
 		wp_set_script_translations( 'isc/image-block', 'image-source-control-isc', apply_filters( 'isc_path_to_languages', '' ) );
 
-		wp_enqueue_script( 'isc/media-upload', trailingslashit( ISCBASEURL ) . 'admin/assets/js/media-upload.js', [ 'media-upload' ], ISCVERSION, true );
+		Helpers::enqueue_script( 'isc/media-upload', 'admin/assets/js/media-upload.js', [ 'media-upload' ] );
 	}
 
 	/**
 	 * Enqueue script to add an edit button to image blocks
 	 */
 	public function edit_link_assets() {
-		wp_enqueue_script(
-			'isc/image-block-edit-link',
-			plugin_dir_url( __FILE__ ) . 'isc-image-block-edit-link.js',
-			[ 'wp-blocks', 'wp-i18n', 'wp-element', 'wp-editor' ],
-			ISCVERSION,
-			true // load in the footer
-		);
+		Helpers::enqueue_script( 'isc/image-block-edit-link', 'includes/block-options/isc-image-block-edit-link.js', [ 'wp-blocks', 'wp-i18n', 'wp-element', 'wp-editor' ] );
 
 		wp_set_script_translations( 'isc/image-block-edit-link', 'image-source-control-isc', apply_filters( 'isc_path_to_languages', '' ) );
 	}

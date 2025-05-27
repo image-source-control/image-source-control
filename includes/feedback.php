@@ -42,7 +42,7 @@ class Feedback {
 			return;
 		}
 
-		wp_enqueue_script( 'isc-feedback', ISCBASEURL . 'admin/assets/js/feedback.js', [], ISCVERSION, true );
+		Helpers::enqueue_script( 'isc-feedback', 'admin/assets/js/feedback.js' );
 		wp_enqueue_style( 'isc-feedback', ISCBASEURL . 'admin/assets/css/feedback.css', [], ISCVERSION );
 	}
 
