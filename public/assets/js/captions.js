@@ -153,15 +153,15 @@ function isc_update_caption_position( el ) {
 	switch (pos) {
 		case 'top-left':
 			posl = l + attpl + attml + tml;
-			post = t + attpt + attmt + tmt;
+			post = t + attpt + tmt;
 			break;
 		case 'top-center':
 			posl = l + (Math.round( attw / 2 ) - (Math.round( tw / 2 ))) + attpl + attml;
-			post = t + attpt + attmt + tmt;
+			post = t + attpt + tmt;
 			break;
 		case 'top-right':
 			posl = l - attpl + attml - tml + attw - tw;
-			post = t + attpt + attmt + tmt;
+			post = t + attpt + tmt;
 			break;
 		case 'center':
 			posl = l + (Math.round( attw / 2 ) - (Math.round( tw / 2 ))) + attpl + attml;
@@ -169,15 +169,15 @@ function isc_update_caption_position( el ) {
 			break;
 		case 'bottom-left':
 			posl = l + attpl + attml + tml;
-			post = t - attpt + attmt - tmt - th + atth;
+			post = t - attpt - tmt - th + atth;
 			break;
 		case 'bottom-center':
 			posl = l + (Math.round( attw / 2 ) - (Math.round( tw / 2 ))) + attpl + attml;
-			post = t + attpt + attmt - tmt - th + atth;
+			post = t + attpt - tmt - th + atth;
 			break;
 		case 'bottom-right':
 			posl = l - attpl + attml - tml + attw - tw;
-			post = t + attpt + attmt - tmt - th + atth;
+			post = t + attpt - tmt - th + atth;
 			break;
 	}
 	caption.style.left   = posl + 'px';
@@ -268,3 +268,118 @@ function isc_setup_mutation_observer() {
 		}
 	} );
 }
+
+/**
+ * Caption Positioning When Images Load Dynamically
+ *
+ * This script ensures that image captions are correctly positioned even when images load dynamically,
+ * lazy-loading occurs, or layout changes happen. It achieves this through a combination of event listeners
+ * and a MutationObserver that watches for relevant changes.
+ *
+ * Features:
+ * - Observes changes to images inside `.isc-source` elements.
+ * - Listens for `load` events on images to update caption positions.
+ * - Uses a MutationObserver to detect relevant DOM changes while ignoring `.isc-source-text` elements to prevent infinite loops.
+ * - Debounces updates to avoid excessive function calls.
+ *
+ * How it Works:
+ * - `updateAllCaptions()`: Updates all caption positions, ensuring changes are applied efficiently.
+ * - `observeDOMChanges()`: Watches for changes in image attributes (`src`, `width`, `height`, `style`) and dynamically added `.isc-source` elements.
+ * - `observeImageLoads()`: Ensures captions update when images finish loading.
+ * - `initCaptionFix()`: Initializes the script once the DOM is ready.
+ */
+(function () {
+	let updateTimeout;
+	let isUpdatingCaptions = false;
+
+	/**
+	 * Function to update all captions' positions (debounced to avoid excessive calls)
+	 */
+	function updateAllCaptions() {
+		if (isUpdatingCaptions) return; // Prevent recursive updates
+
+		isUpdatingCaptions = true;
+		clearTimeout(updateTimeout);
+		updateTimeout = setTimeout(() => {
+			isc_update_captions_positions();
+			isUpdatingCaptions = false;
+		}, 100); // Debounce: Only update once within 100ms
+	}
+
+	/**
+	 * Observe changes in the DOM for dynamically loaded images
+	 */
+	function observeDOMChanges() {
+		const observer = new MutationObserver((mutations) => {
+			let needsUpdate = false;
+
+			// Using for...of for better performance with early exit
+			for (const mutation of mutations) {
+				// Ignore changes to .isc-source-text elements (captions)
+				if (mutation.target.closest(".isc-source-text")) {
+					continue;
+				}
+
+				// Only trigger updates if images inside .isc-source are modified
+				if (
+					mutation.type === "childList" ||
+					(mutation.type === "attributes" &&
+						mutation.target.closest(".isc-source") &&
+						["src", "width", "height", "style"].includes(mutation.attributeName)
+					)
+				) {
+					needsUpdate = true;
+					break; // Exit early once we know we need an update
+				}
+			}
+
+			if (needsUpdate) {
+				updateAllCaptions();
+			}
+		});
+
+		// Observe the entire document but filter for .isc-source elements
+		observer.observe(document.body, {
+			childList: true,
+			subtree: true, // Observe all new elements dynamically added
+			attributes: true,
+			attributeFilter: ["src", "width", "height", "style"]
+		});
+
+		// Cleanup on page unload
+		window.addEventListener('unload', () => observer.disconnect(), { once: true });
+	}
+
+	/**
+	 * Attach event listeners to images to update captions when they load
+	 */
+	function observeImageLoads() {
+		const images = document.querySelectorAll(".isc-source img");
+
+		images.forEach((img) => {
+			if (img.complete && img.naturalWidth !== 0) {
+				// Only update if image is actually loaded with dimensions
+				isc_update_caption_position(img.closest(".isc-source"));
+			}
+
+			img.addEventListener("load", function () {
+				isc_update_caption_position(img.closest(".isc-source"));
+			}, { once: true }); // Ensures the event only fires once
+		});
+	}
+
+	/**
+	 * Initialize the solution
+	 */
+	function initCaptionFix() {
+		observeImageLoads();
+		observeDOMChanges();
+	}
+
+	// Run when the document is ready
+	if (document.readyState !== "loading") {
+		initCaptionFix();
+	} else {
+		document.addEventListener("DOMContentLoaded", initCaptionFix);
+	}
+})();
