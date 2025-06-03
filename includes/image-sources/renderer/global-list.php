@@ -156,7 +156,7 @@ class Global_List extends Renderer {
 
 		// calculate total pages
 		if ( $per_page && $per_page < $total ) {
-			$up_limit = ceil( $total / $per_page );
+			$up_limit = (int) ceil( $total / $per_page );
 		}
 
 		ob_start();
