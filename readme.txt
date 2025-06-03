@@ -3,7 +3,7 @@ Contributors: webzunft
 Tags: credits, captions, copyrights, attributions, image sources
 Requires at least: 6.0
 Tested up to: 6.8
-Stable tag: 3.2.0
+Stable tag: 3.3.0
 Requires PHP: 7.4
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -88,7 +88,7 @@ Check out the premium features to display the image caption overlay for featured
 * Personal email support
 
 Extended compatibility with Elementor, Avada, WP Bakery, and other page builders
-as well as with plugins like WPML, Kadence Blocks, Kadence Related Content Carousel, and Lightbox Gallery.
+as well as with plugins like WPML, Kadence Blocks, Kadence Related Content Carousel, Lightbox Gallery, and JetEngine.
 
 [See Pricing](https://imagesourcecontrol.com/pricing/?utm_source=wporg&utm_medium=link&utm_campaign=pricing).
 
@@ -163,10 +163,17 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 
 == Changelog ==
 
-= untagged =
+= 3.3.0 =
 
 - Feature (Pro): Layout option to collapse the Per-page list below the content by default and only open it on click
+- Improvement: Minified JavaScript files in frontend and backend for faster load times
 - Improvement (Pro): Consider the site_icon image as "used" and don’t list it under Unused Images
+- Improvement (Pro): Support for JetEngine AJAX-loaded content
+- Improvement (Pro): The expand-on-click caption option is more stable and should not create random line breaks
+- Fix (Pro): Honor the Elementor compatibility option and disable the feature, if the option is not checked
+- Fix (Pro): Made a string on the Indexer page translatable
+- Dev: The main caption CSS can be customized via the `isc_public_caption_default_style` filter
+- Dev: The new `isc_update_captions_styles()` JavaScript function allows developers to update the caption styles in the frontend. E.g., useful for dynamically loaded content
 - Dev (Pro): Improved handling nested output buffer calls to prevent issues with other plugins; here it was WPBakery
 - Dev (Pro): Use the `isc_unused_images_ids_considered_used` filter to add IDs of images that should not show as unused images
 
