@@ -27,6 +27,7 @@ return array(
     'ISC\\Image_Sources\\Post_Meta\\Post_Images_Meta' => $baseDir . '/includes/image-sources/Post_Meta/Post_Images_Meta.php',
     'ISC\\Image_Sources\\Renderer' => $baseDir . '/includes/image-sources/renderer.php',
     'ISC\\Image_Sources\\Renderer\\Caption' => $baseDir . '/includes/image-sources/renderer/caption.php',
+    'ISC\\Image_Sources\\Renderer\\Global_List' => $baseDir . '/includes/image-sources/renderer/global-list.php',
     'ISC\\Image_Sources\\Renderer\\Image_Source_String' => $baseDir . '/includes/image-sources/renderer/image-source-string.php',
     'ISC\\Image_Sources\\Utils' => $baseDir . '/includes/image-sources/utils.php',
     'ISC\\Indexer' => $baseDir . '/includes/indexer.php',
