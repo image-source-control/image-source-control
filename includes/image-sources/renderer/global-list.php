@@ -4,7 +4,6 @@ namespace ISC\Image_Sources\Renderer;
 
 use ISC\Image_Sources\Renderer;
 use ISC\Image_Sources\Image_Sources;
-use ISC_Model;
 use ISC_Log;
 use ISC\Standard_Source;
 
@@ -67,7 +66,29 @@ class Global_List extends Renderer {
 			];
 		}
 
-		$attachments = ISC_Model::get_attachments( apply_filters( 'isc_global_list_get_attachment_arguments', $args ) );
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$page = isset( $_GET['isc-page'] ) ? intval( $_GET['isc-page'] ) : 1;
+		if ( $page < 1 ) {
+			$page = 1;
+		}
+
+		// pagination arguments
+		$args['posts_per_page'] = $per_page;
+		$args['paged']          = $page;
+		$args['no_found_rows']  = false; // makes sure that WP_Query counts all posts, not just the ones on the current page
+
+		$attachments_query_result = self::get_attachments( apply_filters( 'isc_global_list_get_attachment_arguments', $args ) );
+
+		if ( is_a( $attachments_query_result, 'WP_Query' ) ) {
+			$attachments       = $attachments_query_result->posts;
+			$total_found_posts = $attachments_query_result->found_posts;
+		} elseif ( is_array( $attachments_query_result ) && isset( $attachments_query_result['posts'], $attachments_query_result['found_posts'] ) ) {
+			$attachments       = $attachments_query_result['posts'];
+			$total_found_posts = $attachments_query_result['found_posts'];
+		} else {
+			$attachments = $attachments_query_result;
+			$total_found_posts = count( $attachments );
+		}
 
 		if ( empty( $attachments ) ) {
 			return '';
@@ -76,7 +97,6 @@ class Global_List extends Renderer {
 		$connected_atts = [];
 
 		foreach ( $attachments as $_attachment ) {
-			// skip non-images if option is selected
 			if ( ! \ISC\Media_Type_Checker::should_process_attachment( $_attachment ) ) {
 				ISC_Log::log( sprintf( 'skipped image %d because it is not an image', $_attachment->ID ) );
 				continue;
@@ -84,7 +104,7 @@ class Global_List extends Renderer {
 
 			$connected_atts[ $_attachment->ID ]['source']   = Image_Sources::get_image_source_text_raw( $_attachment->ID );
 			$connected_atts[ $_attachment->ID ]['standard'] = Standard_Source::use_standard_source( $_attachment->ID );
-			// jump to next element if the standard source is set to be excluded from the source list
+
 			if ( Standard_Source::standard_source_is( 'exclude' ) && $connected_atts[ $_attachment->ID ]['standard'] ) {
 				unset( $connected_atts[ $_attachment->ID ] );
 				continue;
@@ -103,7 +123,6 @@ class Global_List extends Renderer {
 			$usage_data = '';
 
 			if ( is_array( $metadata ) && [] !== $metadata ) {
-				$usage_data      .= "<ul style='margin: 0;'>";
 				$usage_data_array = [];
 				foreach ( $metadata as $data ) {
 					// only list published posts
@@ -119,6 +138,7 @@ class Global_List extends Renderer {
 					unset( $connected_atts[ $_attachment->ID ] );
 					continue;
 				}
+				$usage_data .= "<ul style='margin: 0;'>";
 				$usage_data .= implode( '', $usage_data_array );
 				$usage_data .= '</ul>';
 			}
@@ -126,34 +146,47 @@ class Global_List extends Renderer {
 			$connected_atts[ $_attachment->ID ]['posts'] = $usage_data;
 		}
 
-		$total = count( $connected_atts );
+		$total = $total_found_posts;
 
 		if ( 0 === $total ) {
 			return '';
 		}
 
-		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		$page     = isset( $_GET['isc-page'] ) ? intval( $_GET['isc-page'] ) : 1;
 		$up_limit = 1;
 
+		// calculate total pages
 		if ( $per_page && $per_page < $total ) {
-			$rem      = $total % $per_page; // The Remainder of $total / $per_page
-			$up_limit = ( $total - $rem ) / $per_page;
-			if ( 0 < $rem ) {
-				++$up_limit; // If rem is positive, add the last page that contains less than $per_page attachment;
-			}
+			$up_limit = ceil( $total / $per_page );
 		}
 
 		ob_start();
-		if ( 2 > $up_limit ) {
-			self::display_all_attachment_list( $connected_atts, $up_limit );
-		} else {
-			$starting_atts = $per_page * ( $page - 1 ); // for page 2 and 3 $per_page start display on $connected_atts[3*(2-1) = 3]
-			$paged_atts    = array_slice( $connected_atts, $starting_atts, $per_page, true );
-			self::display_all_attachment_list( $paged_atts, $up_limit, $a['before_links'], $a['after_links'], $prev_text, $next_text );
-		}
+		self::display_all_attachment_list( $connected_atts, $up_limit, $a['before_links'], $a['after_links'], $prev_text, $next_text );
 
 		return ob_get_clean();
+	}
+
+	/**
+	 * Get attachments based on the provided arguments
+	 *
+	 * @param array $args Arguments for WP_Query.
+	 * @return \WP_Query|array Returns a WP_Query object or an array of posts.
+	 */
+	public static function get_attachments( $args ) {
+		$args = wp_parse_args(
+			$args,
+			[
+				'post_type'      => 'attachment',
+				'posts_per_page' => get_option( 'posts_per_page' ),
+				'post_status'    => 'inherit',
+				'post_parent'    => null,
+				'paged'          => 1,
+				'no_found_rows'  => false, // this is important for pagination
+			]
+		);
+
+		$query = new \WP_Query( $args );
+
+		return $query;
 	}
 
 	/**
