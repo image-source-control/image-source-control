@@ -47,6 +47,7 @@ class ComposerStaticInitdb72a6bac11cb0e6b971811c93d09a9b
         'ISC\\Image_Sources\\Post_Meta\\Post_Images_Meta' => __DIR__ . '/../..' . '/includes/image-sources/Post_Meta/Post_Images_Meta.php',
         'ISC\\Image_Sources\\Renderer' => __DIR__ . '/../..' . '/includes/image-sources/renderer.php',
         'ISC\\Image_Sources\\Renderer\\Caption' => __DIR__ . '/../..' . '/includes/image-sources/renderer/caption.php',
+        'ISC\\Image_Sources\\Renderer\\Global_List' => __DIR__ . '/../..' . '/includes/image-sources/renderer/global-list.php',
         'ISC\\Image_Sources\\Renderer\\Image_Source_String' => __DIR__ . '/../..' . '/includes/image-sources/renderer/image-source-string.php',
         'ISC\\Image_Sources\\Utils' => __DIR__ . '/../..' . '/includes/image-sources/utils.php',
         'ISC\\Indexer' => __DIR__ . '/../..' . '/includes/indexer.php',

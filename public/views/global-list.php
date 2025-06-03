@@ -29,7 +29,7 @@
 				$v_align = '';
 				if ( $options['thumbnail_in_list'] ) :
 					$v_align = 'style="vertical-align: top;"';
-					?><td><?php $this->render_global_list_thumbnail( $id ); ?></td><?php
+					?><td><?php \ISC\Image_Sources\Renderer\Global_List::render_global_list_thumbnail( $id ); ?></td><?php
 				endif; ?>
 				<td <?php echo $v_align; ?>><?php echo $id; ?></td>
 				<td <?php echo $v_align; ?>><?php echo $data['title']; ?></td>
