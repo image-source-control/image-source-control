@@ -3,7 +3,7 @@ Contributors: webzunft
 Tags: credits, captions, copyrights, attributions, image sources
 Requires at least: 6.0
 Tested up to: 6.8
-Stable tag: 3.3.0
+Stable tag: 3.3.1
 Requires PHP: 7.4
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -162,6 +162,13 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 1. The Indexer searches for all images in published content
 
 == Changelog ==
+
+= 3.3.1 =
+
+- Fix (Pro): The option to enable the expandable list for the Per-page List wasn’t stored
+- Fix: Sometimes, a “Next” link could show up on the pagination of the last page of the Global List, even if there were no more images to show
+- Dev: The query for the Global List was improved to load quickly also on sites with many images
+- Dev: Moved the Global List rendering methods to a dedicated class
 
 = 3.3.0 =
 
