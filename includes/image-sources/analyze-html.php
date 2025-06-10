@@ -147,7 +147,7 @@ class Analyze_HTML {
 		 * Look for any URLs
 		 * - starting with http, or https
 		 * - ending with a valid image format or " or '
-		 * - or any URL in the SRG attribute of IMG tags, where we ignore the extension
+                 * - or any URL in the SRC attribute of IMG tags, where we ignore the extension
 		 *
 		 * What it does
 		 * (?<!, ) – needed to prevent multiple images from `srcset` attribute to being considered here
