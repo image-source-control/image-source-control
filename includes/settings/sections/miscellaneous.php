@@ -17,9 +17,6 @@ class Miscellaneous extends Settings\Section {
 		add_settings_section( 'isc_settings_section_misc', __( 'Miscellaneous settings', 'image-source-control-isc' ), '__return_false', 'isc_settings_page' );
 		add_settings_field( 'standard_source', __( 'Standard source', 'image-source-control-isc' ), [ $this, 'render_field_standard_source' ], 'isc_settings_page', 'isc_settings_section_misc' );
 		add_settings_field( 'block_options', __( 'Block options', 'image-source-control-isc' ), [ $this, 'render_field_block_options' ], 'isc_settings_page', 'isc_settings_section_misc' );
-		if ( defined( 'ELEMENTOR_VERSION' ) ) {
-			add_settings_field( 'elementor', 'Elementor', [ $this, 'render_field_elementor' ], 'isc_settings_page', 'isc_settings_section_misc' );
-		}
 		add_settings_field( 'warning_one_source', __( 'Warn about missing sources', 'image-source-control-isc' ), [ $this, 'render_field_warning_source_missing' ], 'isc_settings_page', 'isc_settings_section_misc' );
 		add_settings_field( 'enable_log', __( 'Debug log', 'image-source-control-isc' ), [ $this, 'render_field_enable_log' ], 'isc_settings_page', 'isc_settings_section_misc' );
 	}
@@ -44,17 +41,6 @@ class Miscellaneous extends Settings\Section {
 		$checked  = \ISC_Block_Options::enabled();
 		$disabled = apply_filters( 'isc_force_block_options', false );
 		require_once ISCPATH . '/admin/templates/settings/miscellaneous/block-options.php';
-	}
-
-	/**
-	 * Render option for Elementor support
-	 */
-	public function render_field_elementor() {
-		if ( ! \ISC\Plugin::is_pro() ) {
-			require_once ISCPATH . '/admin/templates/settings/miscellaneous/elementor.php';
-		}
-
-		do_action( 'isc_admin_settings_template_after_elementor' );
 	}
 
 	/**

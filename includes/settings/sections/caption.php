@@ -35,6 +35,14 @@ class Caption extends Settings\Section {
 		add_settings_field( 'source_overlay', __( 'Overlay prefix', 'image-source-control-isc' ), [ $this, 'render_field_overlay_text' ], 'isc_settings_page', 'isc_settings_section_overlay' );
 		add_settings_field( 'overlay_style', __( 'Layout', 'image-source-control-isc' ), [ $this, 'render_field_overlay_style' ], 'isc_settings_page', 'isc_settings_section_overlay' );
 		add_settings_field( 'overlay_included_images', __( 'Included images', 'image-source-control-isc' ), [ $this, 'render_field_overlay_included_images' ], 'isc_settings_page', 'isc_settings_section_overlay' );
+
+		if ( defined( 'ELEMENTOR_VERSION' ) ) {
+			add_action( 'isc_admin_settings_overlay_included_images_after', [ $this, 'render_field_elementor' ] );
+		}
+
+		if ( class_exists( 'ET_Builder_Element', false ) ) {
+			add_action( 'isc_admin_settings_overlay_included_images_after', [ $this, 'render_field_divi' ] );
+		}
 	}
 
 	/**
@@ -240,5 +248,23 @@ class Caption extends Settings\Section {
 		$output['overlay_included_advanced'] = isset( $input['overlay_included_advanced'] ) && is_array( $input['overlay_included_advanced'] ) ? $input['overlay_included_advanced'] : [];
 
 		return $output;
+	}
+
+	/**
+	 * Render option for Elementor background images support in the Included Images section
+	 */
+	public function render_field_elementor() {
+		if ( ! \ISC\Plugin::is_pro() ) {
+			require_once ISCPATH . '/admin/templates/settings/caption/elementor.php';
+		}
+	}
+
+	/**
+	 * Render option for Divi background images support in the Included Images section
+	 */
+	public function render_field_divi() {
+		if ( ! \ISC\Plugin::is_pro() ) {
+			require_once ISCPATH . '/admin/templates/settings/caption/divi.php';
+		}
 	}
 }
