@@ -283,7 +283,7 @@ class ISC_Public extends \ISC\Image_Sources\Image_Sources {
 		/**
 		 * Split content where `isc_stop_overlay` is found to not display overlays starting there
 		 */
-		if ( strpos( $content, 'isc_stop_overlay' ) ) {
+               if ( strpos( $content, 'isc_stop_overlay' ) !== false ) {
 			list( $content, $content_after ) = explode( 'isc_stop_overlay', $content, 2 );
 		} else {
 			$content_after = '';
