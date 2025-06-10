@@ -39,4 +39,5 @@
 			endif;
 			?>
 	<?php endforeach; ?>
+	<?php do_action( 'isc_admin_settings_overlay_included_images_after' ); ?>
 </div>
