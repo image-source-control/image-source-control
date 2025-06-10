@@ -59,8 +59,8 @@ class Admin_Utils {
 	 * Get URL to the ISC website by site language
 	 * If the URL param contains an anchor, the anchor will be added after the UTM part
 	 *
-	 * @param string $url_param    Default parameter added to the main URL, leading to https://imagesourceocontrol.com/.
-	 * @param string $url_param_de Parameter added to the main URL for German backends, leading to https://imagesourceocontrol.de/.
+         * @param string $url_param    Default parameter added to the main URL, leading to https://imagesourcecontrol.com/.
+         * @param string $url_param_de Parameter added to the main URL for German backends, leading to https://imagesourcecontrol.de/.
 	 * @param string $utm_campaign Position of the link for the campaign link.
 	 *
 	 * @return string website URL
