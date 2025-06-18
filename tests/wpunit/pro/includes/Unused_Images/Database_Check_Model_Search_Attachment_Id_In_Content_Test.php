@@ -1,15 +1,15 @@
 <?php
 
-namespace ISC\Tests\WPUnit\Pro\Admin\Includes;
+namespace ISC\Tests\WPUnit\Pro\Includes\Unused_Images;
 
-use ISC\Tests\WPUnit\WPTestCase;
-use ISC\Pro\Unused_Images;
 use ISC\Options;
+use ISC\Pro\Unused_Images\Database_Check_Model;
+use ISC\Tests\WPUnit\WPTestCase;
 
 /**
- * Testing \ISC\Pro\Unused_Images::search_attachment_id_in_content()
+ * Testing \ISC\Pro\Unused_Images\Database_Check_Model::search_attachment_id_in_content()
  */
-class Unused_Images_Search_Attachment_Id_In_Content_Test extends WPTestCase {
+class Database_Check_Model_Search_Attachment_Id_In_Content_Test extends WPTestCase {
 
 	/**
 	 * Attachment ID
@@ -61,8 +61,7 @@ class Unused_Images_Search_Attachment_Id_In_Content_Test extends WPTestCase {
 		$isc_options['unused_images']['deep_checks'] = [ 'ID in content' ];
 		update_option( 'isc_options', $isc_options );
 
-		$unused_images = new Unused_Images();
-		$result        = $unused_images->search_attachment_id_in_content( $this->attachment_id );
+		$result = ( new Database_Check_Model() )->search_attachment_id_in_content( $this->attachment_id );
 
 		// returns one result
 		$this->assertCount( 1, $result );
@@ -79,8 +78,7 @@ class Unused_Images_Search_Attachment_Id_In_Content_Test extends WPTestCase {
 		$isc_options['unused_images']['deep_checks'] = [];
 		update_option( 'isc_options', $isc_options );
 
-		$unused_images = new Unused_Images();
-		$result        = $unused_images->search_attachment_id_in_content( $this->attachment_id );
+		$result = ( new Database_Check_Model() )->search_attachment_id_in_content( $this->attachment_id );
 
 		// returns one result
 		$this->assertCount( 0, $result );
@@ -104,8 +102,7 @@ class Unused_Images_Search_Attachment_Id_In_Content_Test extends WPTestCase {
 			]
 		);
 
-		$unused_images = new Unused_Images();
-		$result        = $unused_images->search_attachment_id_in_content( $attachment_id );
+		$result = ( new Database_Check_Model() )->search_attachment_id_in_content( $attachment_id );
 
 		// returns one result
 		$this->assertCount( 0, $result );
