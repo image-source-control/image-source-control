@@ -1,14 +1,14 @@
 <?php
 
-namespace ISC\Tests\WPUnit\Pro\Admin\Includes;
+namespace ISC\Tests\WPUnit\Pro\Includes\Unused_Images;
 
+use ISC\Pro\Unused_Images\Database_Check_Model;
 use ISC\Tests\WPUnit\WPTestCase;
-use ISC\Pro\Unused_Images;
 
 /**
  * Testing \ISC\Pro\Unused_Images::search_attachment_id_in_options()
  */
-class Unused_Images_Search_Attachment_Id_In_Options_Test extends WPTestCase {
+class Database_Check_Model_Search_Attachment_Id_In_Options_Test extends WPTestCase {
 	/**
 	 * Test the search_attachment_id_in_options() function to see if it returns a results for a plain option
 	 */
@@ -16,8 +16,7 @@ class Unused_Images_Search_Attachment_Id_In_Options_Test extends WPTestCase {
 		$attachment_id = rand( 10000, 99999 );
 		update_option( 'site_logo', $attachment_id );
 
-		$unused_images = new Unused_Images();
-		$result        = $unused_images->search_attachment_id_in_options( $attachment_id );
+		$result = ( new Database_Check_Model() )->search_attachment_id_in_options( $attachment_id );
 
 		// returns one result
 		$this->assertCount( 1, $result );
@@ -41,8 +40,7 @@ class Unused_Images_Search_Attachment_Id_In_Options_Test extends WPTestCase {
 			]
 		] );
 
-		$unused_images = new Unused_Images();
-		$result        = $unused_images->search_attachment_id_in_options( $attachment_id );
+		$result = ( new Database_Check_Model() )->search_attachment_id_in_options( $attachment_id );
 
 		// returns one result
 		$this->assertCount( 1, $result );
@@ -66,8 +64,7 @@ class Unused_Images_Search_Attachment_Id_In_Options_Test extends WPTestCase {
 			]
 		] );
 
-		$unused_images = new Unused_Images();
-		$result        = $unused_images->search_attachment_id_in_options( $attachment_id );
+		$result = ( new Database_Check_Model() )->search_attachment_id_in_options( $attachment_id );
 
 		// no result returned
 		$this->assertEquals( [], $result );
