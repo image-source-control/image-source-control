@@ -1,9 +1,10 @@
 <?php
 
-namespace ISC\Tests\WPUnit\Pro\Admin\Includes;
+namespace ISC\Tests\WPUnit\Pro\Includes\Unused_Images\Admin;
 
-use ISC\Tests\WPUnit\WPTestCase;
 use ISC\Pro\Unused_Images;
+use ISC\Tests\WPUnit\WPTestCase;
+
 class Unused_Images_Test extends WPTestCase {
 
 	/**
