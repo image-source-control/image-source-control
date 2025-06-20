@@ -1,6 +1,6 @@
 <?php
 
-namespace ISC\Tests\WPUnit\Pro\Admin\Includes;
+namespace ISC\Tests\WPUnit\Pro\Includes\Unused_Images\Admin;
 
 use ISC\Pro\Unused_Images;
 use ISC\Tests\WPUnit\WPTestCase;
