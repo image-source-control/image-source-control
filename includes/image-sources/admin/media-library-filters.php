@@ -31,6 +31,11 @@ class Admin_Media_Library_Filters {
 		];
 
 		$filters[] = [
+			'value' => 'standard_source',
+			'label' => __( 'Images with standard source', 'image-source-control-isc' ),
+		];
+
+		$filters[] = [
 			'value' => 'without_source',
 			'label' => __( 'Images without sources', 'image-source-control-isc' ),
 		];
@@ -76,6 +81,16 @@ class Admin_Media_Library_Filters {
 							'value'   => '',
 							'compare' => '!=',
 						],
+					],
+				]
+			);
+		} elseif ( $filter === 'standard_source' ) {
+			$query->set(
+				'meta_query',
+				[
+					[
+						'key'   => 'isc_image_source_own',
+						'value' => '1',
 					],
 				]
 			);
