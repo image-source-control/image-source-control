@@ -3,6 +3,7 @@
 namespace ISC\Tests\WPUnit\Pro\Includes\Compatibility;
 
 use ISC\Tests\WPUnit\Includes\Image_Sources\Analyze_HTML\Extract_Images_From_Html_Test;
+use ISC\Pro\Compatibility\Kadence;
 
 /**
  * Test if ISC_Pro_Kadence provides compatibility with Kadence Blocks and Kadence Theme specific HTML.
@@ -13,7 +14,7 @@ class Kadence_Test extends Extract_Images_From_Html_Test {
 	public function setUp(): void {
 		parent::setUp();
 		// adjust the general regular expression to also search for DIVs between the image and the link tag.
-		$kadence_class = new \ISC_Pro_Compatibility_Kadence();
+		$kadence_class = new Kadence();
 		add_filter( 'isc_public_caption_regex', [ $kadence_class, 'public_caption_regex' ] );
 		// filter the matches from the regular expression to apply some fixes.
 		add_filter( 'isc_extract_images_from_html', [ $kadence_class, 'filter_matches' ], 10, 2 );
