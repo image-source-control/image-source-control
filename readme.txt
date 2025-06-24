@@ -53,7 +53,7 @@ Choose between different credit displays:
 * Warn about missing image sources
 * Manage, display, and link available licenses
 * Enable the features for any files in the media library or for images only
-* Filter the media library list by images with or without sources
+* Filter the media library list by images with or without sources, or only those using the standard source
 
 **Featured Image Caption**
 
