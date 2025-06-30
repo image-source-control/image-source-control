@@ -58,7 +58,7 @@ class DiviTest extends WPTestCase {
 		$original_output = '<div class="et_pb_row et_pb_row_0 et_pb_equal_columns"></div>';
 
 		// 2. Act
-		$filtered_output = $this->divi->add_row_attributes_and_class( $original_output, 'et_pb_row', $mock_module );
+		$filtered_output = $this->divi->add_module_attributes_and_class( $original_output, 'et_pb_row', $mock_module );
 
 		// 3. Assert
 		$this->assertStringContainsString( 'data-isc-images="' . $image_id . '"', $filtered_output, 'The data-isc-images attribute was not added.' );
@@ -75,7 +75,7 @@ class DiviTest extends WPTestCase {
 		$original_output = '<div class="et_pb_row et_pb_row_0 et_pb_equal_columns"></div>';
 
 		// 2. Act
-		$filtered_output = $this->divi->add_row_attributes_and_class( $original_output, 'et_pb_row', $mock_module );
+		$filtered_output = $this->divi->add_module_attributes_and_class( $original_output, 'et_pb_row', $mock_module );
 
 		// 3. Assert
 		$this->assertEquals( $original_output, $filtered_output, 'Output should not be modified for an invalid image URL.' );
@@ -88,7 +88,7 @@ class DiviTest extends WPTestCase {
 		// 1. Arrange
 		$this->divi = new Divi(); // Instantiate for this test.
 		$expected_style = '<style>
-			.et_pb_row.isc-source { display: inherit; }
+			.et_pb_row.isc-source,.et_pb_section.isc-source{display:inherit;}
 		</style>';
 
 		// 2. Act
@@ -119,7 +119,7 @@ class DiviTest extends WPTestCase {
 		$original_output = '<div class="et_pb_row"></div>';
 
 		// 2. Act & Assert for the filter
-		$filtered_output = apply_filters( 'et_pb_row_shortcode_output', $original_output, 'et_pb_row', $mock_module );
+		$filtered_output = apply_filters( 'et_module_shortcode_output', $original_output, 'et_pb_row', $mock_module );
 		$this->assertStringContainsString( 'data-isc-images="' . $image_id . '"', $filtered_output );
 		$this->assertStringContainsString( 'class="isc-source et_pb_row', $filtered_output );
 
@@ -127,7 +127,7 @@ class DiviTest extends WPTestCase {
 		ob_start();
 		do_action( 'wp_head' );
 		$head_output = ob_get_clean();
-		$this->assertStringContainsString( '.et_pb_row.isc-source { display: inherit; }', $head_output );
+		$this->assertStringContainsString( '.et_pb_row.isc-source, .et_pb_section.isc-source { display: inherit; }', $head_output );
 	}
 
 	/**

@@ -117,8 +117,7 @@ class Database_Check_Model_Test extends WPTestCase {
 
 		// check the actual returned post
 		$actual_object = $result[0];
-		$this->assertEquals( 'Post with Image One', $actual_object->post_title );
-		$this->assertEquals( 'post', $actual_object->post_type );
+		$this->assertEquals( $this->post_ids['one'], $actual_object->ID );
 	}
 
 	/**
