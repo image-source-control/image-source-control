@@ -21,6 +21,7 @@ class Image_Sources {
 		'jpeg',
 		'webp',
 		'avif',
+		'svg',
 	];
 
 	/**
