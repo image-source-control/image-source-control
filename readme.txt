@@ -3,7 +3,7 @@ Contributors: webzunft
 Tags: credits, captions, copyrights, attributions, image sources
 Requires at least: 6.0
 Tested up to: 6.8
-Stable tag: 3.3.1
+Stable tag: 3.4.0
 Requires PHP: 7.4
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -162,6 +162,22 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 1. The Indexer searches for all images in published content
 
 == Changelog ==
+
+= 3.4.0 =
+
+* Feature: Added a filter option to the Media Library list view to show only images using the “Standard” source
+* Feature: Added SVG to the list of accepted image file types
+* Feature (Pro): Show overlays for Divi background images. To use it, enable the appropriate option in the Overlay settings
+* Improvement: Prevent the content from jumping when the caption overlay is placed. The caption markup is now hidden until it was placed correctly. Critical JavaScript errors on the site could prevent them from showing, though.
+* Improvement (Pro): Rewritten rendering of the Appearance list, combining results from indexer, database check and image sources. Optional details list can be enabled in settings
+* Improvement (Pro): Moved the Elementor compatibility option to the Overlay settings, since it is only relevant for overlays
+* Improvement (Pro): Support for JetEngine smart filters
+* Improvement (Pro): Added Polish translation
+* Fix (Pro): The Per-page list stayed empty on the first page load after a post was saved when the Per-page list was enabled in the default settings and the Overlay were set to display on images outside the main content
+* Fix (Pro): The Appearance list in the Media details didn’t show if the Image Sources module was disabled, though that list depends solely on Unused Images
+* Dev (Pro): Removed storing post title and type from Database check to avoid outdated data
+* Dev (Pro): Some code for overlays was loaded even when overlays were disabled. This caused no frontend output
+* Dev (Pro): The thumbnail now has its own entry in the `isc_index` table if found when indexing a single post in the frontend
 
 = 3.3.1 =
 
