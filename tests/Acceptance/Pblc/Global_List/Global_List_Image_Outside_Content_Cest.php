@@ -70,7 +70,7 @@ class Global_List_Image_Outside_Content_Cest {
 		 */
 		$this->muPluginPath = codecept_root_dir( '../../../wp-content/mu-plugins/mu-plugin-add-footer.php' );
 		if ( ! file_exists( $this->muPluginPath ) ) {
-			file_put_contents( $this->muPluginPath, '<?php add_action("wp_footer", function() { echo "<img src=\'https://example.com/test-image-outside.jpg\' alt=\'Test Image Outside\' />"; });' );
+			file_put_contents( $this->muPluginPath, '<?php add_action("wp_footer", function() { echo "<img src=\"https://example.com/test-image-outside.jpg\" alt=\'Test Image Outside\' />"; });' );
 		}
 	}
 
@@ -153,19 +153,16 @@ class Global_List_Image_Outside_Content_Cest {
 	 */
 	public function test_overlay_whole_page( \AcceptanceTester $I ) {
 		/**
-		 * Enable the option to index also images outside the content
+		 * Enable the overlay and the option to index also images outside the content
 		 */
 		$existingOption = $I->grabOptionFromDatabase('isc_options');
+		$existingOption['display_type'][] = 'overlay';
 		$existingOption['overlay_included_images'] = 'body_img';
 		$I->haveOptionInDatabase( 'isc_options', $existingOption );
 
-		$this->open_all_posts( $I );
-
-		// switch to the Global List page
-		$I->amOnPage( '/global-list' );
+		// open the first post
+		$I->amOnPage( '/?p=' . $this->posts[0] );
 		$I->see( "Author Outside" );
-
-		$this->check_global_list_post_links( $I, 1 );
 	}
 
 	/**
