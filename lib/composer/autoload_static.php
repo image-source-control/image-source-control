@@ -29,6 +29,7 @@ class ComposerStaticInitdb72a6bac11cb0e6b971811c93d09a9b
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'ISC\\Admin' => __DIR__ . '/../..' . '/admin/admin.php',
         'ISC\\Admin\\Admin_Scripts' => __DIR__ . '/../..' . '/admin/includes/scripts.php',
+        'ISC\\Admin\\Media_Library_Checks' => __DIR__ . '/../..' . '/admin/includes/media-library-checks.php',
         'ISC\\Admin\\Media_Library_Filter' => __DIR__ . '/../..' . '/admin/includes/media-library-filter.php',
         'ISC\\Admin_Utils' => __DIR__ . '/../..' . '/admin/utils.php',
         'ISC\\Autoloader' => __DIR__ . '/../..' . '/includes/class-autoloader.php',

@@ -9,6 +9,7 @@ return array(
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
     'ISC\\Admin' => $baseDir . '/admin/admin.php',
     'ISC\\Admin\\Admin_Scripts' => $baseDir . '/admin/includes/scripts.php',
+    'ISC\\Admin\\Media_Library_Checks' => $baseDir . '/admin/includes/media-library-checks.php',
     'ISC\\Admin\\Media_Library_Filter' => $baseDir . '/admin/includes/media-library-filter.php',
     'ISC\\Admin_Utils' => $baseDir . '/admin/utils.php',
     'ISC\\Autoloader' => $baseDir . '/includes/class-autoloader.php',
