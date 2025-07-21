@@ -36,6 +36,7 @@ class Admin {
 	public function load_modules() {
 		new \ISC\Admin\Admin_Scripts();
 		new \ISC\Admin\Media_Library_Filter();
+		new \ISC\Admin\Media_Library_Checks();
 
 		if ( Plugin::is_module_enabled( 'image_sources' ) ) {
 			new \ISC\Image_Sources\Admin();
