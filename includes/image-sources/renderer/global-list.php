@@ -31,6 +31,7 @@ class Global_List extends Renderer {
 				'prev_text'    => '&#171; Previous',
 				'next_text'    => 'Next &#187;',
 				'included'     => null,
+				'style'        => 'table',
 			],
 			$atts
 		);
@@ -77,7 +78,7 @@ class Global_List extends Renderer {
 		$args['paged']          = $page;
 		$args['no_found_rows']  = false; // makes sure that WP_Query counts all posts, not just the ones on the current page
 
-		$attachments_query_result = self::get_attachments( apply_filters( 'isc_global_list_get_attachment_arguments', $args ) );
+		$attachments_query_result = self::get_attachments( apply_filters( 'isc_global_list_get_attachment_arguments', $args, $a ) );
 
 		if ( is_a( $attachments_query_result, 'WP_Query' ) ) {
 			$attachments       = $attachments_query_result->posts;
@@ -160,7 +161,7 @@ class Global_List extends Renderer {
 		}
 
 		ob_start();
-		self::display_all_attachment_list( $connected_atts, $up_limit, $a['before_links'], $a['after_links'], $prev_text, $next_text );
+		self::display_all_attachment_list( $a, $connected_atts, $up_limit, $a['before_links'], $a['after_links'], $prev_text, $next_text );
 
 		return ob_get_clean();
 	}
@@ -192,6 +193,7 @@ class Global_List extends Renderer {
 	/**
 	 * Render the global list
 	 *
+	 * @param array   $shortcode_attributes attributes from the shortcode.
 	 * @param array[] $atts attachments.
 	 * @param int     $up_limit total page count.
 	 * @param string  $before_links optional html to display before pagination links.
@@ -199,7 +201,7 @@ class Global_List extends Renderer {
 	 * @param string  $prev_text text for the previous page link.
 	 * @param string  $next_text text for the next page link.
 	 */
-	public static function display_all_attachment_list( $atts, $up_limit, $before_links = '', $after_links = '', $prev_text = '', $next_text = '' ) {
+	public static function display_all_attachment_list( $shortcode_attributes, $atts, $up_limit, $before_links = '', $after_links = '', $prev_text = '', $next_text = '' ) {
 		if ( ! is_array( $atts ) || $atts === [] ) {
 			return;
 		}
@@ -211,7 +213,7 @@ class Global_List extends Renderer {
 			self::pagination_links( $up_limit, $before_links, $after_links, $prev_text, $next_text );
 		}
 
-		do_action( 'isc_public_global_list_after', $atts, $up_limit, $before_links, $after_links, $prev_text, $next_text );
+		do_action( 'isc_public_global_list_after', $shortcode_attributes, $atts, $up_limit, $before_links, $after_links, $prev_text, $next_text );
 	}
 
 	/**
