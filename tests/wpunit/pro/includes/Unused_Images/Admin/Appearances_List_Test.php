@@ -2,6 +2,7 @@
 
 namespace ISC\Tests\WPUnit\Pro\Includes\Unused_Images\Admin;
 
+use ISC\Pro\Indexer\Index_Table;
 use ISC\Tests\WPUnit\WPTestCase;
 use ISC\Pro\Unused_Images\Admin\Appearances_List;
 
@@ -20,6 +21,9 @@ class Appearances_List_Test extends WPTestCase {
 
 	public function setUp(): void {
 		parent::setUp();
+
+		// Reset the index table to ensure a clean state for each test
+		Index_Table::reset_oldest_entry_date_cache();
 
 		// Create test attachment
 		$this->test_image_id = $this->factory()->attachment->create( [
@@ -710,6 +714,8 @@ class Appearances_List_Test extends WPTestCase {
 	public function test_render_with_check_indicators_indexer_data() {
 		$index_table = new \ISC\Pro\Indexer\Index_Table();
 		$index_table->insert_or_update( $this->test_post_id, $this->test_image_id, 'content' );
+
+		Index_Table::reset_oldest_entry_date_cache();
 
 		ob_start();
 		Appearances_List::render( $this->test_image_id, [ 'checks' ] );
