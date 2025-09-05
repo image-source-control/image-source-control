@@ -89,6 +89,8 @@ class DiviTest extends WPTestCase {
 		$this->divi = new Divi(); // Instantiate for this test.
 		$expected_style = '<style>
 			.et_pb_row.isc-source,.et_pb_section.isc-source{display:inherit;}
+			.et_pb_fullwidth_image .isc-source { display: inherit; }
+			.isc_image_has_fullwidth.et_pb_image .isc-source { position: revert; display: revert; }
 		</style>';
 
 		// 2. Act
