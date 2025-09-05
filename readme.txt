@@ -80,6 +80,7 @@ Check out the premium features to display the image caption overlay for featured
 * Show the full text only after a click or on mouseover on the caption overlay
 * Choose which data is displayed in the Global List
 * List only images with a proper source in the Global List
+* Show the Global List as a table or a simple list view
 * Show image sources for Elementor background images, images in Kadence Blocks Galleries, and Kadence Related Content Carousel
 * Developer options to show overlay captions for CSS background images
 * Support for [background images of the Group block](https://imagesourcecontrol.com/blog/group-block-background-image/)
@@ -87,7 +88,7 @@ Check out the premium features to display the image caption overlay for featured
 * Unused Images (see below)
 * Personal email support
 
-Extended compatibility with Elementor, Avada, WP Bakery, and other page builders
+Extended compatibility with Elementor, Avada, WP Bakery, Divi, Fusion Builder, and other page builders
 as well as with plugins like WPML, Kadence Blocks, Kadence Related Content Carousel, Lightbox Gallery, and JetEngine.
 
 [See Pricing](https://imagesourcecontrol.com/pricing/?utm_source=wporg&utm_medium=link&utm_campaign=pricing).
@@ -100,6 +101,8 @@ Premium media cleaner features to remove unused images safely.
 - Run an additional deep check to see if images are used in widgets, meta fields, or options
 - Bulk delete unused images
 - Filter the list by various states
+
+Constantly extended support for finding used and unused images in plugins and page builders, e.g., Elementor, Divi, WP Bakery, WP User Meta, and the Newsletter Plugin.
 
 [See Pricing](https://imagesourcecontrol.com/pricing/?utm_source=wporg&utm_medium=link&utm_campaign=pricing).
 
@@ -162,6 +165,17 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 1. The Indexer searches for all images in published content
 
 == Changelog ==
+
+= 3.5.0 =
+
+* Feature (Pro): Search for unused media files in the `wp_usermeta` table to support plugins like WP User Meta
+* Feature (Pro): Show the Global List in a simple list view using the `style` attribute, i.e., `[isc_list_all style="list"]`
+* Improvement (Pro): Support for caption overlays on full width images in the Divi builder
+* Improvement (Pro): Support for the `data-bg-url` attribute in the Fusion Builder
+* Improvement (Pro): Ignore false positive results for unused images caused by the Newsletter Plugin
+* Improvement (Pro): Automatically purge outdated entries in the Indexer to handle unpublished content
+* Improvement: Show a warning in the media library when image filepath and `wp_posts.guid` don’t match; e.g., after migrating the domain
+* Dev: Cache the SQL query in `get_oldest_entry_date()` to prevent the same query running multiple times on ISC pages in WP admin
 
 = 3.4.0 =
 
