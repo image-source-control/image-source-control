@@ -56,8 +56,8 @@ class Admin_Media_Library_Filters {
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$filter = isset( $_GET['isc_filter'] ) ? sanitize_text_field( wp_unslash( $_GET['isc_filter'] ) ) : '';
 
-		// Add image type check if images_only is enabled
-		if ( \ISC\Media_Type_Checker::enabled_images_only_option() ) {
+		// Add image type check if images_only is enabled and a filter for image sources is checked
+		if ( $filter && \ISC\Media_Type_Checker::enabled_images_only_option() ) {
 			$query->set( 'post_mime_type', 'image%' );
 		}
 
