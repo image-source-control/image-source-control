@@ -178,7 +178,8 @@ class ISC_Storage_Model {
 		}
 
 		$this->storage = $storage;
-		update_option( $this->option_slug, $storage, true );
+		// autoload is false since this can get quite large
+		update_option( $this->option_slug, $storage, false );
 	}
 
 	/**
