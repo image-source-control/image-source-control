@@ -13,31 +13,27 @@ class Media_Library_Checks {
 	 * Constructor.
 	 */
 	public function __construct() {
-		add_action( 'add_meta_boxes', [ $this, 'add_warning_meta_box' ], 10, 2 );
+		add_action( 'add_meta_boxes_attachment', [ $this, 'add_warning_meta_box' ] );
 	}
 
 	/**
 	 * Add a warning meta box when the GUID domain or path does not match the attachment metadata.
 	 *
-	 * @param string   $post_type Post type.
-	 * @param \WP_Post $post      Attachment post object.
+	 * @param \WP_Post $post Attachment post object.
 	 */
-	public function add_warning_meta_box( $post_type, \WP_Post $post ) {
-		if ( 'attachment' !== $post_type ) {
+	public function add_warning_meta_box( \WP_Post $post ) {
+		if ( ! $this->has_guid_domain_mismatch( $post ) && ! $this->has_guid_path_mismatch( $post ) ) {
 			return;
 		}
 
-		// Only add the meta box if there's any kind of GUID mismatch.
-		if ( $this->has_guid_domain_mismatch( $post ) || $this->has_guid_path_mismatch( $post ) ) {
-			add_meta_box(
-				'isc-error-check',
-				__( 'Error', 'image-source-control-isc' ),
-				[ $this, 'render_warning_meta_box' ],
-				'attachment',
-				'side',
-				'high'
-			);
-		}
+		add_meta_box(
+			'isc-error-check',
+			__( 'Error', 'image-source-control-isc' ),
+			[ $this, 'render_warning_meta_box' ],
+			'attachment',
+			'side',
+			'high'
+		);
 	}
 
 	/**
