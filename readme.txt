@@ -173,7 +173,7 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 * Improvement (Pro): Added labels for icons in the Unused Images list for better clarity
 * Improvement (Pro): An image is no longer considered “used” if the attached post is moved to the trash; previously, only fully deleting the post did that
 * Fix: Prevent a fatal error on comment edit pages
-* Fiv: The Images-only option caused non-images (e.g., PDFs) to no longer show in the media library
+* Fix: The Images-only option caused non-images (e.g., PDFs) to no longer show in the media library
 * Dev: Disables autoload of the `isc_storage` option
 
 = 3.5.0 =
