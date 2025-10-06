@@ -3,7 +3,7 @@ Contributors: webzunft
 Tags: credits, captions, copyrights, attributions, image sources
 Requires at least: 6.0
 Tested up to: 6.8
-Stable tag: 3.5.0
+Stable tag: 3.6.0
 Requires PHP: 7.4
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -165,6 +165,16 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 1. The Indexer searches for all images in published content
 
 == Changelog ==
+
+= 3.6.0 =
+
+* Feature (Pro): Execute the Indexer for Unused Images as a logged-in user; enable this option if your site is (partially) hidden behind a login or user capabilities
+* Feature (Pro): Optionally run the indexer only on un-indexed instead of all posts
+* Improvement (Pro): Added labels for icons in the Unused Images list for better clarity
+* Improvement (Pro): An image is no longer considered “used” if the attached post is moved to the trash; previously, only fully deleting the post did that
+* Fix: Prevent a fatal error on comment edit pages
+* Fiv: The Images-only option caused non-images (e.g., PDFs) to no longer show in the media library
+* Dev: Disables autoload of the `isc_storage` option
 
 = 3.5.0 =
 
