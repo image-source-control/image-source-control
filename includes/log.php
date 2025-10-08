@@ -14,7 +14,7 @@ class ISC_Log {
 	 */
 	public static function get_file_name(): string {
 		// Hash the AUTH_KEY to create a unique but persistent filename
-		return 'isc_' . hash( 'crc32', AUTH_KEY ) . '.log';
+		return 'image-source-control_' . hash( 'crc32', AUTH_KEY ) . '.log';
 	}
 
 	/**
@@ -94,7 +94,8 @@ class ISC_Log {
 	 * @return string
 	 */
 	public static function get_log_file_url(): string {
-		return ISCBASEURL . self::get_file_name();
+		$upload_dir = wp_upload_dir();
+		return $upload_dir['baseurl'] . '/' . self::get_file_name();
 	}
 
 	/**
@@ -103,7 +104,8 @@ class ISC_Log {
 	 * @return string
 	 */
 	public static function get_log_file_path(): string {
-		return ISCPATH . '/' . self::get_file_name();
+		$upload_dir = wp_upload_dir();
+		return $upload_dir['basedir'] . '/' . self::get_file_name();
 	}
 
 	/**
