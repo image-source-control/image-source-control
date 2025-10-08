@@ -24,6 +24,38 @@ jQuery( document ).ready(
 			$( '#isc-settings-plugin-images-only-cleanup-wrapper' ).toggleClass( 'hidden', !enabled );
 		});
 
+		// Copy log URL to clipboard
+		$( '#isc-copy-log-url-btn' ).on( 'click', function() {
+			const urlField = document.getElementById( 'isc-log-url-field' );
+			if ( ! urlField ) {
+				return;
+			}
+
+			const showSuccess = function() {
+				$( '#isc-copy-log-url-success' ).stop( true, true ).fadeIn().delay( 2000 ).fadeOut();
+			};
+
+			const fallbackCopy = function() {
+				urlField.focus();
+				urlField.select();
+				urlField.setSelectionRange( 0, urlField.value.length );
+				if ( document.execCommand( 'copy' ) ) {
+					showSuccess();
+				}
+			};
+
+			if ( navigator.clipboard?.writeText ) {
+				navigator.clipboard.writeText( urlField.value ).then( showSuccess ).catch( fallbackCopy );
+			} else {
+				fallbackCopy();
+			}
+		} );
+
+		// Toggle log URL field visibility when checkbox is changed
+		$( '#isc-enable-log-checkbox' ).on( 'change', function() {
+			$( '#isc-log-url-wrapper' ).toggle( this.checked );
+		});
+
 		// Show and update preview when a position option is clicked
 		$('#isc-settings-caption-pos-options button').on( 'click', function (event) {
 			// Stop propagation to prevent document click event from hiding the preview immediately

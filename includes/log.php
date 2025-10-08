@@ -109,6 +109,15 @@ class ISC_Log {
 	}
 
 	/**
+	 * Check if the log file exists
+	 *
+	 * @return bool
+	 */
+	public static function log_file_exists(): bool {
+		return file_exists( self::get_log_file_path() );
+	}
+
+	/**
 	 * Return true if internal caches should be ignored
 	 * only works in combination with an activated log
 	 */
