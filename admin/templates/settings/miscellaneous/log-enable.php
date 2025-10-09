@@ -30,5 +30,10 @@
 	<button type="button" id="isc-copy-log-url-btn" class="button" style="height: 28px; line-height: 26px; padding: 0 10px; vertical-align: middle;">
 		<span class="dashicons dashicons-admin-page" style="line-height: 28px;"></span>
 	</button>
+	<?php if ( $file_exists ) : ?>
+	<button type="button" id="isc-download-log-btn" class="button" style="height: 28px; line-height: 26px; padding: 0 10px; vertical-align: middle;">
+		<span class="dashicons dashicons-download" style="line-height: 28px;"></span>
+	</button>
+	<?php endif; ?>
 	<span class="dashicons dashicons-yes" id="isc-copy-log-url-success" style="color: #46b450; line-height: 28px; vertical-align: middle; display: none;"></span>
 </div>

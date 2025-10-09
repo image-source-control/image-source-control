@@ -51,6 +51,22 @@ jQuery( document ).ready(
 			}
 		} );
 
+		// Download log file
+		$( '#isc-download-log-btn' ).on( 'click', function() {
+			const urlField = document.getElementById( 'isc-log-url-field' );
+			if ( ! urlField || ! urlField.value ) {
+				return;
+			}
+
+			// Create a temporary anchor element to trigger download
+			const link = document.createElement( 'a' );
+			link.href = urlField.value;
+			link.download = ''; // This will use the filename from the URL
+			document.body.appendChild( link );
+			link.click();
+			document.body.removeChild( link );
+		} );
+
 		// Toggle log URL field visibility when checkbox is changed
 		$( '#isc-enable-log-checkbox' ).on( 'change', function() {
 			$( '#isc-log-url-wrapper' ).toggle( this.checked );
