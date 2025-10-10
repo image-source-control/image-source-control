@@ -35,6 +35,7 @@ class Admin {
 	 */
 	public function load_modules() {
 		new \ISC\Admin\Admin_Scripts();
+		new \ISC\Admin\Admin_Ajax();
 		new \ISC\Admin\Media_Library_Filter();
 		new \ISC\Admin\Media_Library_Checks();
 
