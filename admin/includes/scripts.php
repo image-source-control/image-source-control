@@ -60,9 +60,10 @@ class Admin_Scripts {
 		<?php
 		// Define the base modules array
 		$params = [
-			'ajaxNonce'      => wp_create_nonce( 'isc-admin-ajax-nonce' ),
+			'ajaxNonce'        => wp_create_nonce( 'isc-admin-ajax-nonce' ),
+			'logDownloadNonce' => wp_create_nonce( 'isc-log-download-nonce' ),
 			// Allow other plugins to modify the modules
-			'moduleSections' => apply_filters(
+			'moduleSections'   => apply_filters(
 				'isc_settings_plugin_modules_related_sections',
 				[
 					'image_sources' => [
