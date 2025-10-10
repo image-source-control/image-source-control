@@ -53,18 +53,53 @@ jQuery( document ).ready(
 
 		// Download log file
 		$( '#isc-download-log-btn' ).on( 'click', function() {
-			const urlField = document.getElementById( 'isc-log-url-field' );
-			if ( ! urlField || ! urlField.value ) {
-				return;
-			}
+			// Use AJAX to download the file via WordPress backend
+			$.ajax({
+				type: 'POST',
+				url: ajaxurl,
+				data: {
+					action: 'isc_download_log',
+					nonce: isc.ajaxNonce,
+				},
+				xhrFields: {
+					responseType: 'blob'
+				},
+				success: function( response, status, xhr ) {
+					// Get filename from Content-Disposition header or use default
+					const disposition = xhr.getResponseHeader( 'Content-Disposition' );
+					let filename = 'image-source-control.log';
+					if ( disposition && disposition.indexOf( 'filename=' ) !== -1 ) {
+						const filenameMatch = disposition.match( /filename="?([^"]+)"?/ );
+						if ( filenameMatch && filenameMatch[1] ) {
+							filename = filenameMatch[1];
+						}
+					}
 
-			// Create a temporary anchor element to trigger download
-			const link = document.createElement( 'a' );
-			link.href = urlField.value;
-			link.download = ''; // This will use the filename from the URL
-			document.body.appendChild( link );
-			link.click();
-			document.body.removeChild( link );
+					// Create a blob URL and trigger download
+					const blob = new Blob( [response], { type: 'text/plain' } );
+					const url = window.URL.createObjectURL( blob );
+					const link = document.createElement( 'a' );
+					link.href = url;
+					link.download = filename;
+					document.body.appendChild( link );
+					link.click();
+					document.body.removeChild( link );
+					window.URL.revokeObjectURL( url );
+				},
+				error: function( xhr ) {
+					// Show error message
+					console.error( 'Error downloading log file:', xhr.statusText );
+					let errorMsg = 'Error downloading log file.';
+					if (xhr.status) {
+						errorMsg += ' HTTP status: ' + xhr.status + ' (' + xhr.statusText + ').';
+					}
+					// Try to extract a more specific error message from the response, if available
+					if (xhr.responseText) {
+						errorMsg += '\nDetails: ' + xhr.responseText;
+					}
+					alert(errorMsg);
+				}
+			});
 		} );
 
 		// Toggle log URL field visibility when checkbox is changed
