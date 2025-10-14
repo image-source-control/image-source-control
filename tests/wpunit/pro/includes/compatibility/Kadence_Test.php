@@ -38,6 +38,24 @@ class Kadence_Test extends Extract_Images_From_Html_Test {
 	}
 
 	/**
+	 * Test if ISC_Pro_Kadence::public_caption_regex() works with single quotes
+	 */
+	public function test_public_caption_regex_single_quotes() {
+		$markup   = '<figure class=\'alignleft\'><a href=\'https://example.com/image.png\'><div class=\'kadence-blocks-gallery-item\'><img src=\'https://example.com/image.png\'/></div></a></figure>';
+		$expected = [
+			[
+				'full' => '<figure class=\'alignleft\'><a href=\'https://example.com/image.png\'><div class=\'kadence-blocks-gallery-item\'><img src=\'https://example.com/image.png\'/></div></a>',
+				'figure_class' => 'alignleft',
+				'inner_code' => '<a href=\'https://example.com/image.png\'><div class=\'kadence-blocks-gallery-item\'><img src=\'https://example.com/image.png\'/></div></a>',
+				'img_src' => 'https://example.com/image.png',
+			],
+		];
+
+		$actual   = $this->html_analyzer->extract_images_from_html( $markup );
+		$this->assertEquals( $expected, $actual );
+	}
+
+	/**
 	 * Test multiple nested div containers
 	 */
 	public function test_public_caption_regex_nested_divs() {
@@ -50,6 +68,7 @@ class Kadence_Test extends Extract_Images_From_Html_Test {
 				'img_src' => 'https://example.com/image.jpg',
 			],
 		];
+
 		$actual   = $this->html_analyzer->extract_images_from_html( $markup );
 		$this->assertEquals( $expected, $actual );
 	}
