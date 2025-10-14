@@ -265,4 +265,40 @@ class Extract_Image_Urls_From_Html_Tags_Test extends WPTestCase {
 
 		$this->assertEquals( $expected, $result, 'Failed to extract expected URLs from nested HTML with various attributes' );
 	}
+
+	/**
+	 * Test with single quotes in src attribute
+	 */
+	public function test_single_quotes_in_src_attribute() {
+		$html     = '<img src=\'https://example.com/image.jpg\'>';
+		$expected = [ 'https://example.com/image.jpg' ];
+		$result   = Analyze_HTML::extract_image_urls_from_html_tags( $html );
+		$this->assertEquals( $expected, $result, 'extract_image_urls_from_html_tags should handle single quotes in src attribute' );
+	}
+
+	/**
+	 * Test with mixed quotes (single and double) in different img tags
+	 */
+	public function test_mixed_quotes_in_img_tags() {
+		$html     = '<img src="https://example.com/image1.jpg"><img src=\'https://example.com/image2.png\'>';
+		$expected = [
+			'https://example.com/image1.jpg',
+			'https://example.com/image2.png',
+		];
+		$result   = Analyze_HTML::extract_image_urls_from_html_tags( $html );
+		sort( $expected );
+		sort( $result );
+		$this->assertEquals( $expected, $result, 'extract_image_urls_from_html_tags should handle mixed quotes' );
+	}
+
+	/**
+	 * Test with single quotes in data-id attribute
+	 */
+	public function test_single_quotes_in_data_id() {
+		$html     = '<img src=\'https://example.com/image.jpg\' data-id=\'123\'>';
+		$expected = [ 'https://example.com/image.jpg' ];
+		$result   = Analyze_HTML::extract_image_urls_from_html_tags( $html );
+		$this->assertEquals( $expected, $result, 'extract_image_urls_from_html_tags should handle single quotes in data-id' );
+	}
+}
 }

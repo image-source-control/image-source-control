@@ -40,7 +40,7 @@ class Analyze_HTML {
 		 *
 		 * Use (\x20|\x9|\xD|\xA)+ to match whitespace following HTML starting tag name according to W3C REC 3.1. See issue PR #136
 		 */
-		$pattern = apply_filters( 'isc_public_caption_regex', '#(?:<figure[^>]*class="([^"]*)"[^>]*>\s*)?((<a[\x20|\x9|\xD|\xA]+[^>]*>)?\s*(<img[\x20|\x9|\xD|\xA]+[^>]*[^>]*src="(.+)".*\/?>).*(\s*</a>)??[^<]*)#isU', $html );
+		$pattern = apply_filters( 'isc_public_caption_regex', '#(?:<figure[^>]*class=["\']([^"\']*)["\'][^>]*>\s*)?((<a[\x20|\x9|\xD|\xA]+[^>]*>)?\s*(<img[\x20|\x9|\xD|\xA]+[^>]*[^>]*src=["\'](.+)["\'].*\/?>).*(\s*</a>)??[^<]*)#isU', $html );
 		preg_match_all( $pattern, $html, $matches, PREG_SET_ORDER );
 
 		/**
@@ -82,7 +82,7 @@ class Analyze_HTML {
 		 * - img tag with class "wp-image-123"
 		 * - img tag with data-id="123"
 		 */
-		$success = preg_match( '#wp-image-(\d+)|data-id="(\d+)#is', $html, $matches_id );
+		$success = preg_match( '#wp-image-(\d+)|data-id=["\'](\d+)#is', $html, $matches_id );
 		if ( $success ) {
 			$id = $matches_id[1] ? intval( $matches_id[1] ) : intval( $matches_id[2] );
 			ISC_Log::log( sprintf( 'found ID "%s"', $id ) );
@@ -106,7 +106,7 @@ class Analyze_HTML {
 
 		$src = '';
 
-		$success = preg_match( '#src="([^"]+)"#is', $html, $matches_src );
+		$success = preg_match( '#src=["\']([^"\']+)["\']#is', $html, $matches_src );
 		if ( $success ) {
 			$src = $matches_src[1];
 			ISC_Log::log( sprintf( 'found src "%s"', $src ) );
@@ -158,7 +158,7 @@ class Analyze_HTML {
 		 * Limitations
 		 * - we don't include images that don't have a full path, e.g., url("../img/image.png") or url("image.png"); they are likely not in the Media library
 		 */
-		$pattern = '#((?<!, )((http[s]?:)[^\'^"^ ]*\.(' . $types . ')))|(<img[\x20|\x9|\xD|\xA]+[^>]*[^>]*src="(.+)".*\/?>)#isU';
+		$pattern = '#((?<!, )((http[s]?:)[^\'^"^ ]*\.(' . $types . ')))|(<img[\x20|\x9|\xD|\xA]+[^>]*[^>]*src=["\'](.+)["\'].*\/?>)#isU';
 
 		/**
 		 * Match index
