@@ -265,4 +265,42 @@ class Extract_Image_Urls_From_Html_Tags_Test extends WPTestCase {
 
 		$this->assertEquals( $expected, $result, 'Failed to extract expected URLs from nested HTML with various attributes' );
 	}
+
+	/**
+	 * Test with single quotes in src attribute for img tags without file extension.
+	 * This tests the second part of the regex pattern which extracts URLs from img src attributes.
+	 * URLs without extensions are only matched by the img tag pattern, not the URL pattern.
+	 */
+	public function test_single_quotes_in_src_without_extension() {
+		$html     = '<img src=\'https://example.com/image\'>';
+		$expected = [ 'https://example.com/image' ];
+		$result   = Analyze_HTML::extract_image_urls_from_html_tags( $html );
+		$this->assertEquals( $expected, $result, 'extract_image_urls_from_html_tags should handle single quotes in src for URLs without extensions' );
+	}
+
+	/**
+	 * Test with double quotes in src attribute for img tags without file extension.
+	 * Ensures backward compatibility for the img tag pattern.
+	 */
+	public function test_double_quotes_in_src_without_extension() {
+		$html     = '<img src="https://example.com/image">';
+		$expected = [ 'https://example.com/image' ];
+		$result   = Analyze_HTML::extract_image_urls_from_html_tags( $html );
+		$this->assertEquals( $expected, $result, 'extract_image_urls_from_html_tags should handle double quotes in src for URLs without extensions' );
+	}
+
+	/**
+	 * Test with mixed quotes for img tags without file extensions.
+	 */
+	public function test_mixed_quotes_in_img_tags_without_extension() {
+		$html     = '<img src="https://example.com/image1"><img src=\'https://example.com/image2\'>';
+		$expected = [
+			'https://example.com/image1',
+			'https://example.com/image2',
+		];
+		$result   = Analyze_HTML::extract_image_urls_from_html_tags( $html );
+		sort( $expected );
+		sort( $result );
+		$this->assertEquals( $expected, $result, 'extract_image_urls_from_html_tags should handle mixed quotes for URLs without extensions' );
+	}
 }

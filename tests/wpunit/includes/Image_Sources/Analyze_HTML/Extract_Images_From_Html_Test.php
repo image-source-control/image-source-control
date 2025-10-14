@@ -78,13 +78,64 @@ class Extract_Images_From_Html_Test extends WPTestCase {
 
 	/**
 	 * Test an unquoted src attribute
-	 * Missing or single quotes are not supported.
+	 * Unquoted attributes are not supported.
 	 */
 	public function test_unquoted_src_attribute() {
 		$html     = '<img src=https://example.com/test>';
 		$expected = [];
 		$result   = $this->html_analyzer->extract_images_from_html( $html );
 		$this->assertEquals( $expected, $result, 'extract_images_from_html did not return the correct image information' );
+	}
+
+	/**
+	 * Test single quotes in src attribute
+	 */
+	public function test_single_quotes_src_attribute() {
+		$html     = '<img src=\'https://example.com/test.jpg\'>';
+		$expected = [
+			[
+				'full'         => '<img src=\'https://example.com/test.jpg\'>',
+				'figure_class' => '',
+				'inner_code'   => '<img src=\'https://example.com/test.jpg\'>',
+				'img_src'      => 'https://example.com/test.jpg',
+			],
+		];
+		$result   = $this->html_analyzer->extract_images_from_html( $html );
+		$this->assertEquals( $expected, $result, 'extract_images_from_html should handle single quotes in src attribute' );
+	}
+
+	/**
+	 * Test single quotes in figure class and src attribute
+	 */
+	public function test_single_quotes_figure_and_src() {
+		$html     = '<figure class=\'wp-block-image\'><img src=\'https://example.com/test.jpg\'></figure>';
+		$expected = [
+			[
+				'full'         => '<figure class=\'wp-block-image\'><img src=\'https://example.com/test.jpg\'>',
+				'figure_class' => 'wp-block-image',
+				'inner_code'   => '<img src=\'https://example.com/test.jpg\'>',
+				'img_src'      => 'https://example.com/test.jpg',
+			],
+		];
+		$result   = $this->html_analyzer->extract_images_from_html( $html );
+		$this->assertEquals( $expected, $result, 'extract_images_from_html should handle single quotes in figure and src' );
+	}
+
+	/**
+	 * Test mixed quotes (single for figure, double for src)
+	 */
+	public function test_mixed_quotes_figure_and_src() {
+		$html     = '<figure class=\'wp-block-image\'><a href="https://example.com"><img src="https://example.com/test.jpg"></a></figure>';
+		$expected = [
+			[
+				'full'         => '<figure class=\'wp-block-image\'><a href="https://example.com"><img src="https://example.com/test.jpg"></a>',
+				'figure_class' => 'wp-block-image',
+				'inner_code'   => '<a href="https://example.com"><img src="https://example.com/test.jpg"></a>',
+				'img_src'      => 'https://example.com/test.jpg',
+			],
+		];
+		$result   = $this->html_analyzer->extract_images_from_html( $html );
+		$this->assertEquals( $expected, $result, 'extract_images_from_html should handle mixed quotes' );
 	}
 
 	/**
