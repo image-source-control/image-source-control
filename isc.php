@@ -40,6 +40,9 @@ define( 'ISCBASEURL', plugin_dir_url( __FILE__ ) ); // URL to the plugin directo
 require_once ISCPATH . 'includes/class-autoloader.php';
 \ISC\Autoloader::get()->initialize();
 
+// Initialize Media Trash module early to define MEDIA_TRASH constant
+new \ISC\Media_Trash\Media_Trash();
+
 if ( is_admin() ) {
 	new ISC\Admin();
 } elseif ( ! is_admin() && ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) ) {

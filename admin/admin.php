@@ -43,6 +43,10 @@ class Admin {
 			new \ISC\Image_Sources\Admin();
 		}
 
+		if ( Plugin::is_module_enabled( 'media_trash' ) ) {
+			new \ISC\Media_Trash\Media_Trash_Admin();
+		}
+
 		new \ISC\Feedback();
 	}
 

@@ -95,6 +95,12 @@ class Plugin_Options extends Settings\Section {
 				'value'       => 'body_img',
 				'is_pro'      => true,
 			],
+			'media_trash' => [
+				'label'       => __( 'Media Trash', 'image-source-control-isc' ),
+				'description' => __( 'Enable Media Library trash with file movement to isc-trash folder. Files are automatically deleted after 30 days.', 'image-source-control-isc' ),
+				'value'       => 'media_trash',
+				'coming_soon' => false,
+			],
 		];
 
 		return apply_filters( 'isc_plugin_options_modules', $modules_options );
