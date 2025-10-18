@@ -127,6 +127,15 @@ class ISC_Log {
 	}
 
 	/**
+	 * Return true if existing indexer data (Pro) should be ignored
+	 * only works in combination with an activated log
+	 */
+	public static function ignore_index(): bool {
+		// phpcs:ignore WordPress.Security.NonceVerification
+		return self::enabled() && isset( $_GET['isc-ignore-index'] );
+	}
+
+	/**
 	 * Return true if the log should be cleared automatically before writing
 	 */
 	public static function clear_log(): bool {
