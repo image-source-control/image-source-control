@@ -53,7 +53,7 @@ class ISC_Log {
 	public static function enabled(): bool {
 		// true if the Debug Log option is enabled and the ?isc-log query parameter is set
 		// phpcs:ignore WordPress.Security.NonceVerification
-		return ( ! empty( Plugin::get_options()['enable_log'] ) && isset( $_GET['isc-log'] ) );
+		return ( ! empty( Plugin::get_options()['enable_log'] ) && isset( $_REQUEST['isc-log'] ) );
 	}
 
 	/**
