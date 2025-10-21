@@ -7,6 +7,7 @@
 ## Coding Standards
 
 - Tabs should be used at the beginning of the line for indentation, while spaces can be used mid-line for alignment.
+- When linking out of the WordPress backend, e.g., to our homepage or manual, use `target="_blank"`. Don’t use it for links within the WordPress backend.
 
 ## Strings and Translations
 
