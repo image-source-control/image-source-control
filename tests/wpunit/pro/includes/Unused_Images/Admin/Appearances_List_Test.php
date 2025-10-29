@@ -95,7 +95,7 @@ class Appearances_List_Test extends WPTestCase {
 	 * Combined List:
 	 * - Post with Image 1
 	 * - Post with Image 2
-	 * <h4>Content check</h4>
+	 * <h4>Frontend check</h4>
 	 * - Post with Image 1
 	 * - Post with Image 2
 	 * <h4>Database check</h4>
@@ -121,10 +121,10 @@ class Appearances_List_Test extends WPTestCase {
 		$output = ob_get_clean();
 
 		// Should contain indexer section header
-		$this->assertStringContainsString('<h4>Content check</h4>', $output);
+		$this->assertStringContainsString('<h4>Frontend check</h4>', $output);
 
 		// Should NOT show "no results" for indexer section
-		$indexer_section_start = strpos($output, 'Content check');
+		$indexer_section_start = strpos($output, 'Frontend check');
 		$database_section_start = strpos($output, 'Database check');
 		$indexer_section = substr($output, $indexer_section_start, $database_section_start - $indexer_section_start);
 
@@ -147,7 +147,7 @@ class Appearances_List_Test extends WPTestCase {
 	 * Expected output:
 	 * Combined List:
 	 * - Test Post
-	 * <h4>Content check</h4>
+	 * <h4>Frontend check</h4>
 	 * - Test Post
 	 * <h4>Database check</h4>
 	 * — unchecked —
@@ -162,10 +162,10 @@ class Appearances_List_Test extends WPTestCase {
 		$output = ob_get_clean();
 
 		// Should contain indexer section header
-		$this->assertStringContainsString('<h4>Content check</h4>', $output);
+		$this->assertStringContainsString('<h4>Frontend check</h4>', $output);
 
 		// Should NOT show "no results" for indexer section
-		$indexer_section_start = strpos($output, 'Content check');
+		$indexer_section_start = strpos($output, 'Frontend check');
 		$database_section_start = strpos($output, 'Database check');
 		$indexer_section = substr($output, $indexer_section_start, $database_section_start - $indexer_section_start);
 
@@ -189,7 +189,7 @@ class Appearances_List_Test extends WPTestCase {
 	 * Combined List:
 	 * - Post with Image 1
 	 * - Post with Image 2
-	 * <h4>Content check</h4>
+	 * <h4>Frontend check</h4>
 	 * — no results — (no posts found)
 	 * <h4>Database check</h4>
 	 * - Post with Image 1
@@ -237,7 +237,7 @@ class Appearances_List_Test extends WPTestCase {
 		$database_section_start = strpos($output, 'Database check');
 
 		if ($database_section_start !== false) {
-			$indexer_section_start = strpos($output, 'Content check');
+			$indexer_section_start = strpos($output, 'Frontend check');
 			if ($indexer_section_start !== false) {
 				$database_section = substr($output, $database_section_start, strpos($output, '</details>', $database_section_start) - $database_section_start);
 				$this->assertStringNotContainsString('&mdash; no results &mdash;', $database_section);
@@ -251,7 +251,7 @@ class Appearances_List_Test extends WPTestCase {
 		$output = preg_replace('/\s+/', ' ', $output);
 
 		// The other sections are empty
-		$this->assertStringContainsString('<h4>Content check</h4> &mdash; no results &mdash; <h4>', $output);
+		$this->assertStringContainsString('<h4>Frontend check</h4> &mdash; no results &mdash; <h4>', $output);
 	}
 
 	/**
@@ -386,7 +386,7 @@ class Appearances_List_Test extends WPTestCase {
 	 *     Database Post (Post)
 	 * </div>
 	 * Details
-	 *    <h4>Content check</h4>
+	 *    <h4>Frontend check</h4>
 	 *      Image Source Post (Post)
 	 *    <h4>Database check</h4>
 	 *      Database Post (Post)
@@ -429,7 +429,7 @@ class Appearances_List_Test extends WPTestCase {
 		$output = ob_get_clean();
 
 		// All sections should have content, not "no results"
-		$this->assertStringContainsString('<h4>Content check</h4>', $output);
+		$this->assertStringContainsString('<h4>Frontend check</h4>', $output);
 		$this->assertStringContainsString('<h4>Database check</h4>', $output);
 		$this->assertStringContainsString('<h4>Post Index (Image Sources)</h4>', $output);
 
@@ -457,7 +457,7 @@ class Appearances_List_Test extends WPTestCase {
 	 *     Image Source Post (Post)
 	 * </div>
 	 * Details
-	 *    <h4>Content check</h4>
+	 *    <h4>Frontend check</h4>
 	 *      Image Source Post (Post)
 	 *    <h4>Database check</h4>
 	 *      Database Post (Post)
@@ -490,7 +490,7 @@ class Appearances_List_Test extends WPTestCase {
 		$output = ob_get_clean();
 
 		// All sections should have content
-		$this->assertStringContainsString('<h4>Content check</h4>', $output);
+		$this->assertStringContainsString('<h4>Frontend check</h4>', $output);
 		$this->assertStringContainsString('<h4>Database check</h4>', $output);
 		$this->assertStringContainsString('<h4>Post Index (Image Sources)</h4>', $output);
 
@@ -516,7 +516,7 @@ class Appearances_List_Test extends WPTestCase {
 	 * </div>
 	 * <details class="isc-appearances-list">
 	 *   <summary>Details</summary>
-	 *   <h4>Content check</h4>
+	 *   <h4>Frontend check</h4>
 	 *
 	 *   <h4>Database check</h4>
 	 * </details>
@@ -552,7 +552,7 @@ class Appearances_List_Test extends WPTestCase {
 		$output = ob_get_clean();
 
 		// Test section headers
-		$this->assertStringContainsString( '<h4>Content check</h4>', $output );
+		$this->assertStringContainsString( '<h4>Frontend check</h4>', $output );
 		$this->assertStringContainsString( '<h4>Database check</h4>', $output );
 
 		// strip linebreaks
@@ -619,7 +619,7 @@ class Appearances_List_Test extends WPTestCase {
 	 * Expected order:
 	 * 1. Combined results section
 	 * 2. Details opening tag
-	 * 3. Content check
+	 * 3. Frontend check
 	 * 4. Database check
 	 * 5. Related posts from Image Sources Index (if enabled)
 	 * 6. Details closing tag
@@ -645,7 +645,7 @@ class Appearances_List_Test extends WPTestCase {
 		// Test the order of sections in output
 		$combined_pos = strpos( $output, "isc-appearances-list-combined" );
 		$details_pos = strpos( $output, '<details class="isc-appearances-list">' );
-		$indexer_pos = strpos( $output, 'Content check' );
+		$indexer_pos = strpos( $output, 'Frontend check' );
 		$database_pos = strpos( $output, 'Database check' );
 		$checks_pos = strpos( $output, 'class="isc-check-indicator isc-check-indexer"' );
 
@@ -688,7 +688,7 @@ class Appearances_List_Test extends WPTestCase {
 		$this->assertStringContainsString( 'class="isc-check-indicator isc-check-database"', $output );
 		// Checks are showing "no", because they didn’t run
 		$this->assertStringContainsString( '<span class="dashicons dashicons-no-alt" title="Database check"></span>', $output );
-		$this->assertStringContainsString( '<span class="dashicons dashicons-no-alt" title="Content check"></span>', $output );
+		$this->assertStringContainsString( '<span class="dashicons dashicons-no-alt" title="Frontend check"></span>', $output );
 	}
 
 	/**
@@ -704,8 +704,8 @@ class Appearances_List_Test extends WPTestCase {
 
 		// Should show "yes" for database check
 		$this->assertStringContainsString( '<span class="dashicons dashicons-yes" title="Database check"></span>', $output );
-		// Content check should still show "no"
-		$this->assertStringContainsString( '<span class="dashicons dashicons-no-alt" title="Content check"></span>', $output );
+		// Frontend check should still show "no"
+		$this->assertStringContainsString( '<span class="dashicons dashicons-no-alt" title="Frontend check"></span>', $output );
 	}
 
 	/**
@@ -722,7 +722,7 @@ class Appearances_List_Test extends WPTestCase {
 		$output = ob_get_clean();
 
 		// Should show "yes" for indexer check
-		$this->assertStringContainsString( '<span class="dashicons dashicons-yes" title="Content check"></span>', $output );
+		$this->assertStringContainsString( '<span class="dashicons dashicons-yes" title="Frontend check"></span>', $output );
 		// Database check should still show "no"
 		$this->assertStringContainsString( '<span class="dashicons dashicons-no-alt" title="Database check"></span>', $output );
 	}
