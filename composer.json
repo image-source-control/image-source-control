@@ -19,7 +19,7 @@
         "codeception/module-webdriver": "^1.0",
         "codeception/util-universalframework": "^1.0",
         "lucatume/wp-browser": "^3.1",
-        "wp-coding-standards/wpcs": "^3.0"
+        "wp-coding-standards/wpcs": "^3.2"
     },
     "config": {
         "sort-packages": true,

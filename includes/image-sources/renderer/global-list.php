@@ -128,10 +128,15 @@ class Global_List extends Renderer {
 				foreach ( $metadata as $data ) {
 					// only list published posts
 					if ( get_post_status( $data ) === 'publish' ) {
+						$post_title = get_the_title( $data );
+						// Use post ID as fallback if title is empty
+						if ( empty( $post_title ) ) {
+							$post_title = '#' . $data;
+						}
 						$usage_data_array[] = sprintf(
 							'<li><a href="%1$s">%2$s</a></li>',
 							esc_url( get_permalink( $data ) ),
-							esc_html( get_the_title( $data ) )
+							esc_html( $post_title )
 						);
 					}
 				}
