@@ -128,7 +128,7 @@ class Global_List extends Renderer {
 				foreach ( $metadata as $data ) {
 					// only list published posts
 					if ( get_post_status( $data ) === 'publish' ) {
-						$post_title = get_the_title( $data );
+						$post_title = trim( get_the_title( $data ) );
 						// Use post ID as fallback if title is empty
 						if ( empty( $post_title ) ) {
 							$post_title = '#' . $data;
