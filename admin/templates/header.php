@@ -12,20 +12,33 @@
 		<h1><?php echo esc_html( $title ); ?></h1>
 	</div>
 	<div id="isc-header-links">
-		<?php if ( ! \ISC\Plugin::is_pro() ) :
+		<?php
+		if ( ! \ISC\Plugin::is_pro() ) :
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			echo ISC\Admin_Utils::get_pro_link( 'header-pro' );
-		endif; ?>
-		<?php switch ( $screen_id ) :
-			case 'settings_page_isc-settings' : ?>
+		endif;
+		?>
+		<?php
+		switch ( $screen_id ) :
+			case 'settings_page_isc-settings':
+				if ( \ISC\Plugin::is_module_enabled( 'image_sources' ) ) :
+					?>
 				<a href="<?php echo esc_url( admin_url( 'upload.php?page=isc-sources' ) ); ?>"><?php esc_html_e( 'Tools', 'image-source-control-isc' ); ?></a>
-		<?php break;
-		case 'media_page_isc-sources' : ?>
+					<?php
+				endif;
+				break;
+			case 'media_page_isc-sources':
+				?>
 				<a href="<?php echo esc_url( admin_url( 'options-general.php?page=isc-settings' ) ); ?>"><?php esc_html_e( 'Settings', 'image-source-control-isc' ); ?></a>
-		<?php break;
-		default : ?>
+				<?php
+				break;
+			default:
+				if ( \ISC\Plugin::is_module_enabled( 'image_sources' ) ) :
+					?>
 				<a href="<?php echo esc_url( admin_url( 'upload.php?page=isc-sources' ) ); ?>"><?php esc_html_e( 'Tools', 'image-source-control-isc' ); ?></a>
+				<?php endif; ?>
 				<a href="<?php echo esc_url( admin_url( 'options-general.php?page=isc-settings' ) ); ?>"><?php esc_html_e( 'Settings', 'image-source-control-isc' ); ?></a>
-		<?php endswitch; ?>
+			<?php endswitch; ?>
 		<a href="<?php echo esc_url( ISC\Admin_Utils::get_manual_url( 'header-manual' ) ); ?>" target="_blank"><?php esc_html_e( 'Manual', 'image-source-control-isc' ); ?></a>
 	</div>
 </div>
