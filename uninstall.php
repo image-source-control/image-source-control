@@ -17,6 +17,7 @@ if ( ! empty( $options['remove_on_uninstall'] ) ) {
 	delete_post_meta_by_key( 'isc_possible_usages' );
 	delete_post_meta_by_key( 'isc_possible_usages_last_check' );
 	delete_post_meta_by_key( 'isc_post_images_before_update' );
+	delete_post_meta_by_key( 'isc_last_index' );
 
 	// delete main plugin options
 	delete_option( 'isc_options' );
