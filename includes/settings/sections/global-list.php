@@ -17,6 +17,7 @@ class Global_List extends Settings\Section {
 		add_settings_section( 'isc_settings_section_complete_list', __( 'Global list', 'image-source-control-isc' ), [ $this, 'render_settings_section' ], 'isc_settings_page' );
 		add_settings_field( 'global_list_included_images', __( 'Included images', 'image-source-control-isc' ), [ $this, 'render_field_global_list_included_images' ], 'isc_settings_page', 'isc_settings_section_complete_list' );
 		add_settings_field( 'images_per_page_in_list', __( 'Images per page', 'image-source-control-isc' ), [ $this, 'render_field_images_per_page_in_list' ], 'isc_settings_page', 'isc_settings_section_complete_list' );
+		add_settings_field( 'global_list_layout', __( 'Layout', 'image-source-control-isc' ), [ $this, 'render_field_global_list_layout' ], 'isc_settings_page', 'isc_settings_section_complete_list' );
 		add_settings_field( 'global_list_included_data', __( 'Included data', 'image-source-control-isc' ), [ $this, 'render_field_global_list_data' ], 'isc_settings_page', 'isc_settings_section_complete_list' );
 	}
 
@@ -48,6 +49,18 @@ class Global_List extends Settings\Section {
 		$options         = $this->get_options();
 		$images_per_page = isset( $options['images_per_page'] ) ? absint( $options['images_per_page'] ) : 99999;
 		require_once ISCPATH . '/admin/templates/settings/global-list/images-per-page.php';
+	}
+
+	/**
+	 * Render option to define the layout of the global list
+	 */
+	public function render_field_global_list_layout() {
+		$manual_url = \ISC\Admin_Utils::get_isc_localized_website_url(
+			'documentation/customizations/#Styling_the_global_list',
+			'dokumentation/anpassungen/#Die_Globale_Quellenliste_stylen',
+			'global-list-layout'
+		);
+		require_once ISCPATH . '/admin/templates/settings/global-list/layout.php';
 	}
 
 	/**
