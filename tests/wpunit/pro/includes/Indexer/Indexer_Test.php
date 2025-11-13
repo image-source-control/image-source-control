@@ -39,12 +39,7 @@ class Indexer_Test extends WPTestCase {
 	public function tearDown(): void {
 		parent::tearDown();
 
-		// Clear all index data
-		$this->index_table->clear_all();
 		delete_post_meta_by_key( Indexer::LAST_INDEX_META_KEY );
-
-		// Reset the cache
-		Index_Table::reset_oldest_entry_date_cache();
 	}
 
 	/**
