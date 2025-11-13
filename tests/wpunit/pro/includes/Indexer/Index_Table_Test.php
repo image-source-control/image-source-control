@@ -39,12 +39,6 @@ class Index_Table_Test extends WPTestCase {
 
 	public function tearDown(): void {
 		parent::tearDown();
-
-		// Clear the table after each test
-		$this->index_table->clear_all();
-
-		// Reset the static cache
-		Index_Table::reset_oldest_entry_date_cache();
 	}
 
 	/**

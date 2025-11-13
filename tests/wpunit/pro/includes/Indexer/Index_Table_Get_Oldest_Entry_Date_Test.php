@@ -48,9 +48,11 @@ class Index_Table_Get_Oldest_Entry_Date_Test extends WPTestCase {
 		// Create test posts and attachments
 		$this->post_id_1       = $this->factory()->post->create();
 		$this->post_id_2       = $this->factory()->post->create();
-		$this->attachment_id_1 = $this->factory()->post->create( [ 'post_type' => 'attachment' ] );
-		$this->attachment_id_2 = $this->factory()->post->create( [ 'post_type' => 'attachment' ] );
-		$this->attachment_id_3 = $this->factory()->post->create( [ 'post_type' => 'attachment' ] );
+
+		// Use the attachment factory to avoid leaking "unused" artifacts
+		$this->attachment_id_1 = $this->factory()->attachment->create();
+		$this->attachment_id_2 = $this->factory()->attachment->create();
+		$this->attachment_id_3 = $this->factory()->attachment->create();
 	}
 
 	public function tearDown(): void {

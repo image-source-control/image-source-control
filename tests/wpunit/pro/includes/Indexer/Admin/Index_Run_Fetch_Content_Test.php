@@ -448,19 +448,6 @@ class Index_Run_Fetch_Content_Test extends WPTestCase {
 		$normalize_method = $reflection->getMethod( 'normalize_url' );
 		$normalize_method->setAccessible( true );
 
-		// Debug what the actual URLs will be during fetch
-		$url_with_cache_buster = add_query_arg( 'isc-indexer-cache-buster', time(), $original_url );
-
-		$debug = sprintf(
-			"Original URL: %s\nWith cache-buster: %s\nNormalized original: %s\n\nRedirect URL: %s\nNormalized redirect: %s\n\nAre normalized equal? %s\n",
-			$original_url,
-			$url_with_cache_buster,
-			$normalize_method->invoke( $this->indexer_run, $url_with_cache_buster ),
-			$redirect_url,
-			$normalize_method->invoke( $this->indexer_run, $redirect_url ),
-			$normalize_method->invoke( $this->indexer_run, $url_with_cache_buster ) === $normalize_method->invoke( $this->indexer_run, $redirect_url ) ? 'YES' : 'NO'
-		);
-
 		add_filter( 'pre_http_request', function( $preempt, $args, $url ) use ( $redirect_url ) {
 			return [
 				'response'      => [ 'code' => 200 ],

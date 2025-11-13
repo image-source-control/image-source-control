@@ -73,7 +73,7 @@ class Autoloader {
 		$lib       = $directory . 'lib/autoload.php';
 		$vendors   = $directory . 'vendor/autoload.php';
 
-		if ( is_readable( $lib ) && ( ! $this->is_test() ) ) {
+		if ( is_readable( $lib ) && ( ! self::is_test() ) ) {
 			return $lib;
 		}
 
@@ -89,7 +89,7 @@ class Autoloader {
 	 *
 	 * @return bool
 	 */
-	public function is_test(): bool {
+	public static function is_test(): bool {
 		return ( isset( $_SERVER['TEST_SITE_USER_AGENT'] ) && $_SERVER['TEST_SITE_USER_AGENT'] === 'ISC_Test' ); // wp-browser unit test
 	}
 }
