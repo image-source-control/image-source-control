@@ -86,11 +86,7 @@ class Unused_Images_Ignore_Ajax_Test extends WPTestCase {
 
 		// Capture output
 		ob_start();
-		try {
-			$this->unused_images->ajax_ignore_image();
-		} catch ( \WPDieException $e ) {
-			// Expected for wp_send_json_success
-		}
+		$this->unused_images->ajax_ignore_image();
 		$output = ob_get_clean();
 
 		// Verify the response
@@ -122,11 +118,7 @@ class Unused_Images_Ignore_Ajax_Test extends WPTestCase {
 
 		// Capture output
 		ob_start();
-		try {
-			$this->unused_images->ajax_unignore_image();
-		} catch ( \WPDieException $e ) {
-			// Expected for wp_send_json_success
-		}
+		$this->unused_images->ajax_unignore_image();
 		$output = ob_get_clean();
 
 		// Verify the response
@@ -152,11 +144,7 @@ class Unused_Images_Ignore_Ajax_Test extends WPTestCase {
 
 		// Capture output
 		ob_start();
-		try {
-			$this->unused_images->ajax_ignore_image();
-		} catch ( \WPDieException $e ) {
-			// Expected for wp_send_json_error
-		}
+		$this->unused_images->ajax_ignore_image();
 		$output = ob_get_clean();
 
 		// Verify the error response
@@ -184,11 +172,7 @@ class Unused_Images_Ignore_Ajax_Test extends WPTestCase {
 
 		// Capture output
 		ob_start();
-		try {
-			$this->unused_images->ajax_ignore_image();
-		} catch ( \WPDieException $e ) {
-			// Expected for wp_send_json_error
-		}
+		$this->unused_images->ajax_ignore_image();
 		$output = ob_get_clean();
 
 		// Verify the error response
@@ -222,11 +206,7 @@ class Unused_Images_Ignore_Ajax_Test extends WPTestCase {
 
 		// Capture output
 		ob_start();
-		try {
-			$this->unused_images->ajax_ignore_image();
-		} catch ( \WPDieException $e ) {
-			// Expected for wp_send_json_error
-		}
+		$this->unused_images->ajax_ignore_image();
 		$output = ob_get_clean();
 
 		// Verify the error response
@@ -252,11 +232,7 @@ class Unused_Images_Ignore_Ajax_Test extends WPTestCase {
 
 		// Capture output
 		ob_start();
-		try {
-			$this->unused_images->ajax_ignore_image();
-		} catch ( \WPDieException $e ) {
-			// Expected for wp_send_json_error
-		}
+		$this->unused_images->ajax_ignore_image();
 		$output = ob_get_clean();
 
 		// Verify the error response
@@ -281,11 +257,7 @@ class Unused_Images_Ignore_Ajax_Test extends WPTestCase {
 
 		// Capture output
 		ob_start();
-		try {
-			$this->unused_images->ajax_ignore_image();
-		} catch ( \WPDieException $e ) {
-			// Expected for wp_send_json_error
-		}
+		$this->unused_images->ajax_ignore_image();
 		$output = ob_get_clean();
 
 		// Verify the error response
@@ -310,11 +282,7 @@ class Unused_Images_Ignore_Ajax_Test extends WPTestCase {
 
 		// Capture output
 		ob_start();
-		try {
-			$this->unused_images->ajax_ignore_image();
-		} catch ( \WPDieException $e ) {
-			// Expected for wp_send_json_error
-		}
+		$this->unused_images->ajax_ignore_image();
 		$output = ob_get_clean();
 
 		// Verify the error response
@@ -343,11 +311,7 @@ class Unused_Images_Ignore_Ajax_Test extends WPTestCase {
 
 		// Capture output
 		ob_start();
-		try {
-			$this->unused_images->ajax_ignore_image();
-		} catch ( \WPDieException $e ) {
-			// Expected for wp_send_json_success
-		}
+		$this->unused_images->ajax_ignore_image();
 		ob_get_clean();
 
 		// Verify transient was cleared
@@ -376,11 +340,7 @@ class Unused_Images_Ignore_Ajax_Test extends WPTestCase {
 		$_REQUEST['image_id'] = $this->attachment_id;
 
 		ob_start();
-		try {
-			$this->unused_images->ajax_ignore_image();
-		} catch ( \WPDieException $e ) {
-			// Expected
-		}
+		$this->unused_images->ajax_ignore_image();
 		ob_get_clean();
 
 		$this->assertTrue( Unused_Images::is_ignored( $this->attachment_id ), 'First image should be ignored' );
@@ -392,11 +352,7 @@ class Unused_Images_Ignore_Ajax_Test extends WPTestCase {
 		$_REQUEST['nonce'] = $_POST['nonce'];
 
 		ob_start();
-		try {
-			$this->unused_images->ajax_ignore_image();
-		} catch ( \WPDieException $e ) {
-			// Expected
-		}
+		$this->unused_images->ajax_ignore_image();
 		ob_get_clean();
 
 		$this->assertTrue( Unused_Images::is_ignored( $attachment_id_2 ), 'Second image should be ignored' );
@@ -410,11 +366,7 @@ class Unused_Images_Ignore_Ajax_Test extends WPTestCase {
 		$_REQUEST['nonce'] = $_POST['nonce'];
 
 		ob_start();
-		try {
-			$this->unused_images->ajax_unignore_image();
-		} catch ( \WPDieException $e ) {
-			// Expected
-		}
+		$this->unused_images->ajax_unignore_image();
 		ob_get_clean();
 
 		$this->assertFalse( Unused_Images::is_ignored( $this->attachment_id ), 'First image should not be ignored' );
