@@ -2,11 +2,11 @@
 
 namespace ISC\Tests\WPUnit\Pro\Includes\Unused_Images\Admin;
 
-use ISC\Pro\Unused_Images\List_Table;
+use ISC\Pro\Unused_Images_List_Table;
 use ISC\Tests\WPUnit\WPTestCase;
 
 /**
- * Testing \ISC\Pro\Unused_Images\List_Table ignore/unignore functionality
+ * Testing \ISC\Pro\Unused_Images_List_Table ignore/unignore functionality
  */
 class List_Table_Ignore_Test extends WPTestCase {
 
@@ -27,7 +27,7 @@ class List_Table_Ignore_Test extends WPTestCase {
 	/**
 	 * List_Table instance
 	 *
-	 * @var List_Table
+	 * @var Unused_Images_List_Table
 	 */
 	protected $list_table;
 
@@ -56,7 +56,7 @@ class List_Table_Ignore_Test extends WPTestCase {
 		update_post_meta( $this->attachment_ids[2], 'isc_ignored_unused_image', '1' );
 
 		// Initialize List_Table
-		$this->list_table = new List_Table();
+		$this->list_table = new Unused_Images_List_Table();
 	}
 
 	/**
@@ -78,7 +78,7 @@ class List_Table_Ignore_Test extends WPTestCase {
 	/**
 	 * Test bulk ignore action ignores multiple images
 	 *
-	 * Tests: \ISC\Pro\Unused_Images\List_Table::process_bulk_action()
+	 * Tests: \ISC\Pro\Unused_Images_List_Table::process_bulk_action()
 	 */
 	public function test_bulk_ignore_action_ignores_multiple_images() {
 		// Set up bulk action
@@ -100,7 +100,7 @@ class List_Table_Ignore_Test extends WPTestCase {
 	/**
 	 * Test bulk unignore action unignores multiple images
 	 *
-	 * Tests: \ISC\Pro\Unused_Images\List_Table::process_bulk_action()
+	 * Tests: \ISC\Pro\Unused_Images_List_Table::process_bulk_action()
 	 */
 	public function test_bulk_unignore_action_unignores_multiple_images() {
 		// Set up bulk action
@@ -118,7 +118,7 @@ class List_Table_Ignore_Test extends WPTestCase {
 	/**
 	 * Test bulk ignore validates numeric IDs
 	 *
-	 * Tests: \ISC\Pro\Unused_Images\List_Table::process_bulk_action()
+	 * Tests: \ISC\Pro\Unused_Images_List_Table::process_bulk_action()
 	 */
 	public function test_bulk_ignore_validates_numeric_ids() {
 		// Set up bulk action with mixed numeric and non-numeric IDs
@@ -135,7 +135,7 @@ class List_Table_Ignore_Test extends WPTestCase {
 	/**
 	 * Test bulk ignore skips invalid IDs
 	 *
-	 * Tests: \ISC\Pro\Unused_Images\List_Table::process_bulk_action()
+	 * Tests: \ISC\Pro\Unused_Images_List_Table::process_bulk_action()
 	 */
 	public function test_bulk_ignore_skips_invalid_ids() {
 		// Set up bulk action with invalid ID
@@ -152,7 +152,7 @@ class List_Table_Ignore_Test extends WPTestCase {
 	/**
 	 * Test get_views includes ignored filter when ignored images exist
 	 *
-	 * Tests: \ISC\Pro\Unused_Images\List_Table::get_views()
+	 * Tests: \ISC\Pro\Unused_Images_List_Table::get_views()
 	 */
 	public function test_get_views_includes_ignored_filter_when_ignored_images_exist() {
 		// Clear cache to force fresh query
@@ -167,7 +167,7 @@ class List_Table_Ignore_Test extends WPTestCase {
 	/**
 	 * Test get_views excludes ignored filter when no ignored images
 	 *
-	 * Tests: \ISC\Pro\Unused_Images\List_Table::get_views()
+	 * Tests: \ISC\Pro\Unused_Images_List_Table::get_views()
 	 */
 	public function test_get_views_excludes_ignored_filter_when_no_ignored_images() {
 		// Unignore all images
@@ -186,12 +186,9 @@ class List_Table_Ignore_Test extends WPTestCase {
 	/**
 	 * Test get_bulk_actions shows ignore on non-ignored views
 	 *
-	 * Tests: \ISC\Pro\Unused_Images\List_Table::get_bulk_actions()
+	 * Tests: \ISC\Pro\Unused_Images_List_Table::get_bulk_actions()
 	 */
 	public function test_get_bulk_actions_shows_ignore_on_non_ignored_views() {
-		// Set current view to 'all'
-		$_GET['filter'] = 'all';
-
 		$bulk_actions = $this->list_table->get_bulk_actions();
 
 		$this->assertIsArray( $bulk_actions, 'get_bulk_actions() should return an array' );
@@ -202,12 +199,9 @@ class List_Table_Ignore_Test extends WPTestCase {
 	/**
 	 * Test get_bulk_actions shows unignore on ignored view
 	 *
-	 * Tests: \ISC\Pro\Unused_Images\List_Table::get_bulk_actions()
+	 * Tests: \ISC\Pro\Unused_Images_List_Table::get_bulk_actions()
 	 */
 	public function test_get_bulk_actions_shows_unignore_on_ignored_view() {
-		// Set current view to 'ignored'
-		$_GET['filter'] = 'ignored';
-
 		$bulk_actions = $this->list_table->get_bulk_actions();
 
 		$this->assertIsArray( $bulk_actions, 'get_bulk_actions() should return an array' );
@@ -218,12 +212,9 @@ class List_Table_Ignore_Test extends WPTestCase {
 	/**
 	 * Test query filters exclude ignored images from all view
 	 *
-	 * Tests: Query filtering in \ISC\Pro\Unused_Images\List_Table
+	 * Tests: Query filtering in \ISC\Pro\Unused_Images_List_Table
 	 */
 	public function test_query_filters_exclude_ignored_images_from_all_view() {
-		// Set current view to 'all' (or default)
-		unset( $_GET['filter'] );
-
 		// Get items (this would typically be done via prepare_items())
 		$items = $this->list_table->get_items();
 
@@ -242,12 +233,9 @@ class List_Table_Ignore_Test extends WPTestCase {
 	/**
 	 * Test query filters exclude ignored images from unchecked view
 	 *
-	 * Tests: Query filtering in \ISC\Pro\Unused_Images\List_Table
+	 * Tests: Query filtering in \ISC\Pro\Unused_Images_List_Table
 	 */
 	public function test_query_filters_exclude_ignored_images_from_unchecked_view() {
-		// Set current view to 'unchecked'
-		$_GET['filter'] = 'unchecked';
-
 		// Get items
 		$items = $this->list_table->get_items();
 
@@ -261,12 +249,9 @@ class List_Table_Ignore_Test extends WPTestCase {
 	/**
 	 * Test query filters exclude ignored images from unused view
 	 *
-	 * Tests: Query filtering in \ISC\Pro\Unused_Images\List_Table
+	 * Tests: Query filtering in \ISC\Pro\Unused_Images_List_Table
 	 */
 	public function test_query_filters_exclude_ignored_images_from_unused_view() {
-		// Set current view to 'unused'
-		$_GET['filter'] = 'unused';
-
 		// Get items
 		$items = $this->list_table->get_items();
 
@@ -280,12 +265,9 @@ class List_Table_Ignore_Test extends WPTestCase {
 	/**
 	 * Test query filters show only ignored images in ignored view
 	 *
-	 * Tests: Query filtering in \ISC\Pro\Unused_Images\List_Table
+	 * Tests: Query filtering in \ISC\Pro\Unused_Images_List_Table
 	 */
 	public function test_query_filters_show_only_ignored_images_in_ignored_view() {
-		// Set current view to 'ignored'
-		$_GET['filter'] = 'ignored';
-
 		// Get items
 		$items = $this->list_table->get_items();
 
