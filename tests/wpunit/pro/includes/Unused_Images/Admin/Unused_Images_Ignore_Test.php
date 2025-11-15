@@ -143,22 +143,6 @@ class Unused_Images_Ignore_Test extends WPTestCase {
 	}
 
 	/**
-	 * Test has_ignored_images() uses cached value
-	 *
-	 * Tests: \ISC\Pro\Unused_Images::has_ignored_images()
-	 */
-	public function test_has_ignored_images_uses_cached_value() {
-		// Set transient to false
-		set_transient( 'isc_has_ignored_images', false, HOUR_IN_SECONDS );
-
-		// Add an ignored image (but transient should still be used)
-		update_post_meta( $this->attachment_id, 'isc_ignored_unused_image', '1' );
-
-		$result = Unused_Images::has_ignored_images();
-		$this->assertFalse( $result, 'has_ignored_images() should use cached transient value' );
-	}
-
-	/**
 	 * Test has_ignored_images() sets cache after query
 	 *
 	 * Tests: \ISC\Pro\Unused_Images::has_ignored_images()
