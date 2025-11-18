@@ -142,7 +142,7 @@ class Analyze_HTML {
 
 		ISC_Log::log( 'look for image IDs within the HTML' );
 
-		$types = implode( '|', \ISC\Image_Sources\Image_Sources::get_instance()->allowed_extensions );
+		$types = implode( '|', \ISC\Image_Sources\Image_Sources::get_allowed_extensions() );
 		/**
 		 * Look for any URLs
 		 * - starting with http, or https
@@ -196,7 +196,7 @@ class Analyze_HTML {
 		\ISC_Log::log( 'Looking for valid image URLs within HTML' );
 
 		// Get allowed image extensions as a pipe-separated string.
-		$types = implode( '|', \ISC\Image_Sources\Image_Sources::get_instance()->allowed_extensions );
+		$types = implode( '|', \ISC\Image_Sources\Image_Sources::get_allowed_extensions() );
 
 		/**
 		 * The regex below matches:

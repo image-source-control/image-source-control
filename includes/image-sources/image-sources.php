@@ -10,11 +10,11 @@ use ISC_Model;
  */
 class Image_Sources {
 	/**
-	 * Allowed image file types/extensions
+	 * Default allowed image file types/extensions
 	 *
-	 * @var array allowed image extensions.
+	 * @var array
 	 */
-	public $allowed_extensions = [
+	const DEFAULT_ALLOWED_EXTENSIONS = [
 		'jpg',
 		'png',
 		'gif',
@@ -23,6 +23,13 @@ class Image_Sources {
 		'avif',
 		'svg',
 	];
+
+	/**
+	 * Allowed image file types/extensions
+	 *
+	 * @var array allowed image extensions.
+	 */
+	public array $allowed_extensions = [];
 
 	/**
 	 * Thumbnail size in list of all images.
@@ -72,7 +79,11 @@ class Image_Sources {
 	 * Setup registers filters and actions.
 	 */
 	public function __construct() {
-		self::$instance      = $this;
+		self::$instance = $this;
+
+		// Initialize allowed_extensions
+		$this->allowed_extensions = self::DEFAULT_ALLOWED_EXTENSIONS;
+
 		$this->model         = new ISC_Model();
 		$this->html_analyzer = new Analyze_HTML();
 
@@ -215,5 +226,16 @@ class Image_Sources {
 	 */
 	public static function get_thumbnail_sizes() {
 		return self::$thumbnail_size;
+	}
+
+	/**
+	 * Get allowed image extensions
+	 * Works even when the Image Sources module is not initialized
+	 *
+	 * @return array
+	 */
+	public static function get_allowed_extensions(): array {
+		$extensions = self::$instance ? self::$instance->allowed_extensions : self::DEFAULT_ALLOWED_EXTENSIONS;
+		return apply_filters( 'isc_allowed_image_extensions', $extensions );
 	}
 }

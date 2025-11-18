@@ -21,18 +21,6 @@ class Extract_Image_Urls_Test extends WPTestCase {
 	public function setUp() : void {
 		parent::setUp();
 		$this->html_analyzer = new Analyze_HTML();
-
-		// Mock the allowed_extensions property in Image_Sources
-		$image_sources = $this->getMockBuilder(Image_Sources::class)
-		                      ->disableOriginalConstructor()
-		                      ->getMock();
-		$image_sources->allowed_extensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
-
-		// Use reflection to set the singleton instance
-		$reflection = new \ReflectionClass(Image_Sources::class);
-		$instance_property = $reflection->getProperty('instance');
-		$instance_property->setAccessible(true);
-		$instance_property->setValue(null, $image_sources);
 	}
 
 	/**

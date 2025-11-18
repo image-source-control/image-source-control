@@ -432,7 +432,7 @@ class ISC_Model {
 			} else {
 				return 0;
 			}
-		} elseif ( ! in_array( $ext, Image_Sources::get_instance()->allowed_extensions, true ) ) {
+		} elseif ( ! in_array( $ext, Image_Sources::get_allowed_extensions(), true ) ) {
 			// a valid image extension is required, if an extension is given
 			ISC_Log::log( 'exit get_image_by_url() due to invalid image extension' );
 			return 0;
