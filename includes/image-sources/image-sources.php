@@ -235,10 +235,7 @@ class Image_Sources {
 	 * @return array
 	 */
 	public static function get_allowed_extensions(): array {
-		if ( self::$instance ) {
-			return self::$instance->allowed_extensions;
-		}
-		// Fallback: return default extensions when module is not active
-		return apply_filters( 'isc_allowed_image_extensions', self::DEFAULT_ALLOWED_EXTENSIONS );
+		$extensions = self::$instance ? self::$instance->allowed_extensions : self::DEFAULT_ALLOWED_EXTENSIONS;
+		return apply_filters( 'isc_allowed_image_extensions', $extensions );
 	}
 }
