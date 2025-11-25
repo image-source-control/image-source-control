@@ -504,6 +504,7 @@ class Appearances_List_Test extends WPTestCase {
 		// the post line is found 4 times
 		$expected_link = '<a href="http://isc.local/?p=' . $this->test_post_id . '" target="_blank">Test Post</a> (Post)';
 		$actual_count = substr_count($output, $expected_link);
+
 		$this->assertEquals(4, $actual_count, 'The post link should appear exactly 4 times in the output');
 	}
 
@@ -725,5 +726,143 @@ class Appearances_List_Test extends WPTestCase {
 		$this->assertStringContainsString( '<span class="dashicons dashicons-yes" title="Frontend check"></span>', $output );
 		// Database check should still show "no"
 		$this->assertStringContainsString( '<span class="dashicons dashicons-no-alt" title="Database check"></span>', $output );
+	}
+
+	/**
+	 * Test that render() shows the global indicator when image is probably global
+	 */
+	public function test_render_shows_global_indicator_for_global_images() {
+		$index_table = new \ISC\Pro\Indexer\Index_Table();
+		$threshold = \ISC\Pro\Indexer\Indexer::get_global_threshold(); // Default is 4
+
+		// Add threshold + 1 entries with head/body positions to trigger global status
+		for ( $i = 0; $i <= $threshold; $i++ ) {
+			$post_id = $this->factory()->post->create( [ 'post_title' => "Post $i" ] );
+			$position = ( $i % 2 === 0 ) ? 'head' : 'body';
+			$index_table->insert_or_update( $post_id, $this->test_image_id, $position );
+		}
+
+		ob_start();
+		Appearances_List::render( $this->test_image_id, [ 'details' ] );
+		$output = ob_get_clean();
+
+		// Should contain the global indicator
+		$this->assertStringContainsString( 'isc-probably-global-indicator', $output, 'Should show global indicator CSS class' );
+
+		// Should show the threshold value in the message
+		$this->assertStringContainsString( "Found more than $threshold times", $output, 'Should display threshold value in message' );
+
+		// Should include link to documentation
+		$this->assertStringContainsString( 'Manual', $output, 'Should include Manual link' );
+	}
+
+	/**
+	 * Test that render() does NOT show the global indicator for normal images
+	 */
+	public function test_render_hides_global_indicator_for_normal_images() {
+		$index_table = new \ISC\Pro\Indexer\Index_Table();
+
+		// Add only content/thumbnail entries (not global)
+		$post_id_1 = $this->factory()->post->create();
+		$post_id_2 = $this->factory()->post->create();
+		$index_table->insert_or_update( $post_id_1, $this->test_image_id, 'content' );
+		$index_table->insert_or_update( $post_id_2, $this->test_image_id, 'thumbnail' );
+
+		ob_start();
+		Appearances_List::render( $this->test_image_id, [ 'details' ] );
+		$output = ob_get_clean();
+
+		// Should NOT contain the global indicator
+		$this->assertStringNotContainsString( 'isc-probably-global-indicator', $output, 'Should not show global indicator for normal images' );
+		$this->assertStringNotContainsString( 'Found more than', $output, 'Should not show "Found more than" message' );
+	}
+
+	/**
+	 * Test is_probably_global() returns false when image has no index entries
+	 */
+	public function test_is_probably_global_returns_false_with_no_entries() {
+		$result = Appearances_List::is_probably_global( $this->test_image_id );
+
+		$this->assertFalse( $result, 'Should return false when image has no index entries' );
+	}
+
+	/**
+	 * Test is_probably_global() returns false when image only has content/thumbnail positions
+	 */
+	public function test_is_probably_global_returns_false_with_only_content_positions() {
+		$index_table = new \ISC\Pro\Indexer\Index_Table();
+
+		// Add entries with content and thumbnail positions (not global)
+		$post_id_1 = $this->factory()->post->create();
+		$post_id_2 = $this->factory()->post->create();
+
+		$index_table->insert_or_update( $post_id_1, $this->test_image_id, 'content' );
+		$index_table->insert_or_update( $post_id_2, $this->test_image_id, 'thumbnail' );
+
+		$result = Appearances_List::is_probably_global( $this->test_image_id );
+
+		$this->assertFalse( $result, 'Should return false when image only has content/thumbnail positions' );
+	}
+
+	/**
+	 * Test is_probably_global() returns false when head/body entries are at or below threshold
+	 */
+	public function test_is_probably_global_returns_false_at_threshold() {
+		$index_table = new \ISC\Pro\Indexer\Index_Table();
+		$threshold = \ISC\Pro\Indexer\Indexer::get_global_threshold(); // Default is 4
+
+		// Add exactly threshold number of head/body entries
+		for ( $i = 0; $i < $threshold; $i++ ) {
+			$post_id = $this->factory()->post->create();
+			$position = ( $i % 2 === 0 ) ? 'head' : 'body';
+			$index_table->insert_or_update( $post_id, $this->test_image_id, $position );
+		}
+
+		$result = Appearances_List::is_probably_global( $this->test_image_id );
+
+		$this->assertFalse( $result, 'Should return false when head/body count equals threshold' );
+	}
+
+	/**
+	 * Test is_probably_global() returns true when head/body entries exceed threshold
+	 */
+	public function test_is_probably_global_returns_true_above_threshold() {
+		$index_table = new \ISC\Pro\Indexer\Index_Table();
+		$threshold = \ISC\Pro\Indexer\Indexer::get_global_threshold(); // Default is 4
+
+		// Add threshold + 1 entries with head/body positions
+		for ( $i = 0; $i <= $threshold; $i++ ) {
+			$post_id = $this->factory()->post->create();
+			$position = ( $i % 2 === 0 ) ? 'head' : 'body';
+			$index_table->insert_or_update( $post_id, $this->test_image_id, $position );
+		}
+
+		$result = Appearances_List::is_probably_global( $this->test_image_id );
+
+		$this->assertTrue( $result, 'Should return true when head/body count exceeds threshold' );
+	}
+
+	/**
+	 * Test is_probably_global() only counts head/body positions, not content/thumbnail
+	 */
+	public function test_is_probably_global_only_counts_head_and_body_positions() {
+		$index_table = new \ISC\Pro\Indexer\Index_Table();
+
+		// Add many content/thumbnail entries (should not count toward global)
+		for ( $i = 0; $i < 10; $i++ ) {
+			$post_id = $this->factory()->post->create();
+			$position = ( $i % 2 === 0 ) ? 'content' : 'thumbnail';
+			$index_table->insert_or_update( $post_id, $this->test_image_id, $position );
+		}
+
+		// Add only 2 head entries (below threshold)
+		$post_id_1 = $this->factory()->post->create();
+		$post_id_2 = $this->factory()->post->create();
+		$index_table->insert_or_update( $post_id_1, $this->test_image_id, 'head' );
+		$index_table->insert_or_update( $post_id_2, $this->test_image_id, 'body' );
+
+		$result = Appearances_List::is_probably_global( $this->test_image_id );
+
+		$this->assertFalse( $result, 'Should only count head/body positions, not content/thumbnail' );
 	}
 }
