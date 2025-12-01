@@ -80,6 +80,8 @@
 								isc_image_source: newValue,
 							});
 						},
+						__next40pxDefaultSize: true,
+						__nextHasNoMarginBottom: true,
 					}), el(wp.components.CheckboxControl, {
 						label: __('Use standard source', 'image-source-control-isc'),
 						checked: props.attributes.isc_image_source_own,
@@ -91,7 +93,8 @@
 							props.setAttributes({
 								isc_image_source_own: newValue,
 							});
-						}
+						},
+						__nextHasNoMarginBottom: true,
 					}), el(wp.components.TextControl, {
 						label: __('Image Source URL', 'image-source-control-isc'),
 						value: props.attributes.isc_image_source_url,
@@ -105,6 +108,8 @@
 								isc_image_source_url: newValue,
 							});
 						},
+						__next40pxDefaultSize: true,
+						__nextHasNoMarginBottom: true,
 					})];
 
 				if (iscData.option['enable_licences']) {
@@ -121,6 +126,8 @@
 									isc_image_licence: newValue,
 								});
 							},
+							__next40pxDefaultSize: true,
+							__nextHasNoMarginBottom: true,
 						}));
 				}
 
