@@ -652,13 +652,15 @@ class ISC_Model {
 	 * @return int Attachment ID or 0 if not found.
 	 */
 	public static function find_scaled_attachment_by_original_url( string $url, string $ext ): int {
+		$ext_escaped = preg_quote( $ext, '/' );
+
 		// don't search for scaled/rotated if the URL already contains them
-		if ( preg_match( "/-(?:scaled|rotated)\.{$ext}$/i", $url ) ) {
+		if ( preg_match( '/-(?:scaled|rotated)\.' . $ext_escaped . '$/i', $url ) ) {
 			return 0;
 		}
 
 		// try the "-scaled" version
-		$scaled_url = preg_replace( "/\.{$ext}$/i", '-scaled.' . $ext, $url );
+		$scaled_url = preg_replace( '/\.' . $ext_escaped . '$/i', '-scaled.' . $ext, $url );
 		if ( $scaled_url && $scaled_url !== $url ) {
 			$id = attachment_url_to_postid( $scaled_url );
 			if ( $id ) {
@@ -668,7 +670,7 @@ class ISC_Model {
 		}
 
 		// try the "-rotated" version
-		$rotated_url = preg_replace( "/\.{$ext}$/i", '-rotated.' . $ext, $url );
+		$rotated_url = preg_replace( '/\.' . $ext_escaped . '$/i', '-rotated.' . $ext, $url );
 		if ( $rotated_url && $rotated_url !== $url ) {
 			$id = attachment_url_to_postid( $rotated_url );
 			if ( $id ) {
