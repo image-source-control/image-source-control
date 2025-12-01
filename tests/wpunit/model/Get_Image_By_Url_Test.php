@@ -251,4 +251,74 @@ class Get_Image_By_Url_Test extends WPTestCase {
 		$result = ISC_Model::get_image_by_url( 'https://example.com/wp-content/uploads/image-to-be-cropped-150x150.png' );
 		$this->assertEquals( $image_id, $result, 'Image ID should be found for the old resized version' );
 	}
+
+	/**
+	 * Test if the function finds a scaled attachment when given the original (unscaled) URL.
+	 *
+	 * When large images (> 2560px) are uploaded, WordPress creates a "-scaled" version.
+	 * The original file still exists. This tests that we can find the attachment
+	 * when the original URL is used in content.
+	 *
+	 * Tests ISC_Model::find_scaled_attachment_by_original_url()
+	 */
+	public function test_find_scaled_attachment_by_original_url() {
+		// Create an attachment with the scaled version stored in _wp_attached_file
+		$image_id = wp_insert_attachment( [
+			'guid'      => 'https://example.com/wp-content/uploads/large-image.jpg',
+			'post_type' => 'attachment',
+		] );
+
+		// The _wp_attached_file contains the scaled version (as WordPress does for large images)
+		update_post_meta( $image_id, '_wp_attached_file', 'large-image-scaled.jpg' );
+
+		// When someone uses the original (unscaled) URL in content, we should still find the attachment
+		$result = ISC_Model::get_image_by_url( $this->base_url . '/large-image.jpg' );
+		$this->assertEquals( $image_id, $result, 'Image ID should be found when using original URL for a scaled attachment' );
+	}
+
+	/**
+	 * Test if the function finds a rotated attachment when given the original (unrotated) URL.
+	 *
+	 * When images are rotated via WordPress, a "-rotated" version is created.
+	 * The original file still exists. This tests that we can find the attachment
+	 * when the original URL is used in content.
+	 *
+	 * Tests ISC_Model::find_scaled_attachment_by_original_url()
+	 */
+	public function test_find_rotated_attachment_by_original_url() {
+		// Create an attachment with the rotated version stored in _wp_attached_file
+		$image_id = wp_insert_attachment( [
+			'guid'      => 'https://example.com/wp-content/uploads/rotated-image.jpg',
+			'post_type' => 'attachment',
+		] );
+
+		// The _wp_attached_file contains the rotated version
+		update_post_meta( $image_id, '_wp_attached_file', 'rotated-image-rotated.jpg' );
+
+		// When someone uses the original (unrotated) URL in content, we should still find the attachment
+		$result = ISC_Model::get_image_by_url( $this->base_url . '/rotated-image.jpg' );
+		$this->assertEquals( $image_id, $result, 'Image ID should be found when using original URL for a rotated attachment' );
+	}
+
+	/**
+	 * Test that find_scaled_attachment_by_original_url returns 0 when URL already contains -scaled.
+	 *
+	 * Tests ISC_Model::find_scaled_attachment_by_original_url()
+	 */
+	public function test_find_scaled_attachment_skips_already_scaled_urls() {
+		// This tests that we don't double-add -scaled to URLs that already have it
+		$result = ISC_Model::find_scaled_attachment_by_original_url( 'https://example.com/image-scaled.jpg', 'jpg' );
+		$this->assertEquals( 0, $result, 'Should return 0 when URL already contains -scaled' );
+	}
+
+	/**
+	 * Test that find_scaled_attachment_by_original_url returns 0 when URL already contains -rotated.
+	 *
+	 * Tests ISC_Model::find_scaled_attachment_by_original_url()
+	 */
+	public function test_find_scaled_attachment_skips_already_rotated_urls() {
+		// This tests that we don't double-add -rotated to URLs that already have it
+		$result = ISC_Model::find_scaled_attachment_by_original_url( 'https://example.com/image-rotated.jpg', 'jpg' );
+		$this->assertEquals( 0, $result, 'Should return 0 when URL already contains -rotated' );
+	}
 }

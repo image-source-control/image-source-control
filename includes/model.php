@@ -469,6 +469,18 @@ class ISC_Model {
 			return $id;
 		}
 
+		/**
+		 * When large images are uploaded (> 2560px), WordPress creates a "-scaled" version.
+		 * The original (unscaled) file still exists on the server and can be used in content.
+		 * If the URL doesn't contain "-scaled" already, try finding the scaled attachment.
+		 */
+		$id = self::find_scaled_attachment_by_original_url( $newurl, $ext );
+		if ( $id ) {
+			$storage->update_post_id( $newurl, $id );
+			ISC_Log::log( 'found scaled attachment ID ' . $id . ' for original URL' );
+			return $id;
+		}
+
 		// remove protocol (http or https)
 		$url    = str_ireplace( [ 'http:', 'https:' ], '', $url );
 		$newurl = str_ireplace( [ 'http:', 'https:' ], '', $newurl );
@@ -625,6 +637,47 @@ class ISC_Model {
 		}
 
 		return $file;
+	}
+
+	/**
+	 * Find attachment by trying the scaled version of an original URL.
+	 *
+	 * When large images (> 2560px) are uploaded, WordPress creates a "-scaled" version.
+	 * The original file still exists and can be used. This method tries to find the
+	 * scaled attachment when given the original (unscaled) URL.
+	 *
+	 * @param string $url Image URL without -scaled suffix.
+	 * @param string $ext File extension.
+	 *
+	 * @return int Attachment ID or 0 if not found.
+	 */
+	public static function find_scaled_attachment_by_original_url( string $url, string $ext ): int {
+		// don't search for scaled/rotated if the URL already contains them
+		if ( preg_match( "/-(?:scaled|rotated)\.{$ext}$/i", $url ) ) {
+			return 0;
+		}
+
+		// try the "-scaled" version
+		$scaled_url = preg_replace( "/\.{$ext}$/i", '-scaled.' . $ext, $url );
+		if ( $scaled_url && $scaled_url !== $url ) {
+			$id = attachment_url_to_postid( $scaled_url );
+			if ( $id ) {
+				ISC_Log::log( 'found scaled attachment by original URL: ' . $scaled_url );
+				return $id;
+			}
+		}
+
+		// try the "-rotated" version
+		$rotated_url = preg_replace( "/\.{$ext}$/i", '-rotated.' . $ext, $url );
+		if ( $rotated_url && $rotated_url !== $url ) {
+			$id = attachment_url_to_postid( $rotated_url );
+			if ( $id ) {
+				ISC_Log::log( 'found rotated attachment by original URL: ' . $rotated_url );
+				return $id;
+			}
+		}
+
+		return 0;
 	}
 
 	/**
