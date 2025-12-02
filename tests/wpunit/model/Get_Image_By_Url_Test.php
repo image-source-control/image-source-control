@@ -88,18 +88,61 @@ class Get_Image_By_Url_Test extends WPTestCase {
 
 	/**
 	 * Test if the function finds an image despite the "scaled" keyword in the image file
+	 *  The `-scaled` suffix is added by WordPress when a very large image is scaled down on upload
+	 *  While `guid` doesn’t contain the suffix, `_wp_attached_file` does
 	 */
-	public function test_with_scaled_keyword() {
-		$result = ISC_Model::get_image_by_url( $this->base_url . '/test-scaled.jpg' );
-		$this->assertEquals( $this->image_id, $result );
+	public function test_scaled_image() {
+		$image_id = wp_insert_attachment( [
+          'guid'      => 'http://isc.local/wp-content/uploads/image2.jpg',
+          'post_type' => 'attachment'
+      ] );
+
+		// add a _wp_attached_file meta value
+		update_post_meta( $image_id, '_wp_attached_file', 'image2-scaled.jpg' );
+
+		// find both versions
+		$result = ISC_Model::get_image_by_url( $this->base_url . '/image2.jpg' );
+		$this->assertEquals( $image_id, $result );
+		$result = ISC_Model::get_image_by_url( $this->base_url . '/image2-scaled.jpg' );
+		$this->assertEquals( $image_id, $result );
 	}
 
 	/**
 	 * Test if the function finds an image despite the "rotated" keyword in the image file
+	 * The `-rotated` suffix is added by WordPress when an image is rotated on upload
+	 * While `guid` doesn’t contain the suffix, `_wp_attached_file` does
 	 */
-	public function test_with_rotated_keyword() {
-		$result = ISC_Model::get_image_by_url( $this->base_url . '/test-rotated.jpg' );
-		$this->assertEquals( $this->image_id, $result );
+	public function test_rotated_image() {
+		$image_id = wp_insert_attachment( [
+            'guid'      => 'http://isc.local/wp-content/uploads/image3.jpg',
+			'post_type' => 'attachment'
+        ] );
+
+		// add a _wp_attached_file meta value
+		update_post_meta( $image_id, '_wp_attached_file', 'image3-rotated.jpg' );
+
+		// find both versions
+		$result = ISC_Model::get_image_by_url( $this->base_url . '/image3.jpg' );
+		$this->assertEquals( $image_id, $result );
+		$result = ISC_Model::get_image_by_url( $this->base_url . '/image3-rotated.jpg' );
+		$this->assertEquals( $image_id, $result );
+	}
+
+	/**
+	 * Test if the function finds the "rotated" and resized version of an image
+	 */
+	public function test_rotated_resized_image() {
+		$image_id = wp_insert_attachment( [
+			                                  'guid'      => 'http://isc.local/wp-content/uploads/image4.jpg',
+			                                  'post_type' => 'attachment'
+		                                  ] );
+
+		// add a _wp_attached_file meta value
+		update_post_meta( $image_id, '_wp_attached_file', 'image4-rotated.jpg' );
+
+		// find both versions
+		$result = ISC_Model::get_image_by_url( $this->base_url . '/image4-300x200.jpg' );
+		$this->assertEquals( $image_id, $result );
 	}
 
 	/**
