@@ -460,8 +460,9 @@ class ISC_Model {
 		 * Attachment_url_to_postid needs the URL including protocol, but cannot handle sizes, so it needs to be at exactly this position
 		 * this function finds images based on the _wp_attached_file post meta value that includes the image path followed after the upload dir
 		 * it therefore also works when the domain changed
+		 * since _wp_attached_file contains "scaled" or "rotated" as well, we keep them, but only remove sizes
 		 */
-		$id = attachment_url_to_postid( $newurl );
+		$id = attachment_url_to_postid( esc_url( preg_replace( "/-\d+x\d+\.{$ext}(.*)/i", '.' . $ext, $url ) ) );
 		if ( $id ) {
 			// store attachment ID in storage
 			$storage->update_post_id( $newurl, $id );
