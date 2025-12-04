@@ -1,6 +1,6 @@
 <?php
 
-namespace ISC\Tests\WPUnit\Pro\Includes\Indexer;
+namespace ISC\Tests\WPUnit\Pro\Includes\Unused_Images;
 
 use ISC\Pro\Indexer\Index_Table;
 use ISC\Tests\WPUnit\WPTestCase;
