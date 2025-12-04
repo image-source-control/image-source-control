@@ -1,6 +1,6 @@
 <?php
 
-namespace ISC\Tests\WPUnit\Pro\Includes\Indexer\Admin;
+namespace ISC\Tests\WPUnit\Pro\Includes\Unused_Images\Admin;
 
 use ISC\Pro\Indexer\Index_Run;
 use ISC\Tests\WPUnit\WPTestCase;
