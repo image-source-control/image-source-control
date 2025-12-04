@@ -1,30 +1,30 @@
 <?php
 
-namespace ISC\Tests\WPUnit\Pro\Includes\Indexer\Admin;
+namespace ISC\Tests\WPUnit\Pro\Includes\Unused_Images\Admin;
 
-use ISC\Pro\Indexer\Index_Run;
+use ISC\Pro\Unused_Images\Content_Scan_Run;
 use ISC\Tests\WPUnit\WPTestCase;
 
 /**
  * Tests for Index_Run::get_content_urls_batch()
  */
-class Index_Run_Get_Content_Urls_Batch_Test extends WPTestCase {
+class Content_Scan_Run_Get_Content_Urls_Batch_Test extends WPTestCase {
 
 	/**
-	 * @var \ISC\Pro\Indexer\Index_Run
+	 * @var Content_Scan_Run
 	 */
-	protected $indexer_run;
+	protected $content_scan_run;
 
 	public function setUp(): void {
 		parent::setUp();
 
-		$this->indexer_run = new Index_Run();
+		$this->content_scan_run = new Content_Scan_Run();
 
 		// Set a smaller URL batch size for testing purposes
-		$reflection = new \ReflectionClass( $this->indexer_run );
+		$reflection = new \ReflectionClass( $this->content_scan_run );
 		$property   = $reflection->getProperty( 'url_batch_size' );
 		$property->setAccessible( true );
-		$property->setValue( $this->indexer_run, 2 ); // Set batch size to 2 for tests
+		$property->setValue( $this->content_scan_run, 2 ); // Set batch size to 2 for tests
 	}
 
 	public function tearDown(): void {
@@ -33,7 +33,7 @@ class Index_Run_Get_Content_Urls_Batch_Test extends WPTestCase {
 		unregister_post_type( 'my_cpt' );
 		unregister_post_type( 'private_cpt' );
 
-		$this->indexer_run = null;
+		$this->content_scan_run = null;
 	}
 
 	/**
@@ -44,14 +44,14 @@ class Index_Run_Get_Content_Urls_Batch_Test extends WPTestCase {
 		$post_ids = $this->factory()->post->create_many( 5, [ 'post_status' => 'publish' ] );
 
 		// Get the URL batch size set in setUp
-		$reflection = new \ReflectionClass( $this->indexer_run );
+		$reflection = new \ReflectionClass( $this->content_scan_run );
 		$property   = $reflection->getProperty( 'url_batch_size' );
 		$property->setAccessible( true );
-		$batch_size = $property->getValue( $this->indexer_run ); // Should be 2
+		$batch_size = $property->getValue( $this->content_scan_run ); // Should be 2
 
 		// --- Test first batch (offset 0) ---
 		$offset       = 0;
-		$urls_batch_1 = $this->indexer_run->get_content_urls_batch( $offset, $batch_size );
+		$urls_batch_1 = $this->content_scan_run->get_content_urls_batch( $offset, $batch_size );
 
 		$this->assertCount( $batch_size, $urls_batch_1, 'First batch count incorrect' );
 		$this->assertEquals( [
@@ -61,7 +61,7 @@ class Index_Run_Get_Content_Urls_Batch_Test extends WPTestCase {
 
 		// --- Test second batch (offset 2) ---
 		$offset       = $batch_size;
-		$urls_batch_2 = $this->indexer_run->get_content_urls_batch( $offset, $batch_size );
+		$urls_batch_2 = $this->content_scan_run->get_content_urls_batch( $offset, $batch_size );
 
 		$this->assertCount( $batch_size, $urls_batch_2, 'Second batch count incorrect' );
 		$this->assertEquals( [
@@ -71,7 +71,7 @@ class Index_Run_Get_Content_Urls_Batch_Test extends WPTestCase {
 
 		// --- Test final batch (offset 4) ---
 		$offset       = $batch_size * 2;
-		$urls_batch_3 = $this->indexer_run->get_content_urls_batch( $offset, $batch_size );
+		$urls_batch_3 = $this->content_scan_run->get_content_urls_batch( $offset, $batch_size );
 
 		$this->assertCount( 1, $urls_batch_3, 'Final batch count incorrect' ); // Only 1 post left
 		$this->assertEquals( [
@@ -80,7 +80,7 @@ class Index_Run_Get_Content_Urls_Batch_Test extends WPTestCase {
 
 		// --- Test offset greater than total ---
 		$offset       = $batch_size * 3; // Offset 6
-		$urls_batch_4 = $this->indexer_run->get_content_urls_batch( $offset, $batch_size );
+		$urls_batch_4 = $this->content_scan_run->get_content_urls_batch( $offset, $batch_size );
 
 		$this->assertCount( 0, $urls_batch_4, 'Offset greater than total should return empty batch' );
 		$this->assertEquals( [], $urls_batch_4 );
@@ -102,7 +102,7 @@ class Index_Run_Get_Content_Urls_Batch_Test extends WPTestCase {
 		$published_private_cpt_id = $this->factory()->post->create( [ 'post_status' => 'publish', 'post_type' => 'private_cpt' ] );
 
 		// Get a batch (batch size 2 from setUp)
-		$urls_batch = $this->indexer_run->get_content_urls_batch( 0, 10 ); // Use a larger batch size to get all
+		$urls_batch = $this->content_scan_run->get_content_urls_batch( 0, 10 ); // Use a larger batch size to get all
 
 		// Assert that only published public posts are included
 		$expected_urls = [

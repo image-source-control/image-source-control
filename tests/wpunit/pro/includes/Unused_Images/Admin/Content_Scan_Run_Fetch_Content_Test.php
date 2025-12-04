@@ -1,24 +1,24 @@
 <?php
 
-namespace ISC\Tests\WPUnit\Pro\Includes\Indexer\Admin;
+namespace ISC\Tests\WPUnit\Pro\Includes\Unused_Images\Admin;
 
-use ISC\Pro\Indexer\Index_Run;
+use ISC\Pro\Unused_Images\Content_Scan_Run;
 use ISC\Tests\WPUnit\WPTestCase;
 
 /**
- * Test class for Index_Run::fetch_content() method
+ * Test class for Content_Scan_Run::fetch_content() method
  *
  * This class tests the fetch_content() method which handles HTTP requests
  * to fetch and index content from URLs.
  *
- * @package ISC\Pro\Indexer
+ * @package ISC\Pro\Unused_Images
  */
-class Index_Run_Fetch_Content_Test extends WPTestCase {
+class Content_Scan_Run_Fetch_Content_Test extends WPTestCase {
 
 	/**
-	 * @var Index_Run
+	 * @var Content_Scan_Run
 	 */
-	protected Index_Run $indexer_run;
+	protected Content_Scan_Run $content_scan_run;
 
 	/**
 	 * @var array Storage for captured HTTP request details
@@ -31,7 +31,7 @@ class Index_Run_Fetch_Content_Test extends WPTestCase {
 	public function setUp(): void {
 		parent::setUp();
 
-		$this->indexer_run       = new Index_Run();
+		$this->content_scan_run       = new Content_Scan_Run();
 		$this->last_request_args = [];
 	}
 
@@ -76,7 +76,7 @@ class Index_Run_Fetch_Content_Test extends WPTestCase {
 			];
 		}, 10, 3 );
 
-		$result = $this->indexer_run->fetch_content( $test_url );
+		$result = $this->content_scan_run->fetch_content( $test_url );
 
 		$this->assertIsArray( $result );
 		$this->assertEquals( 200, $result['code'], 'Expected HTTP status code 200' );
@@ -109,7 +109,7 @@ class Index_Run_Fetch_Content_Test extends WPTestCase {
 			];
 		}, 10, 3 );
 
-		$result = $this->indexer_run->fetch_content( $test_url );
+		$result = $this->content_scan_run->fetch_content( $test_url );
 
 		$this->assertIsArray( $result );
 		$this->assertEquals( 200, $result['code'], 'Expected HTTP status code 200' );
@@ -136,7 +136,7 @@ class Index_Run_Fetch_Content_Test extends WPTestCase {
 			];
 		},          10, 3 );
 
-		$result = $this->indexer_run->fetch_content( $test_url );
+		$result = $this->content_scan_run->fetch_content( $test_url );
 
 		$this->assertIsArray( $result );
 		$this->assertEquals( 404, $result['code'] );
@@ -157,7 +157,7 @@ class Index_Run_Fetch_Content_Test extends WPTestCase {
 			];
 		},          10, 3 );
 
-		$result = $this->indexer_run->fetch_content( $test_url );
+		$result = $this->content_scan_run->fetch_content( $test_url );
 
 		$this->assertIsArray( $result );
 		$this->assertEquals( 500, $result['code'] );
@@ -173,7 +173,7 @@ class Index_Run_Fetch_Content_Test extends WPTestCase {
 			return new \WP_Error( 'http_request_failed', 'Connection timeout' );
 		},          10, 3 );
 
-		$result = $this->indexer_run->fetch_content( $test_url );
+		$result = $this->content_scan_run->fetch_content( $test_url );
 
 		$this->assertFalse( $result );
 	}
@@ -195,7 +195,7 @@ class Index_Run_Fetch_Content_Test extends WPTestCase {
 			];
 		},          10, 3 );
 
-		$this->indexer_run->fetch_content( $test_url );
+		$this->content_scan_run->fetch_content( $test_url );
 
 		// Verify cache control headers are present
 		$this->assertArrayHasKey( 'headers', $captured_args );
@@ -222,7 +222,7 @@ class Index_Run_Fetch_Content_Test extends WPTestCase {
 			];
 		},          10, 3 );
 
-		$this->indexer_run->fetch_content( $test_url );
+		$this->content_scan_run->fetch_content( $test_url );
 
 		$this->assertArrayHasKey( 'user-agent', $captured_args );
 		$this->assertEquals( 'ISC Index Bot', $captured_args['user-agent'] );
@@ -245,7 +245,7 @@ class Index_Run_Fetch_Content_Test extends WPTestCase {
 			];
 		},          10, 3 );
 
-		$this->indexer_run->fetch_content( $test_url );
+		$this->content_scan_run->fetch_content( $test_url );
 
 		$this->assertArrayHasKey( 'timeout', $captured_args );
 		$this->assertEquals( 30, $captured_args['timeout'] );
@@ -268,7 +268,7 @@ class Index_Run_Fetch_Content_Test extends WPTestCase {
 			];
 		},          10, 3 );
 
-		$this->indexer_run->fetch_content( $test_url, false );
+		$this->content_scan_run->fetch_content( $test_url, false );
 
 		$this->assertArrayHasKey( 'sslverify', $captured_args );
 		$this->assertFalse( $captured_args['sslverify'] );
@@ -291,7 +291,7 @@ class Index_Run_Fetch_Content_Test extends WPTestCase {
 			];
 		},          10, 3 );
 
-		$this->indexer_run->fetch_content( $test_url, true );
+		$this->content_scan_run->fetch_content( $test_url, true );
 
 		$this->assertArrayHasKey( 'sslverify', $captured_args );
 		$this->assertTrue( $captured_args['sslverify'] );
@@ -307,7 +307,7 @@ class Index_Run_Fetch_Content_Test extends WPTestCase {
 			$this->fail( 'Should not make HTTP request to foreign host' );
 		},          10, 3 );
 
-		$result = $this->indexer_run->fetch_content( $foreign_url, true );
+		$result = $this->content_scan_run->fetch_content( $foreign_url, true );
 
 		$this->assertFalse( $result, 'Should refuse to send admin cookies to foreign host' );
 	}
@@ -325,7 +325,7 @@ class Index_Run_Fetch_Content_Test extends WPTestCase {
 			$this->fail( 'Should not make HTTP request with scheme mismatch' );
 		},          10, 3 );
 
-		$result = $this->indexer_run->fetch_content( $mismatched_url, true );
+		$result = $this->content_scan_run->fetch_content( $mismatched_url, true );
 
 		$this->assertFalse( $result, 'Should refuse to send admin cookies with scheme mismatch' );
 	}
@@ -345,7 +345,7 @@ class Index_Run_Fetch_Content_Test extends WPTestCase {
 			];
 		},          10, 3 );
 
-		$result = $this->indexer_run->fetch_content( $original_url );
+		$result = $this->content_scan_run->fetch_content( $original_url );
 
 		$this->assertFalse( $result['is_problematic_redirect'], 'Trailing slash redirect should not be problematic' );
 	}
@@ -365,7 +365,7 @@ class Index_Run_Fetch_Content_Test extends WPTestCase {
 			];
 		},          10, 3 );
 
-		$result = $this->indexer_run->fetch_content( $original_url );
+		$result = $this->content_scan_run->fetch_content( $original_url );
 
 		$this->assertTrue( $result['is_problematic_redirect'], 'External redirect should be problematic' );
 	}
@@ -390,7 +390,7 @@ class Index_Run_Fetch_Content_Test extends WPTestCase {
 			];
 		}, 10, 3 );
 
-		$result = $this->indexer_run->fetch_content( $original_url );
+		$result = $this->content_scan_run->fetch_content( $original_url );
 
 		$this->assertFalse( $result['is_problematic_redirect'], 'HTTP to HTTPS redirect should not be problematic' );
 
@@ -404,7 +404,7 @@ class Index_Run_Fetch_Content_Test extends WPTestCase {
 	public function test_invalid_url_returns_false(): void {
 		$invalid_url = 'not-a-valid-url';
 
-		$result = $this->indexer_run->fetch_content( $invalid_url );
+		$result = $this->content_scan_run->fetch_content( $invalid_url );
 
 		$this->assertFalse( $result );
 	}
@@ -426,7 +426,7 @@ class Index_Run_Fetch_Content_Test extends WPTestCase {
 			];
 		},          10, 3 );
 
-		$this->indexer_run->fetch_content( $test_url );
+		$this->content_scan_run->fetch_content( $test_url );
 
 		$this->assertArrayHasKey( 'redirection', $captured_args );
 		$this->assertEquals( 5, $captured_args['redirection'] );
@@ -444,7 +444,7 @@ class Index_Run_Fetch_Content_Test extends WPTestCase {
 		$redirect_url = get_permalink( $post2_id );
 
 		// Use reflection to test normalize_url
-		$reflection = new \ReflectionClass( $this->indexer_run );
+		$reflection = new \ReflectionClass( $this->content_scan_run );
 		$normalize_method = $reflection->getMethod( 'normalize_url' );
 		$normalize_method->setAccessible( true );
 
@@ -456,7 +456,7 @@ class Index_Run_Fetch_Content_Test extends WPTestCase {
 			];
 		}, 10, 3 );
 
-		$result = $this->indexer_run->fetch_content( $original_url );
+		$result = $this->content_scan_run->fetch_content( $original_url );
 
 		$this->assertTrue( $result['is_problematic_redirect'], 'Redirect to different post should be problematic' );
 	}
@@ -479,7 +479,7 @@ class Index_Run_Fetch_Content_Test extends WPTestCase {
 			];
 		}, 10, 3 );
 
-		$result = $this->indexer_run->fetch_content( $original_url );
+		$result = $this->content_scan_run->fetch_content( $original_url );
 
 		$this->assertFalse( $result['is_problematic_redirect'], 'Redirect to same post should not be problematic' );
 	}
@@ -501,7 +501,7 @@ class Index_Run_Fetch_Content_Test extends WPTestCase {
 			];
 		}, 10, 3 );
 
-		$result = $this->indexer_run->fetch_content( $original_url );
+		$result = $this->content_scan_run->fetch_content( $original_url );
 
 		// Before fix: is_problematic_redirect was empty/false
 		// After fix: should be true (different posts)
@@ -526,7 +526,7 @@ class Index_Run_Fetch_Content_Test extends WPTestCase {
 			];
 		}, 10, 3 );
 
-		$result = $this->indexer_run->fetch_content( $original_url );
+		$result = $this->content_scan_run->fetch_content( $original_url );
 
 		// Should not be flagged as problematic since it's the same URL after normalization
 		$this->assertFalse( $result['is_problematic_redirect'], 'Cache-buster should be normalized away' );

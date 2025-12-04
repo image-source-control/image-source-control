@@ -1,8 +1,8 @@
 <?php
 
-namespace ISC\Tests\WPUnit\Pro\Includes\Indexer\Admin;
+namespace ISC\Tests\WPUnit\Pro\Includes\Unused_Images\Admin;
 
-use ISC\Pro\Indexer\Index_Run;
+use ISC\Pro\Unused_Images\Content_Scan_Run;
 use ISC\Tests\WPUnit\WPTestCase;
 
 /**
@@ -13,12 +13,12 @@ use ISC\Tests\WPUnit\WPTestCase;
  *
  * @package ISC\Pro\Indexer
  */
-class Index_Run_Index_Single_Item_Test extends WPTestCase {
+class Content_Scan_Run_Index_Single_Item_Test extends WPTestCase {
 
 	/**
-	 * @var \ISC\Pro\Indexer\Index_Run
+	 * @var Content_Scan_Run
 	 */
-	protected $indexer_run;
+	protected $content_scan_run;
 
 	/**
 	 * Set up the test environment.
@@ -26,7 +26,7 @@ class Index_Run_Index_Single_Item_Test extends WPTestCase {
 	public function setUp(): void {
 		parent::setUp();
 
-		$this->indexer_run = new Index_Run();
+		$this->content_scan_run = new Content_Scan_Run();
 	}
 
 	/**
@@ -35,7 +35,7 @@ class Index_Run_Index_Single_Item_Test extends WPTestCase {
 	public function tearDown(): void {
 		parent::tearDown();
 
-		$this->indexer_run = null;
+		$this->content_scan_run = null;
 	}
 
 	/**
@@ -60,7 +60,7 @@ class Index_Run_Index_Single_Item_Test extends WPTestCase {
 		];
 
 		// Call index_single_item
-		$result = $this->indexer_run->index_single_item( $url_data );
+		$result = $this->content_scan_run->scan_single_item( $url_data );
 
 		// Assert the structure of the returned array
 		$this->assertIsArray( $result );
@@ -92,7 +92,7 @@ class Index_Run_Index_Single_Item_Test extends WPTestCase {
 	 * Test with empty array input.
 	 */
 	public function test_handles_empty_array_input(): void {
-		$result = $this->indexer_run->index_single_item( [] );
+		$result = $this->content_scan_run->scan_single_item( [] );
 
 		$this->assertIsArray( $result );
 		$this->assertArrayHasKey( 'is_error', $result );
@@ -106,7 +106,7 @@ class Index_Run_Index_Single_Item_Test extends WPTestCase {
 	 * Test with missing 'id' field.
 	 */
 	public function test_handles_missing_id_field(): void {
-		$result = $this->indexer_run->index_single_item( [ 'url' => 'https://example.com' ] );
+		$result = $this->content_scan_run->scan_single_item( [ 'url' => 'https://example.com' ] );
 
 		$this->assertIsArray( $result );
 		$this->assertArrayHasKey( 'is_error', $result );
@@ -120,7 +120,7 @@ class Index_Run_Index_Single_Item_Test extends WPTestCase {
 	 * Test with missing 'url' field.
 	 */
 	public function test_handles_missing_url_field(): void {
-		$result = $this->indexer_run->index_single_item( [ 'id' => 123 ] );
+		$result = $this->content_scan_run->scan_single_item( [ 'id' => 123 ] );
 
 		$this->assertIsArray( $result );
 		$this->assertArrayHasKey( 'is_error', $result );
@@ -134,7 +134,7 @@ class Index_Run_Index_Single_Item_Test extends WPTestCase {
 	 * Test with invalid post ID (negative).
 	 */
 	public function test_handles_negative_post_id(): void {
-		$result = $this->indexer_run->index_single_item( [ 'id' => - 5, 'url' => 'https://example.com' ] );
+		$result = $this->content_scan_run->scan_single_item( [ 'id' => - 5, 'url' => 'https://example.com' ] );
 
 		$this->assertIsArray( $result );
 		$this->assertArrayHasKey( 'is_error', $result );
@@ -148,7 +148,7 @@ class Index_Run_Index_Single_Item_Test extends WPTestCase {
 	 * Test with post ID of zero.
 	 */
 	public function test_handles_zero_post_id(): void {
-		$result = $this->indexer_run->index_single_item( [ 'id' => 0, 'url' => 'https://example.com' ] );
+		$result = $this->content_scan_run->scan_single_item( [ 'id' => 0, 'url' => 'https://example.com' ] );
 
 		$this->assertIsArray( $result );
 		$this->assertArrayHasKey( 'is_error', $result );
@@ -169,7 +169,7 @@ class Index_Run_Index_Single_Item_Test extends WPTestCase {
 
 		update_option( 'page_for_posts', $page_id );
 
-		$result = $this->indexer_run->index_single_item( [
+		$result = $this->content_scan_run->scan_single_item( [
 			                                                 'id'  => $page_id,
 			                                                 'url' => get_permalink( $page_id ),
 		                                                 ] );
@@ -196,7 +196,7 @@ class Index_Run_Index_Single_Item_Test extends WPTestCase {
 			                                           'post_title'  => 'Test Page',
 		                                           ] );
 
-		$result = $this->indexer_run->index_single_item( [
+		$result = $this->content_scan_run->scan_single_item( [
 			                                                 'id'  => $page_id,
 			                                                 'url' => get_permalink( $page_id ),
 		                                                 ] );
@@ -222,7 +222,7 @@ class Index_Run_Index_Single_Item_Test extends WPTestCase {
 		$time_before = time();
 
 		// Index the post
-		$this->indexer_run->index_single_item( [
+		$this->content_scan_run->scan_single_item( [
 			                                       'id'  => $post_id,
 			                                       'url' => get_permalink( $post_id ),
 		                                       ] );
@@ -251,7 +251,7 @@ class Index_Run_Index_Single_Item_Test extends WPTestCase {
 		$timestamp = time();
 
 		// Should not throw an error
-		$result = $this->indexer_run->index_single_item(
+		$result = $this->content_scan_run->scan_single_item(
 			[
 				'id'  => $post_id,
 				'url' => get_permalink( $post_id ),
@@ -273,7 +273,7 @@ class Index_Run_Index_Single_Item_Test extends WPTestCase {
 		                                           ] );
 
 		// Should not throw an error
-		$result = $this->indexer_run->index_single_item(
+		$result = $this->content_scan_run->scan_single_item(
 			[
 				'id'  => $post_id,
 				'url' => get_permalink( $post_id ),
@@ -293,7 +293,7 @@ class Index_Run_Index_Single_Item_Test extends WPTestCase {
 			                                          'post_status' => 'publish',
 		                                          ]);
 
-		$this->indexer_run->index_single_item([
+		$this->content_scan_run->scan_single_item([
 			                                      'id'  => $post_id,
 			                                      'url' => '',
 		                                      ]);

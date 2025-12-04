@@ -1,19 +1,19 @@
 <?php
 
-namespace ISC\Tests\WPUnit\Pro\Includes\Indexer;
+namespace ISC\Tests\WPUnit\Pro\Includes\Unused_Images;
 
-use ISC\Pro\Indexer\Index_Table;
+use ISC\Pro\Unused_Images\Content_Scan_Table;
 use ISC\Tests\WPUnit\WPTestCase;
 
 /**
- * Testing the Index_Table::get_existing_by_attachment_ids_and_position() method
+ * Testing the Content_Scan_Table::get_existing_by_attachment_ids_and_position() method
  */
-class Index_Table_Get_Existing_By_Attachment_Ids_And_Position_Test extends WPTestCase {
+class Content_Scan_Table_Get_Existing_By_Attachment_Ids_And_Position_Test extends WPTestCase {
 
 	/**
-	 * @var Index_Table
+	 * @var Content_Scan_Table
 	 */
-	private Index_Table $index_table;
+	private Content_Scan_Table $content_scan_table;
 
 	/**
 	 * @var int
@@ -48,7 +48,7 @@ class Index_Table_Get_Existing_By_Attachment_Ids_And_Position_Test extends WPTes
 	public function setUp(): void {
 		parent::setUp();
 
-		$this->index_table = new Index_Table();
+		$this->content_scan_table = new Content_Scan_Table();
 
 		// Create test posts and attachments
 		$this->post_id_1       = $this->factory()->post->create();
@@ -68,12 +68,12 @@ class Index_Table_Get_Existing_By_Attachment_Ids_And_Position_Test extends WPTes
 	 */
 	public function test_returns_existing_attachments_with_position() {
 		// Insert entries with 'content' position
-		$this->index_table->insert_or_update( $this->post_id_1, $this->attachment_id_1, 'content' );
-		$this->index_table->insert_or_update( $this->post_id_1, $this->attachment_id_2, 'content' );
+		$this->content_scan_table->insert_or_update( $this->post_id_1, $this->attachment_id_1, 'content' );
+		$this->content_scan_table->insert_or_update( $this->post_id_1, $this->attachment_id_2, 'content' );
 		// Insert entry with different position
-		$this->index_table->insert_or_update( $this->post_id_1, $this->attachment_id_3, 'thumbnail' );
+		$this->content_scan_table->insert_or_update( $this->post_id_1, $this->attachment_id_3, 'thumbnail' );
 
-		$result = $this->index_table->get_existing_by_attachment_ids_and_position(
+		$result = $this->content_scan_table->get_existing_by_attachment_ids_and_position(
 			[ $this->attachment_id_1, $this->attachment_id_2, $this->attachment_id_3 ],
 			'content'
 		);
@@ -89,7 +89,7 @@ class Index_Table_Get_Existing_By_Attachment_Ids_And_Position_Test extends WPTes
 	 * Test with empty attachment IDs array returns empty array
 	 */
 	public function test_empty_attachment_ids_returns_empty_array() {
-		$result = $this->index_table->get_existing_by_attachment_ids_and_position( [], 'content' );
+		$result = $this->content_scan_table->get_existing_by_attachment_ids_and_position( [], 'content' );
 
 		$this->assertIsArray( $result );
 		$this->assertEmpty( $result );
@@ -99,9 +99,9 @@ class Index_Table_Get_Existing_By_Attachment_Ids_And_Position_Test extends WPTes
 	 * Test with invalid position returns empty array
 	 */
 	public function test_invalid_position_returns_empty_array() {
-		$this->index_table->insert_or_update( $this->post_id_1, $this->attachment_id_1, 'content' );
+		$this->content_scan_table->insert_or_update( $this->post_id_1, $this->attachment_id_1, 'content' );
 
-		$result = $this->index_table->get_existing_by_attachment_ids_and_position(
+		$result = $this->content_scan_table->get_existing_by_attachment_ids_and_position(
 			[ $this->attachment_id_1 ],
 			'invalid_position'
 		);
@@ -114,9 +114,9 @@ class Index_Table_Get_Existing_By_Attachment_Ids_And_Position_Test extends WPTes
 	 * Test filters out invalid attachment IDs (0, negative)
 	 */
 	public function test_filters_out_invalid_attachment_ids() {
-		$this->index_table->insert_or_update( $this->post_id_1, $this->attachment_id_1, 'content' );
+		$this->content_scan_table->insert_or_update( $this->post_id_1, $this->attachment_id_1, 'content' );
 
-		$result = $this->index_table->get_existing_by_attachment_ids_and_position(
+		$result = $this->content_scan_table->get_existing_by_attachment_ids_and_position(
 			[ $this->attachment_id_1, 0, - 1, - 99 ],
 			'content'
 		);
@@ -130,7 +130,7 @@ class Index_Table_Get_Existing_By_Attachment_Ids_And_Position_Test extends WPTes
 	 * Test returns empty array when all attachment IDs are invalid
 	 */
 	public function test_all_invalid_attachment_ids_returns_empty_array() {
-		$result = $this->index_table->get_existing_by_attachment_ids_and_position(
+		$result = $this->content_scan_table->get_existing_by_attachment_ids_and_position(
 			[ 0, - 1, - 99 ],
 			'content'
 		);
@@ -143,10 +143,10 @@ class Index_Table_Get_Existing_By_Attachment_Ids_And_Position_Test extends WPTes
 	 * Test returns empty array when none of the attachments exist
 	 */
 	public function test_no_matching_attachments_returns_empty_array() {
-		$this->index_table->insert_or_update( $this->post_id_1, $this->attachment_id_1, 'content' );
+		$this->content_scan_table->insert_or_update( $this->post_id_1, $this->attachment_id_1, 'content' );
 
 		// Check for attachments that don't exist in the index
-		$result = $this->index_table->get_existing_by_attachment_ids_and_position(
+		$result = $this->content_scan_table->get_existing_by_attachment_ids_and_position(
 			[ $this->attachment_id_2, $this->attachment_id_3 ],
 			'content'
 		);
@@ -159,10 +159,10 @@ class Index_Table_Get_Existing_By_Attachment_Ids_And_Position_Test extends WPTes
 	 * Test partial matches - some attachments exist, some don't
 	 */
 	public function test_returns_partial_matches() {
-		$this->index_table->insert_or_update( $this->post_id_1, $this->attachment_id_1, 'content' );
-		$this->index_table->insert_or_update( $this->post_id_1, $this->attachment_id_3, 'content' );
+		$this->content_scan_table->insert_or_update( $this->post_id_1, $this->attachment_id_1, 'content' );
+		$this->content_scan_table->insert_or_update( $this->post_id_1, $this->attachment_id_3, 'content' );
 
-		$result = $this->index_table->get_existing_by_attachment_ids_and_position(
+		$result = $this->content_scan_table->get_existing_by_attachment_ids_and_position(
 			[ $this->attachment_id_1, $this->attachment_id_2, $this->attachment_id_3, $this->attachment_id_4 ],
 			'content'
 		);
@@ -179,10 +179,10 @@ class Index_Table_Get_Existing_By_Attachment_Ids_And_Position_Test extends WPTes
 	 */
 	public function test_returns_distinct_attachment_ids() {
 		// Same attachment used in multiple posts
-		$this->index_table->insert_or_update( $this->post_id_1, $this->attachment_id_1, 'content' );
-		$this->index_table->insert_or_update( $this->post_id_2, $this->attachment_id_1, 'content' );
+		$this->content_scan_table->insert_or_update( $this->post_id_1, $this->attachment_id_1, 'content' );
+		$this->content_scan_table->insert_or_update( $this->post_id_2, $this->attachment_id_1, 'content' );
 
-		$result = $this->index_table->get_existing_by_attachment_ids_and_position(
+		$result = $this->content_scan_table->get_existing_by_attachment_ids_and_position(
 			[ $this->attachment_id_1 ],
 			'content'
 		);
@@ -196,11 +196,11 @@ class Index_Table_Get_Existing_By_Attachment_Ids_And_Position_Test extends WPTes
 	 */
 	public function test_same_attachment_multiple_positions() {
 		// Same attachment with different positions on same post
-		$this->index_table->insert_or_update( $this->post_id_1, $this->attachment_id_1, 'content' );
-		$this->index_table->insert_or_update( $this->post_id_1, $this->attachment_id_1, 'thumbnail' );
+		$this->content_scan_table->insert_or_update( $this->post_id_1, $this->attachment_id_1, 'content' );
+		$this->content_scan_table->insert_or_update( $this->post_id_1, $this->attachment_id_1, 'thumbnail' );
 
 		// Check for 'content' position
-		$result_content = $this->index_table->get_existing_by_attachment_ids_and_position(
+		$result_content = $this->content_scan_table->get_existing_by_attachment_ids_and_position(
 			[ $this->attachment_id_1 ],
 			'content'
 		);
@@ -209,7 +209,7 @@ class Index_Table_Get_Existing_By_Attachment_Ids_And_Position_Test extends WPTes
 		$this->assertContains( $this->attachment_id_1, $result_content );
 
 		// Check for 'thumbnail' position
-		$result_thumbnail = $this->index_table->get_existing_by_attachment_ids_and_position(
+		$result_thumbnail = $this->content_scan_table->get_existing_by_attachment_ids_and_position(
 			[ $this->attachment_id_1 ],
 			'thumbnail'
 		);
@@ -218,7 +218,7 @@ class Index_Table_Get_Existing_By_Attachment_Ids_And_Position_Test extends WPTes
 		$this->assertContains( $this->attachment_id_1, $result_thumbnail );
 
 		// Check for 'head' position (doesn't exist)
-		$result_head = $this->index_table->get_existing_by_attachment_ids_and_position(
+		$result_head = $this->content_scan_table->get_existing_by_attachment_ids_and_position(
 			[ $this->attachment_id_1 ],
 			'head'
 		);
@@ -234,25 +234,25 @@ class Index_Table_Get_Existing_By_Attachment_Ids_And_Position_Test extends WPTes
 
 		// Insert old entry (2 hours ago)
 		$old_timestamp = $current_time - 7200;
-		$this->index_table->insert_or_update(
+		$this->content_scan_table->insert_or_update(
 			$this->post_id_1,
 			$this->attachment_id_1,
 			'content',
-			$this->index_table->get_last_checked( $old_timestamp )
+			$this->content_scan_table->get_last_checked( $old_timestamp )
 		);
 
 		// Insert recent entry (30 minutes ago)
 		$recent_timestamp = $current_time - 1800;
-		$this->index_table->insert_or_update(
+		$this->content_scan_table->insert_or_update(
 			$this->post_id_1,
 			$this->attachment_id_2,
 			'content',
-			$this->index_table->get_last_checked( $recent_timestamp )
+			$this->content_scan_table->get_last_checked( $recent_timestamp )
 		);
 
 		// Filter to get only entries updated in the last hour
 		$one_hour_ago = $current_time - 3600;
-		$result = $this->index_table->get_existing_by_attachment_ids_and_position(
+		$result = $this->content_scan_table->get_existing_by_attachment_ids_and_position(
 			[ $this->attachment_id_1, $this->attachment_id_2 ],
 			'content',
 			$one_hour_ago
@@ -271,7 +271,7 @@ class Index_Table_Get_Existing_By_Attachment_Ids_And_Position_Test extends WPTes
 
 		// Insert old entry
 		$old_timestamp = $current_time - 7200;
-		$this->index_table->insert_or_update(
+		$this->content_scan_table->insert_or_update(
 			$this->post_id_1,
 			$this->attachment_id_1,
 			'content',
@@ -280,7 +280,7 @@ class Index_Table_Get_Existing_By_Attachment_Ids_And_Position_Test extends WPTes
 
 		// Insert recent entry
 		$recent_timestamp = $current_time - 1800;
-		$this->index_table->insert_or_update(
+		$this->content_scan_table->insert_or_update(
 			$this->post_id_1,
 			$this->attachment_id_2,
 			'content',
@@ -288,7 +288,7 @@ class Index_Table_Get_Existing_By_Attachment_Ids_And_Position_Test extends WPTes
 		);
 
 		// No timestamp filter (default 0)
-		$result = $this->index_table->get_existing_by_attachment_ids_and_position(
+		$result = $this->content_scan_table->get_existing_by_attachment_ids_and_position(
 			[ $this->attachment_id_1, $this->attachment_id_2 ],
 			'content',
 			0
@@ -303,9 +303,9 @@ class Index_Table_Get_Existing_By_Attachment_Ids_And_Position_Test extends WPTes
 	 * Test timestamp filtering with negative timestamp is treated as 0
 	 */
 	public function test_negative_timestamp_includes_all_entries() {
-		$this->index_table->insert_or_update( $this->post_id_1, $this->attachment_id_1, 'content' );
+		$this->content_scan_table->insert_or_update( $this->post_id_1, $this->attachment_id_1, 'content' );
 
-		$result = $this->index_table->get_existing_by_attachment_ids_and_position(
+		$result = $this->content_scan_table->get_existing_by_attachment_ids_and_position(
 			[ $this->attachment_id_1 ],
 			'content',
 			- 100
@@ -327,11 +327,11 @@ class Index_Table_Get_Existing_By_Attachment_Ids_And_Position_Test extends WPTes
 
 			// Only insert half of them
 			if ( $i < 25 ) {
-				$this->index_table->insert_or_update( $this->post_id_1, $attachment_id, 'content' );
+				$this->content_scan_table->insert_or_update( $this->post_id_1, $attachment_id, 'content' );
 			}
 		}
 
-		$result = $this->index_table->get_existing_by_attachment_ids_and_position(
+		$result = $this->content_scan_table->get_existing_by_attachment_ids_and_position(
 			$attachment_ids,
 			'content'
 		);
@@ -343,9 +343,9 @@ class Index_Table_Get_Existing_By_Attachment_Ids_And_Position_Test extends WPTes
 	 * Test returns array of integers, not strings
 	 */
 	public function test_returns_array_of_integers() {
-		$this->index_table->insert_or_update( $this->post_id_1, $this->attachment_id_1, 'content' );
+		$this->content_scan_table->insert_or_update( $this->post_id_1, $this->attachment_id_1, 'content' );
 
-		$result = $this->index_table->get_existing_by_attachment_ids_and_position(
+		$result = $this->content_scan_table->get_existing_by_attachment_ids_and_position(
 			[ $this->attachment_id_1 ],
 			'content'
 		);

@@ -1,9 +1,9 @@
 <?php
 
-namespace ISC\Tests\WPUnit\Pro\Includes\Indexer;
+namespace ISC\Tests\WPUnit\Pro\Includes\Unused_Images;
 
-use ISC\Pro\Indexer\Indexer;
-use ISC\Pro\Indexer\Index_Table;
+use ISC\Pro\Unused_Images\Content_Scan_Table;
+use ISC\Pro\Unused_Images\Content_Scan;
 use ISC\Tests\WPUnit\WPTestCase;
 
 /**
@@ -11,17 +11,17 @@ use ISC\Tests\WPUnit\WPTestCase;
  *
  * @package ISC\Tests\WPUnit\Pro\Includes\Indexer
  */
-class Indexer_Test extends WPTestCase {
+class Content_Scan_Test extends WPTestCase {
 
 	/**
-	 * @var Indexer
+	 * @var Content_Scan
 	 */
-	protected Indexer $indexer;
+	protected Content_Scan $indexer;
 
 	/**
-	 * @var Index_Table
+	 * @var Content_Scan_Table
 	 */
-	protected Index_Table $index_table;
+	protected Content_Scan_Table $index_table;
 
 	/**
 	 * Set up the test environment.
@@ -29,8 +29,8 @@ class Indexer_Test extends WPTestCase {
 	public function setUp(): void {
 		parent::setUp();
 
-		$this->indexer = new Indexer();
-		$this->index_table = new Index_Table();
+		$this->content_scan = new Content_Scan();
+		$this->content_scan_table = new Content_Scan_Table();
 	}
 
 	/**
@@ -39,7 +39,7 @@ class Indexer_Test extends WPTestCase {
 	public function tearDown(): void {
 		parent::tearDown();
 
-		delete_post_meta_by_key( Indexer::LAST_INDEX_META_KEY );
+		delete_post_meta_by_key( Content_Scan::LAST_SCAN_META_KEY );
 	}
 
 	/**
@@ -50,18 +50,18 @@ class Indexer_Test extends WPTestCase {
 		$post_id = $this->factory()->post->create();
 
 		// Set the last index meta
-		update_post_meta( $post_id, Indexer::LAST_INDEX_META_KEY, time() );
+		update_post_meta( $post_id, Content_Scan::LAST_SCAN_META_KEY, time() );
 
 		// Verify meta exists
-		$meta_before = get_post_meta( $post_id, Indexer::LAST_INDEX_META_KEY, true );
+		$meta_before = get_post_meta( $post_id, Content_Scan::LAST_SCAN_META_KEY, true );
 		$this->assertNotEmpty( $meta_before );
 
 		// Call the method
-		$result = $this->indexer->remove_post_index_meta( $post_id );
+		$result = $this->content_scan->remove_post_scan_meta( $post_id );
 
 		// Verify meta was deleted
 		$this->assertTrue( $result );
-		$meta_after = get_post_meta( $post_id, Indexer::LAST_INDEX_META_KEY, true );
+		$meta_after = get_post_meta( $post_id, Content_Scan::LAST_SCAN_META_KEY, true );
 		$this->assertEmpty( $meta_after );
 	}
 
@@ -75,13 +75,13 @@ class Indexer_Test extends WPTestCase {
 
 		// Insert an entry with an old timestamp (8 days ago, beyond MAX_DAYS_SINCE_LAST_CHECK)
 		$old_timestamp = time() - ( 8 * DAY_IN_SECONDS );
-		$this->index_table->insert_or_update( $post_id, $attachment_id, 'content', $old_timestamp );
+		$this->content_scan_table->insert_or_update( $post_id, $attachment_id, 'content', $old_timestamp );
 
 		// Reset cache to ensure fresh query
-		Index_Table::reset_oldest_entry_date_cache();
+		Content_Scan_Table::reset_oldest_entry_date_cache();
 
 		// Check if expired
-		$is_expired = Indexer::is_indexer_expired();
+		$is_expired = Content_Scan::is_scan_expired();
 
 		$this->assertTrue( $is_expired, 'Indexer should be expired when oldest entry is older than 7 days' );
 	}
@@ -95,13 +95,13 @@ class Indexer_Test extends WPTestCase {
 		$attachment_id = $this->factory()->attachment->create();
 
 		// Insert a recent entry (1 day ago)
-		$this->index_table->insert_or_update( $post_id, $attachment_id, 'content' );
+		$this->content_scan_table->insert_or_update( $post_id, $attachment_id, 'content' );
 
 		// Reset cache to ensure fresh query
-		Index_Table::reset_oldest_entry_date_cache();
+		Content_Scan_Table::reset_oldest_entry_date_cache();
 
 		// Check if expired
-		$is_expired = Indexer::is_indexer_expired();
+		$is_expired = Content_Scan::is_scan_expired();
 
 		$this->assertFalse( $is_expired, 'Indexer should not be expired when entries are recent' );
 	}
@@ -115,11 +115,11 @@ class Indexer_Test extends WPTestCase {
 
 		// Mark as indexed
 		$before_time = time();
-		Indexer::mark_post_as_indexed( $post_id );
+		Content_Scan::mark_post_as_scanned( $post_id );
 		$after_time = time();
 
 		// Verify meta was set
-		$last_index = get_post_meta( $post_id, Indexer::LAST_INDEX_META_KEY, true );
+		$last_index = get_post_meta( $post_id, Content_Scan::LAST_SCAN_META_KEY, true );
 		$this->assertNotEmpty( $last_index );
 		$this->assertGreaterThanOrEqual( $before_time, $last_index );
 		$this->assertLessThanOrEqual( $after_time, $last_index );
@@ -132,26 +132,26 @@ class Indexer_Test extends WPTestCase {
 		// Create test data
 		$post_id = $this->factory()->post->create();
 		$attachment_id = $this->factory()->attachment->create();
-		update_post_meta( $post_id, Indexer::LAST_INDEX_META_KEY, time() );
+		update_post_meta( $post_id, Content_Scan::LAST_SCAN_META_KEY, time() );
 
 		// Insert index entry
-		$this->index_table->insert_or_update( $post_id, $attachment_id, 'content' );
+		$this->content_scan_table->insert_or_update( $post_id, $attachment_id, 'content' );
 
 		// Verify data exists
 		global $wpdb;
 		$table_name = $wpdb->prefix . 'isc_index';
 		$entries_before = $wpdb->get_var( "SELECT COUNT(*) FROM {$table_name}" );
 		$this->assertGreaterThan( 0, $entries_before );
-		$meta_before = get_post_meta( $post_id, Indexer::LAST_INDEX_META_KEY, true );
+		$meta_before = get_post_meta( $post_id, Content_Scan::LAST_SCAN_META_KEY, true );
 		$this->assertNotEmpty( $meta_before );
 
 		// Clear all data
-		Indexer::clear_all_index_data();
+		Content_Scan::clear_all_scan_data();
 
 		// Verify everything was cleared
 		$entries_after = $wpdb->get_var( "SELECT COUNT(*) FROM {$table_name}" );
 		$this->assertEquals( 0, $entries_after );
-		$meta_after = get_post_meta( $post_id, Indexer::LAST_INDEX_META_KEY, true );
+		$meta_after = get_post_meta( $post_id, Content_Scan::LAST_SCAN_META_KEY, true );
 		$this->assertEmpty( $meta_after );
 	}
 
@@ -165,7 +165,7 @@ class Indexer_Test extends WPTestCase {
 			]
 		] );
 
-		$result = Indexer::is_index_any_url_enabled();
+		$result = Content_Scan::is_scan_any_url_enabled();
 
 		$this->assertTrue( $result );
 	}
@@ -180,7 +180,7 @@ class Indexer_Test extends WPTestCase {
 			]
 		] );
 
-		$result = Indexer::is_index_any_url_enabled();
+		$result = Content_Scan::is_scan_any_url_enabled();
 
 		$this->assertFalse( $result );
 	}
@@ -191,7 +191,7 @@ class Indexer_Test extends WPTestCase {
 	public function test_is_index_any_url_enabled_returns_false_when_option_not_set(): void {
 		delete_option( 'isc_options' );
 
-		$result = Indexer::is_index_any_url_enabled();
+		$result = Content_Scan::is_scan_any_url_enabled();
 
 		$this->assertFalse( $result );
 	}
@@ -200,7 +200,7 @@ class Indexer_Test extends WPTestCase {
 	 * Test get_global_threshold returns default value of 4
 	 */
 	public function test_get_global_threshold_returns_default_value(): void {
-		$threshold = Indexer::get_global_threshold();
+		$threshold = Content_Scan::get_global_threshold();
 
 		$this->assertEquals( 4, $threshold, 'Default threshold should be 4' );
 	}
@@ -213,7 +213,7 @@ class Indexer_Test extends WPTestCase {
 			return 10;
 		} );
 
-		$threshold = Indexer::get_global_threshold();
+		$threshold = Content_Scan::get_global_threshold();
 
 		$this->assertEquals( 10, $threshold, 'Should return filtered value' );
 
@@ -228,7 +228,7 @@ class Indexer_Test extends WPTestCase {
 			return 0; // Try to set below minimum
 		} );
 
-		$threshold = Indexer::get_global_threshold();
+		$threshold = Content_Scan::get_global_threshold();
 
 		$this->assertEquals( 1, $threshold, 'Should enforce minimum of 1' );
 
@@ -243,7 +243,7 @@ class Indexer_Test extends WPTestCase {
 			return 150; // Try to set above maximum
 		} );
 
-		$threshold = Indexer::get_global_threshold();
+		$threshold = Content_Scan::get_global_threshold();
 
 		$this->assertEquals( 100, $threshold, 'Should enforce maximum of 100' );
 
@@ -258,7 +258,7 @@ class Indexer_Test extends WPTestCase {
 			return '25'; // String value
 		} );
 
-		$threshold = Indexer::get_global_threshold();
+		$threshold = Content_Scan::get_global_threshold();
 
 		$this->assertIsInt( $threshold, 'Should return an integer' );
 		$this->assertEquals( 25, $threshold, 'Should convert string to int' );
@@ -274,7 +274,7 @@ class Indexer_Test extends WPTestCase {
 			return -5;
 		} );
 
-		$threshold = Indexer::get_global_threshold();
+		$threshold = Content_Scan::get_global_threshold();
 
 		$this->assertEquals( 1, $threshold, 'Should convert negative values to minimum of 1' );
 
