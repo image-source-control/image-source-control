@@ -2,7 +2,8 @@
 
 namespace ISC\Tests\WPUnit\Pro\Includes\Unused_Images\Admin;
 
-use ISC\Pro\Indexer\Index_Table;
+use ISC\Pro\Unused_Images\Content_Scan;
+use ISC\Pro\Unused_Images\Content_Scan_Table;
 use ISC\Tests\WPUnit\WPTestCase;
 use ISC\Pro\Unused_Images\Admin\Appearances_List;
 
@@ -23,7 +24,7 @@ class Appearances_List_Test extends WPTestCase {
 		parent::setUp();
 
 		// Reset the index table to ensure a clean state for each test
-		Index_Table::reset_oldest_entry_date_cache();
+		Content_Scan_Table::reset_oldest_entry_date_cache();
 
 		// Create test attachment
 		$this->test_image_id = $this->factory()->attachment->create( [
@@ -111,7 +112,7 @@ class Appearances_List_Test extends WPTestCase {
 			                                                    'post_type' => 'page'
 		                                                    ]);
 
-		$index_table = new \ISC\Pro\Indexer\Index_Table();
+		$index_table = new Content_Scan_Table();
 
 		$index_table->insert_or_update($post_with_image_1, $this->test_image_id, 'content');
 		$index_table->insert_or_update($post_with_image_2, $this->test_image_id, 'content');
@@ -153,7 +154,7 @@ class Appearances_List_Test extends WPTestCase {
 	 * — unchecked —
 	 */
 	public function test_render_with_indexer_results_in_thumbnail() {
-		$index_table = new \ISC\Pro\Indexer\Index_Table();
+		$index_table = new Content_Scan_Table();
 
 		$index_table->insert_or_update( $this->test_post_id, $this->test_image_id, 'thumbnail' );
 
@@ -400,7 +401,7 @@ class Appearances_List_Test extends WPTestCase {
 			                                               'post_type' => 'post'
 		                                               ]);
 
-		$index_table = new \ISC\Pro\Indexer\Index_Table();
+		$index_table = new Content_Scan_Table();
 		$index_table->insert_or_update($indexer_post, $this->test_image_id, 'content');
 
 		// 2. Add database results
@@ -465,7 +466,7 @@ class Appearances_List_Test extends WPTestCase {
 	 *      Image Source Post (Post)
 	 */
 	public function test_render_with_same_post_in_all_data_sources() {
-		$index_table = new \ISC\Pro\Indexer\Index_Table();
+		$index_table = new Content_Scan_Table();
 		$index_table->insert_or_update( $this->test_post_id, $this->test_image_id, 'content');
 
 		// 2. Add database results
@@ -713,10 +714,10 @@ class Appearances_List_Test extends WPTestCase {
 	 * Test check indicators with valid Indexer data
 	 */
 	public function test_render_with_check_indicators_indexer_data() {
-		$index_table = new \ISC\Pro\Indexer\Index_Table();
+		$index_table = new Content_Scan_Table();
 		$index_table->insert_or_update( $this->test_post_id, $this->test_image_id, 'content' );
 
-		Index_Table::reset_oldest_entry_date_cache();
+		Content_Scan_Table::reset_oldest_entry_date_cache();
 
 		ob_start();
 		Appearances_List::render( $this->test_image_id, [ 'checks' ] );
@@ -732,8 +733,8 @@ class Appearances_List_Test extends WPTestCase {
 	 * Test that render() shows the global indicator when image is probably global
 	 */
 	public function test_render_shows_global_indicator_for_global_images() {
-		$index_table = new \ISC\Pro\Indexer\Index_Table();
-		$threshold = \ISC\Pro\Indexer\Indexer::get_global_threshold(); // Default is 4
+		$index_table = new Content_Scan_Table();
+		$threshold = Content_Scan::get_global_threshold(); // Default is 4
 
 		// Add threshold + 1 entries with head/body positions to trigger global status
 		for ( $i = 0; $i <= $threshold; $i++ ) {
@@ -760,7 +761,7 @@ class Appearances_List_Test extends WPTestCase {
 	 * Test that render() does NOT show the global indicator for normal images
 	 */
 	public function test_render_hides_global_indicator_for_normal_images() {
-		$index_table = new \ISC\Pro\Indexer\Index_Table();
+		$index_table = new Content_Scan_Table();
 
 		// Add only content/thumbnail entries (not global)
 		$post_id_1 = $this->factory()->post->create();
@@ -790,7 +791,7 @@ class Appearances_List_Test extends WPTestCase {
 	 * Test is_probably_global() returns false when image only has content/thumbnail positions
 	 */
 	public function test_is_probably_global_returns_false_with_only_content_positions() {
-		$index_table = new \ISC\Pro\Indexer\Index_Table();
+		$index_table = new Content_Scan_Table();
 
 		// Add entries with content and thumbnail positions (not global)
 		$post_id_1 = $this->factory()->post->create();
@@ -808,8 +809,8 @@ class Appearances_List_Test extends WPTestCase {
 	 * Test is_probably_global() returns false when head/body entries are at or below threshold
 	 */
 	public function test_is_probably_global_returns_false_at_threshold() {
-		$index_table = new \ISC\Pro\Indexer\Index_Table();
-		$threshold = \ISC\Pro\Indexer\Indexer::get_global_threshold(); // Default is 4
+		$index_table = new Content_Scan_Table();
+		$threshold = Content_Scan::get_global_threshold(); // Default is 4
 
 		// Add exactly threshold number of head/body entries
 		for ( $i = 0; $i < $threshold; $i++ ) {
@@ -827,8 +828,8 @@ class Appearances_List_Test extends WPTestCase {
 	 * Test is_probably_global() returns true when head/body entries exceed threshold
 	 */
 	public function test_is_probably_global_returns_true_above_threshold() {
-		$index_table = new \ISC\Pro\Indexer\Index_Table();
-		$threshold = \ISC\Pro\Indexer\Indexer::get_global_threshold(); // Default is 4
+		$index_table = new Content_Scan_Table();
+		$threshold = Content_Scan::get_global_threshold(); // Default is 4
 
 		// Add threshold + 1 entries with head/body positions
 		for ( $i = 0; $i <= $threshold; $i++ ) {
@@ -846,7 +847,7 @@ class Appearances_List_Test extends WPTestCase {
 	 * Test is_probably_global() only counts head/body positions, not content/thumbnail
 	 */
 	public function test_is_probably_global_only_counts_head_and_body_positions() {
-		$index_table = new \ISC\Pro\Indexer\Index_Table();
+		$index_table = new Content_Scan_Table();
 
 		// Add many content/thumbnail entries (should not count toward global)
 		for ( $i = 0; $i < 10; $i++ ) {

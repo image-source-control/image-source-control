@@ -2,7 +2,7 @@
 
 namespace ISC\Tests\WPUnit\Pro\Includes\Unused_Images\Admin;
 
-use ISC\Pro\Indexer\Index_Table;
+use ISC\Pro\Unused_Images\Content_Scan_Table;
 use ISC\Pro\Unused_Images;
 use ISC\Tests\WPUnit\WPTestCase;
 
@@ -144,7 +144,7 @@ class Unused_Images_Get_Unused_Attachments_Test extends WPTestCase {
 		$unused_attachments = Unused_Images::get_unused_attachments();
 		$this->assertCount( 3, $unused_attachments, 'Expected 3 attachments before adding something to the index table' );
 
-		$index_table = new Index_Table();
+		$index_table = new Content_Scan_Table();
 		$index_table->insert_or_update( 123, $this->attachment_ids[0], 'content' );
 		$index_table->insert_or_update( 123, $this->attachment_ids[1], 'content' );
 

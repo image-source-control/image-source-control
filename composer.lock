@@ -1764,6 +1764,7 @@
         },
         {
             "name": "phpcsstandards/phpcsutils",
+<<<<<<< HEAD
             "version": "1.2.2",
             "source": {
                 "type": "git",
@@ -1774,6 +1775,18 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/PHPCSStandards/PHPCSUtils/zipball/c216317e96c8b3f5932808f9b0f1f7a14e3bbf55",
                 "reference": "c216317e96c8b3f5932808f9b0f1f7a14e3bbf55",
+=======
+            "version": "1.2.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PHPCSStandards/PHPCSUtils.git",
+                "reference": "d71128c702c180ca3b27c761b6773f883394f162"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PHPCSStandards/PHPCSUtils/zipball/d71128c702c180ca3b27c761b6773f883394f162",
+                "reference": "d71128c702c180ca3b27c761b6773f883394f162",
+>>>>>>> 7116987 (Updated all Indexer-related tests)
                 "shasum": ""
             },
             "require": {
@@ -1853,7 +1866,11 @@
                     "type": "thanks_dev"
                 }
             ],
+<<<<<<< HEAD
             "time": "2025-12-08T14:27:58+00:00"
+=======
+            "time": "2025-11-17T12:58:33+00:00"
+>>>>>>> 7116987 (Updated all Indexer-related tests)
         },
         {
             "name": "phpoption/phpoption",
@@ -2251,6 +2268,7 @@
         },
         {
             "name": "phpunit/phpunit",
+<<<<<<< HEAD
             "version": "9.6.31",
             "source": {
                 "type": "git",
@@ -2261,6 +2279,18 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/945d0b7f346a084ce5549e95289962972c4272e5",
                 "reference": "945d0b7f346a084ce5549e95289962972c4272e5",
+=======
+            "version": "9.6.30",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/sebastianbergmann/phpunit.git",
+                "reference": "b69489b312503bf8fa6d75a76916919d7d2fa6d4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/b69489b312503bf8fa6d75a76916919d7d2fa6d4",
+                "reference": "b69489b312503bf8fa6d75a76916919d7d2fa6d4",
+>>>>>>> 7116987 (Updated all Indexer-related tests)
                 "shasum": ""
             },
             "require": {
@@ -2334,7 +2364,11 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
+<<<<<<< HEAD
                 "source": "https://github.com/sebastianbergmann/phpunit/tree/9.6.31"
+=======
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/9.6.30"
+>>>>>>> 7116987 (Updated all Indexer-related tests)
             },
             "funding": [
                 {
@@ -2358,7 +2392,11 @@
                     "type": "tidelift"
                 }
             ],
+<<<<<<< HEAD
             "time": "2025-12-06T07:45:52+00:00"
+=======
+            "time": "2025-12-01T07:35:08+00:00"
+>>>>>>> 7116987 (Updated all Indexer-related tests)
         },
         {
             "name": "psr/container",
