@@ -1,19 +1,19 @@
 <?php
 
-namespace ISC\Tests\WPUnit\Pro\Includes\Indexer;
+namespace ISC\Tests\WPUnit\Pro\Includes\Unused_Images;
 
-use ISC\Pro\Indexer\Index_Table;
+use ISC\Pro\Unused_Images\Content_Scan_Table;
 use ISC\Tests\WPUnit\WPTestCase;
 
 /**
  * Testing the Index_Table::get_by_attachment_id() method
  */
-class Index_Table_Get_By_Attachment_Id_Test extends WPTestCase {
+class Content_Scan_Table_Get_By_Attachment_Id_Test extends WPTestCase {
 
 	/**
-	 * @var Index_Table
+	 * @var Content_Scan_Table
 	 */
-	private Index_Table $index_table;
+	private Content_Scan_Table $index_table;
 
 	/**
 	 * @var int
@@ -28,7 +28,7 @@ class Index_Table_Get_By_Attachment_Id_Test extends WPTestCase {
 	public function setUp(): void {
 		parent::setUp();
 
-		$this->index_table = new Index_Table();
+		$this->content_scan_table = new Content_Scan_Table();
 
 		// Create test post and attachment
 		$this->post_id       = $this->factory()->post->create();
@@ -45,13 +45,13 @@ class Index_Table_Get_By_Attachment_Id_Test extends WPTestCase {
 	 * Test retrieving entries by attachment_id
 	 */
 	public function test_get_by_attachment_id_returns_entries() {
-		$this->index_table->insert_or_update(
+		$this->content_scan_table->insert_or_update(
 			$this->post_id,
 			$this->attachment_id,
 			'content'
 		);
 
-		$entries = $this->index_table->get_by_attachment_id( $this->attachment_id );
+		$entries = $this->content_scan_table->get_by_attachment_id( $this->attachment_id );
 
 		$this->assertIsArray( $entries );
 		$this->assertArrayHasKey( $this->post_id, $entries );
@@ -62,7 +62,7 @@ class Index_Table_Get_By_Attachment_Id_Test extends WPTestCase {
 	 * Test retrieving entries with invalid attachment_id returns empty array
 	 */
 	public function test_get_by_attachment_id_with_invalid_id_returns_empty_array() {
-		$entries = $this->index_table->get_by_attachment_id( 0 );
+		$entries = $this->content_scan_table->get_by_attachment_id( 0 );
 
 		$this->assertIsArray( $entries );
 		$this->assertEmpty( $entries );
@@ -77,25 +77,25 @@ class Index_Table_Get_By_Attachment_Id_Test extends WPTestCase {
 		$post_id_3 = $this->factory()->post->create();
 
 		// Insert entries for the same attachment across different posts
-		$this->index_table->insert_or_update(
+		$this->content_scan_table->insert_or_update(
 			$this->post_id,
 			$this->attachment_id,
 			'content'
 		);
 
-		$this->index_table->insert_or_update(
+		$this->content_scan_table->insert_or_update(
 			$post_id_2,
 			$this->attachment_id,
 			'thumbnail'
 		);
 
-		$this->index_table->insert_or_update(
+		$this->content_scan_table->insert_or_update(
 			$post_id_3,
 			$this->attachment_id,
 			'head'
 		);
 
-		$entries = $this->index_table->get_by_attachment_id( $this->attachment_id );
+		$entries = $this->content_scan_table->get_by_attachment_id( $this->attachment_id );
 
 		// Verify the array is keyed by post_id
 		$this->assertArrayHasKey( $this->post_id, $entries );
@@ -123,30 +123,30 @@ class Index_Table_Get_By_Attachment_Id_Test extends WPTestCase {
 	 */
 	public function test_get_by_attachment_id_with_duplicate_post_ids() {
 		// Insert the same attachment on the same post with different positions
-		$this->index_table->insert_or_update(
+		$this->content_scan_table->insert_or_update(
 			$this->post_id,
 			$this->attachment_id,
 			'content'
 		);
 
-		$this->index_table->insert_or_update(
+		$this->content_scan_table->insert_or_update(
 			$this->post_id,
 			$this->attachment_id,
 			'head'
 		);
 
-		$this->index_table->insert_or_update(
+		$this->content_scan_table->insert_or_update(
 			$this->post_id,
 			$this->attachment_id,
 			'body'
 		);
 
 		// Verify that 3 entries were actually created in the database
-		$total_count = $this->index_table->count_occurrences_by_post_id( $this->post_id );
+		$total_count = $this->content_scan_table->count_occurrences_by_post_id( $this->post_id );
 		$this->assertEquals( 3, $total_count, 'Should have 3 total entries in the database' );
 
 		// Get entries using get_by_attachment_id
-		$entries = $this->index_table->get_by_attachment_id( $this->attachment_id );
+		$entries = $this->content_scan_table->get_by_attachment_id( $this->attachment_id );
 
 		// Should only return 1 entry (keyed by post_id, so duplicates are overwritten)
 		$this->assertCount( 1, $entries, 'Should only return one entry per post_id, even with multiple positions' );

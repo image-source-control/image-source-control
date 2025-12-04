@@ -1,8 +1,8 @@
 <?php
 
-namespace ISC\Tests\WPUnit\Pro\Includes\Indexer\Admin;
+namespace ISC\Tests\WPUnit\Pro\Includes\Unused_Images\Admin;
 
-use ISC\Pro\Indexer\Index_Run;
+use ISC\Pro\Unused_Images\Content_Scan_Run;
 use ISC\Tests\WPUnit\WPTestCase;
 use ReflectionClass;
 
@@ -19,12 +19,12 @@ use ReflectionClass;
  *
  * @package ISC\Pro\Indexer
  */
-class Index_Run_Normalize_Url_Test extends WPTestCase {
+class Content_Scan_Run_Normalize_Url_Test extends WPTestCase {
 
 	/**
-	 * @var Index_Run
+	 * @var Content_Scan_Run
 	 */
-	protected Index_Run $indexer_run;
+	protected Content_Scan_Run $content_scan_run;
 
 	/**
 	 * @var \ReflectionMethod
@@ -37,10 +37,10 @@ class Index_Run_Normalize_Url_Test extends WPTestCase {
 	public function setUp(): void {
 		parent::setUp();
 
-		$this->indexer_run = new Index_Run();
+		$this->content_scan_run = new Content_Scan_Run();
 
 		// Use reflection to access private normalize_url method
-		$reflection             = new ReflectionClass( $this->indexer_run );
+		$reflection             = new ReflectionClass( $this->content_scan_run );
 		$this->normalize_method = $reflection->getMethod( 'normalize_url' );
 		$this->normalize_method->setAccessible( true );
 	}
@@ -53,7 +53,7 @@ class Index_Run_Normalize_Url_Test extends WPTestCase {
 	 * @return string Normalized URL.
 	 */
 	private function normalize( string $url ): string {
-		return $this->normalize_method->invoke( $this->indexer_run, $url );
+		return $this->normalize_method->invoke( $this->content_scan_run, $url );
 	}
 
 	/**
