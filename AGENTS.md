@@ -54,6 +54,7 @@ The Pro code from the [image-source-control](https://github.com/image-source-con
 
 - Do not modify files listed in `.gitignore`:
 - When changing existing .js files that have a minified version (marked with `.min`), simply run the `php bin/minify.php path/to/file.js` helper from the base repo to automatically generate the updated minified file. You do not need to manually create or edit the minified file.
+  Do not modify `lib/` or Composer files (`composer.json`, `composer.lock`) unless the current task explicitly requires it. Unrequested updates to `lib/` or Composer often introduce large, unnecessary diffs and complicate reviews. If a dependency or `lib/` change is truly necessary, document the reason in the Issue/PR and include the change in a separate, clearly labeled commit.
 
 ## Development Setup
 
@@ -63,6 +64,8 @@ The Pro code from the [image-source-control](https://github.com/image-source-con
 ## WordPress-Specific Guidelines
 
 - Utilize WordPress APIs (Options API, Settings API, etc.)
+- Utilize WordPress APIs (Functions, Options API, Settings API, etc.)
+- Don’t write a custom function or lines of code if a WordPress core function already exists for that purpose
 - Follow WordPress security best practices (nonces, sanitization, escaping)
 - Use WordPress hooks and filters for extensibility
 - Respect WordPress loading order (plugins_loaded, init, admin_init, etc.)
@@ -231,3 +234,10 @@ vendor/bin/codecept build
 ### Adding Translations
 - Reuse existing strings when possible
 - Document new strings in PR description with "## Translations" section
+
+### Pull Requests
+
+#### Updating Pull Requests
+
+When updating a PR after reviews or task changes:
+- Keep the original PR description as the main summary; though change outdated parts if necessary
