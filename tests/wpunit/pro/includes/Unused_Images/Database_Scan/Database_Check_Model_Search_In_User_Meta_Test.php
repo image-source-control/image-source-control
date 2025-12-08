@@ -1,9 +1,9 @@
 <?php
 
-namespace ISC\Tests\WPUnit\Pro\Includes\Unused_Images;
+namespace ISC\Tests\WPUnit\Pro\Includes\Unused_Images\Database_Scan;
 
+use ISC\Pro\Unused_Images\Database_Scan\Database_Check_Model;
 use ISC\Tests\WPUnit\WPTestCase;
-use ISC\Pro\Unused_Images\Database_Check_Model;
 
 class Database_Check_Model_Search_In_User_Meta_Test extends WPTestCase {
 

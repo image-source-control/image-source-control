@@ -2,8 +2,8 @@
 
 namespace ISC\Tests\WPUnit\Pro\Includes\Indexer;
 
-use ISC\Pro\Unused_Images\Content_Scan_Public;
-use ISC\Pro\Unused_Images\Content_Scan;
+use ISC\Pro\Unused_Images\Content_Scan\Content_Scan_Public;
+use ISC\Pro\Unused_Images\Content_Scan\Content_Scan;
 use ISC\Tests\WPUnit\WPTestCase;
 
 /**

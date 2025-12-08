@@ -1,8 +1,8 @@
 <?php
 
-namespace ISC\Tests\WPUnit\Pro\Includes\Unused_Images;
+namespace ISC\Tests\WPUnit\Pro\Includes\Unused_Images\Content_Scan;
 
-use ISC\Pro\Unused_Images\Content_Scan_Table;
+use ISC\Pro\Unused_Images\Content_Scan\Content_Scan_Table;
 use ISC\Tests\WPUnit\WPTestCase;
 
 /**

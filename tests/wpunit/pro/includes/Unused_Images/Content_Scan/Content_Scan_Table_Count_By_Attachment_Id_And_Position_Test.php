@@ -1,8 +1,8 @@
 <?php
 
-namespace ISC\Tests\WPUnit\Pro\Includes\Unused_Images;
+namespace ISC\Tests\WPUnit\Pro\Includes\Unused_Images\Content_Scan;
 
-use ISC\Pro\Unused_Images\Content_Scan_Table;
+use ISC\Pro\Unused_Images\Content_Scan\Content_Scan_Table;
 use ISC\Tests\WPUnit\WPTestCase;
 
 /**
@@ -200,7 +200,7 @@ class Content_Scan_Table_Count_By_Attachment_Id_And_Position_Test extends WPTest
 	 * Test counting with exact threshold boundary
 	 */
 	public function test_count_at_threshold_boundary() {
-		$threshold = \ISC\Pro\Unused_Images\Content_Scan::get_global_threshold(); // Default is 4
+		$threshold = \ISC\Pro\Unused_Images\Content_Scan\Content_Scan::get_global_threshold(); // Default is 4
 
 		// Add exactly threshold number of entries
 		for ( $i = 1; $i <= $threshold; $i++ ) {
@@ -217,7 +217,7 @@ class Content_Scan_Table_Count_By_Attachment_Id_And_Position_Test extends WPTest
 	 * Test counting above threshold (global image scenario)
 	 */
 	public function test_count_above_threshold() {
-		$threshold = \ISC\Pro\Unused_Images\Content_Scan::get_global_threshold(); // Default is 4
+		$threshold = \ISC\Pro\Unused_Images\Content_Scan\Content_Scan::get_global_threshold(); // Default is 4
 
 		// Add threshold + 1 entries (simulating capped global image)
 		for ( $i = 1; $i <= $threshold + 1; $i++ ) {
