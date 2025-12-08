@@ -237,6 +237,9 @@ class ISC_Model {
 			$where_clause .= " AND wp_posts.post_mime_type LIKE 'image/%'";
 		}
 
+		// Filter for additional where clauses
+		$where_clause = apply_filters( 'isc_image_sources_attachments_with_empty_sources_where_clause', $where_clause );
+
 		/**
 		 * Using EXISTS instead of LEFT JOINs resulted in much faster queries and helped caching the results.
 		 */
