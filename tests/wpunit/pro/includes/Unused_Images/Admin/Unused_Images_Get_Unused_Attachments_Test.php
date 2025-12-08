@@ -2,8 +2,8 @@
 
 namespace ISC\Tests\WPUnit\Pro\Includes\Unused_Images\Admin;
 
-use ISC\Pro\Unused_Images\Content_Scan_Table;
-use ISC\Pro\Unused_Images;
+use ISC\Pro\Unused_Images\Content_Scan\Content_Scan_Table;
+use ISC\Pro\Unused_Images\Admin\Unused_Images;
 use ISC\Tests\WPUnit\WPTestCase;
 
 /**
