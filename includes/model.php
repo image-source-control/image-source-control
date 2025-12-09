@@ -237,7 +237,12 @@ class ISC_Model {
 			$where_clause .= " AND wp_posts.post_mime_type LIKE 'image/%'";
 		}
 
-		// Filter for additional where clauses
+		/**
+		 * Filters the WHERE clause for the query that finds attachments with empty sources.
+		 *
+		 * @param string $where_clause The WHERE clause conditions for the attachments query.
+		 * @return string The filtered WHERE clause.
+		 */
 		$where_clause = apply_filters( 'isc_image_sources_attachments_with_empty_sources_where_clause', $where_clause );
 
 		/**
