@@ -136,4 +136,23 @@ EOD
 		// see the actual HTML output, including the data attribute and the overlay code at the beginning of the DIV container
 		$I->seeInSource('<div class="wp-block-group" style="margin-top:0;margin-bottom:0;padding-top:var(--wp--preset--spacing--20);padding-right:var(--wp--preset--spacing--20);padding-bottom:var(--wp--preset--spacing--20);padding-left:var(--wp--preset--spacing--20);background-image:url(https://example.com/image-in-style-attribute.jpg);background-size:cover;" data-isc-source-text="Quelle: &lt;a href=&quot;https://www.imagesourcecontrol.com&quot; target=&quot;_blank&quot; rel=&quot;nofollow&quot;&gt;Team ISC&lt;/a&gt;" data-isc-images="123"><span class="isc-source-text">Quelle: <a href="https://www.imagesourcecontrol.com" target="_blank" rel="nofollow">Team ISC</a></span>Some Content</div>');
 	}
+
+	/**
+	 * Test with WordPress 6.9+ escaped single quotes (&apos;) in background image URLs
+	 * WordPress 6.9 changed the escape format from &#039; to &apos; for single quotes in inline styles
+	 */
+	public function test_wordpress_69_escaped_quotes(\FunctionalTester $I) {
+		$I->havePageInDatabase([
+			                       'post_name' => 'test-page',
+			                       'post_content' => '<div class="wp-block-group" style="background-image:url(&apos;https://example.com/image-in-style-attribute.jpg&apos;);">Some Content</div>',
+		                       ]);
+
+		// Go to the page.
+		$I->amOnPage('/test-page');
+		// see the source information
+		$I->see('Team ISC');
+		// The escaped quotes should be handled and the image source should be detected
+		$I->seeInSource('data-isc-images="123"');
+		$I->seeInSource('<span class="isc-source-text">Quelle: <a href="https://www.imagesourcecontrol.com" target="_blank" rel="nofollow">Team ISC</a></span>');
+	}
 }
