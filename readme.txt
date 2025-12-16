@@ -2,8 +2,8 @@
 Contributors: webzunft
 Tags: credits, captions, copyrights, attributions, image sources
 Requires at least: 6.0
-Tested up to: 6.8
-Stable tag: 3.6.0
+Tested up to: 6.9
+Stable tag: 3.6.1
 Requires PHP: 7.4
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -166,6 +166,10 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 
 == Changelog ==
 
+= 3.6.1 =
+
+* Fix (Pro): Overlays did not display on background images of core blocks (i.e., groups) due to an undocumented change in WP 6.9 regarding the conversion of apostrophes in inline styles
+
 = 3.6.0 =
 
 * Feature (Pro): Execute the Indexer for Unused Images as a logged-in user; enable this option if your site is (partially) hidden behind a login or user capabilities
@@ -173,7 +177,7 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 * Improvement (Pro): Added labels for icons in the Unused Images list for better clarity
 * Improvement (Pro): An image is no longer considered “used” if the attached post is moved to the trash; previously, only fully deleting the post did that
 * Fix: Prevent a fatal error on comment edit pages
-* Fiv: The Images-only option caused non-images (e.g., PDFs) to no longer show in the media library
+* Fix: The Images-only option caused non-images (e.g., PDFs) to no longer show in the media library
 * Dev: Disables autoload of the `isc_storage` option
 
 = 3.5.0 =
