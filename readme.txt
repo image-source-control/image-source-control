@@ -3,7 +3,7 @@ Contributors: webzunft
 Tags: credits, captions, copyrights, attributions, image sources
 Requires at least: 6.0
 Tested up to: 6.9
-Stable tag: 3.6.0
+Stable tag: 3.6.1
 Requires PHP: 7.4
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -165,6 +165,10 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 1. The Indexer searches for all images in published content
 
 == Changelog ==
+
+= 3.6.1 =
+
+* Fix (Pro): Overlays did not display on background images of core blocks (i.e., groups) due to an undocumented change in WP 6.9 regarding the conversion of apostrophes in inline styles
 
 = 3.6.0 =
 
