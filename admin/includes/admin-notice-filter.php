@@ -34,13 +34,13 @@ class Admin_Notice_Filter {
 		}
 
 		// Build the whitelist and remove non-whitelisted callbacks
-		$this->build_whitelist();
+		$this->build_whitelist_and_filter_callbacks();
 	}
 
 	/**
-	 * Build the whitelist of allowed callbacks
+	 * Build the whitelist of allowed callbacks and remove non-whitelisted ones
 	 */
-	private function build_whitelist() {
+	private function build_whitelist_and_filter_callbacks() {
 		global $wp_filter;
 
 		$this->whitelisted_callbacks = [];
@@ -96,8 +96,12 @@ class Admin_Notice_Filter {
 	 * @return bool
 	 */
 	private function is_callback_whitelisted( $callback ): bool {
+		// Generate a unique key for this callback
+		$callback_key = $this->get_callback_key( $callback );
+		
 		foreach ( $this->whitelisted_callbacks as $whitelisted ) {
-			if ( $this->callbacks_match( $callback, $whitelisted ) ) {
+			$whitelisted_key = $this->get_callback_key( $whitelisted );
+			if ( $callback_key === $whitelisted_key ) {
 				return true;
 			}
 		}
@@ -106,34 +110,23 @@ class Admin_Notice_Filter {
 	}
 
 	/**
-	 * Check if two callbacks match
+	 * Generate a unique key for a callback
 	 *
-	 * @param callable $callback1 First callback.
-	 * @param callable $callback2 Second callback.
+	 * @param callable $callback The callback.
 	 *
-	 * @return bool
+	 * @return string
 	 */
-	private function callbacks_match( $callback1, $callback2 ): bool {
-		// Handle string function names
-		if ( is_string( $callback1 ) && is_string( $callback2 ) ) {
-			return $callback1 === $callback2;
+	private function get_callback_key( $callback ): string {
+		if ( is_string( $callback ) ) {
+			return 'string:' . $callback;
 		}
 
-		// Handle array callbacks [class, method]
-		if ( is_array( $callback1 ) && is_array( $callback2 ) ) {
-			// Both should have 2 elements
-			if ( count( $callback1 ) !== 2 || count( $callback2 ) !== 2 ) {
-				return false;
-			}
-
-			// Compare class names (handle both object instances and class names)
-			$class1 = is_object( $callback1[0] ) ? get_class( $callback1[0] ) : $callback1[0];
-			$class2 = is_object( $callback2[0] ) ? get_class( $callback2[0] ) : $callback2[0];
-
-			// Compare methods
-			return $class1 === $class2 && $callback1[1] === $callback2[1];
+		if ( is_array( $callback ) && count( $callback ) === 2 ) {
+			$class = is_object( $callback[0] ) ? get_class( $callback[0] ) : $callback[0];
+			return 'array:' . $class . '::' . $callback[1];
 		}
 
-		return false;
+		// For other types, use serialization as fallback
+		return 'other:' . serialize( $callback );
 	}
 }

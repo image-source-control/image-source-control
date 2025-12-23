@@ -13,74 +13,71 @@ use ISC\Tests\WPUnit\WPTestCase;
 class Admin_Notice_Filter_Test extends WPTestCase {
 
 	/**
-	 * Test that callbacks_match correctly identifies matching string callbacks
+	 * Test that get_callback_key correctly generates unique keys for string callbacks
 	 */
-	public function test_callbacks_match_with_string_callbacks(): void {
+	public function test_get_callback_key_with_string_callbacks(): void {
 		$filter = new Admin_Notice_Filter();
 		
 		// Use reflection to test the private method
 		$reflection = new \ReflectionClass( $filter );
-		$method = $reflection->getMethod( 'callbacks_match' );
+		$method = $reflection->getMethod( 'get_callback_key' );
 		$method->setAccessible( true );
 
-		// Test identical string callbacks
-		$result = $method->invoke( $filter, 'settings_errors', 'settings_errors' );
-		$this->assertTrue( $result, 'Expected identical string callbacks to match' );
+		// Test string callback
+		$result = $method->invoke( $filter, 'settings_errors' );
+		$this->assertSame( 'string:settings_errors', $result, 'Expected string callback to have string: prefix' );
 
-		// Test different string callbacks
-		$result = $method->invoke( $filter, 'settings_errors', 'other_function' );
-		$this->assertFalse( $result, 'Expected different string callbacks to not match' );
+		// Test different string callbacks produce different keys
+		$result1 = $method->invoke( $filter, 'settings_errors' );
+		$result2 = $method->invoke( $filter, 'other_function' );
+		$this->assertNotSame( $result1, $result2, 'Expected different string callbacks to have different keys' );
 	}
 
 	/**
-	 * Test that callbacks_match correctly identifies matching array callbacks
+	 * Test that get_callback_key correctly generates unique keys for array callbacks
 	 */
-	public function test_callbacks_match_with_array_callbacks(): void {
+	public function test_get_callback_key_with_array_callbacks(): void {
 		$filter = new Admin_Notice_Filter();
 		
 		// Use reflection to test the private method
 		$reflection = new \ReflectionClass( $filter );
-		$method = $reflection->getMethod( 'callbacks_match' );
+		$method = $reflection->getMethod( 'get_callback_key' );
 		$method->setAccessible( true );
 
-		// Test matching class/method arrays
-		$callback1 = [ \ISC\Admin::class, 'branded_admin_header' ];
-		$callback2 = [ \ISC\Admin::class, 'branded_admin_header' ];
-		$result = $method->invoke( $filter, $callback1, $callback2 );
-		$this->assertTrue( $result, 'Expected matching class/method callbacks to match' );
+		// Test array callback
+		$callback = [ \ISC\Admin::class, 'branded_admin_header' ];
+		$result = $method->invoke( $filter, $callback );
+		$expected = 'array:ISC\Admin::branded_admin_header';
+		$this->assertSame( $expected, $result, 'Expected array callback to have array: prefix with class::method' );
 
-		// Test different methods
+		// Test different array callbacks produce different keys
 		$callback1 = [ \ISC\Admin::class, 'branded_admin_header' ];
 		$callback2 = [ \ISC\Admin::class, 'different_method' ];
-		$result = $method->invoke( $filter, $callback1, $callback2 );
-		$this->assertFalse( $result, 'Expected different methods to not match' );
-
-		// Test different classes
-		$callback1 = [ \ISC\Admin::class, 'branded_admin_header' ];
-		$callback2 = [ \ISC\Settings::class, 'branded_admin_header' ];
-		$result = $method->invoke( $filter, $callback1, $callback2 );
-		$this->assertFalse( $result, 'Expected different classes to not match' );
+		$result1 = $method->invoke( $filter, $callback1 );
+		$result2 = $method->invoke( $filter, $callback2 );
+		$this->assertNotSame( $result1, $result2, 'Expected different methods to have different keys' );
 	}
 
 	/**
-	 * Test that callbacks_match handles object instances correctly
+	 * Test that get_callback_key handles object instances correctly
 	 */
-	public function test_callbacks_match_with_object_instances(): void {
+	public function test_get_callback_key_with_object_instances(): void {
 		$filter = new Admin_Notice_Filter();
 		
 		// Use reflection to test the private method
 		$reflection = new \ReflectionClass( $filter );
-		$method = $reflection->getMethod( 'callbacks_match' );
+		$method = $reflection->getMethod( 'get_callback_key' );
 		$method->setAccessible( true );
 
 		// Create an instance
 		$instance = new \ISC\Admin();
 
-		// Test object instance against class name
+		// Test object instance produces same key as class name
 		$callback1 = [ $instance, 'branded_admin_header' ];
 		$callback2 = [ \ISC\Admin::class, 'branded_admin_header' ];
-		$result = $method->invoke( $filter, $callback1, $callback2 );
-		$this->assertTrue( $result, 'Expected object instance to match class name' );
+		$result1 = $method->invoke( $filter, $callback1 );
+		$result2 = $method->invoke( $filter, $callback2 );
+		$this->assertSame( $result1, $result2, 'Expected object instance to produce same key as class name' );
 	}
 
 	/**
@@ -135,7 +132,7 @@ class Admin_Notice_Filter_Test extends WPTestCase {
 		
 		// Use reflection to access private method and property
 		$reflection = new \ReflectionClass( $filter );
-		$build_method = $reflection->getMethod( 'build_whitelist' );
+		$build_method = $reflection->getMethod( 'build_whitelist_and_filter_callbacks' );
 		$build_method->setAccessible( true );
 		
 		$whitelist_property = $reflection->getProperty( 'whitelisted_callbacks' );
