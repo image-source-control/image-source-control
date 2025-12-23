@@ -34,6 +34,7 @@ class Admin {
 	 * Load additional admin classes and modules
 	 */
 	public function load_modules() {
+		new \ISC\Admin\Admin_Notice_Filter();
 		new \ISC\Admin\Admin_Scripts();
 		new \ISC\Admin\Admin_Ajax();
 		new \ISC\Admin\Media_Library_Filter();
