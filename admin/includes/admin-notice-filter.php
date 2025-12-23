@@ -53,7 +53,27 @@ class Admin_Notice_Filter {
 		// Whitelist WordPress core settings notices
 		$this->whitelisted_callbacks[] = 'settings_errors';
 
-		// Allow plugins to add their own callbacks to the whitelist
+		/**
+		 * Filter the list of whitelisted admin notice callbacks on ISC pages
+		 *
+		 * This filter allows developers to add their own callbacks to the whitelist
+		 * so that their notices will be displayed on ISC admin pages.
+		 *
+		 * @since 3.6.2
+		 *
+		 * @param array $whitelisted_callbacks Array of callbacks that are allowed to display notices.
+		 *                                     Callbacks can be either:
+		 *                                     - String function names (e.g., 'my_custom_notice')
+		 *                                     - Array with class and method (e.g., [ MyClass::class, 'my_method' ])
+		 *
+		 * @example
+		 * // Add a custom notice callback to the whitelist
+		 * add_filter( 'isc_admin_notice_whitelist', function( $whitelist ) {
+		 *     $whitelist[] = 'my_custom_notice_function';
+		 *     $whitelist[] = [ MyPlugin\Admin::class, 'display_notice' ];
+		 *     return $whitelist;
+		 * } );
+		 */
 		$this->whitelisted_callbacks = apply_filters( 'isc_admin_notice_whitelist', $this->whitelisted_callbacks );
 
 		// Now remove non-whitelisted callbacks from the admin_notices hook
