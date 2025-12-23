@@ -17,6 +17,20 @@ class Admin_Notice_Filter {
 	private $whitelisted_callbacks = [];
 
 	/**
+	 * Lookup table of whitelisted callback keys for fast checking
+	 *
+	 * @var array
+	 */
+	private $whitelisted_keys = [];
+
+	/**
+	 * Whether the whitelist has been built
+	 *
+	 * @var bool
+	 */
+	private $whitelist_built = false;
+
+	/**
 	 * Constructor
 	 */
 	public function __construct() {
@@ -33,8 +47,11 @@ class Admin_Notice_Filter {
 			return;
 		}
 
-		// Build the whitelist and remove non-whitelisted callbacks
-		$this->build_whitelist_and_filter_callbacks();
+		// Build the whitelist only once per request
+		if ( ! $this->whitelist_built ) {
+			$this->build_whitelist_and_filter_callbacks();
+			$this->whitelist_built = true;
+		}
 	}
 
 	/**
@@ -76,6 +93,13 @@ class Admin_Notice_Filter {
 		 */
 		$this->whitelisted_callbacks = apply_filters( 'isc_admin_notice_whitelist', $this->whitelisted_callbacks );
 
+		// Build the lookup table for fast checking
+		$this->whitelisted_keys = [];
+		foreach ( $this->whitelisted_callbacks as $callback ) {
+			$key = $this->get_callback_key( $callback );
+			$this->whitelisted_keys[ $key ] = true;
+		}
+
 		// Now remove non-whitelisted callbacks from the admin_notices hook
 		if ( isset( $wp_filter['admin_notices'] ) ) {
 			foreach ( $wp_filter['admin_notices']->callbacks as $priority => $callbacks ) {
@@ -96,17 +120,9 @@ class Admin_Notice_Filter {
 	 * @return bool
 	 */
 	private function is_callback_whitelisted( $callback ): bool {
-		// Generate a unique key for this callback
+		// Generate a unique key for this callback and check in the lookup table
 		$callback_key = $this->get_callback_key( $callback );
-		
-		foreach ( $this->whitelisted_callbacks as $whitelisted ) {
-			$whitelisted_key = $this->get_callback_key( $whitelisted );
-			if ( $callback_key === $whitelisted_key ) {
-				return true;
-			}
-		}
-
-		return false;
+		return isset( $this->whitelisted_keys[ $callback_key ] );
 	}
 
 	/**
