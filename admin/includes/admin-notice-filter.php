@@ -12,6 +12,10 @@ class Admin_Notice_Filter {
 	/**
 	 * List of callbacks that are allowed to display notices on ISC pages
 	 *
+	 * Array elements can be:
+	 * - String function names (e.g., 'settings_errors')
+	 * - Array with class and method (e.g., [ MyClass::class, 'my_method' ])
+	 *
 	 * @var array
 	 */
 	private $whitelisted_callbacks = [];
