@@ -19,6 +19,10 @@ class Admin_Notices {
 
 	/**
 	 * Search for missing sources and display a warning if found some
+	 *
+	 * This message intentionally uses the `admin_notices` hook instead of the `isc_admin_notices` hook
+	 * since it is meant to be shown in the general admin area and not on ISC pages.
+	 * Someone visiting ISC pages might already be aware of the issue and does not need to be reminded there.
 	 */
 	public function admin_notices() {
 
