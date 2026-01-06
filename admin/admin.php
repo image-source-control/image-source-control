@@ -15,8 +15,11 @@ class Admin {
 		// load more admin-related classes
 		add_action( 'init', [ $this, 'load_modules' ] );
 
+		// Remove existing admin notices and register our own
+		add_action( 'in_admin_header', [ $this, 'unregister_admin_notices' ] );
+
 		// ISC page header
-		add_action( 'admin_notices', [ $this, 'branded_admin_header' ] );
+		add_action( 'isc_admin_notices', [ $this, 'branded_admin_header' ] );
 
 		// hide the admin language switcher from WPML on our pages
 		add_filter( 'wpml_show_admin_language_switcher', [ $this, 'disable_wpml_admin_lang_switcher' ] );
@@ -47,10 +50,25 @@ class Admin {
 	}
 
 	/**
+	 * Unregister existing admin notices and register our own
+	 * This should help prevent unrelated notices on ISC specific pages
+	 */
+	public function unregister_admin_notices() {
+		if ( ! Admin_Utils::is_isc_page() ) {
+			return;
+		}
+
+		// Remove all admin_notices hooks
+		remove_all_actions( 'admin_notices' );
+
+		// Trigger ISC-specific admin notices action
+		do_action( 'isc_admin_notices' );
+	}
+
+	/**
 	 * Add links to pages from plugins.php
 	 *
 	 * @param array $links existing plugin links.
-	 *
 	 * @return array
 	 */
 	public function add_links_to_plugin_page( $links ): array {

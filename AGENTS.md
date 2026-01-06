@@ -241,3 +241,8 @@ vendor/bin/codecept build
 
 When updating a PR after reviews or task changes:
 - Keep the original PR description as the main summary; though change outdated parts if necessary
+
+### Admin Notices
+
+The plugin is clearing all notices set with `admin_notices` on ISC admin pages
+To add a notice to these pages, use the `isc_admin_notices` action hook.
