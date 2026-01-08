@@ -3,7 +3,7 @@
 namespace ISC\Tests\WPUnit\Pro\Includes\Unused_Images;
 
 use ISC\Tests\WPUnit\WPTestCase;
-use ISC\Pro\Unused_Images\Database_Check_Model;
+use ISC\Pro\Unused_Images\Database_Scan\Database_Check_Model;
 
 class Database_Check_Model_Test extends WPTestCase {
 	/**
