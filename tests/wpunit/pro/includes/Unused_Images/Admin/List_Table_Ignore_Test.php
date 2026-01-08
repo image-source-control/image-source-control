@@ -131,7 +131,7 @@ class List_Table_Ignore_Test extends WPTestCase {
 	 * Tests: Query filtering in \ISC\Pro\Unused_Images\Admin\Unused_Images_List_Table
 	 */
 	public function test_query_filters_exclude_ignored_images_from_all_view() {
-		// Get items (this would typically be done via prepare_items())
+		$_REQUEST['filter'] = 'all';
 		$items = $this->list_table->get_items();
 
 		$item_ids = array_map( 'intval', wp_list_pluck( $items, 'ID' ) );
@@ -171,7 +171,7 @@ class List_Table_Ignore_Test extends WPTestCase {
 	 * Tests: Query filtering in \ISC\Pro\Unused_Images\Admin\Unused_Images_List_Table
 	 */
 	public function test_query_filters_exclude_ignored_images_from_unused_view() {
-		// Set current view to 'unused'
+		// Set current view to 'unused' (default view)
 		$_REQUEST['filter'] = 'unused';
 
 		// Get items

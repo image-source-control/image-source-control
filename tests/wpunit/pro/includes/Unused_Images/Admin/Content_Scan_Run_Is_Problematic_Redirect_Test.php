@@ -2,8 +2,7 @@
 
 namespace ISC\Tests\WPUnit\Pro\Includes\Unused_Images\Admin;
 
-use ISC\Pro\Indexer\Index_Run;
-use ISC\Pro\Unused_Images\Content_Scan_Run;
+use ISC\Pro\Unused_Images\Content_Scan\Content_Scan_Run;
 use ISC\Tests\WPUnit\WPTestCase;
 use ReflectionClass;
 

@@ -2,11 +2,11 @@
 
 namespace ISC\Tests\WPUnit\Pro\Includes\Unused_Images\Admin;
 
-use ISC\Pro\Unused_Images;
+use ISC\Pro\Unused_Images\Admin\Unused_Images;
 use ISC\Tests\WPUnit\WPTestCase;
 
 /**
- * @coversDefaultClass \ISC\Pro\Unused_Images
+ * @coversDefaultClass \ISC\Pro\Unused_Images\Admin\Unused_Images
  */
 class Unused_Images_Get_Definitely_Used_Image_Ids_Test extends WPTestCase {
 
