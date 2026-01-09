@@ -94,6 +94,7 @@ Tests are written using "wp browser", which uses Codeception under the hood.
 - use snake case for method names
 - never create class variables that are never used or only written, but never read
 - I have three image file defined, if you need any (e.g., by using codecept_data_dir( 'test-image1.jpg' ): test-image1.jpg, test-image2.jpg, test-image3.jpg
+  e.g.: `$image_id_1 = self::factory()->attachment->create_upload_object( codecept_data_dir( 'test-image1.jpg' ) );`
 - add proper method and class documentation
 - mention the tested method in the docblock of the test method
 - if a method you write a test for calls a method that already has tests, you don't need to retest that behavior again
