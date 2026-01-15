@@ -187,6 +187,7 @@ class Global_List extends Renderer {
 				'post_parent'    => null,
 				'paged'          => 1,
 				'no_found_rows'  => false, // this is important for pagination
+				'orderby'        => 'ID',
 			]
 		);
 
