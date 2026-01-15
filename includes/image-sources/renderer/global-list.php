@@ -103,14 +103,8 @@ class Global_List extends Renderer {
 				continue;
 			}
 
-			$connected_atts[ $_attachment->ID ]['source']   = Image_Sources::get_image_source_text_raw( $_attachment->ID );
-			$connected_atts[ $_attachment->ID ]['standard'] = Standard_Source::use_standard_source( $_attachment->ID );
-
-			if ( Standard_Source::standard_source_is( 'exclude' ) && $connected_atts[ $_attachment->ID ]['standard'] ) {
-				unset( $connected_atts[ $_attachment->ID ] );
-				continue;
-			}
-
+			$connected_atts[ $_attachment->ID ]['source']      = Image_Sources::get_image_source_text_raw( $_attachment->ID );
+			$connected_atts[ $_attachment->ID ]['standard']    = Standard_Source::use_standard_source( $_attachment->ID );
 			$connected_atts[ $_attachment->ID ]['title']       = $_attachment->post_title;
 			$connected_atts[ $_attachment->ID ]['author_name'] = '';
 			if ( Standard_Source::standard_source_is( 'custom_text' ) && ! empty( $connected_atts[ $_attachment->ID ]['own'] ) ) {
@@ -177,6 +171,12 @@ class Global_List extends Renderer {
 	 * @param array $args Arguments for WP_Query.
 	 * @return \WP_Query|array Returns a WP_Query object or an array of posts.
 	 */
+	/**
+	 * Get attachments based on the provided arguments
+	 *
+	 * @param array $args Arguments for WP_Query.
+	 * @return \WP_Query|array Returns a WP_Query object or an array of posts.
+	 */
 	public static function get_attachments( $args ) {
 		$args = wp_parse_args(
 			$args,
@@ -186,10 +186,37 @@ class Global_List extends Renderer {
 				'post_status'    => 'inherit',
 				'post_parent'    => null,
 				'paged'          => 1,
-				'no_found_rows'  => false, // this is important for pagination
+				'no_found_rows'  => false,
 				'orderby'        => 'ID',
+				'order'          => 'DESC',
 			]
 		);
+
+		// Exclude standard source images if option is set to 'exclude'
+		if ( Standard_Source::standard_source_is( 'exclude' ) ) {
+			if ( ! isset( $args['meta_query'] ) ) {
+				$args['meta_query'] = [];
+			}
+
+			// If we already have meta queries, set relation to AND
+			if ( count( $args['meta_query'] ) > 0 && ! isset( $args['meta_query']['relation'] ) ) {
+				$args['meta_query']['relation'] = 'AND';
+			}
+
+			// Exclude images with isc_image_source_own = 1
+			$args['meta_query'][] = [
+				'relation' => 'OR',
+				[
+					'key'     => 'isc_image_source_own',
+					'compare' => 'NOT EXISTS',
+				],
+				[
+					'key'     => 'isc_image_source_own',
+					'value'   => '1',
+					'compare' => '!=',
+				],
+			];
+		}
 
 		$query = new \WP_Query( $args );
 
