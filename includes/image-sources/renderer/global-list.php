@@ -82,11 +82,6 @@ class Global_List extends Renderer {
 		$connected_atts = [];
 
 		foreach ( $attachments as $_attachment ) {
-			if ( ! \ISC\Media_Type_Checker::should_process_attachment( $_attachment ) ) {
-				ISC_Log::log( sprintf( 'skipped image %d because it is not an image', $_attachment->ID ) );
-				continue;
-			}
-
 			$connected_atts[ $_attachment->ID ]['source']      = Image_Sources::get_image_source_text_raw( $_attachment->ID );
 			$connected_atts[ $_attachment->ID ]['standard']    = Standard_Source::use_standard_source( $_attachment->ID );
 			$connected_atts[ $_attachment->ID ]['title']       = $_attachment->post_title;
@@ -218,6 +213,10 @@ class Global_List extends Renderer {
 			'orderby'        => 'ID',
 			'order'          => 'DESC',
 		];
+
+		if ( \ISC\Media_Type_Checker::enabled_images_only_option() ) {
+			$args['post_mime_type'] = 'image';
+		}
 
 		// Add meta_query if we built one
 		if ( ! empty( $meta_query ) ) {
