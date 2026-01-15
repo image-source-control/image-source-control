@@ -134,6 +134,11 @@ class Global_List extends Renderer {
 						);
 					}
 				}
+				/**
+				 * Note: Images might temporarily show fewer posts than expected if a post was recently
+				 * unpublished/expired but the index hasn't been updated yet. This is an acceptable
+				 * trade-off to avoid complex SQL queries on serialized meta data.
+				 */
 				if ( 'all' !== $included && $usage_data_array === [] ) {
 					unset( $connected_atts[ $_attachment->ID ] );
 					continue;
