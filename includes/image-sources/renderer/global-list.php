@@ -54,31 +54,15 @@ class Global_List extends Renderer {
 		$prev_text = '&#171; Previous' === $a['prev_text'] ? __( '&#171; Previous', 'image-source-control-isc' ) : $a['prev_text'];
 		$next_text = 'Next &#187;' === $a['next_text'] ? __( 'Next &#187;', 'image-source-control-isc' ) : $a['next_text'];
 
-		// check which images are included
-		$args = [];
-		if ( 'all' !== $included ) {
-			// only load images attached to posts
-			$args['meta_query'] = [
-				[
-					'key'     => 'isc_image_posts',
-					'value'   => 'a:0:{}',
-					'compare' => '!=',
-				],
-			];
-		}
-
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$page = isset( $_GET['isc-page'] ) ? intval( $_GET['isc-page'] ) : 1;
-		if ( $page < 1 ) {
-			$page = 1;
-		}
 
-		// pagination arguments
-		$args['posts_per_page'] = $per_page;
-		$args['paged']          = $page;
-		$args['no_found_rows']  = false; // makes sure that WP_Query counts all posts, not just the ones on the current page
-
-		$attachments_query_result = self::get_attachments( apply_filters( 'isc_global_list_get_attachment_arguments', $args, $a ) );
+		$attachments_query_result = self::get_attachments(
+			$a,
+			$per_page,
+			$page,
+			$included
+		);
 
 		if ( is_a( $attachments_query_result, 'WP_Query' ) ) {
 			$attachments       = $attachments_query_result->posts;
@@ -87,7 +71,7 @@ class Global_List extends Renderer {
 			$attachments       = $attachments_query_result['posts'];
 			$total_found_posts = $attachments_query_result['found_posts'];
 		} else {
-			$attachments = $attachments_query_result;
+			$attachments       = $attachments_query_result;
 			$total_found_posts = count( $attachments );
 		}
 
@@ -173,43 +157,33 @@ class Global_List extends Renderer {
 	/**
 	 * Get attachments based on the provided arguments
 	 *
-	 * @param array $args Arguments for WP_Query.
-	 * @return \WP_Query|array Returns a WP_Query object or an array of posts.
-	 */
-	/**
-	 * Get attachments based on the provided arguments
+	 * @param array    $a        Shortcode attributes.
+	 * @param int|null $per_page Number of items per page.
+	 * @param int      $page     Current page number.
+	 * @param string   $included Which types of images to include ('all' or '').
 	 *
-	 * @param array $args Arguments for WP_Query.
-	 * @return \WP_Query|array Returns a WP_Query object or an array of posts.
+	 * @return \WP_Query Returns a WP_Query object.
 	 */
-	public static function get_attachments( $args ) {
-		$args = wp_parse_args(
-			$args,
-			[
-				'post_type'      => 'attachment',
-				'posts_per_page' => get_option( 'posts_per_page' ),
-				'post_status'    => 'inherit',
-				'post_parent'    => null,
-				'paged'          => 1,
-				'no_found_rows'  => false,
-				'orderby'        => 'ID',
-				'order'          => 'DESC',
-			]
-		);
+	public static function get_attachments( array $a, int $per_page = null, int $page = 1, string $included = '' ) {
+		// Build meta_query for included images filter
+		$meta_query = [];
+		if ( 'all' !== $included ) {
+			// Only load images attached to posts
+			$meta_query[] = [
+				'key'     => 'isc_image_posts',
+				'value'   => 'a:0:{}',
+				'compare' => '!=',
+			];
+		}
 
 		// Exclude standard source images if option is set to 'exclude'
 		if ( Standard_Source::standard_source_is( 'exclude' ) ) {
-			if ( ! isset( $args['meta_query'] ) ) {
-				$args['meta_query'] = [];
-			}
-
-			// If we already have meta queries, set relation to AND
-			if ( count( $args['meta_query'] ) > 0 && ! isset( $args['meta_query']['relation'] ) ) {
-				$args['meta_query']['relation'] = 'AND';
+			if ( ! empty( $meta_query ) ) {
+				$meta_query['relation'] = 'AND';
 			}
 
 			// Exclude images with isc_image_source_own = 1
-			$args['meta_query'][] = [
+			$meta_query[] = [
 				'relation' => 'OR',
 				[
 					'key'     => 'isc_image_source_own',
@@ -222,6 +196,31 @@ class Global_List extends Renderer {
 				],
 			];
 		}
+
+		// Build default arguments
+		$args = [
+			'post_type'      => 'attachment',
+			'posts_per_page' => $per_page === null ? get_option( 'posts_per_page' ) : (int) $per_page,
+			'post_status'    => 'inherit',
+			'post_parent'    => null,
+			'paged'          => max( $page, 1 ),
+			'no_found_rows'  => false,
+			'orderby'        => 'ID',
+			'order'          => 'DESC',
+		];
+
+		// Add meta_query if we built one
+		if ( ! empty( $meta_query ) ) {
+			$args['meta_query'] = $meta_query;
+		}
+
+		/**
+		 * Modify query arguments for the global list attachments
+		 *
+		 * @param array $args Current query arguments.
+		 * @param array $a Shortcode attributes.
+		 */
+		$args = apply_filters( 'isc_global_list_get_attachment_arguments', $args, $a );
 
 		$query = new \WP_Query( $args );
 
