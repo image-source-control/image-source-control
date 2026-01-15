@@ -78,7 +78,6 @@ class Global_List_Pagination_Cest {
 
 		// 3. Set plugin options.
 		$existingOption = $I->grabOptionFromDatabase( 'isc_options' );
-		$existingOption['global_list_enabled'] = 1;
 		// Set the global plugin option for images per page.
 		$existingOption['images_per_page'] = $this->per_page_limit;
 		$I->haveOptionInDatabase( 'isc_options', $existingOption );
