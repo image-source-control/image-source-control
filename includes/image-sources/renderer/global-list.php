@@ -165,24 +165,34 @@ class Global_List extends Renderer {
 	 * @return \WP_Query Returns a WP_Query object.
 	 */
 	public static function get_attachments( array $a, int $per_page = null, int $page = 1, string $included = '' ) {
-		// Build meta_query for included images filter
-		$meta_query = [];
+		// Start with proper structure
+		$meta_query = [ 'relation' => 'AND' ];
+
 		if ( 'all' !== $included ) {
-			// Only load images attached to posts
+			// Add as subquery (single condition, but in array form for consistency)
 			$meta_query[] = [
 				'key'     => 'isc_image_posts',
 				'value'   => 'a:0:{}',
 				'compare' => '!=',
 			];
+
+			/**
+			 * Filter the meta query for included images based on the isc_image_posts meta key
+			 *
+			 * @param array $meta_query Current meta query.
+			 * @param string $included Included images setting.
+			 */
+			$meta_query = apply_filters( 'isc_global_list_meta_query_isc_image_posts', $meta_query, $included );
 		}
 
 		// Exclude standard source images if option is set to 'exclude'
 		if ( Standard_Source::standard_source_is( 'exclude' ) ) {
-			if ( ! empty( $meta_query ) ) {
+			// Already has relation from above or we add it
+			if ( ! isset( $meta_query['relation'] ) ) {
 				$meta_query['relation'] = 'AND';
 			}
 
-			// Exclude images with isc_image_source_own = 1
+			// Add as subquery
 			$meta_query[] = [
 				'relation' => 'OR',
 				[
