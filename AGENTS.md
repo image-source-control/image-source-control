@@ -225,6 +225,12 @@ vendor/bin/codecept run functional tests/functional/pro/Indexer_Public_Cest.php
 vendor/bin/codecept build
 ```
 
+### Common issues
+
+When writing tests in the past, the following issues happened. Make sure to avoid them:
+
+- `[MalformedLocatorException] XPath or CSS locator is malformed`: Make sure your CSS selectors in functions like this: `$I->see( '2', 'a.page-numbers' );` don’t include spaces in the selector.
+
 ## Common Tasks
 
 ### Modifying Settings
