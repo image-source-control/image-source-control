@@ -53,6 +53,7 @@ return array(
     'ISC\\Pro\\Unused_Images\\Database_Scan\\Database_Scan' => $baseDir . '/pro/includes/Unused_Images/Database_Scan/Database_Scan.php',
     'ISC\\Pro\\Unused_Images\\Scanner\\Batch_Size_Calculator' => $baseDir . '/pro/includes/Unused_Images/Scanner/Batch_Size_Calculator.php',
     'ISC\\Pro\\Unused_Images\\Scanner\\Scanner_Admin' => $baseDir . '/pro/includes/Unused_Images/Scanner/Scanner_Admin.php',
+    'ISC\\Pro\\Unused_Images\\Scanner\\Scanner_Log' => $baseDir . '/pro/includes/Unused_Images/Scanner/Scanner_Log.php',
     'ISC\\Pro\\Unused_Images\\Scanner\\Scanner_Orchestrator' => $baseDir . '/pro/includes/Unused_Images/Scanner/Scanner_Orchestrator.php',
     'ISC\\Pro\\Unused_Images\\Scanner\\Scanner_Stats' => $baseDir . '/pro/includes/Unused_Images/Scanner/Scanner_Stats.php',
     'ISC\\Settings' => $baseDir . '/includes/settings.php',

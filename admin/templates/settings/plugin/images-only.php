@@ -16,7 +16,7 @@
 	<i class="dashicons dashicons-info"></i>
 	<?php
 	if ( \ISC\Plugin::is_pro() ) :
-		$open_a  = '<a href="' . admin_url( 'options.php?page=isc-indexer' ) . '">';
+		$open_a  = '<a href="' . admin_url( 'upload.php?page=isc-unused-images' ) . '">';
 		$close_a = '</a>';
 	else :
 		// don’t link to the indexer page since it is not
@@ -25,7 +25,7 @@
 	endif;
 	printf(
 	// translators: %%1$s is an opening link tag, %2$s is the closing one
-		esc_html__( 'Run the %1$sIndexer%2$s to update all data at once.', 'image-source-control-isc' ),
+		esc_html__( 'Run the %1$sScanner%2$s to update all data at once.', 'image-source-control-isc' ),
 		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		$open_a,
 		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped

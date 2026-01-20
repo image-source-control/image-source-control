@@ -73,6 +73,7 @@ class ComposerStaticInitdb72a6bac11cb0e6b971811c93d09a9b
         'ISC\\Pro\\Unused_Images\\Database_Scan\\Database_Scan' => __DIR__ . '/../..' . '/pro/includes/Unused_Images/Database_Scan/Database_Scan.php',
         'ISC\\Pro\\Unused_Images\\Scanner\\Batch_Size_Calculator' => __DIR__ . '/../..' . '/pro/includes/Unused_Images/Scanner/Batch_Size_Calculator.php',
         'ISC\\Pro\\Unused_Images\\Scanner\\Scanner_Admin' => __DIR__ . '/../..' . '/pro/includes/Unused_Images/Scanner/Scanner_Admin.php',
+        'ISC\\Pro\\Unused_Images\\Scanner\\Scanner_Log' => __DIR__ . '/../..' . '/pro/includes/Unused_Images/Scanner/Scanner_Log.php',
         'ISC\\Pro\\Unused_Images\\Scanner\\Scanner_Orchestrator' => __DIR__ . '/../..' . '/pro/includes/Unused_Images/Scanner/Scanner_Orchestrator.php',
         'ISC\\Pro\\Unused_Images\\Scanner\\Scanner_Stats' => __DIR__ . '/../..' . '/pro/includes/Unused_Images/Scanner/Scanner_Stats.php',
         'ISC\\Settings' => __DIR__ . '/../..' . '/includes/settings.php',
