@@ -26,6 +26,8 @@ if ( ! empty( $options['remove_on_uninstall'] ) ) {
 	delete_option( 'isc_storage' );
 	// delete the total number of unused images (Pro)
 	delete_option( 'isc_unused_images_total_items' );
+	// delete the total number of unused images (Pro)
+	delete_option( 'isc_scanner_log' );
 
 	// delete user meta
 	delete_metadata( 'user', null, 'isc_newsletter_subscribed', '', true );
