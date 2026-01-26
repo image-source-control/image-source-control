@@ -1,0 +1,3 @@
+[submodule ".github/agent-skills"]
+	path = .github/agent-skills
+	url = git@github.com:webzunft/agent-skills.git
