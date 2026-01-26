@@ -70,6 +70,18 @@ The Pro code from the [image-source-control](https://github.com/image-source-con
 - Use WordPress hooks and filters for extensibility
 - Respect WordPress loading order (plugins_loaded, init, admin_init, etc.)
 
+## Specific Constants
+- `ISCPRO` - indicates Pro version is active; don’t use it
+- `ISCNAME` - plugin name
+- `ISCVERSION` - plugin version
+
+### Paths
+(add `pro` to navigate to pro directory)
+
+- `ISCPATH` - path to the base plugin directory
+- `ISCBATH` - plugin base as used by WordPress to identify it.
+- `ISCBASEURL` - URL to the plugin’s directory.
+
 ## Testing
 
 All tests are in the `tests/` folder. Feel free to update or create tests as needed.
