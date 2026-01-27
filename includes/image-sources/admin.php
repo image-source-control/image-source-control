@@ -34,6 +34,10 @@ class Admin extends Image_Sources {
 	 * @param int $post_id WP_Post ID.
 	 */
 	public function delete_attachment( $post_id ) {
+		// prevent a fatal error during plugin updates in case this class was ever renamed or moved
+		if ( ! class_exists( '\ISC_Storage_Model', false ) ) {
+			return;
+		}
 		$storage_model = new \ISC_Storage_Model();
 		$storage_model->remove_image_by_id( $post_id );
 	}

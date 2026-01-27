@@ -108,6 +108,9 @@ class Image_Sources {
 
 		/**
 		 * Register an action to update missing sources when an attachment was deleted
+		 *
+		 * When removing or changing ISC_Model::update_missing_sources_transient,
+		 * make sure this hook can still reach the method to prevent a critical error on plugin updates.
 		 */
 		add_action( 'deleted_post', [ 'ISC_Model', 'update_missing_sources_transient' ] );
 
