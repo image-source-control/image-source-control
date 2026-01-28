@@ -4,7 +4,7 @@ set -euo pipefail
 suite="$1"; shift           # wpunit / functional / acceptance …
 raw_args=("$@")              # everything after the suite
 
-PHP_VERSIONS=( 7.4.33 8.1.31 8.2.26 8.3.14 8.4.1 )
+PHP_VERSIONS=( 7.4.33 8.1.34 8.2.30 8.3.28 8.4.15 )
 MAMP_ROOT="/Applications/MAMP/bin/php"
 
 ########################################
