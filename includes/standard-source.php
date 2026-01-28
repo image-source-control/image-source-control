@@ -116,11 +116,11 @@ class Standard_Source {
 	/**
 	 * Get the label of the standard source label
 	 *
-	 * @param string|null $value optional value, if missing, will use the stored value.
+	 * @param string $value optional value, if missing, will use the stored value.
 	 *
 	 * @return string
 	 */
-	public static function get_standard_source_label( string $value = null ) {
+	public static function get_standard_source_label( string $value = '' ) {
 		$labels = [
 			'exclude'     => __( 'Exclude from lists', 'image-source-control-isc' ),
 			'author_name' => __( 'Author name', 'image-source-control-isc' ),

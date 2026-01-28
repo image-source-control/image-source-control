@@ -159,7 +159,7 @@ class Global_List extends Renderer {
 	 *
 	 * @return \WP_Query Returns a WP_Query object.
 	 */
-	public static function get_attachments( array $a, int $per_page = null, int $page = 1, string $included = '' ) {
+	public static function get_attachments( array $a, int $per_page = 0, int $page = 1, string $included = '' ) {
 		// Start with proper structure
 		$meta_query = [ 'relation' => 'AND' ];
 
@@ -205,7 +205,7 @@ class Global_List extends Renderer {
 		// Build default arguments
 		$args = [
 			'post_type'      => 'attachment',
-			'posts_per_page' => $per_page === null ? get_option( 'posts_per_page' ) : (int) $per_page,
+			'posts_per_page' => $per_page === 0 ? get_option( 'posts_per_page' ) : (int) $per_page,
 			'post_status'    => 'inherit',
 			'post_parent'    => null,
 			'paged'          => max( $page, 1 ),
