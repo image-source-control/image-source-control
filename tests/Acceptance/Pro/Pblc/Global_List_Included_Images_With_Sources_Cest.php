@@ -90,7 +90,7 @@ class Global_List_Included_Images_With_Sources_Cest {
 		$I->havePageInDatabase( [
 			                        'post_name'    => $this->global_list_slug,
 			                        'post_title'   => 'Global List With Filtered Images',
-			                        'post_content' => '[isc_list_all included="all"]'
+			                        'post_content' => '[isc_list_all]'
 		                        ] );
 
 		// 5. Visit the post to trigger indexing
