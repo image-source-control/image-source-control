@@ -65,15 +65,15 @@ class Unused_Images_Get_Unused_Attachments_Test extends WPTestCase {
 	 * Create an attachment with optional title and mime type.
 	 *
 	 * @param string $mime
-	 * @param string|null $title
+	 * @param string $title
 	 * @return int
 	 */
-	private function createAttachmentWithMime( string $mime, string $title = null ): int {
+	private function createAttachmentWithMime( string $mime, string $title = '' ): int {
 		$args = [
 			'post_mime_type' => $mime,
 			'post_type'      => 'attachment',
 		];
-		if ( $title ) {
+		if ( $title !== '' ) {
 			$args['post_title'] = $title;
 		}
 

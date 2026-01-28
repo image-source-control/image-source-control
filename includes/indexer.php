@@ -214,9 +214,9 @@ class Indexer {
 	 * ignore also attachment posts
 	 * ignore revisions
 	 *
-	 * @param integer|null $post_id WP_Post ID. Useful if post object is not given.
+	 * @param integer $post_id WP_Post ID. Useful if post object is not given.
 	 */
-	public static function can_save_image_information( int $post_id = null ): bool {
+	public static function can_save_image_information( int $post_id = 0 ): bool {
 		$post = get_post( $post_id );
 
 		if ( ! isset( $post->post_type )
