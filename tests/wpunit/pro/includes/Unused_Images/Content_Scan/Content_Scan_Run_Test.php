@@ -181,7 +181,7 @@ class Content_Scan_Run_Test extends WPTestCase {
 		$this->assertGreaterThanOrEqual( 1, count( $batch ) );
 
 		// Check structure
-		if ( !  empty( $batch ) ) {
+		if ( ! empty( $batch ) ) {
 			$this->assertArrayHasKey( 'id', $batch[0] );
 			$this->assertArrayHasKey( 'url', $batch[0] );
 		}

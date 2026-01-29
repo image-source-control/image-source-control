@@ -70,7 +70,7 @@ class Database_Scan_Test extends WPTestCase {
 		// Create 5 test attachments
 		for ( $i = 0; $i < 5; $i ++ ) {
 			$filename = ( $i % 2 === 0 ) ? 'test-image1.jpg' : 'test-image2.jpg';
-			self:: factory()->attachment->create_upload_object( codecept_data_dir( $filename ) );
+			self::factory()->attachment->create_upload_object( codecept_data_dir( $filename ) );
 		}
 
 		$batch = $this->database_scan->get_batch( [ 'batch_size' => 3 ] );
@@ -142,7 +142,7 @@ class Database_Scan_Test extends WPTestCase {
 	 */
 	public function test_get_batch_only_missing_false_includes_all(): void {
 		// Create attachments
-		$unchecked_id = self:: factory()->attachment->create_upload_object( codecept_data_dir( 'test-image1.jpg' ) );
+		$unchecked_id = self::factory()->attachment->create_upload_object( codecept_data_dir( 'test-image1.jpg' ) );
 		$checked_id   = self::factory()->attachment->create_upload_object( codecept_data_dir( 'test-image2.jpg' ) );
 
 		// Mark one as checked
@@ -189,7 +189,7 @@ class Database_Scan_Test extends WPTestCase {
 		// Create attachments
 		$id1 = self::factory()->attachment->create_upload_object( codecept_data_dir( 'test-image1.jpg' ) );
 		$id2 = self::factory()->attachment->create_upload_object( codecept_data_dir( 'test-image2.jpg' ) );
-		$id3 = self:: factory()->attachment->create_upload_object( codecept_data_dir( 'test-image1.jpg' ) );
+		$id3 = self::factory()->attachment->create_upload_object( codecept_data_dir( 'test-image1.jpg' ) );
 
 		$batch = $this->database_scan->get_batch( [
 			                                          'batch_size'    => 10,
@@ -223,7 +223,7 @@ class Database_Scan_Test extends WPTestCase {
 		update_option( 'isc_options', $options );
 
 		// Create image
-		$image_id = self:: factory()->attachment->create_upload_object( codecept_data_dir( 'test-image1.jpg' ) );
+		$image_id = self::factory()->attachment->create_upload_object( codecept_data_dir( 'test-image1.jpg' ) );
 
 		// Create non-image
 		$pdf_id = self::factory()->attachment->create_object(
@@ -343,7 +343,7 @@ class Database_Scan_Test extends WPTestCase {
 	 * Test run_batch returns success status
 	 */
 	public function test_run_batch_returns_success_status(): void {
-		$attachment_id = self:: factory()->attachment->create_upload_object( codecept_data_dir( 'test-image1.jpg' ) );
+		$attachment_id = self::factory()->attachment->create_upload_object( codecept_data_dir( 'test-image1.jpg' ) );
 
 		$result = $this->database_scan->run_batch( array( $attachment_id ) );
 
@@ -406,7 +406,7 @@ class Database_Scan_Test extends WPTestCase {
 	 * Test run_single stores meta data
 	 */
 	public function test_run_single_stores_meta_data(): void {
-		$attachment_id = self:: factory()->attachment->create_upload_object( codecept_data_dir( 'test-image1.jpg' ) );
+		$attachment_id = self::factory()->attachment->create_upload_object( codecept_data_dir( 'test-image1.jpg' ) );
 
 		$this->database_scan->run_single( $attachment_id );
 

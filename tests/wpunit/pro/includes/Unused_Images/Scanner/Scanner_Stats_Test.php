@@ -5,7 +5,7 @@
  * @package ISC\Pro\Tests
  */
 
-namespace ISC\Tests\WPUnit\Pro\Includes\Untest_database_scan_counts_only_images_when_images_only_enabledused_Images\Scanner;
+namespace ISC\Tests\WPUnit\Pro\Includes\Unused_Images\Scanner;
 
 use ISC\Pro\Unused_Images\Scanner\Scanner_Stats;
 use ISC\Tests\WPUnit\WPTestCase;
@@ -291,16 +291,16 @@ class Scanner_Stats_Test extends WPTestCase {
 	public function test_database_scan_checked_count_respects_images_only_option(): void {
 		// Enable images_only option
 		$options = get_option( 'isc_options', array() );
-		$original_images_only = $options['images_only'] ??  false;
+		$original_images_only = $options['images_only'] ?? false;
 		$options['images_only'] = true;
 		update_option( 'isc_options', $options );
 
 		// Create and check an image
-		$image_id = self:: factory()->attachment->create_upload_object( codecept_data_dir( 'test-image1.jpg' ) );
+		$image_id = self::factory()->attachment->create_upload_object( codecept_data_dir( 'test-image1.jpg' ) );
 		update_post_meta( $image_id, 'isc_possible_usages', array() );
 
 		// Create and check a non-image
-		$pdf_id = self:: factory()->attachment->create_object(
+		$pdf_id = self::factory()->attachment->create_object(
 			'test-document.pdf',
 			0,
 			array(
