@@ -6,7 +6,7 @@ use ISC\Pro\Unused_Images\Database_Scan\Database_Check_Model;
 use ISC\Tests\WPUnit\WPTestCase;
 
 /**
- * Testing Database_Check_Model:: search() integration tests
+ * Testing Database_Check_Model::search() integration tests
  */
 class Database_Check_Model_Search_Test extends WPTestCase {
 

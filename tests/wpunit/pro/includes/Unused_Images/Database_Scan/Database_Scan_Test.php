@@ -372,7 +372,7 @@ class Database_Scan_Test extends WPTestCase {
 
 		$suggested = $result['suggested_batch_size'];
 		$this->assertGreaterThanOrEqual( Database_Scan::MIN_BATCH_SIZE, $suggested );
-		$this->assertLessThanOrEqual( Database_Scan:: MAX_BATCH_SIZE, $suggested );
+		$this->assertLessThanOrEqual( Database_Scan::MAX_BATCH_SIZE, $suggested );
 	}
 
 	/**
