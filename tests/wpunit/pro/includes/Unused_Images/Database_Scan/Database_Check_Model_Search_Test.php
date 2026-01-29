@@ -42,7 +42,7 @@ class Database_Check_Model_Search_Test extends WPTestCase {
 	 * Test search() finds image in post content
 	 */
 	public function test_search_finds_image_in_post_content() {
-		$attachment_id = self:: factory()->attachment->create_upload_object( codecept_data_dir( 'test-image1.jpg' ) );
+		$attachment_id = self::factory()->attachment->create_upload_object( codecept_data_dir( 'test-image1.jpg' ) );
 		$image_url     = wp_get_attachment_url( $attachment_id );
 
 		// Create post with image in content

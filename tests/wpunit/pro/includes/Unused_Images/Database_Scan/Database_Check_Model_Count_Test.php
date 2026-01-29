@@ -71,7 +71,7 @@ class Database_Check_Model_Count_Test extends WPTestCase {
 	 * Test count_images_with_usages_since returns 0 when no images have usages
 	 */
 	public function test_count_images_with_usages_since_with_no_usages() {
-		$attachment_id = self:: factory()->attachment->create_upload_object( codecept_data_dir( 'test-image1.jpg' ) );
+		$attachment_id = self::factory()->attachment->create_upload_object( codecept_data_dir( 'test-image1.jpg' ) );
 
 		update_post_meta( $attachment_id, 'isc_possible_usages', array() ); // empty array
 		update_post_meta( $attachment_id, 'isc_possible_usages_last_check', time() );
