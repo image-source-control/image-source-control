@@ -457,7 +457,7 @@ class Content_Scan_Run_Test extends WPTestCase {
 		$method->setAccessible( true );
 
 		$site_parts = wp_parse_url( home_url() );
-		$host       = $site_parts['host'] ??  'example.com';
+		$host       = $site_parts['host'] ?? 'example.com';
 
 		$original = 'http://' . $host . '/test-page';
 		$redirect = 'https://' . $host . '/test-page';
