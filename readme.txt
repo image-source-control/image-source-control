@@ -3,7 +3,7 @@ Contributors: webzunft
 Tags: credits, captions, copyrights, attributions, image sources
 Requires at least: 6.0
 Tested up to: 6.9
-Stable tag: 3.6.1
+Stable tag: 3.7.0
 Requires PHP: 7.4
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -165,6 +165,36 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 1. The Indexer searches for all images in published content
 
 == Changelog ==
+
+= 3.7.0 =
+
+* Feature (Pro): Introducing the new unified **Scanner** for Unused Images. This powerful tool combines the previous Indexer and Database search into a single, streamlined interface. The existing "Indexer" page will slowly be phased out. The individual Deep Check will be renamed to "Database Check" in the future
+* Feature (Pro): Bulk edit image sources for multiple images directly in the Media Library list view
+* Feature (Pro): Mark images as "Ignored" in the Unused Images list to focus on relevant items
+* Feature: Added a download button for the ISC log file in the settings for easier debugging
+* Improvement (Pro): Adaptive batching for the Content Scan to optimize performance based on server speed
+* Improvement (Pro): New "Any image URL" indexing option to detect images in CSS backgrounds and inline styles during the Content Scan
+* Improvement (Pro): Specialized usage detection for images in Advanced Custom Fields (ACF) and the Newsletter plugin
+* Improvement (Pro): Enhanced detection and labeling of "Global" images found in the page head or body
+* Improvement (Pro): Detailed error logging for the Scanner to help troubleshoot access issues, empty and redirected pages
+* Improvement (Pro): Add warning when many pages scanned but few images found
+* Improvement (Pro): Images that are found more than 5 times in the frontend are labeled "global"
+* Improvement (Pro): Prevent attachments from self-referencing their own entry in wp_posts during usage detection
+* Improvement: Automatically clear admin notices from other plugins on ISC pages to provide a cleaner management interface
+* Improvement: Added a "Layout" section in Global List settings with links to styling tips and documentation
+* Improvement: Support for single quotes in HTML attributes for better compatibility with themes like Kadence and block-based background images
+* Improvement: Improved detection of scaled and rotated images to ensure correct attribution
+* Improvement: Display the Post ID in the Global List when a post has no title
+* Fix (Pro): Appearance list showed an upsell pitch
+* Fix: Moved Global List filtering to the database query level to fix pagination issues and improve performance
+* Fix: Hide the "Tools" link when the Image Sources module is disabled
+* Dev (Pro): Add safety margin when deleting old entries from the index table
+* Dev: Prevented deprecation notices in the block editor for future WordPress versions (7.0+)
+* Dev: Resolved PHP 8.4 compatibility issues related to nullable parameters
+* Dev: Moved the log file to the WordPress uploads directory for better accessibility and security
+* Dev: Significant increase in automated test coverage for the Indexer, Global List, and Unused Images modules
+* Dev: Hardened hook handling to prevent potential fatal errors during future plugin updates
+* Dev: The `isc_image_sources_attachments_with_empty_sources_where_clause` filter hook can be used to manipulate the `where` clause of the search for images without an image source.
 
 = 3.6.1 =
 
