@@ -63,7 +63,7 @@ class Scanner_Stats_Test extends WPTestCase {
 	}
 
 	/**
-	 * Test get_database_scan_stats returns proper structure and structure
+	 * Test get_database_scan_stats returns proper structure
 	 */
 	public function test_get_database_scan_stats_structure(): void {
 		$stats = $this->scanner_stats->get_database_scan_stats();
