@@ -97,7 +97,7 @@ as well as with plugins like Advanced Custom Fields, WPML, Kadence Blocks, Kaden
 
 Premium media cleaner features to remove unused images safely.
 
-– Go to _Media > Unused Images_ to see and remove unused images
+- Go to _Media > Unused Images_ to see and remove unused images
 - Check automatically all pages in the frontend to detect real use
 - Run a deep check in the database to find references to images outside the content, like in meta data or options
 - Bulk delete unused images
