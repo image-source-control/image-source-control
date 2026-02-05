@@ -209,7 +209,7 @@ class Content_Scan_Test extends WPTestCase {
 	 * Test get_global_threshold respects filter
 	 */
 	public function test_get_global_threshold_respects_filter(): void {
-		add_filter( 'isc_indexer_global_image_threshold', function() {
+		add_filter( 'isc_unused_images_global_image_threshold', function() {
 			return 10;
 		} );
 
@@ -217,14 +217,14 @@ class Content_Scan_Test extends WPTestCase {
 
 		$this->assertEquals( 10, $threshold, 'Should return filtered value' );
 
-		remove_all_filters( 'isc_indexer_global_image_threshold' );
+		remove_all_filters( 'isc_unused_images_global_image_threshold' );
 	}
 
 	/**
 	 * Test get_global_threshold enforces minimum value of 1
 	 */
 	public function test_get_global_threshold_enforces_minimum(): void {
-		add_filter( 'isc_indexer_global_image_threshold', function() {
+		add_filter( 'isc_unused_images_global_image_threshold', function() {
 			return 0; // Try to set below minimum
 		} );
 
@@ -232,14 +232,14 @@ class Content_Scan_Test extends WPTestCase {
 
 		$this->assertEquals( 1, $threshold, 'Should enforce minimum of 1' );
 
-		remove_all_filters( 'isc_indexer_global_image_threshold' );
+		remove_all_filters( 'isc_unused_images_global_image_threshold' );
 	}
 
 	/**
 	 * Test get_global_threshold enforces maximum value of 100
 	 */
 	public function test_get_global_threshold_enforces_maximum(): void {
-		add_filter( 'isc_indexer_global_image_threshold', function() {
+		add_filter( 'isc_unused_images_global_image_threshold', function() {
 			return 150; // Try to set above maximum
 		} );
 
@@ -247,14 +247,14 @@ class Content_Scan_Test extends WPTestCase {
 
 		$this->assertEquals( 100, $threshold, 'Should enforce maximum of 100' );
 
-		remove_all_filters( 'isc_indexer_global_image_threshold' );
+		remove_all_filters( 'isc_unused_images_global_image_threshold' );
 	}
 
 	/**
 	 * Test get_global_threshold converts non-integer values to int
 	 */
 	public function test_get_global_threshold_converts_to_int(): void {
-		add_filter( 'isc_indexer_global_image_threshold', function() {
+		add_filter( 'isc_unused_images_global_image_threshold', function() {
 			return '25'; // String value
 		} );
 
@@ -263,14 +263,14 @@ class Content_Scan_Test extends WPTestCase {
 		$this->assertIsInt( $threshold, 'Should return an integer' );
 		$this->assertEquals( 25, $threshold, 'Should convert string to int' );
 
-		remove_all_filters( 'isc_indexer_global_image_threshold' );
+		remove_all_filters( 'isc_unused_images_global_image_threshold' );
 	}
 
 	/**
 	 * Test get_global_threshold handles negative values
 	 */
 	public function test_get_global_threshold_handles_negative_values(): void {
-		add_filter( 'isc_indexer_global_image_threshold', function() {
+		add_filter( 'isc_unused_images_global_image_threshold', function() {
 			return -5;
 		} );
 
@@ -278,6 +278,6 @@ class Content_Scan_Test extends WPTestCase {
 
 		$this->assertEquals( 1, $threshold, 'Should convert negative values to minimum of 1' );
 
-		remove_all_filters( 'isc_indexer_global_image_threshold' );
+		remove_all_filters( 'isc_unused_images_global_image_threshold' );
 	}
 }
