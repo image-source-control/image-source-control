@@ -536,7 +536,8 @@ class ISC_Model {
 		);
 
 		if ( $id ) {
-			$storage->update_post_id( $guid, $id );
+			// if no $guid is found, we store one of the earlier URLs
+			$storage->update_post_id( $guid ?? $url, $id );
 			ISC_Log::log( 'found image ID ' . $id );
 		} else {
 			// this should ideally only apply to image URLs that are not in the media library
