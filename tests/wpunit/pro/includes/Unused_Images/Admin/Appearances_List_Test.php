@@ -96,10 +96,10 @@ class Appearances_List_Test extends WPTestCase {
 	 * Combined List:
 	 * - Post with Image 1
 	 * - Post with Image 2
-	 * <h4>Frontend check</h4>
+	 * <h4>Content Scan</h4>
 	 * - Post with Image 1
 	 * - Post with Image 2
-	 * <h4>Database check</h4>
+	 * <h4>Database Scan</h4>
 	 * –– unchecked -–
 	 */
 	public function test_render_with_indexer_results_in_content() {
@@ -122,11 +122,11 @@ class Appearances_List_Test extends WPTestCase {
 		$output = ob_get_clean();
 
 		// Should contain indexer section header
-		$this->assertStringContainsString('<h4>Frontend check</h4>', $output);
+		$this->assertStringContainsString('<h4>Content Scan</h4>', $output);
 
 		// Should NOT show "no results" for indexer section
-		$indexer_section_start = strpos($output, 'Frontend check');
-		$database_section_start = strpos($output, 'Database check');
+		$indexer_section_start = strpos($output, 'Content Scan');
+		$database_section_start = strpos($output, 'Database Scan');
 		$indexer_section = substr($output, $indexer_section_start, $database_section_start - $indexer_section_start);
 
 		$this->assertStringNotContainsString('&mdash; no results &mdash;', $indexer_section);
@@ -135,7 +135,7 @@ class Appearances_List_Test extends WPTestCase {
 		$output = preg_replace('/\s+/', ' ', $output);
 
 		// The other sections are empty
-		$this->assertStringContainsString('<h4>Database check</h4> &mdash; unchecked &mdash; </details>', $output);
+		$this->assertStringContainsString('<h4>Database Scan</h4> &mdash; unchecked &mdash; </details>', $output);
 
 		// individual results are given
 		$this->assertStringContainsString('<a href="http://isc.local/?p=' . $post_with_image_1 . '" target="_blank">Post with Image 1</a> (Post)', $output);
@@ -148,9 +148,9 @@ class Appearances_List_Test extends WPTestCase {
 	 * Expected output:
 	 * Combined List:
 	 * - Test Post
-	 * <h4>Frontend check</h4>
+	 * <h4>Content Scan</h4>
 	 * - Test Post
-	 * <h4>Database check</h4>
+	 * <h4>Database Scan</h4>
 	 * — unchecked —
 	 */
 	public function test_render_with_indexer_results_in_thumbnail() {
@@ -163,11 +163,11 @@ class Appearances_List_Test extends WPTestCase {
 		$output = ob_get_clean();
 
 		// Should contain indexer section header
-		$this->assertStringContainsString('<h4>Frontend check</h4>', $output);
+		$this->assertStringContainsString('<h4>Content Scan</h4>', $output);
 
 		// Should NOT show "no results" for indexer section
-		$indexer_section_start = strpos($output, 'Frontend check');
-		$database_section_start = strpos($output, 'Database check');
+		$indexer_section_start = strpos($output, 'Content Scan');
+		$database_section_start = strpos($output, 'Database Scan');
 		$indexer_section = substr($output, $indexer_section_start, $database_section_start - $indexer_section_start);
 
 		$this->assertStringNotContainsString('&mdash; no results &mdash;', $indexer_section);
@@ -176,7 +176,7 @@ class Appearances_List_Test extends WPTestCase {
 		$output = preg_replace('/\s+/', ' ', $output);
 
 		// The other sections are empty
-		$this->assertStringContainsString('<h4>Database check</h4> &mdash; unchecked &mdash; </details>', $output);
+		$this->assertStringContainsString('<h4>Database Scan</h4> &mdash; unchecked &mdash; </details>', $output);
 
 		// individual results are given
 		$this->assertStringContainsString('<a href="http://isc.local/?p=' . $this->test_post_id . '" target="_blank">Test Post</a> (Post)', $output);
@@ -190,9 +190,9 @@ class Appearances_List_Test extends WPTestCase {
 	 * Combined List:
 	 * - Post with Image 1
 	 * - Post with Image 2
-	 * <h4>Frontend check</h4>
+	 * <h4>Content Scan</h4>
 	 * — no results — (no posts found)
-	 * <h4>Database check</h4>
+	 * <h4>Database Scan</h4>
 	 * - Post with Image 1
 	 * - Post with Image 2
 	 */
@@ -232,13 +232,13 @@ class Appearances_List_Test extends WPTestCase {
 		$output = ob_get_clean();
 
 		// Should contain database section header
-		$this->assertStringContainsString('<h4>Database check</h4>', $output);
+		$this->assertStringContainsString('<h4>Database Scan</h4>', $output);
 
 		// Should NOT show "no results" for database section
-		$database_section_start = strpos($output, 'Database check');
+		$database_section_start = strpos($output, 'Database Scan');
 
 		if ($database_section_start !== false) {
-			$indexer_section_start = strpos($output, 'Frontend check');
+			$indexer_section_start = strpos($output, 'Content Scan');
 			if ($indexer_section_start !== false) {
 				$database_section = substr($output, $database_section_start, strpos($output, '</details>', $database_section_start) - $database_section_start);
 				$this->assertStringNotContainsString('&mdash; no results &mdash;', $database_section);
@@ -252,14 +252,14 @@ class Appearances_List_Test extends WPTestCase {
 		$output = preg_replace('/\s+/', ' ', $output);
 
 		// The other sections are empty
-		$this->assertStringContainsString('<h4>Frontend check</h4> &mdash; no results &mdash; <h4>', $output);
+		$this->assertStringContainsString('<h4>Content Scan</h4> &mdash; no results &mdash; <h4>', $output);
 	}
 
 	/**
 	 * Test render() method with database results containing only postmetas.
 	 *
 	 * Expected output:
-	 * <h4>Database check</h4>
+	 * <h4>Database Scan</h4>
 	 *    Post meta key: featured_image
 	 *    Post meta key: gallery_images
 	 */
@@ -289,7 +289,7 @@ class Appearances_List_Test extends WPTestCase {
 		$output = preg_replace( '/\s+/', ' ', $output );
 
 		// Show results for the post meta
-		$this->assertStringContainsString( '<h4>Database check</h4>', $output );
+		$this->assertStringContainsString( '<h4>Database Scan</h4>', $output );
 		$this->assertStringContainsString( 'Post meta key: featured_image', $output );
 		$this->assertStringContainsString( 'Post meta key: gallery_images', $output );
 	}
@@ -298,7 +298,7 @@ class Appearances_List_Test extends WPTestCase {
 	 * Test render() method with database results containing only options.
 	 *
 	 * Expected output:
-	 * <h4>Database check</h4>
+	 * <h4>Database Scan</h4>
 	 *   Option: theme_logo (ID)
 	 *   Option: header_background (URL)
 	 */
@@ -327,7 +327,7 @@ class Appearances_List_Test extends WPTestCase {
 		// strip line breaks from $output
 		$output = preg_replace( '/\s+/', ' ', $output );
 
-		$this->assertStringContainsString( '<h4>Database check</h4>', $output );
+		$this->assertStringContainsString( '<h4>Database Scan</h4>', $output );
 		$this->assertStringContainsString( 'Option: theme_logo', $output );
 		$this->assertStringContainsString( 'Option: header_background', $output );
 	}
@@ -372,7 +372,7 @@ class Appearances_List_Test extends WPTestCase {
 		$output = ob_get_clean();
 
 		// Should contain database section header
-		$this->assertStringContainsString( '<h4>Database check</h4>', $output );
+		$this->assertStringContainsString( '<h4>Database Scan</h4>', $output );
 	}
 
 	/**
@@ -387,9 +387,9 @@ class Appearances_List_Test extends WPTestCase {
 	 *     Database Post (Post)
 	 * </div>
 	 * Details
-	 *    <h4>Frontend check</h4>
+	 *    <h4>Content Scan</h4>
 	 *      Image Source Post (Post)
-	 *    <h4>Database check</h4>
+	 *    <h4>Database Scan</h4>
 	 *      Database Post (Post)
 	 *   <h4>Post Index (Image Sources)</h4>
 	 *      Image Source Post (Post)
@@ -430,8 +430,8 @@ class Appearances_List_Test extends WPTestCase {
 		$output = ob_get_clean();
 
 		// All sections should have content, not "no results"
-		$this->assertStringContainsString('<h4>Frontend check</h4>', $output);
-		$this->assertStringContainsString('<h4>Database check</h4>', $output);
+		$this->assertStringContainsString('<h4>Content Scan</h4>', $output);
+		$this->assertStringContainsString('<h4>Database Scan</h4>', $output);
 		$this->assertStringContainsString('<h4>Post Index (Image Sources)</h4>', $output);
 
 		// no unchecked or no-results
@@ -458,7 +458,7 @@ class Appearances_List_Test extends WPTestCase {
 	 *     Image Source Post (Post)
 	 * </div>
 	 * Details
-	 *    <h4>Frontend check</h4>
+	 *    <h4>Content Scan</h4>
 	 *      Image Source Post (Post)
 	 *    <h4>Database check</h4>
 	 *      Database Post (Post)
@@ -491,8 +491,8 @@ class Appearances_List_Test extends WPTestCase {
 		$output = ob_get_clean();
 
 		// All sections should have content
-		$this->assertStringContainsString('<h4>Frontend check</h4>', $output);
-		$this->assertStringContainsString('<h4>Database check</h4>', $output);
+		$this->assertStringContainsString('<h4>Content Scan</h4>', $output);
+		$this->assertStringContainsString('<h4>Database Scan</h4>', $output);
 		$this->assertStringContainsString('<h4>Post Index (Image Sources)</h4>', $output);
 
 		// no unchecked or no-results
@@ -518,9 +518,9 @@ class Appearances_List_Test extends WPTestCase {
 	 * </div>
 	 * <details class="isc-appearances-list">
 	 *   <summary>Details</summary>
-	 *   <h4>Frontend check</h4>
+	 *   <h4>Content Scan</h4>
 	 *
-	 *   <h4>Database check</h4>
+	 *   <h4>Database Scan</h4>
 	 * </details>
 	 */
 	public function test_render_with_full_database_information() {
@@ -554,8 +554,8 @@ class Appearances_List_Test extends WPTestCase {
 		$output = ob_get_clean();
 
 		// Test section headers
-		$this->assertStringContainsString( '<h4>Frontend check</h4>', $output );
-		$this->assertStringContainsString( '<h4>Database check</h4>', $output );
+		$this->assertStringContainsString( '<h4>Content Scan</h4>', $output );
+		$this->assertStringContainsString( '<h4>Database Scan</h4>', $output );
 
 		// strip linebreaks
 		$output = preg_replace( '/\s+/', ' ', $output );
@@ -621,11 +621,10 @@ class Appearances_List_Test extends WPTestCase {
 	 * Expected order:
 	 * 1. Combined results section
 	 * 2. Details opening tag
-	 * 3. Frontend check
-	 * 4. Database check
+	 * 3. Content Scan
+	 * 4. Database Scan
 	 * 5. Related posts from Image Sources Index (if enabled)
 	 * 6. Details closing tag
-	 * 7. Check indicators
 	 */
 	public function test_render_output_structure_order() {
 		// Test the order of output sections
@@ -647,16 +646,13 @@ class Appearances_List_Test extends WPTestCase {
 		// Test the order of sections in output
 		$combined_pos = strpos( $output, "isc-appearances-list-combined" );
 		$details_pos = strpos( $output, '<details class="isc-appearances-list">' );
-		$indexer_pos = strpos( $output, 'Frontend check' );
-		$database_pos = strpos( $output, 'Database check' );
-		$checks_pos = strpos( $output, 'class="isc-check-indicator isc-check-indexer"' );
+		$indexer_pos = strpos( $output, 'Content Scan' );
+		$database_pos = strpos( $output, 'Database Scan' );
 
 		// Combined results should come first, then details section
 		$this->assertLessThan( $details_pos, $combined_pos );
 		// Within details, indexer section should come before database section
 		$this->assertLessThan( $database_pos, $indexer_pos );
-		// Check indicators should come after the details section
-		$this->assertGreaterThan( $details_pos, $checks_pos );
 	}
 
 	/**
@@ -675,86 +671,6 @@ class Appearances_List_Test extends WPTestCase {
 
 		// Should show "— unchecked —" since no details are available
 		$this->assertEquals( '&mdash; unchecked &mdash;', $output );
-	}
-
-	/**
-	 * Test if the check indicators are rendered
-	 */
-	public function test_render_with_check_indicators() {
-		ob_start();
-		Appearances_List::render( $this->test_image_id, [ 'checks' ] );
-		$output = ob_get_clean();
-
-		// Should contain check indicators
-		$this->assertStringContainsString( 'class="isc-check-indicator isc-check-indexer"', $output );
-		$this->assertStringContainsString( 'class="isc-check-indicator isc-check-database"', $output );
-		// Checks are showing "no", because they didn’t run
-		$this->assertStringContainsString( '<span class="dashicons dashicons-no-alt" title="Database check"></span>', $output );
-		$this->assertStringContainsString( '<span class="dashicons dashicons-no-alt" title="Frontend check"></span>', $output );
-	}
-
-	/**
-	 * Test check indicators with Database check run
-	 */
-	public function test_render_with_check_indicators_database_check_run() {
-		// Simulate a database check run
-		update_post_meta( $this->test_image_id, 'isc_possible_usages_last_check', time() );
-
-		ob_start();
-		Appearances_List::render( $this->test_image_id, [ 'checks' ] );
-		$output = ob_get_clean();
-
-		// Should show "yes" for database check
-		$this->assertStringContainsString( '<span class="dashicons dashicons-yes" title="Database check"></span>', $output );
-		// Frontend check should still show "no"
-		$this->assertStringContainsString( '<span class="dashicons dashicons-no-alt" title="Frontend check"></span>', $output );
-	}
-
-	/**
-	 * Test check indicators with valid Indexer data
-	 */
-	public function test_render_with_check_indicators_indexer_data() {
-		$index_table = new Content_Scan_Table();
-		$index_table->insert_or_update( $this->test_post_id, $this->test_image_id, 'content' );
-
-		Content_Scan_Table::reset_oldest_entry_date_cache();
-
-		ob_start();
-		Appearances_List::render( $this->test_image_id, [ 'checks' ] );
-		$output = ob_get_clean();
-
-		// Should show "yes" for indexer check
-		$this->assertStringContainsString( '<span class="dashicons dashicons-yes" title="Frontend check"></span>', $output );
-		// Database check should still show "no"
-		$this->assertStringContainsString( '<span class="dashicons dashicons-no-alt" title="Database check"></span>', $output );
-	}
-
-	/**
-	 * Test that render() shows the global indicator when image is probably global
-	 */
-	public function test_render_shows_global_indicator_for_global_images() {
-		$index_table = new Content_Scan_Table();
-		$threshold = Content_Scan::get_global_threshold(); // Default is 4
-
-		// Add threshold + 1 entries with head/body positions to trigger global status
-		for ( $i = 0; $i <= $threshold; $i++ ) {
-			$post_id = $this->factory()->post->create( [ 'post_title' => "Post $i" ] );
-			$position = ( $i % 2 === 0 ) ? 'head' : 'body';
-			$index_table->insert_or_update( $post_id, $this->test_image_id, $position );
-		}
-
-		ob_start();
-		Appearances_List::render( $this->test_image_id, [ 'details' ] );
-		$output = ob_get_clean();
-
-		// Should contain the global indicator
-		$this->assertStringContainsString( 'isc-probably-global-indicator', $output, 'Should show global indicator CSS class' );
-
-		// Should show the threshold value in the message
-		$this->assertStringContainsString( "Found more than $threshold times", $output, 'Should display threshold value in message' );
-
-		// Should include link to documentation
-		$this->assertStringContainsString( 'Manual', $output, 'Should include Manual link' );
 	}
 
 	/**
