@@ -422,4 +422,33 @@ class Content_Scan_Table_Test extends WPTestCase {
 		$this->assertIsInt( $result );
 		$this->assertGreaterThan( 0, $result );
 	}
+
+	/**
+	 * Test insert_or_update with replace_others flag removes old entries for same position
+	 */
+	public function test_insert_or_update_with_replace_others_removes_duplicates() {
+		// Insert first thumbnail
+		$this->content_scan_table->insert_or_update(
+			$this->post_id,
+			$this->attachment_id,
+			'thumbnail'
+		);
+
+		$attachment_id_2 = $this->factory()->post->create( [ 'post_type' => 'attachment' ] );
+
+		// Replace with second thumbnail using replace_others flag
+		$this->content_scan_table->insert_or_update(
+			$this->post_id,
+			$attachment_id_2,
+			'thumbnail',
+			null,
+			true
+		);
+
+		// Verify only one thumbnail entry exists
+		$entries = $this->content_scan_table->get_by_post_id( $this->post_id );
+		$this->assertCount( 1, $entries, 'Should have only one thumbnail entry when replace_others is true' );
+		$this->assertArrayHasKey( $attachment_id_2, $entries, 'Should have the new thumbnail' );
+		$this->assertArrayNotHasKey( $this->attachment_id, $entries, 'Should not have the old thumbnail' );
+	}
 }
