@@ -9,16 +9,11 @@ class ComposerStaticInitdb72a6bac11cb0e6b971811c93d09a9b
     public static $prefixLengthsPsr4 = array (
         'I' => 
         array (
-            'ISC\\Pro\\' => 8,
             'ISC\\' => 4,
         ),
     );
 
     public static $prefixDirsPsr4 = array (
-        'ISC\\Pro\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/pro/includes',
-        ),
         'ISC\\' => 
         array (
             0 => __DIR__ . '/../..' . '/includes',
@@ -57,25 +52,6 @@ class ComposerStaticInitdb72a6bac11cb0e6b971811c93d09a9b
         'ISC\\Newsletter' => __DIR__ . '/../..' . '/includes/newsletter.php',
         'ISC\\Options' => __DIR__ . '/../..' . '/includes/options.php',
         'ISC\\Plugin' => __DIR__ . '/../..' . '/includes/plugin.php',
-        'ISC\\Pro\\Custom_Attribute_Processor' => __DIR__ . '/../..' . '/pro/includes/Custom_Attribute_Processor.php',
-        'ISC\\Pro\\IPTC' => __DIR__ . '/../..' . '/pro/includes/IPTC.php',
-        'ISC\\Pro\\List_Layout_Details' => __DIR__ . '/../..' . '/pro/includes/List_Layout_Details.php',
-        'ISC\\Pro\\Unused_Images\\Admin\\Appearances_Column' => __DIR__ . '/../..' . '/pro/includes/Unused_Images/Admin/Appearances_Column.php',
-        'ISC\\Pro\\Unused_Images\\Admin\\Unused_Images' => __DIR__ . '/../..' . '/pro/includes/Unused_Images/Admin/Unused_Images.php',
-        'ISC\\Pro\\Unused_Images\\Admin\\Unused_Images_List_Table' => __DIR__ . '/../..' . '/pro/includes/Unused_Images/Admin/Unused_Images_List_Table.php',
-        'ISC\\Pro\\Unused_Images\\Content_Scan\\Content_Scan' => __DIR__ . '/../..' . '/pro/includes/Unused_Images/Content_Scan/Content_Scan.php',
-        'ISC\\Pro\\Unused_Images\\Content_Scan\\Content_Scan_Admin' => __DIR__ . '/../..' . '/pro/includes/Unused_Images/Content_Scan/Content_Scan_Admin.php',
-        'ISC\\Pro\\Unused_Images\\Content_Scan\\Content_Scan_Public' => __DIR__ . '/../..' . '/pro/includes/Unused_Images/Content_Scan/Content_Scan_Public.php',
-        'ISC\\Pro\\Unused_Images\\Content_Scan\\Content_Scan_Run' => __DIR__ . '/../..' . '/pro/includes/Unused_Images/Content_Scan/Content_Scan_Run.php',
-        'ISC\\Pro\\Unused_Images\\Content_Scan\\Content_Scan_Runner' => __DIR__ . '/../..' . '/pro/includes/Unused_Images/Content_Scan/Content_Scan_Runner.php',
-        'ISC\\Pro\\Unused_Images\\Content_Scan\\Content_Scan_Table' => __DIR__ . '/../..' . '/pro/includes/Unused_Images/Content_Scan/Content_Scan_Table.php',
-        'ISC\\Pro\\Unused_Images\\Database_Scan\\Database_Check_Model' => __DIR__ . '/../..' . '/pro/includes/Unused_Images/Database_Scan/Database_Check_Model.php',
-        'ISC\\Pro\\Unused_Images\\Database_Scan\\Database_Scan' => __DIR__ . '/../..' . '/pro/includes/Unused_Images/Database_Scan/Database_Scan.php',
-        'ISC\\Pro\\Unused_Images\\Scanner\\Batch_Size_Calculator' => __DIR__ . '/../..' . '/pro/includes/Unused_Images/Scanner/Batch_Size_Calculator.php',
-        'ISC\\Pro\\Unused_Images\\Scanner\\Scanner_Admin' => __DIR__ . '/../..' . '/pro/includes/Unused_Images/Scanner/Scanner_Admin.php',
-        'ISC\\Pro\\Unused_Images\\Scanner\\Scanner_Log' => __DIR__ . '/../..' . '/pro/includes/Unused_Images/Scanner/Scanner_Log.php',
-        'ISC\\Pro\\Unused_Images\\Scanner\\Scanner_Orchestrator' => __DIR__ . '/../..' . '/pro/includes/Unused_Images/Scanner/Scanner_Orchestrator.php',
-        'ISC\\Pro\\Unused_Images\\Scanner\\Scanner_Stats' => __DIR__ . '/../..' . '/pro/includes/Unused_Images/Scanner/Scanner_Stats.php',
         'ISC\\Settings' => __DIR__ . '/../..' . '/includes/settings.php',
         'ISC\\Settings\\Section' => __DIR__ . '/../..' . '/includes/settings/section.php',
         'ISC\\Settings\\Sections\\Caption' => __DIR__ . '/../..' . '/includes/settings/sections/caption.php',

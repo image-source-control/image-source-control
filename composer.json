@@ -30,8 +30,8 @@
     },
     "autoload": {
         "psr-4": {
-            "ISC\\": "includes/",
-            "ISC\\Pro\\": "pro/includes/"
+            "ISC\\": "includes/"
+
         },
         "classmap": [
             "admin/",
