@@ -3,7 +3,7 @@ Contributors: webzunft
 Tags: credits, captions, copyrights, attributions, image sources
 Requires at least: 6.0
 Tested up to: 6.9
-Stable tag: 3.7.0
+Stable tag: 3.8.0
 Requires PHP: 7.4
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -169,6 +169,18 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 1. The Scanner searches for unused images (Pro)
 
 == Changelog ==
+
+= 3.8.0 =
+
+* Feature (Pro): Add a reset button to clear the index for Unused Images
+* Improvement (Pro): Compatiblity with Elementor thumbnails in the directory `/uploads/elementor/thumbs\`
+* Improvement (Pro): Removed check indicator icons from the Unused Images list since they were confusing and are irrelevant when using the Scanner
+* Improvement (Pro): Finished renaming "Indexer" and "Deep Check" into "Content Scan" and "Database Scan"
+* Improvement (Pro): Updated Polish and German translations
+* Fix (Pro): A replaced featured image was not marked as unused when using the Content Scan
+* Fix: Prevent the storage from containing empty URLs when an image ID was identified but the image URL not found in the database
+* Dev (Pro): Renamed `isc_indexer_global_image_threshold` filter into `isc_unused_images_global_image_threshold`
+* Dev: Removed Pro files from autoloading mapper
 
 = 3.7.0 =
 
