@@ -102,6 +102,8 @@ class Unused_Images_Get_Unused_Attachments_Test extends WPTestCase {
 		$post_id = $this->factory->post->create();
 		add_post_meta( $post_id, '_thumbnail_id', $this->attachment_ids[0] );
 
+		Unused_Images::reset_featured_images_cache();
+
 		// check that the image is now excluded from the unused attachments
 		$ids = array_map( 'intval', wp_list_pluck( Unused_Images::get_unused_attachments(), 'ID' ) );
 		$this->assertCount( 2, $ids, 'Expected 2 unused attachments' );
