@@ -8,10 +8,8 @@
 ?>
 <label>
 	<input id="isc-settings-plugin-images-only" type="checkbox" name="isc_options[images_only]" value="1" <?php checked( $checked ); ?> />
-</label>
-<p class="description">
 	<?php esc_html_e( 'When enabled, all plugin functions will only work with image files and ignore other media types.', 'image-source-control-isc' ); ?>
-</p>
+</label>
 <p class="hidden" id="isc-settings-plugin-images-only-indexer">
 	<i class="dashicons dashicons-info"></i>
 	<?php
