@@ -3,7 +3,7 @@ Contributors: webzunft
 Tags: credits, captions, copyrights, attributions, image sources
 Requires at least: 6.0
 Tested up to: 6.9
-Stable tag: 3.8.0
+Stable tag: 3.9.0
 Requires PHP: 7.4
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -169,6 +169,13 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 1. The Scanner searches for unused images (Pro)
 
 == Changelog ==
+
+= 3.9.0 =
+
+* Improvement (Pro): Removed the old “Indexer” page to find unused images in the content. All features are covered by the Scanner
+* Improvement (Pro): When the WordPress `MEDIA_TRASH` constant is enabled, a "Move to Trash" option shows up in the bulk actions on the Unused Images page
+* Improvement (Pro): The pagination count in the Unused Images list shows the total number of images right away
+* Improvement: Settings label position unified for a homogeneous look
 
 = 3.8.0 =
 
