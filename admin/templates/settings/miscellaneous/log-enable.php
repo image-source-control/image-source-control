@@ -8,8 +8,8 @@
  */
 
 ?>
-<input type="checkbox" name="isc_options[enable_log]" value="1" <?php checked( $checked ); ?> id="isc-enable-log-checkbox"/>
-<p class="description">
+<label>
+	<input type="checkbox" name="isc_options[enable_log]" value="1" <?php checked( $checked ); ?> id="isc-enable-log-checkbox"/>
 	<?php
 	$file_link = 'image-source-control.log';
 
@@ -24,7 +24,7 @@
 		'<code>?isc-log</code>'
 	);
 	?>
-</p>
+</label>
 <div id="isc-log-url-wrapper" style="margin-top: 10px; display: <?php echo $checked ? 'block' : 'none'; ?>;">
 	<input type="text" id="isc-log-url-field" value="<?php echo esc_attr( $log_file_url ); ?>" readonly style="width: 100%; max-width: 500px; height: 28px; line-height: 28px; padding: 0 8px; vertical-align: middle;" />
 	<button type="button" id="isc-copy-log-url-btn" class="button" style="height: 28px; line-height: 26px; padding: 0 10px; vertical-align: middle;">
