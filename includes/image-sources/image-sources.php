@@ -241,4 +241,39 @@ class Image_Sources {
 		$extensions = self::$instance ? self::$instance->allowed_extensions : self::DEFAULT_ALLOWED_EXTENSIONS;
 		return apply_filters( 'isc_allowed_image_extensions', $extensions );
 	}
+
+	/**
+	 * Sanitize source text for safe input in the backend and output in the frontend
+	 *
+	 * @param string $source_text The source text to sanitize.
+	 * @return string Sanitized source text.
+	 */
+	public static function sanitize_source_html( string $source_text ): string {
+		$allowed_html = [
+			'a'      => [
+				'href'   => true,
+				'title'  => true,
+				'target' => true,
+				'rel'    => true,
+			],
+			'em'     => [],
+			'strong' => [],
+			'b'      => [],
+			'i'      => [],
+			'br'     => [],
+			'span'   => [
+				'class' => true,
+			],
+			'img'    => [
+				'src'   => true,
+				'alt'   => true,
+				'title' => true,
+				'class' => true,
+			],
+		];
+
+		$allowed_html = apply_filters( 'isc_allowed_source_html', $allowed_html );
+
+		return wp_kses( $source_text, $allowed_html );
+	}
 }
