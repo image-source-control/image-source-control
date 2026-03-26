@@ -82,7 +82,7 @@ class Global_List extends Renderer {
 		$connected_atts = [];
 
 		foreach ( $attachments as $_attachment ) {
-			$connected_atts[ $_attachment->ID ]['source']      = Image_Sources::get_image_source_text_raw( $_attachment->ID );
+			$connected_atts[ $_attachment->ID ]['source']      = Image_Sources::sanitize_source_html( Image_Sources::get_image_source_text_raw( $_attachment->ID ) );
 			$connected_atts[ $_attachment->ID ]['standard']    = Standard_Source::use_standard_source( $_attachment->ID );
 			$connected_atts[ $_attachment->ID ]['title']       = $_attachment->post_title;
 			$connected_atts[ $_attachment->ID ]['author_name'] = '';
