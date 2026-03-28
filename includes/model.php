@@ -77,7 +77,7 @@ class ISC_Model {
 	 */
 	public function isc_fields_save( $post, $attachment ) {
 		if ( isset( $attachment['isc_image_source'] ) ) {
-			self::save_field( $post['ID'], 'isc_image_source', $attachment['isc_image_source'] );
+			self::save_field( $post['ID'], 'isc_image_source', Image_Sources::sanitize_source_html( $attachment['isc_image_source'] ) );
 		}
 		if ( isset( $attachment['isc_image_source_url'] ) ) {
 			self::save_field( $post['ID'], 'isc_image_source_url', $this->sanitize_source_url( $attachment['isc_image_source_url'] ) );
@@ -86,7 +86,7 @@ class ISC_Model {
 		self::save_field( $post['ID'], 'isc_image_source_own', $own );
 
 		if ( isset( $attachment['isc_image_licence'] ) ) {
-			self::save_field( $post['ID'], 'isc_image_licence', $attachment['isc_image_licence'] );
+			self::save_field( $post['ID'], 'isc_image_licence', sanitize_text_field( $attachment['isc_image_licence'] ) );
 		}
 
 		return $post;
