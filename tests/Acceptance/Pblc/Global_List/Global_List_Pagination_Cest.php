@@ -255,4 +255,23 @@ class Global_List_Pagination_Cest {
 			$I->amOnPage( '/?p=' . $postId );
 		}
 	}
+
+	/**
+	 * Test that setting the plugin option `images_per_page` to 0 shows all entries without pagination.
+	 *
+	 * @param \AcceptanceTester $I The acceptance tester instance.
+	 */
+	public function test_plugin_option_zero_shows_all_entries_without_pagination( \AcceptanceTester $I ) {
+		$existingOption                      = $I->grabOptionFromDatabase( 'isc_options' );
+		$existingOption['images_per_page']   = 0;
+		$I->haveOptionInDatabase( 'isc_options', $existingOption );
+
+		$I->amOnPage( '/global-list-option' );
+
+		for ( $i = 1; $i <= $this->number_of_images; $i++ ) {
+			$I->see( "Author $i" );
+		}
+
+		$I->dontSeeElement( '.page-numbers' );
+	}
 }

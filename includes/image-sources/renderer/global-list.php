@@ -152,10 +152,10 @@ class Global_List extends Renderer {
 	/**
 	 * Get attachments based on the provided arguments
 	 *
-	 * @param array    $a        Shortcode attributes.
-	 * @param int|null $per_page Number of items per page.
-	 * @param int      $page     Current page number.
-	 * @param string   $included Which types of images to include ('all' or '').
+	 * @param array  $a        Shortcode attributes.
+	 * @param int    $per_page Number of items per page.
+	 * @param int    $page     Current page number.
+	 * @param string $included Which types of images to include ('all' or '').
 	 *
 	 * @return \WP_Query Returns a WP_Query object.
 	 */
@@ -205,7 +205,7 @@ class Global_List extends Renderer {
 		// Build default arguments
 		$args = [
 			'post_type'      => 'attachment',
-			'posts_per_page' => $per_page === 0 ? get_option( 'posts_per_page' ) : (int) $per_page,
+			'posts_per_page' => $per_page === 0 ? -1 : (int) $per_page,
 			'post_status'    => 'inherit',
 			'post_parent'    => null,
 			'paged'          => max( $page, 1 ),
