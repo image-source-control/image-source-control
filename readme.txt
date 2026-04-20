@@ -3,7 +3,7 @@ Contributors: webzunft
 Tags: credits, captions, copyrights, attributions, image sources
 Requires at least: 6.0
 Tested up to: 6.9
-Stable tag: 3.9.1
+Stable tag: 3.9.2
 Requires PHP: 7.4
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -170,10 +170,14 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 
 == Changelog ==
 
+= 3.9.2 =
+
+* Security: Limit input fields and output of source text to specific HTML tags and attributes. This prevets potential script execution. Reported by WordFence
+
 = 3.9.1 =
 
 * Improvement (Pro): Better guiding to the license input field to improve onboarding experience
-* Fix: Pagination links were missing when the number of items in the Global List was set to 0. Only 10 results showed up.
+* Fix: Pagination links were missing when the number of items in the Global List was set to 0. Only 10 results showed up
 * Fix (Pro): rename the `compatibility`  directory to `Compatibility` to resolve case-sensitive filesystem failure
 * Fix (Pro): Added more checks for the `wp_isc_index` table to prevent fatal errors when the table is missing for unexpected reasons
 
