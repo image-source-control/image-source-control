@@ -2,6 +2,7 @@
 
 namespace ISC\Tests\WPUnit\Pro\Includes\Unused_Images\Database_Scan;
 
+use ISC\Options;
 use ISC\Pro\Unused_Images\Database_Scan\Database_Check_Model;
 use ISC\Tests\WPUnit\WPTestCase;
 
@@ -9,6 +10,15 @@ use ISC\Tests\WPUnit\WPTestCase;
  * Testing Database_Check_Model::search() integration tests
  */
 class Database_Check_Model_Search_Test extends WPTestCase {
+
+	/**
+	 * Clean up after each test.
+	 */
+	public function tearDown(): void {
+		delete_option( 'isc_options' );
+
+		parent::tearDown();
+	}
 
 	/**
 	 * Test search() returns false with invalid image ID
@@ -46,9 +56,11 @@ class Database_Check_Model_Search_Test extends WPTestCase {
 		$image_url     = wp_get_attachment_url( $attachment_id );
 
 		// Create post with image in content
-		$post_id = self::factory()->post->create( array(
-			                                          'post_content' => '<img src="' . $image_url . '" />',
-		                                          ) );
+		self::factory()->post->create(
+			array(
+				'post_content' => '<img src="' . $image_url . '" />',
+			)
+		);
 
 		$model = new Database_Check_Model();
 		$model->search( $attachment_id );
@@ -155,11 +167,16 @@ class Database_Check_Model_Search_Test extends WPTestCase {
 	public function test_search_applies_results_filter() {
 		$attachment_id = self::factory()->attachment->create_upload_object( codecept_data_dir( 'test-image1.jpg' ) );
 
-		add_filter( 'isc_unused_images_database_search_results', function( $results, $image_id ) {
-			$results['custom'] = array( 'custom_data' => 'test' );
+		add_filter(
+			'isc_unused_images_database_search_results',
+			function( $results, $image_id ) {
+				$results['custom'] = array( 'custom_data' => 'test' );
 
-			return $results;
-		},          10, 2 );
+				return $results;
+			},
+			10,
+			2
+		);
 
 		$model = new Database_Check_Model();
 		$model->search( $attachment_id );
@@ -182,5 +199,121 @@ class Database_Check_Model_Search_Test extends WPTestCase {
 		$result = $model->search( $attachment_id );
 
 		$this->assertTrue( $result );
+	}
+
+	/**
+	 * Test search() includes extended postmeta results when additional checks are enabled.
+	 */
+	public function test_search_includes_extended_postmeta_results_when_additional_checks_enabled() {
+		$attachment_id = self::factory()->attachment->create_upload_object( codecept_data_dir( 'test-image1.jpg' ) );
+		$post_id       = self::factory()->post->create();
+
+		update_post_meta( $post_id, 'plugin_custom_image_id', (string) $attachment_id );
+
+		$isc_options                                 = Options::get_options();
+		$isc_options['unused_images']['deep_checks'] = [ Database_Check_Model::DEEP_CHECK_EXTENDED_FIELDS ];
+		update_option( 'isc_options', $isc_options );
+
+		$model = new Database_Check_Model();
+		$model->search( $attachment_id );
+
+		$possible_usages = get_post_meta( $attachment_id, 'isc_possible_usages', true );
+
+		$this->assertArrayHasKey( 'postmetas', $possible_usages );
+		$this->assertNotEmpty( $possible_usages['postmetas'] );
+
+		$meta_keys = wp_list_pluck( $possible_usages['postmetas'], 'meta_key' );
+		$post_ids  = array_map( 'intval', wp_list_pluck( $possible_usages['postmetas'], 'post_id' ) );
+
+		$this->assertContains( 'plugin_custom_image_id', $meta_keys );
+		$this->assertContains( $post_id, $post_ids );
+	}
+
+	/**
+	 * Test search() excludes extended postmeta results when additional checks are disabled.
+	 */
+	public function test_search_excludes_extended_postmeta_results_when_additional_checks_disabled() {
+		$attachment_id = self::factory()->attachment->create_upload_object( codecept_data_dir( 'test-image1.jpg' ) );
+		$post_id       = self::factory()->post->create();
+
+		update_post_meta( $post_id, 'plugin_custom_image_id', (string) $attachment_id );
+
+		$isc_options                                 = Options::get_options();
+		$isc_options['unused_images']['deep_checks'] = [];
+		update_option( 'isc_options', $isc_options );
+
+		$model = new Database_Check_Model();
+		$model->search( $attachment_id );
+
+		$possible_usages = get_post_meta( $attachment_id, 'isc_possible_usages', true );
+
+		if ( isset( $possible_usages['postmetas'] ) ) {
+			$meta_keys = wp_list_pluck( $possible_usages['postmetas'], 'meta_key' );
+			$this->assertNotContains( 'plugin_custom_image_id', $meta_keys );
+		} else {
+			$this->assertArrayNotHasKey( 'postmetas', $possible_usages );
+		}
+	}
+
+	/**
+	 * Test search() includes extended termmeta results when additional checks are enabled.
+	 */
+	public function test_search_includes_extended_termmeta_results_when_additional_checks_enabled() {
+		$attachment_id = self::factory()->attachment->create_upload_object( codecept_data_dir( 'test-image1.jpg' ) );
+		$term_id       = self::factory()->term->create(
+			[
+				'taxonomy' => 'category',
+			]
+		);
+
+		update_term_meta( $term_id, 'plugin_custom_image_id', (string) $attachment_id );
+
+		$isc_options                                 = Options::get_options();
+		$isc_options['unused_images']['deep_checks'] = [ Database_Check_Model::DEEP_CHECK_EXTENDED_FIELDS ];
+		update_option( 'isc_options', $isc_options );
+
+		$model = new Database_Check_Model();
+		$model->search( $attachment_id );
+
+		$possible_usages = get_post_meta( $attachment_id, 'isc_possible_usages', true );
+
+		$this->assertArrayHasKey( 'termmetas', $possible_usages );
+		$this->assertNotEmpty( $possible_usages['termmetas'] );
+
+		$meta_keys = wp_list_pluck( $possible_usages['termmetas'], 'meta_key' );
+		$term_ids  = array_map( 'intval', wp_list_pluck( $possible_usages['termmetas'], 'term_id' ) );
+
+		$this->assertContains( 'plugin_custom_image_id', $meta_keys );
+		$this->assertContains( $term_id, $term_ids );
+	}
+
+	/**
+	 * Test search() excludes extended termmeta results when additional checks are disabled.
+	 */
+	public function test_search_excludes_extended_termmeta_results_when_additional_checks_disabled() {
+		$attachment_id = self::factory()->attachment->create_upload_object( codecept_data_dir( 'test-image1.jpg' ) );
+		$term_id       = self::factory()->term->create(
+			[
+				'taxonomy' => 'category',
+			]
+		);
+
+		update_term_meta( $term_id, 'plugin_custom_image_id', (string) $attachment_id );
+
+		$isc_options                                 = Options::get_options();
+		$isc_options['unused_images']['deep_checks'] = [];
+		update_option( 'isc_options', $isc_options );
+
+		$model = new Database_Check_Model();
+		$model->search( $attachment_id );
+
+		$possible_usages = get_post_meta( $attachment_id, 'isc_possible_usages', true );
+
+		if ( isset( $possible_usages['termmetas'] ) ) {
+			$meta_keys = wp_list_pluck( $possible_usages['termmetas'], 'meta_key' );
+			$this->assertNotContains( 'plugin_custom_image_id', $meta_keys );
+		} else {
+			$this->assertArrayNotHasKey( 'termmetas', $possible_usages );
+		}
 	}
 }
