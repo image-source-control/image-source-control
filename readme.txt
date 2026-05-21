@@ -107,7 +107,7 @@ Premium media cleaner features to remove unused images safely.
 - Filter the list by various states
 - Ignore certain images from being listed as unused
 
-Constantly extended support for finding used and unused images in plugins and page builders, e.g., Elementor, Divi, WP Bakery, WP User Meta, and the Newsletter Plugin.
+Constantly extended support for finding used and unused images in plugins and page builders, e.g., Elementor, Divi, WP Bakery, WP User Meta, WooCommerce, Kadence, and the Newsletter Plugin.
 
 [See Pricing](https://imagesourcecontrol.com/pricing/?utm_source=wporg&utm_medium=link&utm_campaign=pricing).
 
@@ -174,7 +174,8 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 = 3.10.0 =
 
 * Feature (Pro): New “Deep Check” option to find unused images in post and term meta fields added by plugins. This is optional to save performance.
-* Improvement (Pro): Compatibility with the Soledad theme
+* Improvement (Pro): Find images used in WooCommerce product archive thumbnails
+* Improvement (Pro): Compatibility for image captions in the Soledad theme
 * Improvement (Pro): Find used images in the "Above Header Background Image" option in Kadence Theme Kit Pro
 * Improvement (Pro): Find used images in the variation images added by Kadence Shop Kit Pro
 * Fix (Pro): Icons in buttons were misplaced in WordPress 7.0
