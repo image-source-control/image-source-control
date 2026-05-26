@@ -95,6 +95,12 @@ class Plugin_Options extends Settings\Section {
 				'value'       => 'body_img',
 				'is_pro'      => true,
 			],
+			'media_trash'   => [
+				'label'       => __( 'Media Trash', 'image-source-control-isc' ),
+				'description' => __( 'Safely move media files to a custom trash folder for easy recovery. Ideal for testing effects of deleting unused images.', 'image-source-control-isc' ),
+				'value'       => 'trash',
+				'is_pro'      => true,
+			],
 		];
 
 		return apply_filters( 'isc_plugin_options_modules', $modules_options );
