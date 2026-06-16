@@ -48,12 +48,14 @@ class ISC_Log {
 	/**
 	 * Check if the log feature is enabled
 	 *
+	 * @param array $args optional arguments.
+	 *
 	 * @return bool
 	 */
-	public static function enabled(): bool {
-		// true if the Debug Log option is enabled and the ?isc-log query parameter is set
+	public static function enabled( array $args = [] ): bool {
+		// true if the Debug Log option is enabled and either ?isc-log is set or force_without_parameter is provided
 		// phpcs:ignore WordPress.Security.NonceVerification
-		return ( ! empty( Plugin::get_options()['enable_log'] ) && isset( $_REQUEST['isc-log'] ) );
+		return ( ! empty( Plugin::get_options()['enable_log'] ) && ( isset( $_REQUEST['isc-log'] ) || ! empty( $args['force_without_parameter'] ) ) );
 	}
 
 	/**
@@ -62,10 +64,11 @@ class ISC_Log {
 	 * set define( 'ISC_LOG', true ); in wp-config.php to enable it
 	 *
 	 * @param string|array $message log message. Arrays will be converted into strings.
+	 * @param array        $args optional arguments.
 	 */
-	public static function log( $message = '' ) {
+	public static function log( $message = '', array $args = [] ) {
 
-		if ( ! self::enabled() || null === $message ) {
+		if ( ! self::enabled( $args ) || null === $message ) {
 			return;
 		}
 
