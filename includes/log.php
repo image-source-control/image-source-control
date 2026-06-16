@@ -66,7 +66,7 @@ class ISC_Log {
 	 * @param string|array $message log message. Arrays will be converted into strings.
 	 * @param array        $args optional arguments.
 	 */
-	public static function log( $message = '', $args = [] ) {
+	public static function log( $message = '', array $args = [] ) {
 
 		if ( ! self::enabled( $args ) || null === $message ) {
 			return;
