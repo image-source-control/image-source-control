@@ -3,7 +3,7 @@ Contributors: webzunft
 Tags: credits, captions, copyrights, attributions, image sources
 Requires at least: 6.0
 Tested up to: 7.0
-Stable tag: 3.10.0
+Stable tag: 3.11.0
 Requires PHP: 7.4
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -111,6 +111,17 @@ Constantly extended support for finding used and unused images in plugins and pa
 
 [See Pricing](https://imagesourcecontrol.com/pricing/?utm_source=wporg&utm_medium=link&utm_campaign=pricing).
 
+**Media Trash**
+
+Move images to the trash instead of directly deleting them permanently. This eases the test if a deleted image was actually unused and allows for easy recovery if it was not.
+
+- Enabled the module in the settings
+- Media Trash has its own menu under _Media > Media Trash_
+- Clear the media trash in bulk
+- Recover trashed images with one click
+
+[See Pricing](https://imagesourcecontrol.com/pricing/?utm_source=wporg&utm_medium=link&utm_campaign=pricing).
+
 Btw., Image Source Control is a suitable alternative to the discontinued or closed plugins Image Credits, [Credit Tracker](https://imagesourcecontrol.com/blog/credit-tracker/?utm_source=wporg&utm_medium=link&utm_campaign=credit-tracker), or FSM Custom Featured Image Caption.
 
 == Instructions ==
@@ -170,6 +181,11 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 1. The Scanner searches for unused images (Pro)
 
 == Changelog ==
+
+= 3.11.0 =
+
+* Feature (Pro): New “Media Trash” module to move images to the trash instead of directly deleting them permanently. This allows for easy recovery
+* Dev (Pro): Log failed license API requests when the debug option is enabled to help troubleshoot license activation issues
 
 = 3.10.0 =
 
