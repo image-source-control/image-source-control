@@ -119,9 +119,19 @@ class Admin_Ajax {
 		$storage_model = new \ISC_Storage_Model();
 		$images        = $storage_model->get_storage();
 
-		// We are in debug mode, so it is fine to just output the content
-		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_print_r
-		print_r( $images );
+		// render a simple table with the storage entries
+		echo '<table class="widefat striped">';
+		echo '<thead><tr><th>Post ID</th><th>Image URL</th></tr></thead>';
+		echo '<tbody>';
+		foreach ( $images as $image_url => $data ) {
+			$post_id = $data['post_id'] ?? null;
+			echo '<tr>';
+			echo '<td>' . esc_html( $post_id ) . '</td>';
+			echo '<td>' . esc_html( $image_url ) . '</td>';
+			echo '</tr>';
+		}
+		echo '</tbody>';
+		echo '</table>';
 
 		die();
 	}
