@@ -56,8 +56,9 @@ class Settings {
 			return;
 		}
 
-		$page             = 'isc_settings_page';
-		$settings_section = $wp_settings_sections[ $page ];
+		$page                  = 'isc_settings_page';
+		$settings_section      = $wp_settings_sections[ $page ];
+		$compatibility_notices = ( new Compatibility() )->get_notices();
 
 		require_once ISCPATH . '/admin/templates/settings/settings.php';
 	}
