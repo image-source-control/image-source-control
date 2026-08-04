@@ -23,6 +23,7 @@ class Settings {
 	public function settings_init() {
 		$this->upgrade_settings();
 		register_setting( 'isc_options_group', 'isc_options', [ $this, 'settings_validation' ] );
+		new Compatibility();
 
 		new \ISC\Settings\Sections\Newsletter();
 		new \ISC\Settings\Sections\Plugin_Options();
@@ -56,9 +57,8 @@ class Settings {
 			return;
 		}
 
-		$page                  = 'isc_settings_page';
-		$settings_section      = $wp_settings_sections[ $page ];
-		$compatibility_notices = ( new Compatibility() )->get_notices();
+		$page             = 'isc_settings_page';
+		$settings_section = $wp_settings_sections[ $page ];
 
 		require_once ISCPATH . '/admin/templates/settings/settings.php';
 	}

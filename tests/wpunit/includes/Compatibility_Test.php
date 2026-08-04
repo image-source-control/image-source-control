@@ -39,27 +39,60 @@ class Compatibility_Test extends WPTestCase {
 	}
 
 	/**
-	 * Test the Settings::render_settings_page() method hides the compatibility box when no notices exist.
+	 * Test the Compatibility::register_settings_section() method does not register a section without notices.
+	 *
+	 * @covers \ISC\Compatibility::register_settings_section
+	 */
+	public function test_register_settings_section_skips_empty_notices(): void {
+		global $wp_settings_sections;
+
+		$wp_settings_sections = [];
+
+		( new Compatibility() )->register_settings_section();
+
+		$this->assertArrayNotHasKey( 'isc_settings_page', $wp_settings_sections );
+	}
+
+	/**
+	 * Test the Settings::render_settings_page() method renders the compatibility section below plugin options.
 	 *
 	 * @covers \ISC\Settings::render_settings_page
 	 */
-	public function test_render_settings_page_hides_compatibility_box_without_notices(): void {
-		global $wp_settings_sections;
+	public function test_render_settings_page_renders_compatibility_section_after_plugin_options(): void {
+		global $wp_settings_sections, $wp_settings_fields;
 
-		$wp_settings_sections = [
-			'isc_settings_page' => [
-				'isc_settings_section_plugin' => [
-					'id'       => 'isc_settings_section_plugin',
-					'title'    => 'Plugin options',
-					'callback' => '__return_false',
-				],
-			],
-		];
+		if ( ! defined( 'WPB_VC_VERSION' ) ) {
+			define( 'WPB_VC_VERSION', 'test-version' );
+		}
+
+		$wp_settings_sections = [];
+		$wp_settings_fields   = [];
+
+		add_settings_section( 'isc_settings_section_newsletter', 'Newsletter', '__return_false', 'isc_settings_page' );
+		add_settings_section( 'isc_settings_section_plugin', 'Plugin options', '__return_false', 'isc_settings_page' );
+		add_settings_field( 'plugin_marker', 'Plugin marker', [ $this, 'render_plugin_marker' ], 'isc_settings_page', 'isc_settings_section_plugin' );
+		add_settings_section( 'isc_settings_section_misc', 'Miscellaneous settings', '__return_false', 'isc_settings_page' );
 
 		ob_start();
 		( new Settings() )->render_settings_page();
 		$output = ob_get_clean();
 
-		$this->assertStringNotContainsString( 'isc_settings_section_compatibility', $output );
+		$this->assertStringContainsString( 'isc_settings_section_compatibility', $output );
+		$this->assertGreaterThan(
+			strpos( $output, 'isc_settings_section_plugin' ),
+			strpos( $output, 'isc_settings_section_compatibility' )
+		);
+		$this->assertGreaterThan(
+			strpos( $output, 'isc_settings_section_compatibility' ),
+			strpos( $output, 'isc_settings_section_misc' )
+		);
+	}
+
+	/**
+	 * Render a marker field that triggers the plugin options hook while rendering.
+	 */
+	public function render_plugin_marker(): void {
+		do_action( 'isc_admin_settings_template_after_plugin_options' );
+		echo 'marker';
 	}
 }

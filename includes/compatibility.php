@@ -8,6 +8,13 @@ namespace ISC;
 class Compatibility {
 
 	/**
+	 * Constructor.
+	 */
+	public function __construct() {
+		add_action( 'isc_admin_settings_template_after_plugin_options', [ $this, 'register_settings_section' ] );
+	}
+
+	/**
 	 * Return all compatibility notices for the current site.
 	 *
 	 * @return array<int,array<string,mixed>>
@@ -32,6 +39,31 @@ class Compatibility {
 		}
 
 		return $notices;
+	}
+
+	/**
+	 * Register the compatibility settings section when needed.
+	 */
+	public function register_settings_section() {
+		if ( [] === $this->get_notices() ) {
+			return;
+		}
+
+		add_settings_section(
+			'isc_settings_section_compatibility',
+			__( 'Compatibility', 'image-source-control-isc' ),
+			[ $this, 'render_settings_section' ],
+			'isc_settings_page'
+		);
+	}
+
+	/**
+	 * Render the compatibility settings section.
+	 */
+	public function render_settings_section() {
+		$notices = $this->get_notices();
+
+		require ISCPATH . '/admin/templates/settings/compatibility.php';
 	}
 
 	/**
