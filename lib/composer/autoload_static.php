@@ -29,6 +29,7 @@ class ComposerStaticInitdb72a6bac11cb0e6b971811c93d09a9b
         'ISC\\Admin\\Media_Library_Filter' => __DIR__ . '/../..' . '/admin/includes/media-library-filter.php',
         'ISC\\Admin_Utils' => __DIR__ . '/../..' . '/admin/utils.php',
         'ISC\\Autoloader' => __DIR__ . '/../..' . '/includes/class-autoloader.php',
+        'ISC\\Compatibility' => __DIR__ . '/../..' . '/includes/compatibility.php',
         'ISC\\Feedback' => __DIR__ . '/../..' . '/includes/feedback.php',
         'ISC\\Helpers' => __DIR__ . '/../..' . '/includes/helpers.php',
         'ISC\\Image_Sources\\Admin' => __DIR__ . '/../..' . '/includes/image-sources/admin.php',

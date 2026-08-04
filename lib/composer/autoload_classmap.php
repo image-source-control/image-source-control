@@ -14,6 +14,7 @@ return array(
     'ISC\\Admin\\Media_Library_Filter' => $baseDir . '/admin/includes/media-library-filter.php',
     'ISC\\Admin_Utils' => $baseDir . '/admin/utils.php',
     'ISC\\Autoloader' => $baseDir . '/includes/class-autoloader.php',
+    'ISC\\Compatibility' => $baseDir . '/includes/compatibility.php',
     'ISC\\Feedback' => $baseDir . '/includes/feedback.php',
     'ISC\\Helpers' => $baseDir . '/includes/helpers.php',
     'ISC\\Image_Sources\\Admin' => $baseDir . '/includes/image-sources/admin.php',
