@@ -11,7 +11,7 @@ class Compatibility {
 	 * Constructor.
 	 */
 	public function __construct() {
-		add_action( 'isc_admin_settings_template_after_plugin_options', [ $this, 'register_settings_section' ] );
+		add_action( 'admin_init', [ $this, 'register_settings_section' ], 20 );
 	}
 
 	/**

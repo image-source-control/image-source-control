@@ -70,7 +70,7 @@ class Compatibility_Test extends WPTestCase {
 
 		add_settings_section( 'isc_settings_section_newsletter', 'Newsletter', '__return_false', 'isc_settings_page' );
 		add_settings_section( 'isc_settings_section_plugin', 'Plugin options', '__return_false', 'isc_settings_page' );
-		add_settings_field( 'plugin_marker', 'Plugin marker', [ $this, 'render_plugin_marker' ], 'isc_settings_page', 'isc_settings_section_plugin' );
+		( new Compatibility() )->register_settings_section();
 		add_settings_section( 'isc_settings_section_misc', 'Miscellaneous settings', '__return_false', 'isc_settings_page' );
 
 		ob_start();
@@ -88,11 +88,4 @@ class Compatibility_Test extends WPTestCase {
 		);
 	}
 
-	/**
-	 * Render a marker field that triggers the plugin options hook while rendering.
-	 */
-	public function render_plugin_marker(): void {
-		do_action( 'isc_admin_settings_template_after_plugin_options' );
-		echo 'marker';
-	}
 }
