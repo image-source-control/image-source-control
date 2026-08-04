@@ -2,7 +2,7 @@
 
 namespace ISC\Tests\WPUnit\Includes;
 
-use ISC\Compatibility;
+use ISC\Settings\Sections\Compatibility;
 use ISC\Settings;
 use ISC\Tests\WPUnit\WPTestCase;
 
@@ -39,16 +39,16 @@ class Compatibility_Test extends WPTestCase {
 	}
 
 	/**
-	 * Test the Compatibility::register_settings_section() method does not register a section without notices.
+	 * Test the Compatibility::add_settings_section() method does not register a section without notices.
 	 *
-	 * @covers \ISC\Compatibility::register_settings_section
+	 * @covers \ISC\Settings\Sections\Compatibility::add_settings_section
 	 */
-	public function test_register_settings_section_skips_empty_notices(): void {
+	public function test_add_settings_section_skips_empty_notices(): void {
 		global $wp_settings_sections;
 
 		$wp_settings_sections = [];
 
-		( new Compatibility() )->register_settings_section();
+		( new Compatibility() )->add_settings_section();
 
 		$this->assertArrayNotHasKey( 'isc_settings_page', $wp_settings_sections );
 	}
@@ -69,8 +69,8 @@ class Compatibility_Test extends WPTestCase {
 		$wp_settings_fields   = [];
 
 		add_settings_section( 'isc_settings_section_newsletter', 'Newsletter', '__return_false', 'isc_settings_page' );
-		add_settings_section( 'isc_settings_section_plugin', 'Plugin options', '__return_false', 'isc_settings_page' );
-		( new Compatibility() )->register_settings_section();
+		new \ISC\Settings\Sections\Plugin_Options();
+		( new Compatibility() )->add_settings_section();
 		add_settings_section( 'isc_settings_section_misc', 'Miscellaneous settings', '__return_false', 'isc_settings_page' );
 
 		ob_start();

@@ -1,17 +1,28 @@
 <?php
 
-namespace ISC;
+namespace ISC\Settings\Sections;
+
+use ISC\Settings;
 
 /**
  * Compatibility checks for known third-party integrations.
  */
-class Compatibility {
+class Compatibility extends Settings\Section {
 
 	/**
-	 * Constructor.
+	 * Add settings section when needed.
 	 */
-	public function __construct() {
-		add_action( 'admin_init', [ $this, 'register_settings_section' ], 20 );
+	public function add_settings_section() {
+		if ( [] === $this->get_notices() ) {
+			return;
+		}
+
+		add_settings_section(
+			'isc_settings_section_compatibility',
+			__( 'Compatibility', 'image-source-control-isc' ),
+			[ $this, 'render_settings_section' ],
+			'isc_settings_page'
+		);
 	}
 
 	/**
@@ -39,22 +50,6 @@ class Compatibility {
 		}
 
 		return $notices;
-	}
-
-	/**
-	 * Register the compatibility settings section when needed.
-	 */
-	public function register_settings_section() {
-		if ( [] === $this->get_notices() ) {
-			return;
-		}
-
-		add_settings_section(
-			'isc_settings_section_compatibility',
-			__( 'Compatibility', 'image-source-control-isc' ),
-			[ $this, 'render_settings_section' ],
-			'isc_settings_page'
-		);
 	}
 
 	/**
