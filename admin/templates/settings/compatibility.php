@@ -4,7 +4,11 @@
  *
  * @var array $notices Compatibility notices.
  */
+
 ?>
+<p class="description">
+	<span class="dashicons dashicons-warning" style="color: red;"></span>
+	<?php esc_html_e( 'The following items might need an upgrade or manual setup for compatibility.', 'image-source-control-isc' ); ?>
 <ul>
 	<?php foreach ( $notices as $notice ) : ?>
 		<li>
