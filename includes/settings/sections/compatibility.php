@@ -130,8 +130,6 @@ class Compatibility extends Settings\Section {
 	 * @return array|null
 	 */
 	public function check_blocksy_theme() {
-		// use WP function to check the theme
-
 		if ( ! $this->is_current_theme( 'blocksy' ) || ! \ISC\Plugin::is_module_enabled( 'image_sources' ) ) {
 			return null;
 		}
