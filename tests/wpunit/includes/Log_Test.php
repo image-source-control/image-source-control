@@ -109,9 +109,9 @@ class Log_Test extends WPTestCase {
 	}
 
 	/**
-	 * Test ISC_Log::maybe_log_settings.
+	 * Test ISC_Log::maybe_log_settings() requires both `isc-settings` and `isc-log` parameters.
 	 */
-	public function test_maybe_log_settings_requires_settings_parameter() {
+	public function test_maybe_log_settings_requires_parameters() {
 		update_option(
 			'isc_options',
 			[
@@ -119,8 +119,18 @@ class Log_Test extends WPTestCase {
 			]
 		);
 
-		$_GET['isc-log'] = 'default';
+		// Only `isc-log` present.
+		$_GET['isc-log']     = 'default';
 		$_REQUEST['isc-log'] = 'default';
+
+		\ISC_Log::maybe_log_settings();
+
+		$this->assertFileDoesNotExist( \ISC_Log::get_log_file_path() );
+
+		// Only `isc-settings` present.
+		unset( $_GET['isc-log'], $_REQUEST['isc-log'] );
+		$_GET['isc-settings']     = '1';
+		$_REQUEST['isc-settings'] = '1';
 
 		\ISC_Log::maybe_log_settings();
 
