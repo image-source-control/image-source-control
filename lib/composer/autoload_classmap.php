@@ -40,6 +40,7 @@ return array(
     'ISC\\Settings' => $baseDir . '/includes/settings.php',
     'ISC\\Settings\\Section' => $baseDir . '/includes/settings/section.php',
     'ISC\\Settings\\Sections\\Caption' => $baseDir . '/includes/settings/sections/caption.php',
+    'ISC\\Settings\\Sections\\Compatibility' => $baseDir . '/includes/settings/sections/compatibility.php',
     'ISC\\Settings\\Sections\\Global_List' => $baseDir . '/includes/settings/sections/global-list.php',
     'ISC\\Settings\\Sections\\Licenses' => $baseDir . '/includes/settings/sections/licenses.php',
     'ISC\\Settings\\Sections\\Miscellaneous' => $baseDir . '/includes/settings/sections/miscellaneous.php',

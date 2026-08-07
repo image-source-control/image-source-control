@@ -2,7 +2,7 @@
 /**
  * Render the settings page
  *
- * @var string $page            The settings page.
+ * @var string $page             The settings page.
  * @var array  $settings_section The settings section.
  */
 
