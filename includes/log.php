@@ -85,6 +85,30 @@ class ISC_Log {
 	}
 
 	/**
+	 * Log the current plugin settings on request.
+	 */
+	public static function maybe_log_settings() {
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		if ( ! self::enabled() || ! isset( $_GET['isc-settings'] ) ) {
+			return;
+		}
+
+		$options = Plugin::get_options();
+		unset( $options['license-key'] );
+
+		self::log( '=== ISC SETTINGS ===' );
+		self::log( $options );
+
+		$license_status = get_option( 'isc_license_status', '' );
+
+		if ( '' === $license_status || false === $license_status || null === $license_status ) {
+			$license_status = '-';
+		}
+
+		self::log( 'isc_license_status: ' . $license_status );
+	}
+
+	/**
 	 * Delete the log file without any conditions
 	 */
 	public static function delete_log_file() {
