@@ -206,6 +206,16 @@ class ISC_Block_Options {
 		wp_enqueue_script( 'isc/image-block' );
 		wp_set_script_translations( 'isc/image-block', 'image-source-control-isc', apply_filters( 'isc_path_to_languages', '' ) );
 
+		// Enqueue Script for Featured Image Source Fields
+		// Attach after isc/image-block so we have access to its data
+		Helpers::register_script(
+			'isc/featured-image-source-fields',
+			'includes/block-options/isc-featured-image-source-fields.js',
+			[ 'wp-plugins', 'wp-edit-post', 'wp-data', 'wp-compose', 'wp-element', 'wp-components', 'wp-i18n', 'lodash', 'isc/image-block' ],
+		);
+		wp_enqueue_script( 'isc/featured-image-source-fields' );
+		wp_set_script_translations( 'isc/featured-image-source-fields', 'image-source-control-isc', apply_filters( 'isc_path_to_languages', '' ) );
+
 		Helpers::enqueue_script( 'isc/media-upload', 'admin/assets/js/media-upload.js', [ 'media-upload' ] );
 	}
 
