@@ -185,7 +185,7 @@ class Compatibility extends Settings\Section {
 			'name'          => 'Elementor',
 			'description'   => sprintf(
 				// translators: %s is the name of the theme or page builder, e.g. Divi.
-				esc_html__( 'Enable support for %s background images.', 'image-source-control-isc' ),
+				__( 'Enable support for %s background images.', 'image-source-control-isc' ),
 				'Elementor'
 			),
 			'manual_url'    => 'https://imagesourcecontrol.com/documentation/compatibility/#Elementor',
@@ -389,7 +389,7 @@ class Compatibility extends Settings\Section {
 			'name'          => 'WPBakery Page Builder (formerly Visual Composer)',
 			'description'   => sprintf(
 			// translators: %s is the name of the theme or page builder, e.g. Divi.
-				esc_html__( 'Enable support for %s background images.', 'image-source-control-isc' ),
+				__( 'Enable support for %s background images.', 'image-source-control-isc' ),
 				'WPBakery Page Builder'
 			),
 			'manual_url'    => 'https://imagesourcecontrol.com/documentation/compatibility/#WPBakery_Page_Builder',
@@ -434,8 +434,8 @@ class Compatibility extends Settings\Section {
 	/**
 	 * Helper function to check if the current theme (parent or child) is a specific theme.
 	 *
-	 * @param string $theme_name The name of the theme to check for.
-	 * @return bool True if the current theme matches the specified theme name, false otherwise.
+	 * @param string $theme_slug The slug of the theme to check for.
+	 * @return bool True if the current theme matches the specified theme slug, false otherwise.
 	 */
 	public function is_current_theme( string $theme_slug ): bool {
 		$current_theme = wp_get_theme();
