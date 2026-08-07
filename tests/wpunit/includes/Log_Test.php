@@ -2,7 +2,9 @@
 
 namespace ISC\Tests\WPUnit\Includes;
 
+use ISC\Settings;
 use \ISC\Tests\WPUnit\WPTestCase;
+use \ISC_Public;
 
 /**
  * Test if ISC_Log file path and URL methods work correctly.
@@ -81,6 +83,32 @@ class Log_Test extends WPTestCase {
 	}
 
 	/**
+	 * Test ISC\Settings::admin_head_scripts().
+	 */
+	public function test_admin_head_scripts_does_not_log_settings() {
+		update_option(
+			'isc_options',
+			[
+				'enable_log' => true,
+			]
+		);
+
+		$_GET['isc-log'] = 'default';
+		$_GET['isc-settings'] = '1';
+		$_REQUEST['isc-log'] = 'default';
+		$_REQUEST['isc-settings'] = '1';
+
+		set_current_screen( 'settings_page_isc-settings' );
+		$settings = ( new \ReflectionClass( Settings::class ) )->newInstanceWithoutConstructor();
+
+		ob_start();
+		$settings->admin_head_scripts();
+		ob_end_clean();
+
+		$this->assertFileDoesNotExist( \ISC_Log::get_log_file_path() );
+	}
+
+	/**
 	 * Test ISC_Log::maybe_log_settings.
 	 */
 	public function test_maybe_log_settings_requires_settings_parameter() {
@@ -100,9 +128,9 @@ class Log_Test extends WPTestCase {
 	}
 
 	/**
-	 * Test ISC_Log::maybe_log_settings.
+	 * Test ISC_Public::prepare_log().
 	 */
-	public function test_maybe_log_settings_logs_settings_without_license_key() {
+	public function test_prepare_log_logs_settings_without_license_key() {
 		update_option(
 			'isc_options',
 			[
@@ -118,7 +146,7 @@ class Log_Test extends WPTestCase {
 		$_REQUEST['isc-log'] = 'default';
 		$_REQUEST['isc-settings'] = '1';
 
-		\ISC_Log::maybe_log_settings();
+		( new ISC_Public() )->prepare_log();
 
 		$log_content = file_get_contents( \ISC_Log::get_log_file_path() );
 

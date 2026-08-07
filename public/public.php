@@ -86,6 +86,7 @@ class ISC_Public extends \ISC\Image_Sources\Image_Sources {
 
 		if ( ISC_Log::enabled() ) {
 			ISC_Log::log( '---' );
+			ISC_Log::maybe_log_settings();
 		}
 	}
 

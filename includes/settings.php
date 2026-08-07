@@ -80,7 +80,6 @@ class Settings {
 	public function admin_head_scripts() {
 		$screen = get_current_screen();
 		if ( isset( $screen->id ) && $screen->id === 'settings_page_isc-settings' ) {
-			\ISC_Log::maybe_log_settings();
 			?>
 			<script>
 				isc_settings = {
