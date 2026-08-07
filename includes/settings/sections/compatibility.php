@@ -10,6 +10,13 @@ use ISC\Settings;
 class Compatibility extends Settings\Section {
 
 	/**
+	 * Compatibility notices for the current request.
+	 *
+	 * @var array<int,array<string,mixed>>|null
+	 */
+	private $notices = null;
+
+	/**
 	 * Add settings section when needed.
 	 */
 	public function add_settings_section() {
@@ -31,6 +38,10 @@ class Compatibility extends Settings\Section {
 	 * @return array<int,array<string,mixed>>
 	 */
 	public function get_notices(): array {
+		if ( null !== $this->notices ) {
+			return $this->notices;
+		}
+
 		$notices = [];
 
 		foreach ( $this->get_checks() as $check ) {
@@ -49,7 +60,9 @@ class Compatibility extends Settings\Section {
 			}
 		}
 
-		return $notices;
+		$this->notices = $notices;
+
+		return $this->notices;
 	}
 
 	/**
