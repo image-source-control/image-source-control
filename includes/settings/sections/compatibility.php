@@ -437,14 +437,14 @@ class Compatibility extends Settings\Section {
 	 * @param string $theme_name The name of the theme to check for.
 	 * @return bool True if the current theme matches the specified theme name, false otherwise.
 	 */
-	public function is_current_theme( string $theme_name ): bool {
+	public function is_current_theme( string $theme_slug ): bool {
 		$current_theme = wp_get_theme();
 
-		if ( strcasecmp( $current_theme->get( 'Name' ), $theme_name ) === 0 ) {
+		if ( strcasecmp( $current_theme->get_stylesheet(), $theme_slug ) === 0 || strcasecmp( $current_theme->get_template(), $theme_slug ) === 0 ) {
 			return true;
 		}
 
-		if ( $current_theme->parent() && strcasecmp( $current_theme->parent()->get( 'Name' ), $theme_name ) === 0 ) {
+		if ( $current_theme->parent() && ( strcasecmp( $current_theme->parent()->get_stylesheet(), $theme_slug ) === 0 || strcasecmp( $current_theme->parent()->get_template(), $theme_slug ) === 0 ) ) {
 			return true;
 		}
 
