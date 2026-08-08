@@ -3,6 +3,7 @@
 namespace ISC\Tests\WPUnit\Includes\Image_Sources;
 
 use ISC\Image_Sources\Renderer\Image_Source_String;
+use ISC\Image_Sources\Utils;
 use ISC\Options;
 use ISC\Tests\WPUnit\WPTestCase;
 /**
@@ -113,5 +114,35 @@ class Render_Source_String_With_Id_Test extends WPTestCase {
 		add_post_meta( $this->image_id, 'isc_image_licence', 'Personal License' );
 
 		$this->assertEquals( 'Author A | Personal License', Image_Source_String::get( $this->image_id ) );
+	}
+
+	/**
+	 * Test Image_Source_String::get() with an AI icon saved in post meta.
+	 */
+	public function test_render_image_source_string_with_saved_ai_icon() {
+		add_post_meta( $this->image_id, 'isc_image_ai', 'ai-modified' );
+
+		$this->assertSame(
+			Utils::get_ai_image_icon( 'ai-modified' ) . ' Author A',
+			Image_Source_String::get( $this->image_id )
+		);
+	}
+
+	/**
+	 * Test Image_Source_String::get() with an AI icon while the standard source is excluded.
+	 */
+	public function test_render_image_source_string_with_ai_icon_and_excluded_standard_source_output() {
+		$isc_options                    = Options::get_options();
+		$isc_options['standard_source'] = 'exclude';
+		update_option( 'isc_options', $isc_options );
+
+		delete_post_meta( $this->image_id, 'isc_image_source' );
+		add_post_meta( $this->image_id, 'isc_image_source_own', 1, true );
+		add_post_meta( $this->image_id, 'isc_image_ai', 'ai' );
+
+		$this->assertSame(
+			Utils::get_ai_image_icon( 'ai' ),
+			Image_Source_String::get( $this->image_id )
+		);
 	}
 }

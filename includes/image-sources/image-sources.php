@@ -136,7 +136,7 @@ class Image_Sources {
 	 * @param string $meta_key    Metadata key.
 	 */
 	public function maybe_update_attachment_post_meta( $meta_id, $object_id, $meta_key ) {
-		if ( in_array( $meta_key, [ 'isc_image_source_own', 'isc_image_source' ], true ) ) {
+		if ( in_array( $meta_key, [ 'isc_image_source_own', 'isc_image_source', 'isc_image_ai' ], true ) ) {
 			ISC_Model::update_missing_sources_transient();
 		}
 	}
@@ -194,6 +194,20 @@ class Image_Sources {
 		return apply_filters(
 			'isc_raw_attachment_get_license',
 			get_post_meta( $attachment_id, 'isc_image_licence', true ),
+			$attachment_id
+		);
+	}
+
+	/**
+	 * Get the selected AI image label.
+	 *
+	 * @param int $attachment_id attachment ID.
+	 * @return string
+	 */
+	public static function get_image_ai_label( $attachment_id ) {
+		return apply_filters(
+			'isc_raw_attachment_get_ai_label',
+			Utils::sanitize_ai_image_value( get_post_meta( $attachment_id, 'isc_image_ai', true ) ),
 			$attachment_id
 		);
 	}
@@ -264,6 +278,70 @@ class Image_Sources {
 			'span'   => [
 				'class' => true,
 			],
+			'svg'    => [
+				'aria-hidden' => true,
+				'class'       => true,
+				'fill'        => true,
+				'focusable'   => true,
+				'height'      => true,
+				'role'        => true,
+				'stroke'      => true,
+				'viewBox'     => true,
+				'width'       => true,
+				'xmlns'       => true,
+			],
+			'g'      => [
+				'fill'              => true,
+				'stroke'            => true,
+				'stroke-linecap'    => true,
+				'stroke-linejoin'   => true,
+				'stroke-width'      => true,
+				'transform'         => true,
+			],
+			'rect'   => [
+				'fill'   => true,
+				'height' => true,
+				'rx'     => true,
+				'ry'     => true,
+				'stroke' => true,
+				'width'  => true,
+				'x'      => true,
+				'y'      => true,
+			],
+			'path'   => [
+				'd'                 => true,
+				'fill'              => true,
+				'stroke'            => true,
+				'stroke-linecap'    => true,
+				'stroke-linejoin'   => true,
+				'stroke-width'      => true,
+			],
+			'circle' => [
+				'cx'     => true,
+				'cy'     => true,
+				'fill'   => true,
+				'r'      => true,
+				'stroke' => true,
+			],
+			'line'   => [
+				'stroke'          => true,
+				'stroke-linecap'  => true,
+				'stroke-width'    => true,
+				'x1'              => true,
+				'x2'              => true,
+				'y1'              => true,
+				'y2'              => true,
+			],
+			'text'   => [
+				'fill'         => true,
+				'font-family'  => true,
+				'font-size'    => true,
+				'font-weight'  => true,
+				'text-anchor'  => true,
+				'x'            => true,
+				'y'            => true,
+			],
+			'title'  => [],
 			'img'    => [
 				'src'   => true,
 				'alt'   => true,

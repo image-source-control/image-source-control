@@ -18,6 +18,7 @@ class Remove_Plugin_Meta_From_Non_Images_Test extends WPTestCase {
 		'isc_image_source_url',
 		'isc_image_license',
 		'isc_image_source_own',
+		'isc_image_ai',
 		'isc_image_posts',
 		'isc_possible_usages',
 		'isc_possible_usages_last_check',
@@ -51,6 +52,7 @@ class Remove_Plugin_Meta_From_Non_Images_Test extends WPTestCase {
 		update_post_meta( $attachment_id, 'isc_image_source_url', 'https://example.com' );
 		update_post_meta( $attachment_id, 'isc_image_license', 'CC-BY' );
 		update_post_meta( $attachment_id, 'isc_image_source_own', '1' );
+		update_post_meta( $attachment_id, 'isc_image_ai', 'ai-generated' );
 		update_post_meta( $attachment_id, 'isc_image_posts', [ 1, 2 ] );
 		update_post_meta( $attachment_id, 'isc_possible_usages', [ 1 ] );
 		update_post_meta( $attachment_id, 'isc_possible_usages_last_check', time() );

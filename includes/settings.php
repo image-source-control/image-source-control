@@ -29,6 +29,7 @@ class Settings {
 		new \ISC\Settings\Sections\Caption();
 		new \ISC\Settings\Sections\Page_List();
 		new \ISC\Settings\Sections\Global_List();
+		new \ISC\Settings\Sections\Ai_Images();
 		new \ISC\Settings\Sections\Licenses();
 		new \ISC\Settings\Sections\Miscellaneous();
 	}

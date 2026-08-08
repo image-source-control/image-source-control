@@ -44,6 +44,7 @@ class Image_Source_String extends Renderer {
 		$options             = self::get_options();
 		$metadata['source']  = $data['source'] ?? Image_Sources::get_image_source_text_raw( $id );
 		$metadata['own']     = $data['own'] ?? Standard_Source::use_standard_source( $id );
+		$metadata['ai']      = $data['ai'] ?? Image_Sources::get_image_ai_label( $id );
 		$metadata['licence'] = $data['licence'] ?? Image_Sources::get_image_license( $id );
 
 		if ( ! isset( $args['disable-links'] ) ) {
@@ -54,14 +55,22 @@ class Image_Source_String extends Renderer {
 
 		$source = '';
 
-		if ( $metadata['own'] ) {
+		if ( $metadata['own'] && ! Standard_Source::hide_standard_source_for_image( $id ) ) {
 			$source = Standard_Source::get_standard_source_text_for_attachment( $id );
 		} elseif ( '' !== $metadata['source'] ) {
 			$source = $metadata['source'];
 		}
 
 		if ( $source === '' ) {
-			return false;
+			if ( '' === $metadata['ai'] ) {
+				return false;
+			}
+		}
+
+		$ai_icon = \ISC\Image_Sources\Utils::get_ai_image_icon( $metadata['ai'] );
+
+		if ( '' !== $ai_icon ) {
+			$source = trim( $ai_icon . ' ' . $source );
 		}
 
 		// wrap link around source, if given

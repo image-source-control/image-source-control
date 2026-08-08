@@ -85,6 +85,10 @@ class ISC_Model {
 		$own = ( isset( $attachment['isc_image_source_own'] ) ) ? $attachment['isc_image_source_own'] : '';
 		self::save_field( $post['ID'], 'isc_image_source_own', $own );
 
+		if ( isset( $attachment['isc_image_ai'] ) ) {
+			self::save_field( $post['ID'], 'isc_image_ai', \ISC\Image_Sources\Utils::sanitize_ai_image_value( $attachment['isc_image_ai'] ) );
+		}
+
 		if ( isset( $attachment['isc_image_licence'] ) ) {
 			self::save_field( $post['ID'], 'isc_image_licence', sanitize_text_field( $attachment['isc_image_licence'] ) );
 		}
@@ -257,6 +261,13 @@ class ISC_Model {
 	                WHERE mt1.post_id = wp_posts.ID
 	                  AND mt1.meta_key = 'isc_image_source_own'
 	                  AND mt1.meta_value = '1'
+	              )
+	          AND NOT EXISTS (
+	                SELECT 1
+	                FROM {$wpdb->postmeta} AS mt_ai
+	                WHERE mt_ai.post_id = wp_posts.ID
+	                  AND mt_ai.meta_key = 'isc_image_ai'
+	                  AND mt_ai.meta_value IN ('ai', 'ai-modified', 'ai-generated')
 	              )
 	          AND (
 	              EXISTS (
@@ -649,6 +660,7 @@ class ISC_Model {
 			'isc_image_source_url',
 			'isc_image_license',
 			'isc_image_source_own',
+			'isc_image_ai',
 			'isc_image_posts',
 			'isc_possible_usages',
 			'isc_possible_usages_last_check',
