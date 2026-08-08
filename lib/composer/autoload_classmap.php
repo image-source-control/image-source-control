@@ -39,6 +39,7 @@ return array(
     'ISC\\Plugin' => $baseDir . '/includes/plugin.php',
     'ISC\\Settings' => $baseDir . '/includes/settings.php',
     'ISC\\Settings\\Section' => $baseDir . '/includes/settings/section.php',
+    'ISC\\Settings\\Sections\\Ai_Images' => $baseDir . '/includes/settings/sections/ai-images.php',
     'ISC\\Settings\\Sections\\Caption' => $baseDir . '/includes/settings/sections/caption.php',
     'ISC\\Settings\\Sections\\Compatibility' => $baseDir . '/includes/settings/sections/compatibility.php',
     'ISC\\Settings\\Sections\\Global_List' => $baseDir . '/includes/settings/sections/global-list.php',
