@@ -499,7 +499,7 @@ class ISC_Public extends \ISC\Image_Sources\Image_Sources {
 			foreach ( $attachments as $attachment_id => $attachment_array ) {
 				$image_uses_standard_source = Standard_Source::use_standard_source( $attachment_id );
 				$source                     = ISC\Image_Sources\Image_Sources::sanitize_source_html( self::get_image_source_text_raw( $attachment_id ) );
-				$ai_label                   = ISC\Image_Sources\Image_Sources::get_image_ai_label( $attachment_id );
+				$ai_label                   = ISC\Image_Sources\Image_Sources::get_ai_label( $attachment_id );
 
 				// check if source of own images can be displayed
 				if ( ! $image_uses_standard_source && $source === '' && '' === $ai_label ) {

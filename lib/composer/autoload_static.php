@@ -37,6 +37,7 @@ class ComposerStaticInitdb72a6bac11cb0e6b971811c93d09a9b
         'ISC\\Image_Sources\\Admin_Media_Library_Filters' => __DIR__ . '/../..' . '/includes/image-sources/admin/media-library-filters.php',
         'ISC\\Image_Sources\\Admin_Menu' => __DIR__ . '/../..' . '/includes/image-sources/admin/menu.php',
         'ISC\\Image_Sources\\Admin_Notices' => __DIR__ . '/../..' . '/includes/image-sources/admin/notices.php',
+        'ISC\\Image_Sources\\Ai_Labels' => __DIR__ . '/../..' . '/includes/image-sources/ai-labels.php',
         'ISC\\Image_Sources\\Analyze_HTML' => __DIR__ . '/../..' . '/includes/image-sources/analyze-html.php',
         'ISC\\Image_Sources\\Image_Sources' => __DIR__ . '/../..' . '/includes/image-sources/image-sources.php',
         'ISC\\Image_Sources\\Image_Sources_Admin_Scripts' => __DIR__ . '/../..' . '/includes/image-sources/admin/scripts.php',

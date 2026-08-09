@@ -29,7 +29,7 @@
 				isc_image_source_url: {
 					type: 'string'
 				},
-				isc_image_ai: {
+				isc_ai_label: {
 					type: 'string'
 				},
 				isc_image_licence: {
@@ -69,7 +69,7 @@
 				props.attributes.isc_image_source = imageMeta.isc_image_source;
 				props.attributes.isc_image_source_own =  imageMeta.isc_image_source_own;
 				props.attributes.isc_image_source_url =  imageMeta.isc_image_source_url;
-				props.attributes.isc_image_ai =  imageMeta.isc_image_ai;
+				props.attributes.isc_ai_label =  imageMeta.isc_ai_label;
 				props.attributes.isc_image_licence =  imageMeta.isc_image_licence;
 
 				var panelFields = [el(wp.components.TextControl, {
@@ -120,16 +120,16 @@
 				if (iscData.option['enable_ai_images']) {
 					panelFields.push(el(wp.components.SelectControl, {
 							label: __('AI images', 'image-source-control-isc'),
-							value: props.attributes.isc_image_ai,
+							value: props.attributes.isc_ai_label,
 							options: aiImageList,
 							key: 'advadsSelectAiImage',
 							help: __('Choose a label for AI-generated images.', 'image-source-control-isc'),
 							onChange: function onChange(newValue) {
-								imageMeta.isc_image_ai = newValue
+								imageMeta.isc_ai_label = newValue
 								wp.data.dispatch( 'core' ).editEntityRecord( 'postType', 'attachment', id, { meta: imageMeta } );
 								wp.data.dispatch( 'core' ).saveEditedEntityRecord( 'postType', 'attachment', id );
 								props.setAttributes({
-									isc_image_ai: newValue,
+									isc_ai_label: newValue,
 								});
 							},
 							__next40pxDefaultSize: true,

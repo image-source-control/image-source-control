@@ -19,10 +19,10 @@ class Isc_Fields_Save_Test extends WPTestCase {
 
 		$model->isc_fields_save(
 			[ 'ID' => $attachment_id ],
-			[ 'isc_image_ai' => 'AI-GENERATED' ]
+			[ 'isc_ai_label' => 'AI-GENERATED' ]
 		);
 
-		$this->assertSame( 'ai-generated', get_post_meta( $attachment_id, 'isc_image_ai', true ) );
+		$this->assertSame( 'ai-generated', get_post_meta( $attachment_id, 'isc_ai_label', true ) );
 	}
 
 	/**
@@ -34,9 +34,9 @@ class Isc_Fields_Save_Test extends WPTestCase {
 
 		$model->isc_fields_save(
 			[ 'ID' => $attachment_id ],
-			[ 'isc_image_ai' => 'invalid-value' ]
+			[ 'isc_ai_label' => 'invalid-value' ]
 		);
 
-		$this->assertSame( '', get_post_meta( $attachment_id, 'isc_image_ai', true ) );
+		$this->assertSame( '', get_post_meta( $attachment_id, 'isc_ai_label', true ) );
 	}
 }

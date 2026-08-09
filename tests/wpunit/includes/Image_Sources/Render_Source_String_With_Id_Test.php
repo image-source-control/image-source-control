@@ -3,7 +3,7 @@
 namespace ISC\Tests\WPUnit\Includes\Image_Sources;
 
 use ISC\Image_Sources\Renderer\Image_Source_String;
-use ISC\Image_Sources\Utils;
+use ISC\Image_Sources\Ai_Labels;
 use ISC\Options;
 use ISC\Tests\WPUnit\WPTestCase;
 /**
@@ -44,6 +44,7 @@ class Render_Source_String_With_Id_Test extends WPTestCase {
 		delete_post_meta( $this->image_id, 'isc_image_source' );
 		delete_post_meta( $this->image_id, 'isc_image_source_own' );
 		delete_post_meta( $this->image_id, 'isc_image_source_url' );
+		delete_post_meta( $this->image_id, 'isc_ai_label' );
 		delete_post_meta( $this->image_id, 'isc_image_licence' );
 
 		// Call parent tearDown
@@ -120,10 +121,10 @@ class Render_Source_String_With_Id_Test extends WPTestCase {
 	 * Test Image_Source_String::get() with an AI icon saved in post meta.
 	 */
 	public function test_render_image_source_string_with_saved_ai_icon() {
-		add_post_meta( $this->image_id, 'isc_image_ai', 'ai-modified' );
+		add_post_meta( $this->image_id, 'isc_ai_label', 'ai-modified' );
 
 		$this->assertSame(
-			Utils::get_ai_image_icon( 'ai-modified' ) . ' Author A',
+			Ai_Labels::get_icon( 'ai-modified' ) . ' Author A',
 			Image_Source_String::get( $this->image_id )
 		);
 	}
@@ -138,10 +139,10 @@ class Render_Source_String_With_Id_Test extends WPTestCase {
 
 		delete_post_meta( $this->image_id, 'isc_image_source' );
 		add_post_meta( $this->image_id, 'isc_image_source_own', 1, true );
-		add_post_meta( $this->image_id, 'isc_image_ai', 'ai' );
+		add_post_meta( $this->image_id, 'isc_ai_label', 'ai' );
 
 		$this->assertSame(
-			Utils::get_ai_image_icon( 'ai' ),
+			Ai_Labels::get_icon( 'ai' ),
 			Image_Source_String::get( $this->image_id )
 		);
 	}

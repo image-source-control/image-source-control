@@ -78,9 +78,9 @@ class ISC_Block_Options {
 		);
 		register_post_meta(
 			'attachment',
-			'isc_image_ai',
+			\ISC\Image_Sources\Ai_Labels::META_KEY,
 			[
-				'sanitize_callback' => [ '\ISC\Image_Sources\Utils', 'sanitize_ai_image_value' ],
+				'sanitize_callback' => [ '\ISC\Image_Sources\Ai_Labels', 'sanitize_value' ],
 				'show_in_rest'      => true,
 				'single'            => true,
 				'type'              => 'string',
@@ -160,13 +160,14 @@ class ISC_Block_Options {
 				continue;
 			}
 
-			foreach ( [ 'isc_image_source', 'isc_image_source_url', 'isc_image_source_own', 'isc_image_ai', 'isc_image_licence' ] as $field ) {
+			foreach ( [ 'isc_image_source', 'isc_image_source_url', 'isc_image_source_own', \ISC\Image_Sources\Ai_Labels::META_KEY, 'isc_image_licence' ] as $field ) {
 				if ( $field === 'isc_image_source_own' ) {
 					ISC_Model::update_post_meta( $image_id, $field, isset( $attributes[ $field ] ) && $attributes[ $field ] === true ? '1' : '' );
 					continue;
 				}
-				if ( $field === 'isc_image_ai' ) {
-					ISC_Model::update_post_meta( $image_id, $field, \ISC\Image_Sources\Utils::sanitize_ai_image_value( isset( $attributes[ $field ] ) ? $attributes[ $field ] : '' ) );
+				if ( $field === \ISC\Image_Sources\Ai_Labels::META_KEY ) {
+					ISC_Model::update_post_meta( $image_id, $field, \ISC\Image_Sources\Ai_Labels::sanitize_value( isset( $attributes[ $field ] ) ? $attributes[ $field ] : '' ) );
+					delete_post_meta( $image_id, \ISC\Image_Sources\Ai_Labels::LEGACY_META_KEY );
 					continue;
 				}
 				ISC_Model::update_post_meta( $image_id, $field, isset( $attributes[ $field ] ) ? $attributes[ $field ] : '' );

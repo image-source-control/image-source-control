@@ -22,6 +22,7 @@ return array(
     'ISC\\Image_Sources\\Admin_Media_Library_Filters' => $baseDir . '/includes/image-sources/admin/media-library-filters.php',
     'ISC\\Image_Sources\\Admin_Menu' => $baseDir . '/includes/image-sources/admin/menu.php',
     'ISC\\Image_Sources\\Admin_Notices' => $baseDir . '/includes/image-sources/admin/notices.php',
+    'ISC\\Image_Sources\\Ai_Labels' => $baseDir . '/includes/image-sources/ai-labels.php',
     'ISC\\Image_Sources\\Analyze_HTML' => $baseDir . '/includes/image-sources/analyze-html.php',
     'ISC\\Image_Sources\\Image_Sources' => $baseDir . '/includes/image-sources/image-sources.php',
     'ISC\\Image_Sources\\Image_Sources_Admin_Scripts' => $baseDir . '/includes/image-sources/admin/scripts.php',

@@ -3,7 +3,7 @@
 namespace ISC\Tests\WPUnit\Includes\Image_Sources;
 
 use ISC\Image_Sources\Renderer\Image_Source_String;
-use ISC\Image_Sources\Utils;
+use ISC\Image_Sources\Ai_Labels;
 use ISC\Options;
 use ISC\Tests\WPUnit\WPTestCase;
 
@@ -32,7 +32,7 @@ class Render_Source_String_With_Data_Test extends WPTestCase {
 	 */
 	public function test_render_image_source_string_with_ai_icon_and_source_text() {
 		$this->assertSame(
-			Utils::get_ai_image_icon( 'ai-generated' ) . ' Test Source',
+			Ai_Labels::get_icon( 'ai-generated' ) . ' Test Source',
 			Image_Source_String::get( 1, [ 'ai' => 'ai-generated', 'source' => 'Test Source' ] )
 		);
 	}
@@ -42,7 +42,7 @@ class Render_Source_String_With_Data_Test extends WPTestCase {
 	 */
 	public function test_render_image_source_string_with_ai_icon_only_output() {
 		$this->assertSame(
-			Utils::get_ai_image_icon( 'ai' ),
+			Ai_Labels::get_icon( 'ai' ),
 			Image_Source_String::get( 1, [ 'ai' => 'ai' ] )
 		);
 	}
