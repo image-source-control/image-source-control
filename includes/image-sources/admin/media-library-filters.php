@@ -77,11 +77,6 @@ class Admin_Media_Library_Filters {
 							'value'   => [ 'ai', 'ai-modified', 'ai-generated' ],
 							'compare' => 'IN',
 						],
-						[
-							'key'     => Ai_Labels::LEGACY_META_KEY,
-							'value'   => [ 'ai', 'ai-modified', 'ai-generated' ],
-							'compare' => 'IN',
-						],
 					],
 					[
 						'relation' => 'AND',
@@ -135,18 +130,6 @@ class Admin_Media_Library_Filters {
 							],
 							[
 								'key'     => Ai_Labels::META_KEY,
-								'value'   => [ 'ai', 'ai-modified', 'ai-generated' ],
-								'compare' => 'NOT IN',
-							],
-						],
-						[
-							'relation' => 'OR',
-							[
-								'key'     => Ai_Labels::LEGACY_META_KEY,
-								'compare' => 'NOT EXISTS',
-							],
-							[
-								'key'     => Ai_Labels::LEGACY_META_KEY,
 								'value'   => [ 'ai', 'ai-modified', 'ai-generated' ],
 								'compare' => 'NOT IN',
 							],

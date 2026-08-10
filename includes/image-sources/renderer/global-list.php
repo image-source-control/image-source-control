@@ -212,11 +212,6 @@ class Global_List extends Renderer {
 							'value'   => [ 'ai', 'ai-modified', 'ai-generated' ],
 							'compare' => 'IN',
 						],
-						[
-							'key'     => \ISC\Image_Sources\Ai_Labels::LEGACY_META_KEY,
-							'value'   => [ 'ai', 'ai-modified', 'ai-generated' ],
-							'compare' => 'IN',
-						],
 					],
 				],
 			];

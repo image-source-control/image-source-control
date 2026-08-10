@@ -136,7 +136,7 @@ class Image_Sources {
 	 * @param string $meta_key    Metadata key.
 	 */
 	public function maybe_update_attachment_post_meta( $meta_id, $object_id, $meta_key ) {
-		if ( in_array( $meta_key, [ 'isc_image_source_own', 'isc_image_source', Ai_Labels::META_KEY, Ai_Labels::LEGACY_META_KEY ], true ) ) {
+		if ( in_array( $meta_key, [ 'isc_image_source_own', 'isc_image_source', Ai_Labels::META_KEY ], true ) ) {
 			ISC_Model::update_missing_sources_transient();
 		}
 	}
@@ -205,15 +205,9 @@ class Image_Sources {
 	 * @return string
 	 */
 	public static function get_ai_label( $attachment_id ) {
-		if ( metadata_exists( 'post', $attachment_id, Ai_Labels::META_KEY ) ) {
-			$ai_label = get_post_meta( $attachment_id, Ai_Labels::META_KEY, true );
-		} else {
-			$ai_label = get_post_meta( $attachment_id, Ai_Labels::LEGACY_META_KEY, true );
-		}
-
 		return apply_filters(
 			'isc_raw_attachment_get_ai_label',
-			Ai_Labels::sanitize_value( $ai_label ),
+			Ai_Labels::sanitize_value( get_post_meta( $attachment_id, Ai_Labels::META_KEY, true ) ),
 			$attachment_id
 		);
 	}

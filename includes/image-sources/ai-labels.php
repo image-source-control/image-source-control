@@ -12,11 +12,6 @@ class Ai_Labels {
 	const META_KEY = 'isc_ai_label';
 
 	/**
-	 * Legacy meta key for AI labels.
-	 */
-	const LEGACY_META_KEY = 'isc_image_ai';
-
-	/**
 	 * Supported AI image labels.
 	 *
 	 * @return string[]

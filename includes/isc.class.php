@@ -179,7 +179,7 @@ class ISC_Class {
 		public function maybe_update_attachment_post_meta( $meta_id, $object_id, $meta_key ) {
 			_deprecated_function( __METHOD__, '3.0.0', 'ISC\Image_Sources\Image_Sources::maybe_update_attachment_post_meta' );
 
-			if ( in_array( $meta_key, [ 'isc_image_source_own', 'isc_image_source', ISC\Image_Sources\Ai_Labels::META_KEY, ISC\Image_Sources\Ai_Labels::LEGACY_META_KEY ], true ) ) {
+			if ( in_array( $meta_key, [ 'isc_image_source_own', 'isc_image_source', ISC\Image_Sources\Ai_Labels::META_KEY ], true ) ) {
 				ISC_Model::update_missing_sources_transient();
 			}
 		}

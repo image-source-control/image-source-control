@@ -167,7 +167,6 @@ class ISC_Block_Options {
 				}
 				if ( $field === \ISC\Image_Sources\Ai_Labels::META_KEY ) {
 					ISC_Model::update_post_meta( $image_id, $field, \ISC\Image_Sources\Ai_Labels::sanitize_value( isset( $attributes[ $field ] ) ? $attributes[ $field ] : '' ) );
-					delete_post_meta( $image_id, \ISC\Image_Sources\Ai_Labels::LEGACY_META_KEY );
 					continue;
 				}
 				ISC_Model::update_post_meta( $image_id, $field, isset( $attributes[ $field ] ) ? $attributes[ $field ] : '' );

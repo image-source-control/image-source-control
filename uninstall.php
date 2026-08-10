@@ -15,7 +15,6 @@ if ( ! empty( $options['remove_on_uninstall'] ) ) {
 	delete_post_meta_by_key( 'isc_image_source_own' );
 	delete_post_meta_by_key( 'isc_image_source_url' );
 	delete_post_meta_by_key( 'isc_ai_label' );
-	delete_post_meta_by_key( 'isc_image_ai' );
 	delete_post_meta_by_key( 'isc_possible_usages' );
 	delete_post_meta_by_key( 'isc_possible_usages_last_check' );
 	delete_post_meta_by_key( 'isc_post_images_before_update' );

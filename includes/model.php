@@ -87,10 +87,6 @@ class ISC_Model {
 
 		if ( isset( $attachment['isc_ai_label'] ) ) {
 			self::save_field( $post['ID'], \ISC\Image_Sources\Ai_Labels::META_KEY, \ISC\Image_Sources\Ai_Labels::sanitize_value( $attachment['isc_ai_label'] ) );
-			delete_post_meta( $post['ID'], \ISC\Image_Sources\Ai_Labels::LEGACY_META_KEY );
-		} elseif ( isset( $attachment['isc_image_ai'] ) ) {
-			self::save_field( $post['ID'], \ISC\Image_Sources\Ai_Labels::META_KEY, \ISC\Image_Sources\Ai_Labels::sanitize_value( $attachment['isc_image_ai'] ) );
-			delete_post_meta( $post['ID'], \ISC\Image_Sources\Ai_Labels::LEGACY_META_KEY );
 		}
 
 		if ( isset( $attachment['isc_image_licence'] ) ) {
@@ -270,7 +266,7 @@ class ISC_Model {
 	                SELECT 1
 	                FROM {$wpdb->postmeta} AS mt_ai
 	                WHERE mt_ai.post_id = wp_posts.ID
-	                  AND mt_ai.meta_key IN ('isc_ai_label', 'isc_image_ai')
+	                  AND mt_ai.meta_key = 'isc_ai_label'
 	                  AND mt_ai.meta_value IN ('ai', 'ai-modified', 'ai-generated')
 	              )
 	          AND (
@@ -665,7 +661,6 @@ class ISC_Model {
 			'isc_image_license',
 			'isc_image_source_own',
 			\ISC\Image_Sources\Ai_Labels::META_KEY,
-			\ISC\Image_Sources\Ai_Labels::LEGACY_META_KEY,
 			'isc_image_posts',
 			'isc_possible_usages',
 			'isc_possible_usages_last_check',
