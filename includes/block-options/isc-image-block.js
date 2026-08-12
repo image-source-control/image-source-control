@@ -10,7 +10,7 @@
 
 	var enableSourceControlOnBlocks = ['core/image', 'core/cover', 'core/media-text', 'core/post-featured-image', 'generateblocks/image'];
 
-	var aiImageList = [{ label: '--', value: '' }];
+	var aiLabelList = [ { label: '--', value: '' } ];
 	var licenceList = [''];
 
 	var addSourceControlAttribute = function (settings, name) {
@@ -117,11 +117,11 @@
 						__nextHasNoMarginBottom: true,
 					})];
 
-				if (iscData.option['enable_ai_images']) {
+				if (iscData.option.ai_images && iscData.option.ai_images.show_label) {
 					panelFields.push(el(wp.components.SelectControl, {
-							label: __('AI images', 'image-source-control-isc'),
+							label: __('AI Label', 'image-source-control-isc'),
 							value: props.attributes.isc_ai_label,
-							options: aiImageList,
+							options: aiLabelList,
 							key: 'advadsSelectAiImage',
 							help: __('Choose a label for AI-generated images.', 'image-source-control-isc'),
 							onChange: function onChange(newValue) {
@@ -173,7 +173,7 @@
 			{ label: __('AI-modified', 'image-source-control-isc'), value: 'ai-modified' },
 			{ label: __('AI-generated', 'image-source-control-isc'), value: 'ai-generated' },
 		].forEach(function (option) {
-			aiImageList.push(option);
+			aiLabelList.push(option);
 		});
 		var allLicences = iscData.option.licences.replace(/[\r]/g, '').split("\n");
 		for (var i in allLicences) {

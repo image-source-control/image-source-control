@@ -86,7 +86,7 @@ class ISC_Model {
 		self::save_field( $post['ID'], 'isc_image_source_own', $own );
 
 		if ( isset( $attachment['isc_ai_label'] ) ) {
-			self::save_field( $post['ID'], \ISC\Image_Sources\Ai_Labels::META_KEY, \ISC\Image_Sources\Ai_Labels::sanitize_value( $attachment['isc_ai_label'] ) );
+			self::save_field( $post['ID'], \ISC\Image_Sources\Ai_Labels::META_KEY, \ISC\Image_Sources\Ai_Labels::sanitize_label( $attachment['isc_ai_label'] ) );
 		}
 
 		if ( isset( $attachment['isc_image_licence'] ) ) {

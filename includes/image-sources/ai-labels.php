@@ -16,7 +16,7 @@ class Ai_Labels {
 	 *
 	 * @return string[]
 	 */
-	public static function get_options(): array {
+	public static function get_labels(): array {
 		return [
 			'ai'           => 'AI',
 			'ai-modified'  => 'AI-modified',
@@ -27,31 +27,29 @@ class Ai_Labels {
 	/**
 	 * Sanitize the selected AI image label.
 	 *
-	 * @param string $value Selected label.
+	 * @param string $label Selected label.
 	 *
 	 * @return string
 	 */
-	public static function sanitize_value( string $value = '' ): string {
-		$value = sanitize_key( $value );
+	public static function sanitize_label( string $label = '' ): string {
+		$label = sanitize_key( $label );
 
-		return array_key_exists( $value, self::get_options() ) ? $value : '';
+		return array_key_exists( $label, self::get_labels() ) ? $label : '';
 	}
 
 	/**
 	 * Get the inline SVG icon markup for an AI image label.
 	 *
-	 * @param string $value Selected label.
+	 * @param string $label Selected label.
 	 *
 	 * @return string
 	 */
-	public static function get_icon( string $value = '' ): string {
-		$value = self::sanitize_value( $value );
-
-		if ( '' === $value ) {
+	public static function get_icon( string $label = '' ): string {
+		if ( '' === $label || ! array_key_exists( $label, self::get_labels() ) ) {
 			return '';
 		}
 
-		$icon_path = ISCPATH . '/public/assets/images/ai-images/' . $value . '.svg';
+		$icon_path = ISCPATH . '/public/assets/images/ai-images/' . $label . '.svg';
 
 		if ( ! is_readable( $icon_path ) ) {
 			return '';

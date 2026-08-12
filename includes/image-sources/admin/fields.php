@@ -96,13 +96,13 @@ class Admin_Fields {
 
 		$options = $this->get_options();
 
-		if ( ! empty( $options['enable_ai_images'] ) ) {
+		if ( ! empty( $options['ai_images']['show_label'] ) ) {
 			$form_fields['isc_ai_label']['input'] = 'html';
-			$form_fields['isc_ai_label']['label'] = __( 'AI images', 'image-source-control-isc' );
+			$form_fields['isc_ai_label']['label'] = __( 'AI label', 'image-source-control-isc' );
 			$form_fields['isc_ai_label']['helps'] = __( 'Choose a label for AI-generated images.', 'image-source-control-isc' );
 			$html                                 = '<select name="attachments[' . $post->ID . '][isc_ai_label]" id="attachments[' . $post->ID . '][isc_ai_label]">';
 			$html                                .= '<option value="">--</option>';
-			foreach ( Ai_Labels::get_options() as $value => $label ) {
+			foreach ( Ai_Labels::get_labels() as $value => $label ) {
 				$html .= '<option value="' . esc_attr( $value ) . '" ' . selected( Image_Sources::get_ai_label( $post->ID ), $value, false ) . '>' . esc_html( $label ) . '</option>';
 			}
 			$html                           .= '</select>';

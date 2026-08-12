@@ -17,8 +17,8 @@ class Image_Source_String extends Renderer {
 	 * @param int $image_id Image ID.
 	 */
 	public static function render( int $image_id ) {
-		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- we need to allow the HTML here and use a custom sanitizer.
-		echo Image_Sources::sanitize_source_html( self::get( $image_id ) );
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo self::get( $image_id );
 	}
 
 	/**
@@ -42,10 +42,10 @@ class Image_Source_String extends Renderer {
 		}
 
 		$options             = self::get_options();
-		$metadata['source']  = $data['source'] ?? Image_Sources::get_image_source_text_raw( $id );
-		$metadata['own']     = $data['own'] ?? Standard_Source::use_standard_source( $id );
-		$metadata['ai']      = $data['ai'] ?? Image_Sources::get_ai_label( $id );
-		$metadata['licence'] = $data['licence'] ?? Image_Sources::get_image_license( $id );
+		$metadata['source']   = $data['source'] ?? Image_Sources::get_image_source_text_raw( $id );
+		$metadata['own']      = $data['own'] ?? Standard_Source::use_standard_source( $id );
+		$metadata['ai_label'] = $data['ai_label'] ?? Image_Sources::get_ai_label( $id );
+		$metadata['licence']  = $data['licence'] ?? Image_Sources::get_image_license( $id );
 
 		if ( ! isset( $args['disable-links'] ) ) {
 			$metadata['source_url'] = $data['source_url'] ?? Image_Sources::get_image_source_url( $id );
@@ -62,12 +62,12 @@ class Image_Source_String extends Renderer {
 		}
 
 		if ( $source === '' ) {
-			if ( '' === $metadata['ai'] ) {
+			if ( '' === $metadata['ai_label'] ) {
 				return false;
 			}
 		}
 
-		$ai_icon = \ISC\Image_Sources\Ai_Labels::get_icon( $metadata['ai'] );
+		$ai_icon = \ISC\Image_Sources\Ai_Labels::get_icon( $metadata['ai_label'] );
 
 		if ( '' !== $ai_icon ) {
 			$source = trim( $ai_icon . ' ' . $source );

@@ -75,7 +75,9 @@ GFDL GNU Free Documentation License 1.3|https://www.gnu.org/licenses/fdl-1.3.htm
 		$default['caption_position']          = 'top-left';
 		$default['caption_style']             = null;
 		$default['source_pretext']            = __( 'Source:', 'image-source-control-isc' );
-		$default['enable_ai_images']          = false;
+		$default['ai_images']                 = [
+			'show_label' => false,
+		];
 		$default['enable_licences']           = false;
 		$default['licences']                  = apply_filters( 'isc-licences-list', $isc_default_licenses );
 		$default['list_included_images']      = '';

@@ -7,15 +7,7 @@
 
 ?>
 <label>
-	<input type="checkbox" name="isc_options[enable_ai_images]" id="isc-settings-ai-images-enable" <?php checked( ! empty( $options['enable_ai_images'] ) ); ?> />
-	<?php
-	echo wp_kses_post(
-		sprintf(
-			/* translators: %1$s is an opening link tag, %2$s is the closing one. */
-			__( 'Choose a label for AI-generated images. See the %1$smanual page%2$s.', 'image-source-control-isc' ),
-			'<a href="https://example.com/manual/ai-images" target="_blank">',
-			'</a>'
-		)
-	);
-	?>
+	<input type="checkbox" name="isc_options[ai_images][show_label]" id="isc-settings-ai-images-enable" <?php checked( ! empty( $options['ai_images']['show_label'] ) ); ?> />
+	<?php esc_html_e( 'Choose a label for AI-generated images.', 'image-source-control-isc' ); ?>
 </label>
+<p><a href="<?php echo esc_url( ISC\Admin_Utils::get_manual_url( 'settings-ai-images' ) ); ?>" target="_blank"><?php esc_html_e( 'Manual', 'image-source-control-isc' ); ?></a></p>

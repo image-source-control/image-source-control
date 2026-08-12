@@ -33,7 +33,7 @@ class Render_Source_String_With_Data_Test extends WPTestCase {
 	public function test_render_image_source_string_with_ai_icon_and_source_text() {
 		$this->assertSame(
 			Ai_Labels::get_icon( 'ai-generated' ) . ' Test Source',
-			Image_Source_String::get( 1, [ 'ai' => 'ai-generated', 'source' => 'Test Source' ] )
+			Image_Source_String::get( 1, [ 'ai_label' => 'ai-generated', 'source' => 'Test Source' ] )
 		);
 	}
 
@@ -43,7 +43,7 @@ class Render_Source_String_With_Data_Test extends WPTestCase {
 	public function test_render_image_source_string_with_ai_icon_only_output() {
 		$this->assertSame(
 			Ai_Labels::get_icon( 'ai' ),
-			Image_Source_String::get( 1, [ 'ai' => 'ai' ] )
+			Image_Source_String::get( 1, [ 'ai_label' => 'ai' ] )
 		);
 	}
 
