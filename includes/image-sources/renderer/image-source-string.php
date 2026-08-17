@@ -47,6 +47,10 @@ class Image_Source_String extends Renderer {
 		$metadata['ai_label'] = $data['ai_label'] ?? Image_Sources::get_ai_label( $id );
 		$metadata['licence']  = $data['licence'] ?? Image_Sources::get_image_license( $id );
 
+		if ( empty( $options['ai_images']['show_label'] ) ) {
+			$metadata['ai_label'] = '';
+		}
+
 		if ( ! isset( $args['disable-links'] ) ) {
 			$metadata['source_url'] = $data['source_url'] ?? Image_Sources::get_image_source_url( $id );
 		} else {

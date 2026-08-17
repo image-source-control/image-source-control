@@ -65,6 +65,10 @@ class Render_Source_String_With_Id_Disable_Link_Test extends WPTestCase {
 	 * Test Image_Source_String::get() with an AI icon and disabled links.
 	 */
 	public function test_render_image_source_string_with_ai_icon_and_disabled_links_output() {
+		$isc_options                          = Options::get_options();
+		$isc_options['ai_images']['show_label'] = true;
+		update_option( 'isc_options', $isc_options );
+
 		add_post_meta( $this->image_id, 'isc_ai_label', 'ai' );
 
 		$this->assertSame(

@@ -31,6 +31,10 @@ class Render_Source_String_With_Data_Test extends WPTestCase {
 	 * Test Image_Source_String::get() with an AI icon and source text.
 	 */
 	public function test_render_image_source_string_with_ai_icon_and_source_text() {
+		$isc_options                          = Options::get_options();
+		$isc_options['ai_images']['show_label'] = true;
+		update_option( 'isc_options', $isc_options );
+
 		$this->assertSame(
 			Ai_Labels::get_icon( 'ai-generated' ) . ' Test Source',
 			Image_Source_String::get( 1, [ 'ai_label' => 'ai-generated', 'source' => 'Test Source' ] )
@@ -41,10 +45,21 @@ class Render_Source_String_With_Data_Test extends WPTestCase {
 	 * Test Image_Source_String::get() with an AI icon and no source text.
 	 */
 	public function test_render_image_source_string_with_ai_icon_only_output() {
+		$isc_options                          = Options::get_options();
+		$isc_options['ai_images']['show_label'] = true;
+		update_option( 'isc_options', $isc_options );
+
 		$this->assertSame(
 			Ai_Labels::get_icon( 'ai' ),
 			Image_Source_String::get( 1, [ 'ai_label' => 'ai' ] )
 		);
+	}
+
+	/**
+	 * Test Image_Source_String::get() without rendering an AI icon when labels are disabled.
+	 */
+	public function test_render_image_source_string_with_ai_icon_disabled_in_settings() {
+		$this->assertFalse( Image_Source_String::get( 1, [ 'ai_label' => 'ai' ] ) );
 	}
 
 	public function test_render_image_source_string_with_source_url() {

@@ -121,6 +121,10 @@ class Render_Source_String_With_Id_Test extends WPTestCase {
 	 * Test Image_Source_String::get() with an AI icon saved in post meta.
 	 */
 	public function test_render_image_source_string_with_saved_ai_icon() {
+		$isc_options                          = Options::get_options();
+		$isc_options['ai_images']['show_label'] = true;
+		update_option( 'isc_options', $isc_options );
+
 		add_post_meta( $this->image_id, 'isc_ai_label', 'ai-modified' );
 
 		$this->assertSame(
@@ -134,6 +138,7 @@ class Render_Source_String_With_Id_Test extends WPTestCase {
 	 */
 	public function test_render_image_source_string_with_ai_icon_and_excluded_standard_source_output() {
 		$isc_options                    = Options::get_options();
+		$isc_options['ai_images']['show_label'] = true;
 		$isc_options['standard_source'] = 'exclude';
 		update_option( 'isc_options', $isc_options );
 
