@@ -17,8 +17,8 @@ class Image_Source_String extends Renderer {
 	 * @param int $image_id Image ID.
 	 */
 	public static function render( int $image_id ) {
-		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-		echo self::get( $image_id );
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- we need to allow the HTML here and use a custom sanitizer.
+		echo Image_Sources::sanitize_source_html( self::get( $image_id ) );
 	}
 
 	/**

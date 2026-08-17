@@ -3,6 +3,7 @@
 namespace ISC\Image_Sources\Renderer;
 
 use ISC\Image_Sources\Renderer;
+use ISC\Standard_Source;
 use ISC_Log;
 
 /**
@@ -36,6 +37,12 @@ class Caption extends Renderer {
 		$source = Image_Source_String::get( $image_id, $data, $args );
 		if ( ! $source ) {
 			ISC_Log::log( sprintf( 'skipped overlay for empty sources string for ID "%s"', $image_id ) );
+			return '';
+		}
+
+		// don’t render the caption for own images if the admin choose not to do so
+		if ( Standard_Source::hide_standard_source_for_image( $image_id ) ) {
+			ISC_Log::log( sprintf( 'skipped overlay for "own" image ID "%s"', $image_id ) );
 			return '';
 		}
 

@@ -126,11 +126,11 @@ class Render_Source_String_With_Id_Test extends WPTestCase {
 		update_option( 'isc_options', $isc_options );
 
 		add_post_meta( $this->image_id, 'isc_ai_label', 'ai-modified' );
+		$output = Image_Source_String::get( $this->image_id );
 
-		$this->assertSame(
-			Ai_Labels::get_icon( 'ai-modified' ) . ' Author A',
-			Image_Source_String::get( $this->image_id )
-		);
+		$this->assertStringContainsString( Ai_Labels::get_icon( 'ai-modified' ), $output );
+		$this->assertStringEndsWith( ' Author A', $output );
+		$this->assertStringContainsString( 'aria-hidden="true"', $output );
 	}
 
 	/**

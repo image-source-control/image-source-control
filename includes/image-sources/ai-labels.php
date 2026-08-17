@@ -61,6 +61,13 @@ class Ai_Labels {
 			return '';
 		}
 
+		$icon = preg_replace( '/<\?xml[^>]*>\s*/i', '', $icon );
+		$icon = preg_replace( '/<svg\b([^>]*)>/', '<svg$1 class="isc-ai-label-icon" height="1em" aria-hidden="true" focusable="false">', $icon, 1 );
+
+		if ( ! is_string( $icon ) || '' === $icon ) {
+			return '';
+		}
+
 		return $icon;
 	}
 }

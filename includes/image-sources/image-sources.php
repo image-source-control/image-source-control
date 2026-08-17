@@ -278,7 +278,29 @@ class Image_Sources {
 			'span'   => [
 				'class' => true,
 			],
-
+			'svg'    => [
+				'aria-hidden' => true,
+				'class'       => true,
+				'focusable'   => true,
+				'height'      => true,
+				'role'        => true,
+				'viewbox'     => true,
+				'width'       => true,
+				'xmlns'       => true,
+			],
+			'defs'   => [],
+			'g'      => [
+				'class'   => true,
+				'fill'    => true,
+				'opacity' => true,
+			],
+			'path'   => [
+				'class'     => true,
+				'd'         => true,
+				'fill'      => true,
+				'fill-rule' => true,
+				'opacity'   => true,
+			],
 			'line'   => [
 				'stroke'          => true,
 				'stroke-linecap'  => true,
@@ -289,6 +311,7 @@ class Image_Sources {
 				'y2'              => true,
 			],
 			'text'   => [
+				'class'        => true,
 				'fill'         => true,
 				'font-family'  => true,
 				'font-size'    => true,
@@ -297,6 +320,7 @@ class Image_Sources {
 				'x'            => true,
 				'y'            => true,
 			],
+			'style'  => [],
 			'title'  => [],
 			'img'    => [
 				'src'   => true,
