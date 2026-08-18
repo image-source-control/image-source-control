@@ -134,6 +134,19 @@ class Render_Source_String_With_Id_Test extends WPTestCase {
 	}
 
 	/**
+	 * Test Image_Source_String::get() excludes the saved source when standard sources are hidden.
+	 */
+	public function test_render_image_source_string_with_excluded_standard_source_and_saved_source() {
+		$isc_options                    = Options::get_options();
+		$isc_options['standard_source'] = 'exclude';
+		update_option( 'isc_options', $isc_options );
+
+		add_post_meta( $this->image_id, 'isc_image_source_own', 1, true );
+
+		$this->assertFalse( Image_Source_String::get( $this->image_id ) );
+	}
+
+	/**
 	 * Test Image_Source_String::get() with an AI icon while the standard source is excluded.
 	 */
 	public function test_render_image_source_string_with_ai_icon_and_excluded_standard_source_output() {
@@ -142,7 +155,6 @@ class Render_Source_String_With_Id_Test extends WPTestCase {
 		$isc_options['standard_source'] = 'exclude';
 		update_option( 'isc_options', $isc_options );
 
-		delete_post_meta( $this->image_id, 'isc_image_source' );
 		add_post_meta( $this->image_id, 'isc_image_source_own', 1, true );
 		add_post_meta( $this->image_id, 'isc_ai_label', 'ai' );
 

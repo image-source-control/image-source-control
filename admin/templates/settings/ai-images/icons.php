@@ -5,7 +5,7 @@
 
 $ai_image_labels = ISC\Image_Sources\Ai_Labels::get_labels();
 ?>
-<ul>
+<ul class="isc-settings-ai-images-icons">
 	<?php foreach ( $ai_image_labels as $value => $label ) : ?>
 		<li>
 			<?php echo ISC\Image_Sources\Ai_Labels::get_icon( $value ); ?>
