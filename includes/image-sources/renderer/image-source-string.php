@@ -59,18 +59,14 @@ class Image_Source_String extends Renderer {
 
 		$source = '';
 
-		if ( $metadata['own'] ) {
-			if ( ! Standard_Source::hide_standard_source_for_image( $id ) ) {
-				$source = Standard_Source::get_standard_source_text_for_attachment( $id );
-			}
+		if ( $metadata['own'] && ! Standard_Source::hide_standard_source_for_image( $id ) ) {
+			$source = Standard_Source::get_standard_source_text_for_attachment( $id );
 		} elseif ( '' !== $metadata['source'] ) {
 			$source = $metadata['source'];
 		}
 
-		if ( $source === '' ) {
-			if ( '' === $metadata['ai_label'] ) {
-				return false;
-			}
+		if ( '' === $source && '' === $metadata['ai_label'] ) {
+			return false;
 		}
 
 		$ai_icon = \ISC\Image_Sources\Ai_Labels::get_icon( $metadata['ai_label'] );

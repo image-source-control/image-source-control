@@ -1,5 +1,6 @@
 <?php
 
+use ISC\Standard_Source;
 use ISC\Helpers;
 
 /**
@@ -493,19 +494,31 @@ class ISC_Public extends \ISC\Image_Sources\Image_Sources {
 		}
 
 		$attachments      = get_post_meta( $post_id, 'isc_post_images', true );
+		$exclude_standard = Standard_Source::standard_source_is( 'exclude' );
+
 		if ( ! empty( $attachments ) && is_array( $attachments ) ) {
 			ISC_Log::log( sprintf( 'going through %d attachments', count( $attachments ) ) );
 			$atts = [];
 			foreach ( $attachments as $attachment_id => $attachment_array ) {
-				$atts[ $attachment_id ]['source'] = ISC\Image_Sources\Renderer\Image_Source_String::get( $attachment_id );
-				if ( ! $atts[ $attachment_id ]['source'] ) {
-					ISC_Log::log( sprintf( 'image %d: skipped because of empty source', $attachment_id ) );
-					unset( $atts[ $attachment_id ] );
-					continue;
-				}
+				$image_uses_standard_source = Standard_Source::use_standard_source( $attachment_id );
+				$source                     = ISC\Image_Sources\Image_Sources::sanitize_source_html( self::get_image_source_text_raw( $attachment_id ) );
 
-				$atts[ $attachment_id ]['title'] = get_the_title( $attachment_id );
-				ISC_Log::log( sprintf( 'image %d: getting title "%s"', $attachment_id, $atts[ $attachment_id ]['title'] ) );
+				// check if source of own images can be displayed
+				if ( ( ! $image_uses_standard_source && $source === '' ) || ( $image_uses_standard_source && $exclude_standard ) ) {
+					if ( $image_uses_standard_source && $exclude_standard ) {
+						ISC_Log::log( sprintf( 'image %d: "own" sources are excluded', $attachment_id ) );
+					} else {
+						ISC_Log::log( sprintf( 'image %d: skipped because of empty source', $attachment_id ) );
+					}
+				} else {
+					$atts[ $attachment_id ]['title'] = get_the_title( $attachment_id );
+					ISC_Log::log( sprintf( 'image %d: getting title "%s"', $attachment_id, $atts[ $attachment_id ]['title'] ) );
+					$atts[ $attachment_id ]['source'] = ISC\Image_Sources\Renderer\Image_Source_String::get( $attachment_id );
+					if ( ! $atts[ $attachment_id ]['source'] ) {
+						ISC_Log::log( sprintf( 'image %d: skipped because of empty source', $attachment_id ) );
+						unset( $atts[ $attachment_id ] );
+					}
+				}
 			}
 
 			return $this->render_attachments( $atts );
