@@ -199,21 +199,6 @@ class Global_List extends Renderer {
 					'value'   => '1',
 					'compare' => '!=',
 				],
-				[
-					'relation' => 'AND',
-					[
-						'key'   => 'isc_image_source_own',
-						'value' => '1',
-					],
-					[
-						'relation' => 'OR',
-						[
-							'key'     => \ISC\Image_Sources\Ai_Labels::META_KEY,
-							'value'   => [ 'ai', 'ai-modified', 'ai-generated' ],
-							'compare' => 'IN',
-						],
-					],
-				],
 			];
 		}
 
