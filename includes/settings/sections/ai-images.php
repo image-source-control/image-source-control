@@ -13,10 +13,17 @@ class Ai_Images extends Settings\Section {
 	 * Add settings section.
 	 */
 	public function add_settings_section() {
-		add_settings_section( 'isc_settings_section_ai_images', __( 'AI images', 'image-source-control-isc' ), '__return_false', 'isc_settings_page' );
+		add_settings_section( 'isc_settings_section_ai_images', __( 'AI images', 'image-source-control-isc' ), [ $this, 'render_section' ], 'isc_settings_page' );
 		add_settings_field( 'enable_ai_labels', __( 'Enable', 'image-source-control-isc' ), [ $this, 'render_field_enable_ai_labels' ], 'isc_settings_page', 'isc_settings_section_ai_images' );
 		add_settings_field( 'ai_label_remove_wrapper_if_source_empty', '', [ $this, 'render_field_remove_wrapper_if_source_empty' ], 'isc_settings_page', 'isc_settings_section_ai_images' );
 		add_settings_field( 'ai_label_icons', __( 'Icons', 'image-source-control-isc' ), [ $this, 'render_field_ai_label_icons' ], 'isc_settings_page', 'isc_settings_section_ai_images' );
+	}
+
+	/**
+	 * Render the section description.
+	 */
+	public function render_section() {
+		?><p><?php esc_html_e( 'This is a beta feature. Visible changes are likely.', 'image-source-control-isc' ); ?> <a href="<?php echo esc_url( \ISC\Admin_Utils::get_manual_url( 'settings-ai-images' ) ); ?>" target="_blank"><?php esc_html_e( 'Manual', 'image-source-control-isc' ); ?></a></p><?php
 	}
 
 	/**
