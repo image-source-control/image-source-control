@@ -47,6 +47,9 @@ class Render_Source_String_With_Id_Test extends WPTestCase {
 		delete_post_meta( $this->image_id, 'isc_ai_label' );
 		delete_post_meta( $this->image_id, 'isc_image_licence' );
 
+		// delete options to reset them to standard
+		delete_option( 'isc_options' );
+
 		// Call parent tearDown
 		parent::tearDown();
 	}

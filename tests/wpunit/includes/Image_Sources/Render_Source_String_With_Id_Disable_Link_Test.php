@@ -32,6 +32,17 @@ class Render_Source_String_With_Id_Disable_Link_Test extends WPTestCase {
 		add_post_meta( $this->image_id, 'isc_image_source_url', 'https://example.com' );
 	}
 
+	/**
+	 * Cleanup
+	 */
+	protected function tearDown(): void {
+		// delete options to reset them to standard
+		delete_option( 'isc_options' );
+
+		// Call parent tearDown
+		parent::tearDown();
+	}
+
 
 	/**
 	 * Render the image source with a source URL

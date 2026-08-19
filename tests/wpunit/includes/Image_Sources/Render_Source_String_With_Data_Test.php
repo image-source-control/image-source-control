@@ -15,6 +15,17 @@ class Render_Source_String_With_Data_Test extends WPTestCase {
 
 	private $iscPublic;
 
+	/**
+	 * Cleanup
+	 */
+	protected function tearDown(): void {
+		// delete options to reset them to standard
+		delete_option( 'isc_options' );
+
+		// Call parent tearDown
+		parent::tearDown();
+	}
+
 	public function test_render_image_source_string_with_standard_source() {
 		$this->assertEquals( '© http://isc.local', Image_Source_String::get( 1, [ 'own' => true ] ) );
 	}
