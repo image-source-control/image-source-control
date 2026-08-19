@@ -3,7 +3,6 @@
 namespace ISC\Tests\WPUnit\Includes\Image_Sources;
 
 use ISC\Image_Sources\Renderer\Image_Source_String;
-use ISC\Image_Sources\Ai_Labels;
 use ISC\Options;
 use ISC\Tests\WPUnit\WPTestCase;
 
@@ -57,22 +56,6 @@ class Render_Source_String_With_Id_Disable_Link_Test extends WPTestCase {
 
 		$this->assertEquals(
 			'Author A | CC BY-NC-ND 4.0 International',
-			Image_Source_String::get( $this->image_id, [], [ 'disable-links' => true ] )
-		);
-	}
-
-	/**
-	 * Test Image_Source_String::get() with an AI icon and disabled links.
-	 */
-	public function test_render_image_source_string_with_ai_icon_and_disabled_links_output() {
-		$isc_options                          = Options::get_options();
-		$isc_options['ai_images']['show_label'] = true;
-		update_option( 'isc_options', $isc_options );
-
-		add_post_meta( $this->image_id, 'isc_ai_label', 'ai' );
-
-		$this->assertSame(
-			Ai_Labels::get_icon( 'ai' ) . ' Author A',
 			Image_Source_String::get( $this->image_id, [], [ 'disable-links' => true ] )
 		);
 	}

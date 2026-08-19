@@ -47,7 +47,7 @@ class Caption extends Renderer {
 			return '';
 		}
 
-		$options                       = self::get_options();
+		$options                        = self::get_options();
 		$remove_wrapper_if_source_empty = ! empty( $options['ai_images']['remove_wrapper_if_source_empty'] ) && self::source_is_empty( $image_id, $data );
 
 		// add the prefix if not disabled
