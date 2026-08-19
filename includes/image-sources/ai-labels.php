@@ -18,9 +18,9 @@ class Ai_Labels {
 	 */
 	public static function get_labels(): array {
 		return [
-			'ai'           => 'AI',
-			'ai-modified'  => 'AI-modified',
-			'ai-generated' => 'AI-generated',
+			'ai'           => _x( 'AI', 'Label for an image that was created with AI', 'image-source-control-isc' ),
+			'ai-modified'  => _x( 'AI-modified', 'Label for an image that was created with AI', 'image-source-control-isc' ),
+			'ai-generated' => _x( 'AI-generated', 'Label for an image that was created with AI', 'image-source-control-isc' ),
 		];
 	}
 
