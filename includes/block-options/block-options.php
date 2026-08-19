@@ -80,7 +80,7 @@ class ISC_Block_Options {
 			'attachment',
 			\ISC\Image_Sources\Ai_Labels::META_KEY,
 			[
-				'sanitize_callback' => [ '\ISC\Image_Sources\Ai_Labels', 'sanitize_value' ],
+'sanitize_callback' => [ '\\ISC\\Image_Sources\\Ai_Labels', 'sanitize_label' ],
 				'show_in_rest'      => true,
 				'single'            => true,
 				'type'              => 'string',
