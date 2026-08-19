@@ -79,15 +79,17 @@ function isc_update_captions_styles() {
  * @param caption image source caption that needs positioning
  */
 function isc_update_caption_style( caption ) {
-	// bail if the element already has a style attribute
-	if ( caption.hasAttribute( 'style' ) ) {
-		return;
+	if ( ! caption.hasAttribute( 'style' ) ) {
+		caption.setAttribute( "style", ISC_STYLE_STRING );
+		// Some themes handle the bottom padding of the attachment's div with the caption text (which is in between
+		// the image and the bottom border) not with the div itself. The following line set the padding on the bottom equal to the top.
+		caption.style.paddingBottom = window.getComputedStyle( caption )['padding-top'];
 	}
 
-	caption.setAttribute( "style", ISC_STYLE_STRING );
-	// Some themes handle the bottom padding of the attachment's div with the caption text (which is in between
-	// the image and the bottom border) not with the div itself. The following line set the padding on the bottom equal to the top.
-	caption.style.paddingBottom = window.getComputedStyle( caption )['padding-top'];
+	if ( caption.classList.contains( 'isc-source-text-empty-source' ) ) {
+		caption.style.removeProperty( 'background-color' );
+		caption.style.removeProperty( 'opacity' );
+	}
 }
 
 /**
