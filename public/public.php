@@ -510,6 +510,7 @@ class ISC_Public extends \ISC\Image_Sources\Image_Sources {
 					} else {
 						ISC_Log::log( sprintf( 'image %d: skipped because of empty source', $attachment_id ) );
 					}
+					unset( $atts[ $attachment_id ] );
 				} else {
 					$atts[ $attachment_id ]['title'] = get_the_title( $attachment_id );
 					ISC_Log::log( sprintf( 'image %d: getting title "%s"', $attachment_id, $atts[ $attachment_id ]['title'] ) );
