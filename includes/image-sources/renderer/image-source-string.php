@@ -17,8 +17,19 @@ class Image_Source_String extends Renderer {
 	 * @param int $image_id Image ID.
 	 */
 	public static function render( int $image_id ) {
-		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- source is sanitized on save; icon is trusted SVG from plugin files.
-		echo self::get( $image_id );
+		$source = self::get( $image_id );
+
+		if ( ! $source ) {
+			return;
+		}
+
+		// The trusted AI icon SVG is excluded from sanitization and re-added after.
+		$options  = self::get_options();
+		$ai_label = empty( $options['ai_images']['show_label'] ) ? '' : Image_Sources::get_ai_label( $image_id );
+		$ai_icon  = \ISC\Image_Sources\Ai_Labels::get_icon( $ai_label );
+
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- icon is trusted SVG from plugin files.
+		echo $ai_icon . Image_Sources::sanitize_source_html( trim( str_replace( $ai_icon, '', $source ) ) );
 	}
 
 	/**
