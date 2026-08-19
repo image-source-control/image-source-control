@@ -45,28 +45,32 @@ class Ai_Labels {
 	 * @return string
 	 */
 	public static function get_icon( string $label = '' ): string {
-		if ( '' === $label || ! array_key_exists( $label, self::get_labels() ) ) {
+		static $cache = [];
+
+		$label = self::sanitize_label( $label );
+		if ( '' === $label ) {
 			return '';
 		}
 
-		$icon_path = ISCPATH . '/public/assets/images/ai-images/' . $label . '.svg';
+		if ( array_key_exists( $label, $cache ) ) {
+			return $cache[ $label ];
+		}
 
+		$icon_path = ISCPATH . '/public/assets/images/ai-images/' . $label . '.svg';
 		if ( ! is_readable( $icon_path ) ) {
+			$cache[ $label ] = '';
 			return '';
 		}
 
 		$icon = file_get_contents( $icon_path );
-
 		if ( ! is_string( $icon ) || '' === $icon ) {
+			$cache[ $label ] = '';
 			return '';
 		}
 
 		$icon = preg_replace( '/<\?xml[^>]*>\s*/i', '', $icon );
+		$cache[ $label ] = ( is_string( $icon ) && '' !== $icon ) ? $icon : '';
 
-		if ( ! is_string( $icon ) || '' === $icon ) {
-			return '';
-		}
-
-		return $icon;
+		return $cache[ $label ];
 	}
 }
