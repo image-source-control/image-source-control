@@ -38,6 +38,9 @@ class Render_Source_String_With_Id_Test extends WPTestCase {
 	 * Cleanup
 	 */
 	protected function tearDown(): void {
+		// Call parent tearDown
+		parent::tearDown();
+
 		// delete the image
 		wp_delete_post( $this->image_id, true );
 
@@ -49,9 +52,6 @@ class Render_Source_String_With_Id_Test extends WPTestCase {
 
 		// delete options to reset them to standard
 		delete_option( 'isc_options' );
-
-		// Call parent tearDown
-		parent::tearDown();
 	}
 
 	/**
