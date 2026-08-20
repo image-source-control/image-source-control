@@ -94,8 +94,21 @@ class Admin_Fields {
 		$form_fields['isc_image_source_url']['value'] = Image_Sources::get_image_source_url( $post->ID );
 		$form_fields['isc_image_source_url']['helps'] = __( 'URL to link the source text to.', 'image-source-control-isc' );
 
+		$options = $this->get_options();
+
+		if ( ! empty( $options['ai_images']['show_label'] ) ) {
+			$form_fields['isc_ai_label']['input'] = 'html';
+			$form_fields['isc_ai_label']['label'] = __( 'AI label', 'image-source-control-isc' );
+			$form_fields['isc_ai_label']['helps'] = __( 'Choose a label for AI-generated images.', 'image-source-control-isc' );
+			$html                                 = '<select name="attachments[' . $post->ID . '][isc_ai_label]" id="attachments[' . $post->ID . '][isc_ai_label]">';
+			$html                                .= '<option value="">--</option>';
+			foreach ( Ai_Labels::get_labels() as $value => $label ) {
+				$html .= '<option value="' . esc_attr( $value ) . '" ' . selected( Image_Sources::get_ai_label( $post->ID ), $value, false ) . '>' . esc_html( $label ) . '</option>';
+			}
+			$html                           .= '</select>';
+			$form_fields['isc_ai_label']['html'] = $html;
+		}
 		// add input field for license, if enabled
-		$options  = $this->get_options();
 		$licences = Utils::licences_text_to_array( $options['licences'] );
 		if ( $options['enable_licences'] && $licences ) {
 			$form_fields['isc_image_licence']['input'] = 'html';

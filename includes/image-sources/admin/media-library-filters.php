@@ -71,6 +71,14 @@ class Admin_Media_Library_Filters {
 						'value' => '1',
 					],
 					[
+						'relation' => 'OR',
+						[
+							'key'     => Ai_Labels::META_KEY,
+							'value'   => [ 'ai', 'ai-modified', 'ai-generated' ],
+							'compare' => 'IN',
+						],
+					],
+					[
 						'relation' => 'AND',
 						[
 							'key'     => 'isc_image_source',
@@ -110,6 +118,21 @@ class Admin_Media_Library_Filters {
 						[
 							'key'     => 'isc_image_source_own',
 							'compare' => 'NOT EXISTS',
+						],
+					],
+					[
+						'relation' => 'AND',
+						[
+							'relation' => 'OR',
+							[
+								'key'     => Ai_Labels::META_KEY,
+								'compare' => 'NOT EXISTS',
+							],
+							[
+								'key'     => Ai_Labels::META_KEY,
+								'value'   => [ 'ai', 'ai-modified', 'ai-generated' ],
+								'compare' => 'NOT IN',
+							],
 						],
 					],
 					[

@@ -184,6 +184,7 @@ class ISC_Public extends \ISC\Image_Sources\Image_Sources {
 		?>
 			<style>
 				.isc-source { position: relative; display: inline-block; line-height: initial; }
+				.isc-ai-label-icon { display: inline-block; width: auto; height: 1.25em; vertical-align: -0.25em; }
 				/* Hides the caption initially until it is positioned via JavaScript */
 				.isc-source > .isc-source-text { display: none; }
 				.wp-block-cover .isc-source { position: static; }
@@ -515,7 +516,7 @@ class ISC_Public extends \ISC\Image_Sources\Image_Sources {
 					ISC_Log::log( sprintf( 'image %d: getting title "%s"', $attachment_id, $atts[ $attachment_id ]['title'] ) );
 					$atts[ $attachment_id ]['source'] = ISC\Image_Sources\Renderer\Image_Source_String::get( $attachment_id );
 					if ( ! $atts[ $attachment_id ]['source'] ) {
-						ISC_Log::log( sprintf( 'image %d: skipped because of empty standard source', $attachment_id ) );
+						ISC_Log::log( sprintf( 'image %d: skipped because of empty source', $attachment_id ) );
 						unset( $atts[ $attachment_id ] );
 					}
 				}

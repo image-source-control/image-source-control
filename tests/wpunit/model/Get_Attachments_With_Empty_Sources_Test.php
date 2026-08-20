@@ -100,6 +100,16 @@ class Get_Attachments_With_Empty_Sources_Test extends WPTestCase {
 	}
 
 	/**
+	 * Test ISC_Model::get_attachments_with_empty_sources() ignores AI-labeled attachments.
+	 */
+	public function test_with_attachments_ai_label_set() {
+		$this->createAttachmentWithMeta( 'isc_ai_label', 'ai-generated' );
+		$attachments = ISC_Model::get_attachments_with_empty_sources();
+
+		$this->assertEmpty( $attachments, 'Expected no attachments to match criteria but some did.' );
+	}
+
+	/**
 	 * Attachment with 'isc_image_source_own' set to non-standard values are counted as empty sources.
 	 *
 	 * @return void

@@ -3,6 +3,7 @@
 namespace ISC\Tests\WPUnit\Includes\Image_Sources;
 
 use ISC\Image_Sources\Renderer\Image_Source_String;
+use ISC\Image_Sources\Ai_Labels;
 use ISC\Options;
 use ISC\Tests\WPUnit\WPTestCase;
 /**
@@ -37,16 +38,20 @@ class Render_Source_String_With_Id_Test extends WPTestCase {
 	 * Cleanup
 	 */
 	protected function tearDown(): void {
+		// Call parent tearDown
+		parent::tearDown();
+
 		// delete the image
 		wp_delete_post( $this->image_id, true );
 
 		delete_post_meta( $this->image_id, 'isc_image_source' );
 		delete_post_meta( $this->image_id, 'isc_image_source_own' );
 		delete_post_meta( $this->image_id, 'isc_image_source_url' );
+		delete_post_meta( $this->image_id, 'isc_ai_label' );
 		delete_post_meta( $this->image_id, 'isc_image_licence' );
 
-		// Call parent tearDown
-		parent::tearDown();
+		// delete options to reset them to standard
+		delete_option( 'isc_options' );
 	}
 
 	/**
@@ -113,5 +118,19 @@ class Render_Source_String_With_Id_Test extends WPTestCase {
 		add_post_meta( $this->image_id, 'isc_image_licence', 'Personal License' );
 
 		$this->assertEquals( 'Author A | Personal License', Image_Source_String::get( $this->image_id ) );
+	}
+
+	/**
+	 * Test Image_Source_String::get() with an AI icon saved in post meta.
+	 */
+	public function test_render_image_source_string_with_saved_ai_icon() {
+		$isc_options                          = Options::get_options();
+		$isc_options['ai_images']['show_label'] = true;
+		update_option( 'isc_options', $isc_options );
+
+		add_post_meta( $this->image_id, 'isc_ai_label', 'ai-modified' );
+		$output = Image_Source_String::get( $this->image_id );
+
+		$this->assertStringContainsString( Ai_Labels::get_icon( 'ai-modified' ), $output );
 	}
 }

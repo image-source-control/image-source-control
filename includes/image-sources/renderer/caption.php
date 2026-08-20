@@ -2,6 +2,7 @@
 
 namespace ISC\Image_Sources\Renderer;
 
+use ISC\Image_Sources\Image_Sources;
 use ISC\Image_Sources\Renderer;
 use ISC\Standard_Source;
 use ISC_Log;
@@ -46,14 +47,17 @@ class Caption extends Renderer {
 			return '';
 		}
 
+		$options                        = self::get_options();
+		$remove_wrapper_if_source_empty = ! empty( $options['ai_images']['remove_wrapper_if_source_empty'] ) && self::source_is_empty( $image_id, $data );
+
 		// add the prefix if not disabled
-		if ( ! array_key_exists( 'prefix', $args ) || $args['prefix'] ) {
+		if ( ( ! array_key_exists( 'prefix', $args ) || $args['prefix'] ) && ! $remove_wrapper_if_source_empty ) {
 			$source = self::add_prefix( $source );
 		}
 
 		// add style wrapper if not disabled
 		if ( ! array_key_exists( 'styled', $args ) || $args['styled'] ) {
-			$source = self::add_style( $source, $image_id );
+			$source = self::add_style( $source, $image_id, $remove_wrapper_if_source_empty );
 		}
 
 		return $source;
@@ -64,14 +68,34 @@ class Caption extends Renderer {
 	 *
 	 * @param string $source Source string.
 	 * @param int    $image_id Image ID.
+	 * @param bool   $remove_wrapper_if_source_empty Whether wrapper styling should be removed.
 	 * @return string
 	 */
-	public static function add_style( string $source, int $image_id ) {
+	public static function add_style( string $source, int $image_id, bool $remove_wrapper_if_source_empty = false ) {
 		if ( self::has_caption_style() && apply_filters( 'isc_caption_apply_default_style', '__return_true' ) ) {
-			$source = '<span class="isc-source-text">' . $source . '</span>';
+			$source = '<span class="isc-source-text' . ( $remove_wrapper_if_source_empty ? ' isc-source-text-empty-source' : '' ) . '">' . $source . '</span>';
 		}
 
 		return apply_filters( 'isc_overlay_html_source', $source, $image_id );
+	}
+
+	/**
+	 * Check whether the source text is empty before AI labels are added.
+	 *
+	 * @param int      $image_id Image ID.
+	 * @param string[] $data     Metadata.
+	 *
+	 * @return bool
+	 */
+	private static function source_is_empty( int $image_id, array $data = [] ): bool {
+		$source = $data['source'] ?? Image_Sources::get_image_source_text_raw( $image_id );
+		$own    = $data['own'] ?? Standard_Source::use_standard_source( $image_id );
+
+		if ( $own && ! Standard_Source::hide_standard_source_for_image( $image_id ) ) {
+			$source = Standard_Source::get_standard_source_text_for_attachment( $image_id );
+		}
+
+		return '' === $source;
 	}
 
 	/**

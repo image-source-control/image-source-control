@@ -17,8 +17,8 @@ class Image_Source_String extends Renderer {
 	 * @param int $image_id Image ID.
 	 */
 	public static function render( int $image_id ) {
-		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- we need to allow the HTML here and use a custom sanitizer.
-		echo Image_Sources::sanitize_source_html( self::get( $image_id ) );
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped, sanitization is done in the get() function
+		echo self::get( $image_id );
 	}
 
 	/**
@@ -41,10 +41,15 @@ class Image_Source_String extends Renderer {
 			return false;
 		}
 
-		$options             = self::get_options();
-		$metadata['source']  = $data['source'] ?? Image_Sources::get_image_source_text_raw( $id );
-		$metadata['own']     = $data['own'] ?? Standard_Source::use_standard_source( $id );
-		$metadata['licence'] = $data['licence'] ?? Image_Sources::get_image_license( $id );
+		$options              = self::get_options();
+		$metadata['source']   = $data['source'] ?? Image_Sources::get_image_source_text_raw( $id );
+		$metadata['own']      = $data['own'] ?? Standard_Source::use_standard_source( $id );
+		$metadata['ai_label'] = $data['ai_label'] ?? Image_Sources::get_ai_label( $id );
+		$metadata['licence']  = $data['licence'] ?? Image_Sources::get_image_license( $id );
+
+		if ( empty( $options['ai_images']['show_label'] ) ) {
+			$metadata['ai_label'] = '';
+		}
 
 		if ( ! isset( $args['disable-links'] ) ) {
 			$metadata['source_url'] = $data['source_url'] ?? Image_Sources::get_image_source_url( $id );
@@ -60,9 +65,12 @@ class Image_Source_String extends Renderer {
 			$source = $metadata['source'];
 		}
 
-		if ( $source === '' ) {
+		if ( '' === $source && '' === $metadata['ai_label'] ) {
 			return false;
 		}
+
+		// sanitize the source string, to avoid XSS attacks
+		$source = Image_Sources::sanitize_source_html( $source );
 
 		// wrap link around source, if given
 		if ( '' !== $metadata['source_url'] ) {
@@ -75,6 +83,12 @@ class Image_Source_String extends Renderer {
 				$id,
 				$metadata
 			);
+		}
+
+		// add AI label icon if enabled
+		$ai_icon = \ISC\Image_Sources\Ai_Labels::get_icon( $metadata['ai_label'] );
+		if ( '' !== $ai_icon ) {
+			$source = trim( sprintf( '%1$s %2$s', $ai_icon, $source ) );
 		}
 
 		// add license if enabled

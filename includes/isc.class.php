@@ -35,6 +35,10 @@ class ISC_Class {
 				'id'      => 'isc_image_licence',
 				'default' => '',
 			],
+			'ai_label'         => [
+				'id'      => 'isc_ai_label',
+				'default' => '',
+			],
 		];
 
 		/**
@@ -175,7 +179,7 @@ class ISC_Class {
 		public function maybe_update_attachment_post_meta( $meta_id, $object_id, $meta_key ) {
 			_deprecated_function( __METHOD__, '3.0.0', 'ISC\Image_Sources\Image_Sources::maybe_update_attachment_post_meta' );
 
-			if ( in_array( $meta_key, [ 'isc_image_source_own', 'isc_image_source' ], true ) ) {
+			if ( in_array( $meta_key, [ 'isc_image_source_own', 'isc_image_source', ISC\Image_Sources\Ai_Labels::META_KEY ], true ) ) {
 				ISC_Model::update_missing_sources_transient();
 			}
 		}

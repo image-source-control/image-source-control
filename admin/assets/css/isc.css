@@ -155,6 +155,35 @@
     color: #000;
 }
 
+.isc-settings-ai-images-icons {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.isc-settings-ai-images-icons li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+}
+
+.isc-settings-ai-images-icons li:first-of-type{
+    margin-bottom: 5px;
+}
+
+.isc-settings-ai-images-icons li:first-of-type .isc-ai-label-icon {
+    height: 1.9em;
+    margin-left: 0.25em;
+}
+
+.isc-settings-ai-images-icons .isc-ai-label-icon {
+    display: block;
+    width: auto;
+    height: 1.5em;
+    flex: none;
+}
+
 /**
  * Meta field in media view
  */

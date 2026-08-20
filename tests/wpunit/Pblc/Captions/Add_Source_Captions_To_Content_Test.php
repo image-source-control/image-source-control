@@ -2,6 +2,7 @@
 
 namespace ISC\Tests\WPUnit\Pblc\Captions;
 
+use ISC\Image_Sources\Ai_Labels;
 use ISC\Tests\WPUnit\WPTestCase;
 use ISC_Public;
 use ISC\Options;
@@ -141,6 +142,25 @@ class Add_Source_Captions_To_Content_Test extends WPTestCase {
 		$expected = '<span id="isc_attachment_' . $this->image_id . '" class="isc-source "><img src="https://example.com/image-one.jpg" alt="Image" /><span class="isc-source-text">Author A</span></span>';
 		$result   = $this->isc_public->add_source_captions_to_content( $html );
 		$this->assertEquals( $expected, $result, 'Image caption text should not have a pretext' );
+	}
+
+	/**
+	 * Test ISC_Public::add_source_captions_to_content() without wrapper styling text when only an AI label exists.
+	 */
+	public function test_image_with_ai_label_and_empty_source_without_wrapper_styles() {
+		delete_post_meta( $this->image_id, 'isc_image_source' );
+
+		$isc_options                                           = Options::get_options();
+		$isc_options['ai_images']['show_label']                = true;
+		$isc_options['ai_images']['remove_wrapper_if_source_empty'] = true;
+		update_option( 'isc_options', $isc_options );
+
+		add_post_meta( $this->image_id, 'isc_ai_label', 'ai-generated' );
+
+		$html     = '<img src="https://example.com/image-one.jpg" alt="Image" />';
+		$expected = '<span id="isc_attachment_' . $this->image_id . '" class="isc-source "><img src="https://example.com/image-one.jpg" alt="Image" /><span class="isc-source-text isc-source-text-empty-source">' . Ai_Labels::get_icon( 'ai-generated' ) . '</span></span>';
+		$result   = $this->isc_public->add_source_captions_to_content( $html );
+		$this->assertEquals( $expected, $result, 'Image caption should omit the pretext and wrapper styles for AI-only output' );
 	}
 
 	/**

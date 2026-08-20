@@ -78,6 +78,16 @@ class ISC_Block_Options {
 		);
 		register_post_meta(
 			'attachment',
+			\ISC\Image_Sources\Ai_Labels::META_KEY,
+			[
+'sanitize_callback' => [ '\\ISC\\Image_Sources\\Ai_Labels', 'sanitize_label' ],
+				'show_in_rest'      => true,
+				'single'            => true,
+				'type'              => 'string',
+			]
+		);
+		register_post_meta(
+			'attachment',
 			'isc_image_source_own',
 			[
 				'show_in_rest' => true,
@@ -150,9 +160,13 @@ class ISC_Block_Options {
 				continue;
 			}
 
-			foreach ( [ 'isc_image_source', 'isc_image_source_url', 'isc_image_source_own', 'isc_image_licence' ] as $field ) {
+			foreach ( [ 'isc_image_source', 'isc_image_source_url', 'isc_image_source_own', \ISC\Image_Sources\Ai_Labels::META_KEY, 'isc_image_licence' ] as $field ) {
 				if ( $field === 'isc_image_source_own' ) {
 					ISC_Model::update_post_meta( $image_id, $field, isset( $attributes[ $field ] ) && $attributes[ $field ] === true ? '1' : '' );
+					continue;
+				}
+				if ( $field === \ISC\Image_Sources\Ai_Labels::META_KEY ) {
+					ISC_Model::update_post_meta( $image_id, $field, \ISC\Image_Sources\Ai_Labels::sanitize_label( isset( $attributes[ $field ] ) ? $attributes[ $field ] : '' ) );
 					continue;
 				}
 				ISC_Model::update_post_meta( $image_id, $field, isset( $attributes[ $field ] ) ? $attributes[ $field ] : '' );
