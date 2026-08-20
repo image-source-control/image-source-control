@@ -42,7 +42,7 @@ class Image_Source_String extends Renderer {
 		}
 
 		$options              = self::get_options();
-		$metadata['source']   = $data['source'] ?? Image_Sources::sanitize_source_html( Image_Sources::get_image_source_text_raw( $id ) );
+		$metadata['source']   = $data['source'] ?? Image_Sources::get_image_source_text_raw( $id );
 		$metadata['own']      = $data['own'] ?? Standard_Source::use_standard_source( $id );
 		$metadata['ai_label'] = $data['ai_label'] ?? Image_Sources::get_ai_label( $id );
 		$metadata['licence']  = $data['licence'] ?? Image_Sources::get_image_license( $id );
@@ -69,11 +69,8 @@ class Image_Source_String extends Renderer {
 			return false;
 		}
 
-		$ai_icon = \ISC\Image_Sources\Ai_Labels::get_icon( $metadata['ai_label'] );
-
-		if ( '' !== $ai_icon ) {
-			$source = trim( $ai_icon . ' ' . $source );
-		}
+		// sanitize the source string, to avoid XSS attacks
+		$source = Image_Sources::sanitize_source_html( $source );
 
 		// wrap link around source, if given
 		if ( '' !== $metadata['source_url'] ) {
@@ -86,6 +83,12 @@ class Image_Source_String extends Renderer {
 				$id,
 				$metadata
 			);
+		}
+
+		// add AI label icon if enabled
+		$ai_icon = \ISC\Image_Sources\Ai_Labels::get_icon( $metadata['ai_label'] );
+		if ( '' !== $ai_icon ) {
+			$source = trim( sprintf( '%1$s %2$s', $ai_icon, $source ) );
 		}
 
 		// add license if enabled
