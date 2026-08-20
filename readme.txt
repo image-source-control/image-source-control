@@ -3,7 +3,7 @@ Contributors: webzunft
 Tags: credits, captions, copyrights, attributions, image sources
 Requires at least: 6.0
 Tested up to: 7.0
-Stable tag: 3.11.1
+Stable tag: 3.12.0
 Requires PHP: 7.4
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -44,6 +44,7 @@ Choose between different credit displays:
 * Attach the Per-page list automatically, by using a shortcode, or with a PHP function
 * Display image sources on archive pages
 * Link to the copyright holder and include a link to the image license
+* Add the EU AI label that marks an image as AI-generated
 
 **Backend Features**
 
@@ -181,6 +182,17 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 1. The Scanner searches for unused images (Pro)
 
 == Changelog ==
+
+= 3.12.0
+
+* Feature: Label AI-generated images. You can now choose to mark an image as AI-generated. This will add one of three possible labels provided by the European Union
+* Improvement (Pro): One can now use `/:|` to separate captions into multiple segments and link them. The new separators only apply when followed by a space.
+* Improvement (Pro): Flatsome UX Builder compatibility with the Unused Images Database Scan
+* Improvement: Show compatibility notices on the Settings page
+* Fix (Pro): With WordPress 7.1, the admin notice about a missing license displayed twice
+* Fix (Pro): Cleanup orphaned entries in the index table after a full Content Scan
+* Dev: List storage content on the Tools page also without `WP_DEBUG` enabled
+* Dev: The error log can now list the plugin settings
 
 = 3.11.1 =
 
