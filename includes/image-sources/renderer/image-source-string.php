@@ -17,8 +17,8 @@ class Image_Source_String extends Renderer {
 	 * @param int $image_id Image ID.
 	 */
 	public static function render( int $image_id ) {
-		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- we need to allow the HTML here and use a custom sanitizer.
-		echo Image_Sources::sanitize_source_html( self::get( $image_id ) );
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped, sanitization is done in the get() function
+		echo self::get( $image_id );
 	}
 
 	/**
@@ -42,7 +42,7 @@ class Image_Source_String extends Renderer {
 		}
 
 		$options              = self::get_options();
-		$metadata['source']   = $data['source'] ?? Image_Sources::get_image_source_text_raw( $id );
+		$metadata['source']   = $data['source'] ?? Image_Sources::sanitize_source_html( Image_Sources::get_image_source_text_raw( $id ) );
 		$metadata['own']      = $data['own'] ?? Standard_Source::use_standard_source( $id );
 		$metadata['ai_label'] = $data['ai_label'] ?? Image_Sources::get_ai_label( $id );
 		$metadata['licence']  = $data['licence'] ?? Image_Sources::get_image_license( $id );
