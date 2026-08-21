@@ -8,11 +8,11 @@ Requires PHP: 7.4
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
-Show image credits, image captions, and copyrights. Manage image sources and warn if they are missing. The original plugin since 2012.
+Show image credits, image captions, and copyrights. Manage image sources, licenses and AI label. The original plugin since 2012.
 
 == Description ==
 
-Are you concerned about being held liable for violating copyright law and would like to start crediting owners properly?
+Are you concerned about being held liable for violating copyright law, would like to start crediting owners or AI-generated images properly?
 
 Do you want to give back to photographers and illustrators by adding image credits, so they are rightfully attributed?
 
@@ -34,6 +34,12 @@ Choose between different credit displays:
 * List all image sources below the content of a specific page or place the list manually
 * Show an image caption overlay above or below the image
 * Embed a complete image credit list with thumbnails on your website
+
+**Label AI-generated images**
+
+* Mark AI-generated images with a label that indicates the image was created by artificial intelligence. Following the EU AI act
+* Available icons: AI, AI-generated, AI-manipulated
+* Show only the icon or add a description text to it in the image source field
 
 **Frontend Features**
 
