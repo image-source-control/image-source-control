@@ -36,11 +36,11 @@ class Render_Source_String_With_Id_Disable_Link_Test extends WPTestCase {
 	 * Cleanup
 	 */
 	protected function tearDown(): void {
-		// Call parent tearDown
-		parent::tearDown();
-
 		// delete options to reset them to standard
 		delete_option( 'isc_options' );
+
+		// Call parent tearDown
+		parent::tearDown();
 	}
 
 
