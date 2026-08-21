@@ -8,5 +8,5 @@
 ?>
 <label>
 	<input type="checkbox" name="isc_options[ai_images][remove_wrapper_if_source_empty]" <?php checked( ! empty( $options['ai_images']['remove_wrapper_if_source_empty'] ) ); ?> />
-	<?php esc_html_e( 'Use plain AI label when source text is empty.', 'image-source-control-isc' ); ?>
+	<?php esc_html_e( 'Show the plain AI label when the source text is empty.', 'image-source-control-isc' ); ?>
 </label>
