@@ -12,7 +12,7 @@ Show image credits, image captions, and copyrights. Manage image sources, licens
 
 == Description ==
 
-Are you concerned about being held liable for violating copyright law, would like to start crediting owners or AI-generated images properly?
+Are you concerned about being held liable for violating copyright law, would like to start crediting owners or [AI-generated images](https://imagesourcecontrol.com/blog/mark-ai-generated-image/) properly?
 
 Do you want to give back to photographers and illustrators by adding image credits, so they are rightfully attributed?
 
@@ -37,7 +37,7 @@ Choose between different credit displays:
 
 **Label AI-generated images**
 
-* Mark AI-generated images with a label that indicates the image was created by artificial intelligence. Following the EU AI act
+* [Mark AI-generated images](https://imagesourcecontrol.com/blog/mark-ai-generated-image/) with a label that indicates the image was created by artificial intelligence. Following the EU AI act
 * Available icons: AI, AI-generated, AI-manipulated
 * Show only the icon or add a description text to it in the image source field
 
