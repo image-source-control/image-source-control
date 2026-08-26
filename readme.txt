@@ -95,7 +95,7 @@ Check out the premium features to display the image caption overlay for featured
 * Detect Unused Images (see below)
 * Personal email support
 
-Extended compatibility with Elementor, Avada, WP Bakery, Divi, Fusion Builder, and other page builders
+Extended compatibility with Elementor, Avada, WP Bakery, Divi, Fusion Builder, Flatsome UX Builder, and other page builders
 themes like Soledad and Kadence (including Kadence Blocks, Kadence Theme Kit Pro, Kadence Shop Kit Pro, and Kadence Related Content Carousel),
 as well as with plugins like Advanced Custom Fields, WPML, Lightbox Gallery, Newsletter plugin, and JetEngine.
 
