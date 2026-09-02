@@ -77,8 +77,7 @@ class ISC_Storage_Model {
 	 * @return string sanitized URL string
 	 */
 	public static function sanitize_url_key( $url ) {
-		$limit = 2;
-		return str_replace( [ 'http://', 'https://', '//' ], '', esc_url( $url ), $limit );
+		return str_replace( [ 'http://', 'https://', '//' ], '', esc_url( $url ) );
 	}
 
 	/**
