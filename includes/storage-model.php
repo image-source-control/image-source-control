@@ -229,6 +229,8 @@ class ISC_Storage_Model {
 
 	/**
 	 * Return storage without images that have an attachment ID
+	 * This is only called on the Tools page in the backend
+	 * if called more frequently, caching might be needed
 	 *
 	 * @return array
 	 */
