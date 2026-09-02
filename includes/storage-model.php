@@ -197,7 +197,7 @@ class ISC_Storage_Model {
 
 		unset( $storage[ $url ] );
 		$this->storage = $storage;
-		update_option( $this->option_slug, $storage, true );
+		update_option( $this->option_slug, $storage, false );
 	}
 
 	/**
