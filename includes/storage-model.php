@@ -217,14 +217,28 @@ class ISC_Storage_Model {
 	 * @param int $post_id WP_Post ID.
 	 */
 	public function remove_image_by_id( $post_id ) {
-		$storage = $this->get_storage();
-
-		// search for the post ID
-		$image_key = array_search( $post_id, array_combine( array_keys( $storage ), array_column( $storage, 'post_id' ) ) );
-
-		if ( $image_key ) {
-			$this->remove_image( $image_key );
+		$post_id = absint( $post_id );
+		if ( ! $post_id ) {
+			return;
 		}
+
+		$storage = $this->get_storage();
+		$changed = false;
+
+		// An attachment can be stored under more than one URL, so remove every match.
+		foreach ( $storage as $url => $data ) {
+			if ( isset( $data['post_id'] ) && absint( $data['post_id'] ) === $post_id ) {
+				unset( $storage[ $url ] );
+				$changed = true;
+			}
+		}
+
+		if ( ! $changed ) {
+			return;
+		}
+
+		self::$storage = $storage;
+		update_option( $this->option_slug, $storage, false );
 	}
 
 	/**
