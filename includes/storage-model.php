@@ -48,13 +48,6 @@ class ISC_Storage_Model {
 	protected static $storage_blog_id = null;
 
 	/**
-	 * Load storage
-	 */
-	public function __construct() {
-		$this->get_storage();
-	}
-
-	/**
 	 * Get storage array
 	 *
 	 * @return array
