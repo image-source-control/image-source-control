@@ -22,9 +22,13 @@ class ISC_Storage_Model {
 	/**
 	 * Storage option with content
 	 *
-	 * @var array
+	 * Static so the ~MB-sized option is unserialized once per request rather
+	 * than once per instance. get_image_by_url() constructs one instance per
+	 * image, and WordPress re-runs maybe_unserialize() on every get_option().
+	 *
+	 * @var array|null null means "not loaded yet"
 	 */
-	public $storage;
+	protected static $storage = null;
 
 	/**
 	 * Instance of ISC_Storage_Model
@@ -32,6 +36,16 @@ class ISC_Storage_Model {
 	 * @var ISC_Storage_Model
 	 */
 	protected static $instance;
+
+	/**
+	 * Blog ID the storage above belongs to.
+	 *
+	 * The option is per site, the static is per request, so the memo must be
+	 * invalidated when the current blog changes (switch_to_blog()).
+	 *
+	 * @var int|null
+	 */
+	protected static $storage_blog_id = null;
 
 	/**
 	 * Load storage
@@ -46,13 +60,17 @@ class ISC_Storage_Model {
 	 * @return array
 	 */
 	public function get_storage() {
-		if ( $this->storage ) {
-			return $this->storage;
+		$blog_id = get_current_blog_id();
+
+		// Explicit null check: an empty array is a valid, already-loaded value.
+		if ( null !== self::$storage && self::$storage_blog_id === $blog_id ) {
+			return self::$storage;
 		}
 
-		$this->storage = get_option( $this->option_slug, array() );
+		self::$storage         = get_option( $this->option_slug, [] );
+		self::$storage_blog_id = $blog_id;
 
-		return $this->storage;
+		return self::$storage;
 	}
 
 	/**
@@ -67,7 +85,7 @@ class ISC_Storage_Model {
 	 */
 	public static function sanitize_url_key( $url ) {
 		$limit = 2;
-		return str_replace( array( 'http://', 'https://', '//' ), '', esc_url( $url ), $limit );
+		return str_replace( [ 'http://', 'https://', '//' ], '', esc_url( $url ), $limit );
 	}
 
 	/**
@@ -78,7 +96,7 @@ class ISC_Storage_Model {
 	 */
 	public function is_image_url_in_storage( $url ) {
 		$storage = $this->get_storage();
-		$url = self::sanitize_url_key( $url );
+		$url     = self::sanitize_url_key( $url );
 
 		return isset( $storage[ $url ] );
 	}
@@ -133,7 +151,7 @@ class ISC_Storage_Model {
 		$url = self::sanitize_url_key( $url );
 
 		if ( absint( $post_id ) ) {
-			$this->update( $url, array( 'post_id' => absint( $post_id ) ) );
+			$this->update( $url, [ 'post_id' => absint( $post_id ) ] );
 		}
 	}
 
@@ -152,7 +170,7 @@ class ISC_Storage_Model {
 		if ( isset( $storage[ $url ] ) ) {
 			$data = $storage[ $url ];
 		} else {
-			$data = array();
+			$data = [];
 		}
 
 		$data[ $key ] = $value;
@@ -167,7 +185,7 @@ class ISC_Storage_Model {
 	 * @param array  $data storage data.
 	 */
 	public function update( $url, array $data ) {
-		$url = self::sanitize_url_key( $url );
+		$url     = self::sanitize_url_key( $url );
 		$storage = $this->get_storage();
 
 		// merge existing data with new data
@@ -177,7 +195,7 @@ class ISC_Storage_Model {
 			$storage[ $url ] = $data;
 		}
 
-		$this->storage = $storage;
+		self::$storage = $storage;
 		// autoload is false since this can get quite large
 		update_option( $this->option_slug, $storage, false );
 	}
@@ -196,7 +214,7 @@ class ISC_Storage_Model {
 		}
 
 		unset( $storage[ $url ] );
-		$this->storage = $storage;
+		self::$storage = $storage;
 		update_option( $this->option_slug, $storage, false );
 	}
 
@@ -224,6 +242,9 @@ class ISC_Storage_Model {
 	 * @return bool true if the option was removed
 	 */
 	public static function clear_storage() {
+		self::$storage         = null;
+		self::$storage_blog_id = null;
+
 		return delete_option( 'isc_storage' );
 	}
 
@@ -237,7 +258,7 @@ class ISC_Storage_Model {
 	public function get_storage_without_wp_images() {
 		$storage = $this->get_storage();
 
-		$storage_filtered = array();
+		$storage_filtered = [];
 		// remove any entry with a post_ID, since they are hosted in WP Media
 		foreach ( $storage as $url => $data ) {
 			if ( ! isset( $data['post_id'] ) ) {
