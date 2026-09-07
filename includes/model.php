@@ -334,10 +334,7 @@ class ISC_Model {
 		$dom = new DOMDocument();
 
 		libxml_use_internal_errors( true );
-		if ( version_compare( PHP_VERSION, '8.2', '<' ) && function_exists( 'mb_convert_encoding' ) ) {
-			$content = mb_convert_encoding( $content, 'HTML-ENTITIES', 'UTF-8' );
-		}
-		$dom->loadHTML( $content );
+		$dom->loadHTML( '<?xml encoding="UTF-8">' . $content );
 
 		// Prevents from sending E_WARNINGs notice (Outputs are forbidden during activation)
 		libxml_clear_errors();
