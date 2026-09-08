@@ -571,7 +571,8 @@ class ISC_Model {
 		$original_url = isset( $params['original_url'] ) ? (string) $params['original_url'] : $original_url;
 		$newurl       = isset( $params['newurl'] ) ? (string) $params['newurl'] : $newurl;
 		$url          = isset( $params['url'] ) ? (string) $params['url'] : $url;
-		$guid         = $params['guid'] ?? $guid;
+		$guid         = array_key_exists( 'guid', $params ) ? $params['guid'] : $guid;
+		$guid         = ( null === $guid || '' === $guid ) ? null : (string) $guid;
 
 		if ( $id ) {
 			// if no $guid is found, we store one of the earlier URLs
