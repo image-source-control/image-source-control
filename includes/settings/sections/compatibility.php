@@ -95,6 +95,7 @@ class Compatibility extends Settings\Section {
 			'check_kadence_theme_kit_pro_unused_images',
 			'check_newsletter_unused_images',
 			'check_polylang',
+			'check_shortpixel_image_optimizer',
 			'check_soledad',
 			'check_woocommerce_unused_images',
 			'check_wp_bakery',
@@ -340,6 +341,23 @@ class Compatibility extends Settings\Section {
 			'name'          => 'Polylang',
 			'manual_url'    => 'https://imagesourcecontrol.com/documentation/compatibility/#Polylang',
 			'show_pro_link' => false,
+		];
+	}
+
+	/**
+	 * Check if the Shortpixel Image Optimizer plugin is active and Pro is not.
+	 *
+	 * @return array|null
+	 */
+	public function check_shortpixel_image_optimizer() {
+		if ( ! defined( 'SHORTPIXEL_IMAGE_OPTIMISER_VERSION' ) || \ISC\Plugin::is_pro() ) {
+			return null;
+		}
+
+		return [
+			'name'          => 'Shortpixel Image Optimizer',
+			'show_pro_link' => true,
+			'manual_url'    => 'https://imagesourcecontrol.com/documentation/compatibility/#Shortpixel_Image_Optimizer',
 		];
 	}
 
