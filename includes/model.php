@@ -543,6 +543,37 @@ class ISC_Model {
 			]
 		);
 
+		$params = [
+			'id'           => $id,
+			'original_url' => $original_url,
+			'newurl'       => $newurl,
+			'url'          => $url,
+			'guid'         => $guid,
+		];
+
+		/**
+		 * Filter all resolved values of get_image_by_url().
+		 *
+		 * Allows integrations to adjust ID and URL-related values in one hook.
+		 *
+		 * @param array $params {
+		 *     @type int         $id           Attachment ID or 0.
+		 *     @type string      $original_url Original incoming URL.
+		 *     @type string      $newurl       Normalized URL.
+		 *     @type string      $url          Current URL variant.
+		 *     @type string|null $guid         GUID found in DB result, if available.
+		 * }
+		 */
+		$filtered_params = apply_filters( 'isc_filter_get_image_by_url_result_final', $params );
+		$params          = is_array( $filtered_params ) ? $filtered_params : $params;
+
+		$id           = isset( $params['id'] ) ? absint( $params['id'] ) : 0;
+		$original_url = isset( $params['original_url'] ) ? (string) $params['original_url'] : $original_url;
+		$newurl       = isset( $params['newurl'] ) ? (string) $params['newurl'] : $newurl;
+		$url          = isset( $params['url'] ) ? (string) $params['url'] : $url;
+		$guid         = array_key_exists( 'guid', $params ) ? $params['guid'] : $guid;
+		$guid         = ( null === $guid || '' === $guid ) ? null : (string) $guid;
+
 		if ( $id ) {
 			// if no $guid is found, we store one of the earlier URLs
 			$storage->update_post_id( $guid ?? $url, $id );
