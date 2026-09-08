@@ -564,7 +564,8 @@ class ISC_Model {
 		 *     @type string|null $guid         GUID found in DB result, if available.
 		 * }
 		 */
-		$params = apply_filters( 'isc_filter_get_image_by_url_result_final', $params );
+		$filtered_params = apply_filters( 'isc_filter_get_image_by_url_result_final', $params );
+		$params          = is_array( $filtered_params ) ? $filtered_params : $params;
 
 		$id           = isset( $params['id'] ) ? absint( $params['id'] ) : 0;
 		$original_url = isset( $params['original_url'] ) ? (string) $params['original_url'] : $original_url;
