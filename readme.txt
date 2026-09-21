@@ -3,7 +3,7 @@ Contributors: webzunft
 Tags: credits, captions, copyrights, attributions, image sources
 Requires at least: 6.0
 Tested up to: 7.1
-Stable tag: 3.12.0
+Stable tag: 3.13.0
 Requires PHP: 7.4
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -97,7 +97,14 @@ Check out the premium features to display the image caption overlay for featured
 
 Extended compatibility with Elementor, Avada, WP Bakery, Divi, Fusion Builder, Flatsome UX Builder, and other page builders
 themes like Soledad and Kadence (including Kadence Blocks, Kadence Theme Kit Pro, Kadence Shop Kit Pro, and Kadence Related Content Carousel),
-as well as with plugins like Advanced Custom Fields, WPML, Lightbox Gallery, Newsletter plugin, and JetEngine.
+as well as with plugins like
+
+* Advanced Custom Fields
+* JetEngine
+* Lightbox Gallery
+* Newsletter plugin
+* Shortpixel Image Optimizer
+* WPML
 
 [See Pricing](https://imagesourcecontrol.com/pricing/?utm_source=wporg&utm_medium=link&utm_campaign=pricing).
 
@@ -190,7 +197,15 @@ See the _Instructions_ section [here](https://wordpress.org/plugins/image-source
 
 == Changelog ==
 
-= 3.12.0
+= 3.13.0 =
+
+* Improvement (Pro): Find image files created by Shortpixel Image Optimizer, e.g., when the file extension differs from the original file name
+* Improvement (Pro): Update WPML compatibility for their 5.0 release. 4.x is still supported
+* Fix (Pro): Fix WPML compatibility with Unused Images after a relevant hook was removed earlier
+* Fix (Pro): Added missing minified file for Media Trash, which caused some delete buttons to not work
+* Dev: Improved UTF-8 DOM parsing for international file names for more matches with database entries
+
+= 3.12.0 =
 
 * Feature: Label AI-generated images. You can now choose to mark an image as AI-generated. This will add one of three possible labels provided by the European Union
 * Improvement (Pro): One can now use `/:|` to separate captions into multiple segments and link them. The new separators only apply when followed by a space.
