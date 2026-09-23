@@ -36,6 +36,11 @@ class Admin_Media_Library_Filters {
 		];
 
 		$filters[] = [
+			'value' => 'ai_label',
+			'label' => __( 'Images with AI label', 'image-source-control-isc' ),
+		];
+
+		$filters[] = [
 			'value' => 'without_source',
 			'label' => __( 'Images without sources', 'image-source-control-isc' ),
 		];
@@ -61,7 +66,18 @@ class Admin_Media_Library_Filters {
 			$query->set( 'post_mime_type', 'image%' );
 		}
 
-		if ( $filter === 'with_source' ) {
+		if ( $filter === 'ai_label' ) {
+			$query->set(
+				'meta_query',
+				[
+					[
+						'key'     => Ai_Labels::META_KEY,
+						'value'   => array_keys( Ai_Labels::get_labels() ),
+						'compare' => 'IN',
+					],
+				]
+			);
+		} elseif ( $filter === 'with_source' ) {
 			$query->set(
 				'meta_query',
 				[
