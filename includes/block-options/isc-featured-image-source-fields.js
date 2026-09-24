@@ -1,0 +1,289 @@
+(function (wp) {
+	if (
+		!wp ||
+		!wp.element ||
+		!wp.components ||
+		!wp.data ||
+		!wp.editor ||
+		!wp.i18n ||
+		!wp.plugins ||
+		typeof lodash === "undefined"
+	) {
+		console.error("ISC Featured Image: One or more needed WordPress modules are missing.");
+		return;
+	}
+
+	const { useState, useEffect, useCallback, useMemo } = wp.element;
+	const el = wp.element.createElement;
+	const { TextControl, CheckboxControl, SelectControl } = wp.components;
+	const { useSelect, useDispatch } = wp.data;
+	const { __ } = wp.i18n;
+	const { PluginDocumentSettingPanel } = wp.editor;
+	const { debounce } = lodash;
+
+	const infoBaseUrl = (document.documentElement.lang || "en").startsWith("de")
+		? "https://imagesourcecontrol.de/beitragsbilder-beschriftung/"
+		: "https://imagesourcecontrol.com/blog/featured-image-caption/";
+	const utm = "?utm_source=isc-plugin&utm_medium=link&utm_campaign=featured-image-caption";
+
+	const PANEL_NAME = "isc-featured-image-source-panel";
+
+	const FeaturedImageSourceFields = () => {
+		// Store state via hooks
+		const {
+				  featuredImageId,
+				  imageAttachment,
+				  hasResolvedAttachment,
+				  iscOptions,
+				  openPanels,
+			  } = useSelect((select) => {
+			const editorSelect = select("core/editor");
+			const coreSelect = select("core");
+			const preferencesSelect = select("core/preferences");
+			const id = editorSelect.getEditedPostAttribute("featured_media");
+
+			return {
+				featuredImageId: id,
+				imageAttachment: id
+									 ? coreSelect.getEntityRecord("postType", "attachment", id)
+									 : null,
+				hasResolvedAttachment: id
+									 ? coreSelect.hasFinishedResolution("getEntityRecord", [
+						"postType",
+						"attachment",
+						id,
+					])
+									 : true,
+				iscOptions: typeof iscData !== "undefined" ? iscData.option : {},
+				openPanels:
+					preferencesSelect?.get("core", "openPanels") ||
+					preferencesSelect?.get("core/edit-post", "openPanels"),
+			};
+		});
+
+		const { editEntityRecord, saveEditedEntityRecord } = useDispatch("core");
+		const { toggleEditorPanelOpened: toggleEditorPanelOpenedNew } = useDispatch("core/editor");
+		const { toggleEditorPanelOpened: toggleEditorPanelOpenedOld } = useDispatch("core/edit-post");
+
+		const saveAttachmentMetaDebounced = useCallback(
+			debounce((id) => saveEditedEntityRecord("postType", "attachment", id), 750),
+			[saveEditedEntityRecord]
+		);
+
+		// Ensure panel is open on first view, using only data/actions from hooks
+		useEffect(() => {
+			if (!openPanels) return;
+
+			if (!openPanels.includes(PANEL_NAME)) {
+				if (toggleEditorPanelOpenedNew) {
+					toggleEditorPanelOpenedNew(PANEL_NAME);
+				} else if (toggleEditorPanelOpenedOld) {
+					toggleEditorPanelOpenedOld(PANEL_NAME);
+				}
+			}
+		}, [openPanels, toggleEditorPanelOpenedNew, toggleEditorPanelOpenedOld]);
+
+		const [source, setSource] = useState("");
+		const [isOwn, setIsOwn] = useState(false);
+		const [sourceUrl, setSourceUrl] = useState("");
+		const [licence, setLicence] = useState("");
+		const [populatedForId, setPopulatedForId] = useState(null);
+
+		useEffect(() => {
+			if (
+				featuredImageId &&
+				featuredImageId !== populatedForId &&
+				imageAttachment &&
+				imageAttachment.meta &&
+				hasResolvedAttachment
+			) {
+				setSource(imageAttachment.meta.isc_image_source || "");
+				setIsOwn(!!imageAttachment.meta.isc_image_source_own);
+				setSourceUrl(imageAttachment.meta.isc_image_source_url || "");
+				setLicence(imageAttachment.meta.isc_image_licence || "");
+				setPopulatedForId(featuredImageId);
+			} else if (!featuredImageId && populatedForId !== null) {
+				setSource("");
+				setIsOwn(false);
+				setSourceUrl("");
+				setLicence("");
+				setPopulatedForId(null);
+			}
+		}, [
+			featuredImageId,
+			imageAttachment,
+			hasResolvedAttachment,
+			populatedForId,
+		]);
+
+		const handleInputChange = useCallback(
+			(field, value) => {
+				let newLocalMeta = {};
+				switch (field) {
+					case "source":
+						setSource(value);
+						newLocalMeta.isc_image_source = value;
+						break;
+					case "isOwn":
+						setIsOwn(value);
+						newLocalMeta.isc_image_source_own = value;
+						break;
+					case "sourceUrl":
+						setSourceUrl(value);
+						newLocalMeta.isc_image_source_url = value;
+						break;
+					case "licence":
+						setLicence(value);
+						newLocalMeta.isc_image_licence = value;
+						break;
+					default:
+						return;
+				}
+
+				if (featuredImageId) {
+					const currentMeta =
+							  imageAttachment && imageAttachment.meta
+								  ? { ...imageAttachment.meta }
+								  : {};
+					const metaToUpdate = {
+						...currentMeta,
+						...newLocalMeta,
+					};
+					editEntityRecord(
+						"postType",
+						"attachment",
+						featuredImageId,
+						{ meta: metaToUpdate }
+					);
+					saveAttachmentMetaDebounced(featuredImageId);
+				}
+			},
+			[
+				featuredImageId,
+				imageAttachment,
+				editEntityRecord,
+				saveAttachmentMetaDebounced,
+			]
+		);
+
+		// useMemo for licenceSelectOptions
+		const licenceSelectOptions = useMemo(() => {
+			if (
+				!iscOptions ||
+				!iscOptions.enable_licences ||
+				!iscOptions.licences ||
+				typeof iscOptions.licences !== "string"
+			) {
+				return [];
+			}
+			const options = iscOptions.licences
+									  .replace(/[\r]/g, "")
+									  .split("\n")
+									  .filter(Boolean)
+									  .map((row) => {
+										  const parts = row.split("|");
+										  return {
+											  label: parts[0],
+											  value: parts[0],
+											  url: parts[1] || "",
+										  };
+									  });
+			// Empty line at the top
+			options.unshift({
+				label: "--",
+				value: "",
+			});
+			return options;
+		}, [iscOptions.licences, iscOptions.enable_licences]);
+
+		if (!featuredImageId) return null;
+
+		const panelFields = [
+			el(
+				"p",
+				{ key: "desc", style: { marginBottom: "1em", color: "#666" } },
+				[__("Source of the featured image.", "image-source-control-isc")]
+			),
+			el(TextControl, {
+				key: "source",
+				label: __("Image Source", "image-source-control-isc"),
+				value: source,
+				onChange: (val) => handleInputChange("source", val),
+				style: { marginBottom: "16px" },
+				__next40pxDefaultSize: true,
+				__nextHasNoMarginBottom: true,
+			}),
+			el(
+				"div",
+				{ style: { marginBottom: "16px" } },
+				el(CheckboxControl, {
+					key: "isOwn",
+					label: __("Use standard source", "image-source-control-isc"),
+					checked: isOwn,
+					onChange: (val) => handleInputChange("isOwn", val),
+					__nextHasNoMarginBottom: true,
+				})
+			),
+			el(TextControl, {
+				key: "sourceUrl",
+				label: __("Image Source URL", "image-source-control-isc"),
+				value: sourceUrl,
+				onChange: (val) => handleInputChange("sourceUrl", val),
+				style: { marginBottom: "16px" },
+				__next40pxDefaultSize: true,
+				__nextHasNoMarginBottom: true,
+			}),
+		];
+
+		// License field, if enabled
+		if (licenceSelectOptions.length > 0) {
+			panelFields.push(
+				el(
+					"div",
+					{ style: { marginBottom: "16px" } },
+					el(SelectControl, {
+						key: "licence",
+						label: __("Image License", "image-source-control-isc"),
+						value: licence,
+						options: licenceSelectOptions,
+						onChange: (val) => handleInputChange("licence", val),
+						__next40pxDefaultSize: true,
+						__nextHasNoMarginBottom: true,
+					})
+				)
+			);
+		}
+
+		// Tutorial link
+		panelFields.push(
+			el(
+				"a",
+				{
+					key: "more-info",
+					href: infoBaseUrl + utm,
+					target: "_blank",
+					rel: "noopener noreferrer",
+					style: {
+						textDecoration: "underline",
+						color: "#0073aa",
+					},
+				},
+				__(
+					"Tutorial: How to add a Featured Image Caption",
+					"image-source-control-isc"
+				)
+			)
+		);
+
+		return el(
+			PluginDocumentSettingPanel,
+			{ name: PANEL_NAME, title: "Image Source Control", initialOpen: false },
+			...panelFields
+		);
+	};
+
+	wp.plugins.registerPlugin("isc-featured-image-source-plugin", {
+		render: FeaturedImageSourceFields,
+		icon: null,
+	});
+})(window.wp);
