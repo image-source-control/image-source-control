@@ -10,6 +10,7 @@ if ( ! $missing_sources ) {
 <p>
 <?php
 printf(
+	// translators: %s is the number of images without sources.
 	esc_html( _n( '%s image has no credits.', '%s images have no credits.', $missing_sources, 'image-source-control-isc' ) ),
 	absint( $missing_sources )
 );
