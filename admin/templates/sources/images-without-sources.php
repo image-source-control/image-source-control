@@ -34,13 +34,19 @@
 		<td>
 		<?php
 		if ( $_attachment->post_parent ) :
-			?>
-			<a href="<?php echo esc_url( get_edit_post_link( $_attachment->post_parent ) ); ?>" title="<?php esc_html_e( 'show parent post’s edit page', 'image-source-control-isc' ); ?>"><?php echo esc_html( get_the_title( $_attachment->post_parent ) ); ?></a>
-			<?php
+			$edit_post_link = get_edit_post_link( $_attachment->post_parent );
+			if ( $edit_post_link ) :
+				?>
+		<a href="<?php echo esc_url( $edit_post_link ); ?>"><?php echo esc_html( get_the_title( $_attachment->post_parent ) ); ?></a>
+				<?php
+			else :
+				echo esc_html( get_the_title( $_attachment->post_parent ) );
+			endif;
 else :
-	esc_html_e( 'no connection', 'image-source-control-isc' );
-	?>
-<?php endif; ?></td></tr>
+	echo '–';
+endif;
+?>
+</td></tr>
 	<?php endforeach; ?>
 </tbody>
 </table>
