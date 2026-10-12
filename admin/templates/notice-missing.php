@@ -18,14 +18,14 @@
 		printf(
 			wp_kses(
 			// translators: %1$s is an opening link tag, %2$s is a closing tag.
-				__( 'See the %1$smissing sources%2$s list.', 'image-source-control-isc' ),
+				__( 'See the %1$smissing sources%2$s in the Media Library.', 'image-source-control-isc' ),
 				[
 					'a' => [
 						'href' => [],
 					],
 				]
 			),
-			'<a href="' . esc_url( admin_url( 'upload.php?page=isc-sources' ) ) . '">',
+			'<a href="' . esc_url( admin_url( 'upload.php?mode=list&isc_filter=without_source' ) ) . '">',
 			'</a>'
 		);
 		// show a link to the settings page
