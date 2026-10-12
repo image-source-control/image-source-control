@@ -78,7 +78,7 @@ class Admin_Menu {
 
 				$storage_model   = new \ISC_Storage_Model();
 				$external_images = $storage_model->get_storage_without_wp_images();
-				if ( ! empty( $stored_images ) ) {
+				if ( ! empty( $external_images ) ) {
 					ob_start();
 					require_once ISCPATH . '/admin/templates/sources/external-images.php';
 					$this->render_sources_page_section( ob_get_clean(), esc_html__( 'Additional images', 'image-source-control-isc' ), 'external-images' );

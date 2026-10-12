@@ -4,6 +4,7 @@
  *
  * @var array $external_images list of images that are not part of the media library.
  */
+
 ?>
 <p><?php esc_html_e( 'ISC found image URLs that are not part of the media library.', 'image-source-control-isc' ); ?></p>
 <table class="widefat striped isc-table isc-table-storage" style="width: 80%;">
