@@ -66,8 +66,16 @@ class ISC_Storage_Model {
 	 * @return string sanitized URL string
 	 */
 	public static function sanitize_url_key( $url ) {
-		$limit = 2;
-		return str_replace( array( 'http://', 'https://', '//' ), '', esc_url( $url ), $limit );
+		// If $url is already stripped of protocol, esc_url will return an empty string, hence the next step.
+		// check if the URL contains '//', and if not, we assume, the protocol was already stripped and prepend 'http://' to it
+		if ( ! preg_match( '//', $url ) ) {
+			$url = 'http://' . $url;
+		}
+
+		// sanitize the URL using esc_url to make sure this is a valid URL, and to prevent any potential security issues
+		$url = esc_url( $url );
+
+		return str_replace( [ 'http://', 'https://', '//' ], '', $url );
 	}
 
 	/**
@@ -78,7 +86,7 @@ class ISC_Storage_Model {
 	 */
 	public function is_image_url_in_storage( $url ) {
 		$storage = $this->get_storage();
-		$url = self::sanitize_url_key( $url );
+		$url     = self::sanitize_url_key( $url );
 
 		return isset( $storage[ $url ] );
 	}
