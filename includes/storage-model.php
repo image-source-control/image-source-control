@@ -68,7 +68,7 @@ class ISC_Storage_Model {
 	public static function sanitize_url_key( $url ) {
 		// If $url is already stripped of protocol, esc_url will return an empty string, hence the next step.
 		// check if the URL contains '//', and if not, we assume, the protocol was already stripped and prepend 'http://' to it
-		if ( ! preg_match( '//', $url ) ) {
+		if ( false === strpos( $url, '//' ) ) {
 			$url = 'http://' . $url;
 		}
 
